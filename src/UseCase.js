@@ -14,6 +14,11 @@ export default class UseCase extends CoreEventEmitter {
          * @type {string} UseCase name
          */
         this.useCaseName = this.constructor.name;
+
+        /**
+         * @type {Context} it is dynamic replaced to Context
+         */
+        this.context = null;
     }
 
     execute() {
