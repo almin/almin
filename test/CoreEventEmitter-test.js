@@ -33,7 +33,7 @@ describe("CoreEventEmitter", function () {
                 value: 100
             };
             emitter.onDispatch(payload => {
-                assert.deepEqual(payload, expectedPayload)
+                assert.deepEqual(payload, expectedPayload);
                 done();
             });
             emitter.dispatch(expectedPayload);

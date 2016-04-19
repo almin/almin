@@ -17,7 +17,7 @@
   },
   "version": "1.0.0",
   "description": "Flux, CQRS like architecture library.",
-  "main": "index.js",
+  "main": "lib/index.js",
   "directories": {
     "test": "test"
   },
@@ -39,6 +39,5 @@
     "babel-register": "^6.7.2",
     "mocha": "^2.4.5"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }
