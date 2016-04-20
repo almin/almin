@@ -1,22 +1,22 @@
 {
-  "name": "alken",
+  "name": "almin",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/azu/alken.git"
+    "url": "git+https://github.com/azu/almin.git"
   },
   "author": "azu",
   "email": "azuciao@gmail.com",
-  "homepage": "https://github.com/azu/alken",
+  "homepage": "https://github.com/azu/almin",
   "license": "MIT",
   "files": [
     "src/",
     "lib/"
   ],
   "bugs": {
-    "url": "https://github.com/azu/alken/issues"
+    "url": "https://github.com/azu/almin/issues"
   },
   "version": "0.1.0",
-  "description": "Flux, CQRS like architecture library.",
+  "description": "Flux, DDD and CQRS like architecture library.",
   "main": "lib/index.js",
   "directories": {
     "test": "test"
