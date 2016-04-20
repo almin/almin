@@ -19,7 +19,7 @@ export default class StoreGroupValidator {
      */
     static validateInstance(storeGroup) {
         assert(storeGroup !== undefined, "store should not be undefined");
-        assert(storeGroup instanceof CoreEventEmitter, "storeGroup should inherit CoreEventEmitter");
+        assert(CoreEventEmitter.isCoreEventEmitter(storeGroup), "storeGroup should inherit CoreEventEmitter");
         assert(typeof storeGroup.onChange === "function", "StoreGroup should have #onChange method");
         assert(typeof storeGroup.getState === "function", "StoreGroup should have #getState method");
         // #release is optional

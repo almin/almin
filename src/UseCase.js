@@ -4,6 +4,15 @@ const assert = require("assert");
 import CoreEventEmitter from "./CoreEventEmitter";
 import {ON_ERROR} from "./Dispatcher";
 export default class UseCase extends CoreEventEmitter {
+    static isUseCase(v) {
+        if (v instanceof UseCase) {
+            return true;
+        } else if (typeof v === "object" && typeof v.execute === "function") {
+            return true;
+        }
+        return false
+    }
+
     constructor() {
         super();
         /**

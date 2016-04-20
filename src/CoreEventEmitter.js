@@ -4,6 +4,15 @@ const EventEmitter = require("events");
 const assert = require("assert");
 export const ON_DISPATCH = "__DISPATCH_ACTION__";
 export default class CoreEventEmitter extends EventEmitter {
+    static isCoreEventEmitter(v) {
+        if (v instanceof CoreEventEmitter) {
+            return true;
+        } else if (typeof v === "object" && typeof v.onDispatch === "function" && typeof v.dispatch === "function") {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * add onAction handler and return unbind function
      * @param {Function} payloadHandler

@@ -2,6 +2,8 @@
 
 Alken is a flux/CQRS like library.
 
+Write code thinking :)
+
 ## Feature
 
 Alken provide a pattern, is not framework.

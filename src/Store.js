@@ -23,6 +23,15 @@ const STATE_CHANGE_EVENT = "STATE_CHANGE_EVENT";
  */
 
 export default class Store extends CoreEventEmitter {
+    static isStore(v) {
+        if (v instanceof Store) {
+            return true;
+        } else if (typeof v === "object" && typeof v.getState === "function" && v.onChange === "function") {
+            return true;
+        }
+        return false
+    }
+
     constructor() {
         super();
         /**
@@ -47,7 +56,7 @@ export default class Store extends CoreEventEmitter {
      * @returns {Function} return un-listen function
      */
     onUseCaseError(useCase, handler) {
-        assert(useCase instanceof UseCase, "useCase should be instance of UseCase: " + useCase);
+        assert(UseCase.isUseCase(useCase), "useCase should be instance of UseCase: " + useCase);
         this.onDispatch(({type, error}) => {
             if (type === `${this.useCaseName}:error`) {
                 handler(error);

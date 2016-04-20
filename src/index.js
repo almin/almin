@@ -7,11 +7,9 @@ import UseCase from "./UseCase";
 import Context from "./Context";
 import CoreEventEmitter from "./CoreEventEmitter";
 // re-export
-module.exports = {
-    Dispatcher,
-    Store,
-    StoreGroup,
-    UseCase,
-    Context,
-    CoreEventEmitter
-};
+module.exports.Dispatcher = Dispatcher;
+module.exports.Store = Store;
+module.exports.StoreGroup = StoreGroup;
+module.exports.UseCase = UseCase;
+module.exports.Context = Context;
+module.exports.CoreEventEmitter = CoreEventEmitter;
