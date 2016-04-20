@@ -6,7 +6,8 @@
   "env": {
     "development": {
       "presets": [
-        "jsdoc-to-assert"
+        "jsdoc-to-assert",
+        "power-assert"
       ]
     }
   }

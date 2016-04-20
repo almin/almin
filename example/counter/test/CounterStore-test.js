@@ -1,18 +1,24 @@
 // LICENSE : MIT
 "use strict";
-import assert from "power-assert"
-import Store from "../examples/counter/src/CounterStore"
-import {keys} from "../examples/counter/src/ActionCreator";
-describe("Store", function () {
+const assert = require("assert");
+import CountUpUseCase from "../src/usecase/CountUpUseCase"
+import {CounterStore} from "../src/store/CounterStore"
+describe("CounterStore", function () {
     describe("onCountUp", function () {
-        it("should emit `CHANGE` event", function () {
-            const store = new Store();
-            var expectedCount = 42;
-            var newState = store.reduce(store.getState(), {
-                type: keys.countUp,
-                count: expectedCount
+        it("should new state was count up", function (done) {
+            const useCase = new CountUpUseCase();
+            const store = new CounterStore();
+            // useCase dispatch to store
+            useCase.pipe(store);
+            // then
+            const expectedCount = 42;
+            store.onChange(() => {
+                const state = store.getState();
+                assert.equal(state.CounterState.count, expectedCount);
+                done();
             });
-            assert.equal(newState.count, expectedCount);
+            // when
+            useCase.execute(expectedCount)
         });
     });
 });
