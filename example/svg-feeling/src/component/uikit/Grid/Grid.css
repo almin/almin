@@ -1,0 +1,51 @@
+/*
+    Grid > GridCell
+
+    HeightについてはGrid側としては考慮していなくて、Columnに関するCellをセルを定義してる。
+    横並びの実装がメインのタスク
+    小さなリファレンス実装のため、厳密なものとしては書かれてない
+
+    table-cellのようなもの
+
+    Gridで考えるかどうかも別で検討が必要そう。
+    borderやgutterなどの概念もレイアウトするには必要になるはず
+    http://gridbyexample.com/
+    http://mdo.github.io/table-grid/
+
+    素直によく作りこまれたライブラリを使うのもありだと思う。
+    CSSでGridLayoutの仕様があるのでそっちに乗っかるのもありそう
+    display:table-cell;を安易に使うべきでない理由いろいろ - Qiita
+    http://qiita.com/sawadays0118/items/4c329fd05cdff14ffebc
+
+    小さなうちは普通に動きそうだけど、柔軟性に欠けるというのはありそう
+*/
+@import "./GridCell.css";
+
+/* Debug */
+.Grid .GridCell {
+    border: #d0d0d0 solid 1px;
+}
+
+.Grid--gutter {
+
+}
+
+.Grid {
+    box-sizing: border-box;
+    width: 100%;
+}
+
+/*Clear*/
+.Grid:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.Grid--center {
+
+}
+
+.Grid--middle .GridCell {
+    vertical-align: middle;
+}
