@@ -15,7 +15,7 @@
   "bugs": {
     "url": "https://github.com/azu/alken/issues"
   },
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Flux, CQRS like architecture library.",
   "main": "lib/index.js",
   "directories": {

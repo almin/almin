@@ -5,9 +5,9 @@ const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
 import CoreEventEmitter from "./../CoreEventEmitter";
 import Store from "./../Store";
 export function validateStore(store) {
-    assert(Store.isStore(store), "store should be instance of Store");
-    assert(typeof store.getState === "function", "Store#getState() should be implemented.\n" +
-        "StoreGroup merge values of store*s*.");
+    assert(Store.isStore(store), `${store} should be instance of Store`);
+    assert(typeof store.getState === "function", `${store} should implement getState() method.
+StoreGroup merge values of store*s*.`);
 }
 
 /**
