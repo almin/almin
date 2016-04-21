@@ -1,7 +1,7 @@
 // LICENSE : MIT
 "use strict";
 const React = require("react");
-import {ColorHistoryState} from "../../../js/store/ColorHistoryStore";
+import ColorHistoryState from "../../../js/store/ColorHistoryStore/ColorHistoryState";
 import ColorHistory from "../../../js/domain/ColorHistory";
 export function ColorHistoryListItem({color}) {
     return <li className="ColorHistoryListItem">

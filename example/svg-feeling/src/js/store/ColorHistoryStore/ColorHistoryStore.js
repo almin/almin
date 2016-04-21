@@ -1,15 +1,7 @@
 // LICENSE : MIT
 "use strict";
 import {Store} from "almin";
-import ColorHistory from "../domain/ColorHistory";
-export class ColorHistoryState {
-    /**
-     * @param {ColorHistory} history
-     */
-    constructor(history) {
-        this.history = history
-    }
-}
+import ColorHistoryState from "./ColorHistoryState";
 /**
  * Simple Store pattern
  */
@@ -29,7 +21,7 @@ export default class ColorHistoryStore extends Store {
         const colorHistory = colorMixer.getHistory();
         // you can access `this.props.colorHistory` from react component
         return {
-            ColorHistoryState : new ColorHistoryState(colorHistory)
+            ColorHistoryState: new ColorHistoryState(colorHistory)
         };
     }
 }

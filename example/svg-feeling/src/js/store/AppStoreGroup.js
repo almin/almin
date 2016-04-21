@@ -2,9 +2,9 @@
 "use strict";
 import {StoreGroup} from "almin";
 import colorMixerRepository from "../infra/ColorMixerRepository";
-import ColorStore from "./ColorStore";
-import ColorHistoryStore from "./ColorHistoryStore";
-import WallColorStore from "./WallColorStore";
+import ColorStore from "./ColorStore/ColorStore";
+import ColorHistoryStore from "./ColorHistoryStore/ColorHistoryStore";
+import WallColorStore from "./WallColorStore/WallColorStore";
 export default class AppStoreGroup {
     /**
      * @returns {StoreGroup}

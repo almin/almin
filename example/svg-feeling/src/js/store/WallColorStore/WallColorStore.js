@@ -1,25 +1,8 @@
 // LICENSE : MIT
 "use strict";
 import {Store} from "almin";
-import {ChangeWallColorUseCase} from "../UseCase/ChangeWallColor";
-import RGBAColor from "../../js/domain/value/RGBAColor";
-export class WallColorState {
-    /**
-     * @param {RGBAColor} wallColor
-     */
-    constructor({wallColor}) {
-        this.wallColor = wallColor;
-    }
-
-    reduce(payload) {
-        switch (payload.type) {
-            case ChangeWallColorUseCase.name:
-                return new WallColorState({wallColor: payload.color});
-            default:
-                return this;
-        }
-    }
-}
+import RGBAColor from "../../domain/value/RGBAColor";
+import WallColorState from "./WallColorState";
 export default class WallColorStore extends Store {
     constructor() {
         super();
