@@ -1,4 +1,4 @@
-# Almin Framework
+# Almin
 
 Almin is a flux/CQRS like library.
 
