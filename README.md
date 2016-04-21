@@ -19,6 +19,23 @@ Almin provide a pattern, is not framework.
 ## Usage
 
 - [ ] Write usage instructions
+- Implement flow
+    - UseCase
+    - Domain
+    - Repository
+    - Store
+    - State
+
+## Example
+
+- [example/counter](example/counter)
+    - Simple Counter example
+    - It use only state
+- [example/svg-feeling](example/counter)
+    - Separate Domain and Store/State
+        - Two way update state.
+    - How to implement for 60 FPS 
+        - Component should implement `shouldComponentUpdate()`
 
 ## Tests
 
