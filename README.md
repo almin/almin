@@ -12,6 +12,10 @@ Almin provide a pattern, is not framework.
 - Scalable
 - Responsibility Layers patten - well-known Domain-Driven Design
 
+Almin is a implementation of Read/Write Stack Architecture that is well-known Flux/CQRS.
+
+- [Read/Write Stack | JavaScriptアーキテクチャ](http://azu.github.io/slide/2016/bikeshedjs/javascript-read-write-stack.html "Read/Write Stack | JavaScriptアーキテクチャ")
+
 ## Installation
 
     npm install almin
