@@ -34,6 +34,18 @@ export default class UseCase extends CoreEventEmitter {
         throw new TypeError(`should be overwrite ${this.constructor.name}#execute()`);
     }
 
+    /**
+     * called the {@link errorHandler} with error when error is occurred.
+     * @param {function(error: Error)} errorHandler
+     * @returns {function(this:Dispatcher)}
+     */
+    onError(errorHandler) {
+        return this.onDispatch(payload => {
+            if (payload.type === ON_ERROR) {
+                errorHandler(payload.error);
+            }
+        });
+    }
 
     /**
      * throw error event

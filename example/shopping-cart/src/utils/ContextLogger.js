@@ -40,7 +40,7 @@ export default class ContextLogger {
             context._dispatcher.onDispatch(onDispatch),
             context.onChange(onChange),
             context._dispatcher.onDidExecuteEachUseCase(onDidExecuteEachUseCase),
-            context._dispatcher.onError(onErrorHandler)
+            context._dispatcher.onErrorDispatch(onErrorHandler)
         ]
     }
 

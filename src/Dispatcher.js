@@ -48,18 +48,24 @@ export default class Dispatcher extends CoreEventEmitter {
     }
 
     /**
+     * @deprecated
+     **/
+    onError() {
+        throw new Error("rename to onErrorDispatch");
+    }
+
+    /**
      * called the {@link errorHandler} with error when error is occurred.
      * @param {function(error: Error)} errorHandler
      * @returns {function(this:Dispatcher)}
      */
-    onError(errorHandler) {
+    onErrorDispatch(errorHandler) {
         return this.onDispatch(payload => {
             if (payload.type === ON_ERROR) {
                 errorHandler(payload);
             }
         });
     }
-
     /**
      * dispatch the method when {@link useCase} will do.
      * @param {UseCase} useCase

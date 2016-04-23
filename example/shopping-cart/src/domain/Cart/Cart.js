@@ -10,6 +10,9 @@ export default class Cart {
      */
     constructor({customer}) {
         this.id = uuid();
+        /**
+         * @type {ProductItem[]}
+         */
         this.products = [];
         this.customer = customer;
     }
@@ -20,6 +23,13 @@ export default class Cart {
      */
     addItem(product) {
         this.products.push(product);
+    }
+
+    /**
+     * @returns {ProductItem[]}
+     */
+    getAllProductItems() {
+        return this.products;
     }
 
     /**
