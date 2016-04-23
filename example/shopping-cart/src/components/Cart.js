@@ -1,7 +1,6 @@
 'use strict';
 
 const React = require('react');
-import ProductItem from "../domain/value/ProductItem";
 const ProductHeader = React.createClass({
     render: function () {
         return <div>{this.props.children}</div>;
