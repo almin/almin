@@ -6,4 +6,13 @@ export default class Customer {
         this.id = uuid();
         this.name = name;
     }
+
+    /**
+     * The customer checkout the cart
+     * @param {Cart} cart
+     * @returns {*|Promise}
+     */
+    checkout(cart) {
+        return cart.tryToFlush();
+    }
 }

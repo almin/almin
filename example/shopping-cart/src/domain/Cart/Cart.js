@@ -25,7 +25,7 @@ export default class Cart {
     /**
      * checkout the cart and (pay money) and flush cart
      */
-    checkout() {
+    tryToFlush() {
         return checkoutProducts(this.products).then(() => {
             this.products = [];
         });

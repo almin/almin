@@ -24,7 +24,7 @@ export default class AddItemToCartUseCase extends UseCase {
         if (!cart) {
             return this.throwError(new Error(`Not found cart for the customer: ${this.customer}`));
         }
-        cart.checkout().then(() => {
+        this.customer.checkout(cart).then(() => {
             // save
             this.cartRepository.store(cart);
         });
