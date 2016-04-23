@@ -1,6 +1,7 @@
 // LICENSE : MIT
 "use strict";
 const uuid = require("uuid");
+import {checkoutProducts} from "../../utils/WebAPIUtils";
 // Cart is Shopping Cart
 // Before you bought the product(item), add the product to the cart.
 export default class Cart {
@@ -25,6 +26,8 @@ export default class Cart {
      * checkout the cart and (pay money) and flush cart
      */
     checkout() {
-
+        return checkoutProducts(this.products).then(() => {
+            this.products = [];
+        });
     }
 }

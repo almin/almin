@@ -1,11 +1,14 @@
 import React from 'react';
 import Cart from './Cart';
+import AppLocator from "../AppLocator";
+import CheckoutCartUseCase from "../usecase/CheckoutCartUseCase";
 let CartContainer = React.createClass({
     onCheckoutClicked() {
-        if (!this.props.products.length) {
+        const {CartState} = this.props;
+        if (!CartState.hasItemAtLeastOne) {
             return;
         }
-        cartCheckout(this.props.products);
+        AppLocator.context.useCase(CheckoutCartUseCase.create()).execute();
     },
 
     render() {

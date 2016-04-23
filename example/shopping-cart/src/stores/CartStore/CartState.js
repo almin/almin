@@ -12,6 +12,10 @@ export default  class CartState {
         this.productItems = cart.products || [];
     }
 
+    get hasItemAtLeastOne() {
+        return this.productItems.length > 0;
+    }
+
     get itemsByProduct() {
         const itemMap = {};
         this.productItems.forEach(product => {
