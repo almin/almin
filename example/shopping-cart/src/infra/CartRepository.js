@@ -17,11 +17,20 @@ export class CartRepository extends EventEmitter {
     }
 
     /**
+     * get cart that is last used by customer
+     * @param customerID
+     * @returns {Cart}
+     */
+    findLatByCustomer(customerID){
+        return this._dataSet.get(customerID);
+    }
+    /**
      * store instance
      * @param {Cart} cart
      */
     store(cart) {
         this._dataSet.set(cart.id, cart);
+        this._dataSet.set(cart.customer.id, cart);
         this.emit("CHANGE", cart);
     }
 

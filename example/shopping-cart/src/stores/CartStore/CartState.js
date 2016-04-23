@@ -6,7 +6,34 @@ export default  class CartState {
      * @param {Cart} [cart]
      */
     constructor(cart = {}) {
-        this.products = cart.products || [];
-        
+        /**
+         * @type {ProductItem[]}
+         */
+        this.productItems = cart.products || [];
+    }
+
+    get itemsByProduct() {
+        const itemMap = {};
+        this.productItems.forEach(product => {
+            if (itemMap[product.id] === undefined) {
+                itemMap[product.id] = {
+                    id: product.id,
+                    title: product.title,
+                    price: product.price,
+                    quantity: 0
+                };
+            }
+            itemMap[product.id].quantity++;
+        });
+        return Object.values(itemMap);
+    }
+
+    get totalPrice() {
+        if (this.productItems.length === 0) {
+            return 0;
+        }
+        return this.productItems.reduce((total, productItem) => {
+            return total + productItem.price;
+        }, 0);
     }
 }

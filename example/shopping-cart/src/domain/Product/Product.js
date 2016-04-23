@@ -8,8 +8,7 @@ export default class ProductCatalog {
      * {"id": 1, "title": "iPad 4 Mini", "price": 500.01, "inventory": 2, "image": "./assets/ipad-mini.png"}
      */
     constructor(catalog = {}) {
-        this.id = uuid();
-        this.catalogNumber = catalog.id;
+        this.id = catalog.id;
         this.title = catalog.title;
         this.price = catalog.price;
         this.inventory = catalog.inventory;
@@ -18,12 +17,24 @@ export default class ProductCatalog {
     }
 
     /**
+     * pick up product item from backyard.
+     * @returns {ProductItem}
+     */
+    pickupProductItem() {
+        if (this.inventory === 0) {
+            throw new Error(`${this.title}'s inventory is 0.`);
+        }
+        this.inventory--;
+        return this.toProductItem();
+    }
+
+    /**
      * Create new ProductItem value
      * @returns {ProductItem}
      */
     toProductItem() {
         return new ProductItem({
-            catalogNumber: this.catalogNumber,
+            id: this.id,
             title: this.title,
             price: this.price,
             inventory: this.inventory,

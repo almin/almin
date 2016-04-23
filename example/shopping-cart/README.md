@@ -25,3 +25,8 @@ shopping-cart example has two stores:
 You notice that `CartStore` have not `products` state.
 `products` is only exist in `ProductStore`. `products` state should not share between two stores.
 
+### AppLocator
+
+
+- `Customer` always is a single. So, AppLocator have global `customer` property.
+    - It is easy to use `customer`.

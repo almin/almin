@@ -10,11 +10,11 @@ let CartContainer = React.createClass({
     },
 
     render() {
-        const {products, total} = this.props;
+        const {CartState} = this.props;
         return (
             <Cart
-                products={products}
-                total={total}
+                products={CartState.itemsByProduct}
+                total={String(CartState.totalPrice)}
                 onCheckoutClicked={this.onCheckoutClicked}
             />
         );

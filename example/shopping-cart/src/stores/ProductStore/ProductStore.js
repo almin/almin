@@ -9,7 +9,6 @@ export default class ProductStore extends Store {
         this.state = new ProductState();
         productRepository.onChange(() => {
             const products = productRepository.findAll();
-            console.log(products);
             const productItems = products.map(product => {
                 return product.toProductItem();
             });

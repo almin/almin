@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from "./components/App";
-import AppContextLocator from "./AppContextLocator";
+import AppLocator from "./AppLocator";
 import ContextLogger from "./utils/ContextLogger";
 // store
 import AppStore from "./stores/AppStore";
@@ -17,7 +17,8 @@ const appContext = new Context({
 });
 const logger = new ContextLogger();
 logger.startLogging(appContext);
-AppContextLocator.context = appContext;
+// update global context
+AppLocator.context = appContext;
 ReactDOM.render(
     React.createElement(App, {
         appContext

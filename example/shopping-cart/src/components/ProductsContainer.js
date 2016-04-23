@@ -1,11 +1,12 @@
 import React from 'react';
 import ProductItem from './ProductItem';
 import ProductsList from './ProductsList';
-import {addToCart} from "../actions/ActionCreator";
+import AddItemToCartUseCase from "../usecase/AddItemToCartUseCase"
+import AppLocator from "../AppLocator";
 let ProductItemContainer = React.createClass({
-
     onAddToCartClicked() {
-        addToCart(this.props.product);
+        const useCase = AddItemToCartUseCase.create();
+        AppLocator.context.useCase(useCase).execute(this.props.product.id);
     },
 
     render() {

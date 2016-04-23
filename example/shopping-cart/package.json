@@ -9,7 +9,7 @@
   "scripts": {
     "clean": "rimraf public/build && mkdirp public/build",
     "build": "NODE_ENV=production webpack -p",
-    "watch": "webpack -d -w",
+    "watch": "NODE_ENV=development webpack -d -w",
     "prepublish": "npm run --if-present build",
     "test": "mocha"
   },

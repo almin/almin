@@ -1,18 +1,18 @@
 import React from 'react';
 import CartContainer from './CartContainer';
 import ProductsContainer from './ProductsContainer';
-import AppContextLocator from "../AppContextLocator";
+import AppLocator from "../AppLocator";
 // UseCase
 import InitializeCustomerUseCase from "../usecase/Initial/InitializeCustomerUseCase";
 import InitializeProductUseCase from "../usecase/Initial/InitializeProductUseCase";
 class App extends React.Component {
     constructor(...args) {
         super(...args);
-        this.state = AppContextLocator.context.getState();
+        this.state = AppLocator.context.getState();
     }
 
     componentDidMount() {
-        const context = AppContextLocator.context;
+        const context = AppLocator.context;
         // when change store, update component
         const onChangeHandler = () => {
             return requestAnimationFrame(() => {
@@ -27,7 +27,7 @@ class App extends React.Component {
 
 
     render() {
-        const state = AppContextLocator.context.getState();
+        const state = AppLocator.context.getState();
         /**
          * @type {CartState}
          */
@@ -39,7 +39,7 @@ class App extends React.Component {
         return (
             <div>
                 <ProductsContainer products={ProductState.products}/>
-                <CartContainer products={CartState.products} total={"1"}/>
+                <CartContainer CartState={CartState} total={"1"}/>
             </div>
         );
     }

@@ -46,7 +46,6 @@ export default class ContextLogger {
 
     logError(payload) {
         console.error(payload.error);
-        console.groupEnd(payload.useCase.name);
     }
 
     logDispatch(payload) {
@@ -60,6 +59,7 @@ export default class ContextLogger {
         stores.forEach(state => {
             console.groupCollapsed(`Store:${state.name} is Changed`);
             console.info(state.getState());
+            console.groupEnd(`Store:${state.name} is Changed`);
         })
     }
 }

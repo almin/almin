@@ -10,7 +10,12 @@ const ProductHeader = React.createClass({
 
 const Cart = React.createClass({
     propTypes: {
-        products: React.PropTypes.arrayOf(React.PropTypes.instanceOf(ProductItem)).isRequired,
+        products: React.PropTypes.arrayOf(React.PropTypes.shape({
+            id: React.PropTypes.number.isRequired,
+            title: React.PropTypes.string.isRequired,
+            price: React.PropTypes.number.isRequired,
+            quantity: React.PropTypes.number.isRequired
+        })).isRequired,
         total: React.PropTypes.string.isRequired,
         onCheckoutClicked: React.PropTypes.func.isRequired
     },
@@ -20,10 +25,10 @@ const Cart = React.createClass({
 
         const hasProducts = products.length > 0;
         const nodes = !hasProducts ?
-                    <div>Please add some products to cart.</div> :
-                    products.map(function (p) {
-                        return <ProductHeader key={p.id}>{p.title} - &euro;{p.price} x {p.quantity}</ProductHeader>;
-                    });
+                      <div>Please add some products to cart.</div> :
+                      products.map(function (p) {
+                          return <ProductHeader key={p.id}>{p.title} - &euro;{p.price} x {p.quantity}</ProductHeader>;
+                      });
 
         return (
             <div className="cart uk-panel uk-panel-box uk-panel-box-primary">
