@@ -12,12 +12,14 @@ module.exports = {
     },
     module: {
         loaders: [
-            {test: /\.json$/, loader: "json"},
+            { test: /\.json$/, loader: "json-loader" },
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
                 loader: "babel"// .babelrcを参照する
             }
         ]
-    }
+    },
+    // to avoid warning by power-assert-formatter
+    exprContextCritical: false
 };

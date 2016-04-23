@@ -6,7 +6,7 @@ export default class DisplayWindow {
     }
 
     /**
-     * @param {Product[]} products
+     * @param {ProductHeader[]} products
      */
     setupProducts(products) {
         this.products = products;

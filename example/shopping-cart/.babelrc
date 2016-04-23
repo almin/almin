@@ -3,6 +3,9 @@
     "es2015",
     "react"
   ],
+  "plugins": [
+    "babel-plugin-transform-runtime"
+  ],
   "env": {
     "development": {
       "presets": [

@@ -1,5 +1,5 @@
 import React from 'react';
-import Cart from './Cart.jsx';
+import Cart from './Cart';
 import {cartCheckout} from "../actions/ActionCreator"
 let CartContainer = React.createClass({
     onCheckoutClicked() {

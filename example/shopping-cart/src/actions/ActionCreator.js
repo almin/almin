@@ -1,5 +1,4 @@
 import {checkoutProducts, getAllProducts as uGetAllProducts} from '../utils/WebAPIUtils';
-import dispatcher from "../dispatcher";
 export var keys = {
     'getAllProducts': 'getAllProducts',
     'receiveProducts': 'receiveProducts',

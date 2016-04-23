@@ -14,6 +14,7 @@ Original example from:
 
 shopping-cart example explain the reason we encourage you to normalize your data is to avoid duplication.
 
+
 ### Store
 
 shopping-cart example has two stores:

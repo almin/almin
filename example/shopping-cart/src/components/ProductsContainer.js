@@ -1,6 +1,6 @@
 import React from 'react';
-import ProductItem from './ProductItem.jsx';
-import ProductsList from './ProductsList.jsx';
+import ProductItem from './ProductItem';
+import ProductsList from './ProductsList';
 import {addToCart} from "../actions/ActionCreator";
 let ProductItemContainer = React.createClass({
 
@@ -21,8 +21,8 @@ let ProductItemContainer = React.createClass({
 
 let ProductsListContainer = React.createClass({
     render() {
-        const product = this.props.product;
-        let nodes = product.products.map(product => {
+        const products = this.props.products;
+        let nodes = products.map(product => {
             return (
                 <ProductItemContainer
                     key={product.id}
@@ -32,7 +32,7 @@ let ProductsListContainer = React.createClass({
         });
 
         return (
-            <ProductsList title="Flux Shop Demo (material-flux)">
+            <ProductsList title="Flux Shop Demo">
                 {nodes}
             </ProductsList>
         );
