@@ -32,6 +32,7 @@ describe("StoreGroup", function () {
             });
             // when - a,b emit change at same time
             aStore.emitChange();
+            aStore.emitChange();
             bStore.emitChange();
         });
     });

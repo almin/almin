@@ -64,7 +64,7 @@ export default class StoreGroup extends CoreEventEmitter {
              class ExampleStore extends Store {
                  getState(prevState = initialState) {
                      return {
-                        nextState
+                         NextState: this.state
                      };
                  }
              }
@@ -105,6 +105,10 @@ StoreGroup#getState()["StateName"]// state
         // if anyone store is changed, will call `emitChange()`.
         const releaseOnChangeHandler = store.onChange(() => {
             this._isAnyOneStoreChanged = true;
+            // if the same store emit multiple, emit only once.
+            if (this._currentChangingStores.indexOf(store) !== -1) {
+                return;
+            }
             // add change store list in now
             // it is released by `StoreGroup#emitChange`
             this._currentChangingStores.push(store);
