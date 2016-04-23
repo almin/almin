@@ -40,6 +40,11 @@ Almin is a implementation of Read/Write Stack Architecture that is well-known Fl
         - Two way update state.
     - How to implement for 60 FPS 
         - Component should implement `shouldComponentUpdate()`
+- [example/shopping-cart](example/shopping-cart)
+    - Shopping Cart is a complex example.
+    - This example is implemented of [flux-comparison](https://github.com/voronianski/flux-comparison "flux-comparison").
+    - How to test.
+    - How to implement domain layer.
 
 ## Tests
 
