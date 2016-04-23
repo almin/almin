@@ -10,7 +10,7 @@ export default class Customer {
     /**
      * The customer checkout the cart
      * @param {Cart} cart
-     * @returns {*|Promise}
+     * @returns {Promise}
      */
     checkout(cart) {
         return cart.tryToFlush();

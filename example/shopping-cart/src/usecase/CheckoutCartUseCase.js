@@ -3,7 +3,7 @@
 import {UseCase} from "almin";
 import cartRepository, {CartRepository} from "../infra/CartRepository";
 import AppLocator from "../AppLocator";
-export default class AddItemToCartUseCase extends UseCase {
+export default class CheckoutCartUseCase extends UseCase {
     static create() {
         const customer = AppLocator.customer;
         return new this({customer, cartRepository})
@@ -24,7 +24,7 @@ export default class AddItemToCartUseCase extends UseCase {
         if (!cart) {
             return this.throwError(new Error(`Not found cart for the customer: ${this.customer}`));
         }
-        this.customer.checkout(cart).then(() => {
+        return this.customer.checkout(cart).then(() => {
             // save
             this.cartRepository.store(cart);
         });
