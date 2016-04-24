@@ -1,4 +1,4 @@
-# Almin
+# Almin.js
 
 Almin is a flux/CQRS like library.
 

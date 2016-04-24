@@ -7,14 +7,13 @@ import UseCase from "./UseCase";
 import UseCaseExecutor  from "./UseCaseExecutor";
 import StoreGroupValidator from "./UILayer/StoreGroupValidator";
 const CONTEXT_ON_CHANGE = "CONTEXT_ON_CHANGE";
-export default class Context extends CoreEventEmitter {
+export default class Context {
 
     /**
      * @param {Dispatcher} dispatcher
      * @param {StoreGroup|Store} store
      */
     constructor({dispatcher, store}) {
-        super();
         StoreGroupValidator.validateInstance(store);
         // central dispatcher
         this._dispatcher = dispatcher;
@@ -52,8 +51,6 @@ export default class Context extends CoreEventEmitter {
      */
     useCase(useCase) {
         assert(UseCase.isUseCase(useCase), `It should be instance of UseCase: ${useCase}`);
-        // Dynamic inject context to useCase
-        useCase.context = this;
         return new UseCaseExecutor(useCase, this._dispatcher);
     }
 

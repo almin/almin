@@ -5,13 +5,61 @@ import UseCase from "../src/UseCase";
 import Dispatcher from "../src/Dispatcher";
 import Store from "../src/Store";
 import Context from "../src/Context";
+import UseCaseContext from "../src/UseCaseContext";
 describe("UseCase", function () {
     context("when execute B UseCase in A UseCase", function () {
+        it("should execute A:will -> B:will -> B:did -> A:did", function () {
+            class BUseCase extends UseCase {
+                execute() {
+                    return "b"
+                }
+            }
+            class AUseCase extends UseCase {
+                execute() {
+                    const bUseCase = new BUseCase();
+                    const useCaseContext = this.context;
+                    useCaseContext.useCase(bUseCase).execute();
+                }
+            }
+            const aUseCase = new AUseCase();
+            const callStack = [];
+            const expectedCallStackOfAUseCase = [
+                `ON_WILL_EXECUTE_EACH_USECASE`,
+                `ON_DID_EXECUTE_EACH_USECASE`
+            ];
+            const expectedCallStack = [
+                `${AUseCase.name}:will`,
+                `${BUseCase.name}:will`,
+                `${BUseCase.name}:did`,
+                `${AUseCase.name}:did`
+            ];
+            const dispatcher = new Dispatcher();
+            const context = new Context({
+                dispatcher,
+                store: new Store()
+            });
+            // then
+            aUseCase.onDispatch(payload => {
+                const type = payload.type;
+                const expectedType = expectedCallStackOfAUseCase.shift();
+                assert.equal(type, expectedType);
+            });
+            dispatcher.onWillExecuteEachUseCase(useCase => {
+                callStack.push(`${useCase.name}:will`);
+            });
+            dispatcher.onDidExecuteEachUseCase(useCase => {
+                callStack.push(`${useCase.name}:did`);
+            });
+            // when
+            return context.useCase(aUseCase).execute().then(() => {
+                assert.deepEqual(callStack, expectedCallStack);
+            });
+        });
         it("UseCase should have `context` that is Context instance", function () {
             class TestUseCase extends UseCase {
                 execute() {
                     // then
-                    assert(this.context instanceof Context);
+                    assert(this.context instanceof UseCaseContext);
                     assert(typeof this.dispatch === "function");
                 }
             }

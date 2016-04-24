@@ -45,8 +45,10 @@ describe("Context", function () {
                 constructor() {
                     super();
                     this.onDispatch(payload => {
-                        assert.deepEqual(payload, DISPATCHED_EVENT);
-                        done();
+                        if(payload.type === DISPATCHED_EVENT.type) {
+                            assert.deepEqual(payload, DISPATCHED_EVENT);
+                            done();
+                        }
                     });
                 }
             }

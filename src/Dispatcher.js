@@ -34,8 +34,11 @@ export default class Dispatcher extends CoreEventEmitter {
      * @param {function(useCase: UseCase)} handler
      */
     onWillExecuteEachUseCase(handler) {
-        this.on(ON_WILL_EXECUTE_EACH_USECASE, handler);
-        return this.removeListener.bind(this, ON_WILL_EXECUTE_EACH_USECASE, handler);
+        return this.onDispatch(payload => {
+            if (payload.type === ON_WILL_EXECUTE_EACH_USECASE) {
+                handler(payload.useCase, payload.args);
+            }
+        });
     }
 
     /**
@@ -43,8 +46,11 @@ export default class Dispatcher extends CoreEventEmitter {
      * @param {function(useCase: UseCase)} handler
      */
     onDidExecuteEachUseCase(handler) {
-        this.on(ON_DID_EXECUTE_EACH_USECASE, handler);
-        return this.removeListener.bind(this, ON_DID_EXECUTE_EACH_USECASE, handler);
+        return this.onDispatch(payload => {
+            if (payload.type === ON_DID_EXECUTE_EACH_USECASE) {
+                handler(payload.useCase);
+            }
+        });
     }
 
     /**
@@ -52,6 +58,20 @@ export default class Dispatcher extends CoreEventEmitter {
      **/
     onError() {
         throw new Error("rename to onErrorDispatch");
+    }
+
+    /**
+     * add onAction handler and return unbind function
+     * @param {Function} payloadHandler
+     * @returns {Function} return unbind function
+     * @override
+     */
+    onDispatch(payloadHandler) {
+        return super.onDispatch(payload => {
+            if (payload.type !== ON_WILL_EXECUTE_EACH_USECASE || payload.type !== ON_DID_EXECUTE_EACH_USECASE) {
+                payloadHandler(payload);
+            }
+        });
     }
 
     /**
@@ -66,6 +86,7 @@ export default class Dispatcher extends CoreEventEmitter {
             }
         });
     }
+
     /**
      * dispatch the method when {@link useCase} will do.
      * @param {UseCase} useCase
@@ -73,7 +94,6 @@ export default class Dispatcher extends CoreEventEmitter {
      */
     dispatchWillExecuteUseCase(useCase, args) {
         this.emit(ON_WILL_EXECUTE_EACH_USECASE, useCase, args);
-
     }
 
     /**

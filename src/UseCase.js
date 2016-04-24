@@ -2,6 +2,7 @@
 "use strict";
 const assert = require("assert");
 import CoreEventEmitter from "./CoreEventEmitter";
+import UseCaseContext from "./UseCaseContext";
 import {ON_ERROR} from "./Dispatcher";
 export default class UseCase extends CoreEventEmitter {
     static isUseCase(v) {
@@ -24,14 +25,18 @@ export default class UseCase extends CoreEventEmitter {
          */
         this.useCaseName = this.constructor.name;
 
-        /**
-         * @type {Context} it is dynamic replaced to Context
-         */
-        this.context = null;
     }
 
     execute() {
         throw new TypeError(`should be overwrite ${this.constructor.name}#execute()`);
+    }
+
+    /**
+     * get context of UseCase
+     * @returns {UseCaseContext}
+     */
+    get context() {
+        return new UseCaseContext(this);
     }
 
     /**

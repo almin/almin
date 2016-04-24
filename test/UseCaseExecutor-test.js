@@ -18,24 +18,22 @@ describe("UseCaseExecutor", function () {
             }
             const callStack = [];
             const expectedCallStack = [1, 2, 3];
-            class MockDispatcher extends Dispatcher {
-                dispatchWillExecuteUseCase() {
-                    callStack.push(1);
-                }
-
-                dispatchDidExecuteUseCase() {
-                    callStack.push(3);
-                }
-            }
-            const dispatcher = new MockDispatcher();
+            const dispatcher = new Dispatcher();
             // then
+            dispatcher.onWillExecuteEachUseCase(() => {
+                callStack.push(1);
+            });
             dispatcher.onDispatch(({type, value}) => {
                 if (type === SyncUseCase.name) {
                     callStack.push(2);
                 }
             });
-            // when
+            dispatcher.onDidExecuteEachUseCase(() => {
+                callStack.push(3);
+            });
             const executor = new UseCaseExecutor(new SyncUseCase(), dispatcher);
+
+            // when
             return executor.execute().then(() => {
                 assert.deepEqual(callStack, expectedCallStack);
             });

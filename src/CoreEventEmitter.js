@@ -44,7 +44,7 @@ export default class CoreEventEmitter extends EventEmitter {
         const toName = toEventEmitter.constructor.name;
         const displayName = `delegate-payload:${fromName}-to-${toName}`;
         const delegatePayload = function delegatePayload(payload) {
-            this.displayName = displayName;
+            delegatePayload.displayName = displayName;
             toEventEmitter.dispatch(payload);
         };
         return this.onDispatch(delegatePayload);

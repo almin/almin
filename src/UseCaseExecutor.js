@@ -1,12 +1,12 @@
 // LICENSE : MIT
 "use strict";
 const assert = require("assert");
-import Dispatcher from "./Dispatcher";
+import Dispatcher, {ON_WILL_EXECUTE_EACH_USECASE, ON_DID_EXECUTE_EACH_USECASE} from "./Dispatcher";
 import UseCase from "./UseCase";
 export default class UseCaseExecutor {
     /**
      * @param {UseCase} useCase
-     * @param {Dispatcher} dispatcher
+     * @param {Dispatcher|UseCase} dispatcher is parent dispatcherable object
      */
     constructor(useCase, dispatcher) {
         // execute and finish =>
@@ -37,21 +37,36 @@ export default class UseCaseExecutor {
     }
 
     /**
-     * @param {*[]} args arguments of the usecase
+     * @param {*[]} [args] arguments of the usecase
      */
     willExecute(args) {
         // emit event for System
-        this.dispatcher.dispatchWillExecuteUseCase(this.useCase, args);
+        this.dispatcher.dispatch({
+            type: ON_WILL_EXECUTE_EACH_USECASE,
+            useCase: this.useCase,
+            args
+        });
     }
 
     /**
      *
      */
-    didExecute(result) {
-        // emit event for Store
-        this.dispatcher.dispatchDidExecuteUseCase(this.useCase);
+    didExecute() {
+        this.dispatcher.dispatch({
+            type: ON_DID_EXECUTE_EACH_USECASE,
+            useCase: this.useCase
+        });
     }
-    
+
+    get context() {
+        const dispatcher = this.dispatcher;
+        return {
+            useCase(useCase){
+                return new UseCaseExecutor(useCase, dispatcher);
+            }
+        }
+    }
+
     /**
      * execute UseCase instance.
      * UseCase is a executable object. it means that has `execute` method.
