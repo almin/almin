@@ -1,10 +1,10 @@
 // LICENSE : MIT
 "use strict";
 const assert = require("assert");
-import CoreEventEmitter from "./CoreEventEmitter";
+import Dispatcher from "./Dispatcher";
 import UseCaseContext from "./UseCaseContext";
 import {ActionTypes} from "./Context";
-export default class UseCase extends CoreEventEmitter {
+export default class UseCase extends Dispatcher {
     static isUseCase(v) {
         if (v instanceof UseCase) {
             return true;

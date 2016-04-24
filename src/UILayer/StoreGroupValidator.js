@@ -2,7 +2,7 @@
 "use strict";
 const assert = require("assert");
 import StoreGroup from "./StoreGroup";
-import CoreEventEmitter from "../CoreEventEmitter";
+import Dispatcher from "../Dispatcher";
 /*
 StoreGroup
 
@@ -19,7 +19,7 @@ export default class StoreGroupValidator {
      */
     static validateInstance(storeGroup) {
         assert(storeGroup !== undefined, "store should not be undefined");
-        assert(CoreEventEmitter.isCoreEventEmitter(storeGroup), "storeGroup should inherit CoreEventEmitter");
+        assert(Dispatcher.isDispatcher(storeGroup), "storeGroup should inherit CoreEventEmitter");
         assert(typeof storeGroup.onChange === "function", "StoreGroup should have #onChange method");
         assert(typeof storeGroup.getState === "function", "StoreGroup should have #getState method");
         // #release is optional

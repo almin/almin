@@ -1,11 +1,11 @@
 // LICENSE : MIT
 "use strict";
 const assert = require("assert");
-import CoreEventEmitter from "../src/CoreEventEmitter";
-describe("CoreEventEmitter", function () {
+import Dispatcher from "../src/Dispatcher";
+describe("Dispatcher", function () {
     describe("#onDispatch", function () {
         it("should return un-listen function", function () {
-            const emitter = new CoreEventEmitter();
+            const emitter = new Dispatcher();
             const unListen = emitter.onDispatch(() => {
                 // should not called
                 throw new Error("don't called");
@@ -18,7 +18,7 @@ describe("CoreEventEmitter", function () {
     });
     describe("#dispatch", function () {
         it("should dispatch with payload object, otherwise throw error", function () {
-            const emitter = new CoreEventEmitter();
+            const emitter = new Dispatcher();
             try {
                 emitter.dispatch("it is not payload");
                 throw new Error("UNREACHED");
@@ -27,7 +27,7 @@ describe("CoreEventEmitter", function () {
             }
         });
         it("should pass payload object to listening handler", function (done) {
-            const emitter = new CoreEventEmitter();
+            const emitter = new Dispatcher();
             const expectedPayload = {
                 type: "pay",
                 value: 100

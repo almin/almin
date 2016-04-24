@@ -2,7 +2,7 @@
 "use strict";
 const assert = require("assert");
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
-import CoreEventEmitter from "./../CoreEventEmitter";
+import Dispatcher from "./../Dispatcher";
 import Store from "./../Store";
 export function validateStore(store) {
     assert(Store.isStore(store), `${store} should be instance of Store`);
@@ -16,7 +16,7 @@ StoreGroup merge values of store*s*.`);
  * It means that StoreGroup thin out change events of stores.
  * If you want to know all change events, and directly listen {@link Store.onChange}.
  */
-export default class StoreGroup extends CoreEventEmitter {
+export default class StoreGroup extends Dispatcher {
     /**
      * Create StoreGroup
      * @param {Store[]} stores stores are instance of MaterialStore
