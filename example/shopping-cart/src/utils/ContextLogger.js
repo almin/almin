@@ -1,65 +1,136 @@
 // LICENSE : MIT
 "use strict";
+const DefaultOptions = {
+    console: console
+};
 export default class ContextLogger {
-    constructor() {
-        this.logMap = {};
-        this.releaseHandlers = [];
+    constructor({console} = {}) {
+        this._logBuffer = [];
+        this._logMap = {};
+        this._releaseHandlers = [];
+        // default logger is `console`
+        this.logger = console || DefaultOptions.console;
     }
 
     /**
+     * show current buffer using logger.
+     * @param {string} logTitle
+     */
+    outputBuffer(logTitle) {
+        const output = (log) => {
+            if (log instanceof Error) {
+                this.logger.error(error);
+            } else {
+                this.logger.info(log);
+            }
+        };
+        this.logger.groupCollapsed(logTitle);
+        // if executing multiple UseCase at once, show warning
+        const currentExecuteUseCases = this._logBuffer.filter(logBuffer=> {
+            return logBuffer.indexOf("will execute") !== -1;
+        });
+        if (currentExecuteUseCases.length > 1) {
+            this.logger.warn("Warning: Executing multiple UseCase at once", currentExecuteUseCases.map(name => {
+                return name.replace(" will execute", "");
+            }))
+        }
+        this._logBuffer.forEach(logBuffer => {
+            if (Array.isArray(logBuffer)) {
+                const title = logBuffer.shift();
+                this.logger.groupCollapsed(title);
+                logBuffer.forEach(output);
+                this.logger.groupEnd();
+            } else {
+                output(logBuffer);
+            }
+        });
+        this.logger.groupEnd();
+    }
+
+    /**
+     * flush current log buffer
+     */
+    flushBuffer() {
+        this._logBuffer.length = 0;
+    }
+
+    /**
+     * start logging for {@link context}
      * @param {Context} context
      */
     startLogging(context) {
-        this.logMap = {};
-        this.releaseHandlers = [];
+        this._logMap = {};
+        this._logBuffer = [];
+        this._releaseHandlers = [];
+        /**
+         * @param {UseCase} useCase
+         */
         const onWillExecuteEachUseCase = useCase => {
-            const startTimeStamp = performance.now();
-            console.groupCollapsed(useCase.name, startTimeStamp);
-            this.logMap[useCase.name] = startTimeStamp;
-            console.log(`${useCase.name} will execute`);
+            this._logMap[useCase.name] = performance.now();
+            this._logBuffer.push(`${useCase.name} will execute`)
         };
         const onDispatch = payload => {
-            this.logDispatch(payload);
+            this._logDispatch(payload);
         };
         const onChange = (stores) => {
-            this.logOnChange(stores);
+            this._logOnChange(stores);
         };
         const onErrorHandler = (error) => {
-            this.logError(error);
+            this._logError(error);
         };
         const onDidExecuteEachUseCase = useCase => {
-            const startTimeStamp = this.logMap[useCase.name];
-            const takenTime = performance.now() - startTimeStamp;
-            console.log(`${useCase.name} did executed`);
-            console.info("Take time(ms): " + takenTime);
-            console.groupEnd(useCase.name);
+            const timeStamp = this._logMap[useCase.name];
+            const takenTime = performance.now() - timeStamp;
+            this._logBuffer.push(`${useCase.name} did executed`);
+            this._logBuffer.push("Taken time(ms): " + takenTime);
+            this.outputBuffer(`\ud83d\udcbe ${useCase.name}`);
+            this.flushBuffer();
         };
         // release handler
-        this.releaseHandlers = [
+        this._releaseHandlers = [
             context.onChange(onChange),
             context.onWillExecuteEachUseCase(onWillExecuteEachUseCase),
-            context.onDispatch(onDispatch),
             context.onDidExecuteEachUseCase(onDidExecuteEachUseCase),
             context.onErrorDispatch(onErrorHandler)
         ];
     }
 
-    logError(payload) {
-        console.error(payload.error);
+    _logError(payload) {
+        // if has useCase and group by useCase
+        if (payload.useCase) {
+            this._logBuffer.push([
+                payload.useCase.name,
+                payload.error
+            ]);
+        } else {
+            this._logBuffer.push(payload.error);
+        }
     }
 
-    logDispatch(payload) {
-        console.info(`Dispatch:${payload.type}`, payload);
+    _logDispatch(payload) {
+        this._logBuffer.push([
+            `Dispatch:${payload.type}`,
+            payload
+        ]);
     }
 
     /**
      * @param {Store[]} stores
      */
-    logOnChange(stores) {
-        stores.forEach(state => {
-            console.groupCollapsed(`Store:${state.name} is Changed`);
-            console.info(state.getState());
-            console.groupEnd(`Store:${state.name} is Changed`);
+    _logOnChange(stores) {
+        stores.forEach(store => {
+            this._logBuffer.push([
+                `Store:${store.name} is Changed`,
+                store.getState()
+            ]);
         })
+    }
+
+    /**
+     * release event handlers
+     */
+    release() {
+        this._releaseHandlers.forEach(releaseHandler => releaseHandler());
+        this._releaseHandlers.length = 0;
     }
 }

@@ -6,8 +6,7 @@ import UseCase from "./UseCase";
 import UseCaseExecutor  from "./UseCaseExecutor";
 import StoreGroupValidator from "./UILayer/StoreGroupValidator";
 /**
- * The use should use onXXX instead of it
- * @type {{}}
+ * The use should use on* handler method instead of it
  */
 export const ActionTypes = {
     ON_WILL_EXECUTE_EACH_USECASE: "ON_WILL_EXECUTE_EACH_USECASE",
