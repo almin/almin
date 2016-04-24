@@ -44,10 +44,10 @@ describe("UseCase", function () {
                 const expectedType = expectedCallStackOfAUseCase.shift();
                 assert.equal(type, expectedType);
             });
-            dispatcher.onWillExecuteEachUseCase(useCase => {
+            context.onWillExecuteEachUseCase(useCase => {
                 callStack.push(`${useCase.name}:will`);
             });
-            dispatcher.onDidExecuteEachUseCase(useCase => {
+            context.onDidExecuteEachUseCase(useCase => {
                 callStack.push(`${useCase.name}:did`);
             });
             // when

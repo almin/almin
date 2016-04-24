@@ -19,8 +19,9 @@ describe("UseCaseExecutor", function () {
             const callStack = [];
             const expectedCallStack = [1, 2, 3];
             const dispatcher = new Dispatcher();
+            const executor = new UseCaseExecutor(new SyncUseCase(), dispatcher);
             // then
-            dispatcher.onWillExecuteEachUseCase(() => {
+            executor.onWillExecuteEachUseCase(() => {
                 callStack.push(1);
             });
             dispatcher.onDispatch(({type, value}) => {
@@ -28,11 +29,9 @@ describe("UseCaseExecutor", function () {
                     callStack.push(2);
                 }
             });
-            dispatcher.onDidExecuteEachUseCase(() => {
+            executor.onDidExecuteEachUseCase(() => {
                 callStack.push(3);
             });
-            const executor = new UseCaseExecutor(new SyncUseCase(), dispatcher);
-
             // when
             return executor.execute().then(() => {
                 assert.deepEqual(callStack, expectedCallStack);
@@ -88,14 +87,14 @@ describe("UseCaseExecutor", function () {
                         isCalledUseCase = true;
                     }
                 });
-                dispatcher.onDidExecuteEachUseCase(useCase => {
+                // when
+                const executor = new UseCaseExecutor(new AsyncUseCase(), dispatcher);
+                executor.onDidExecuteEachUseCase(useCase => {
                     if (useCase instanceof AsyncUseCase) {
                         assert(isCalledUseCase);
                         done();
                     }
                 });
-                // when
-                const executor = new UseCaseExecutor(new AsyncUseCase(), dispatcher);
                 executor.execute(expectedValue);
             });
         });

@@ -3,7 +3,7 @@
 const assert = require("assert");
 import CoreEventEmitter from "./CoreEventEmitter";
 import UseCaseContext from "./UseCaseContext";
-import {ON_ERROR} from "./Dispatcher";
+import {ActionTypes} from "./Context";
 export default class UseCase extends CoreEventEmitter {
     static isUseCase(v) {
         if (v instanceof UseCase) {
@@ -46,7 +46,7 @@ export default class UseCase extends CoreEventEmitter {
      */
     onError(errorHandler) {
         return this.onDispatch(payload => {
-            if (payload.type === ON_ERROR) {
+            if (payload.type === ActionTypes.ON_ERROR) {
                 errorHandler(payload.error);
             }
         });
@@ -60,7 +60,7 @@ export default class UseCase extends CoreEventEmitter {
      */
     throwError(error) {
         const payload = {
-            type: ON_ERROR,
+            type: ActionTypes.ON_ERROR,
             useCase: this,
             error: error
         };
