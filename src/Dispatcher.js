@@ -1,7 +1,8 @@
 // LICENSE : MIT
 "use strict";
 const assert = require("assert");
-import CoreEventEmitter from "./CoreEventEmitter";
+const EventEmitter = require("events");
+export const ON_DISPATCH = "__ON_DISPATCH__";
 /**
  * payload The payload object that must have `type` property.
  * @typedef {Object} DispatcherPayload
@@ -23,5 +24,50 @@ import CoreEventEmitter from "./CoreEventEmitter";
  * A. It is for optimization and limitation.
  * If apply emit style, we cast ...args for passing other dispatcher at every time.
  */
-export default class Dispatcher extends CoreEventEmitter {
+export default class Dispatcher extends EventEmitter {
+    static isDispatcher(v) {
+        if (v instanceof Dispatcher) {
+            return true;
+        } else if (typeof v === "object" && typeof v.onDispatch === "function" && typeof v.dispatch === "function") {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * add onAction handler and return unbind function
+     * @param {Function} payloadHandler
+     * @returns {Function} return unbind function
+     */
+    onDispatch(payloadHandler) {
+        this.on(ON_DISPATCH, payloadHandler);
+        return this.removeListener.bind(this, ON_DISPATCH, payloadHandler);
+    }
+
+    /**
+     * dispatch action object.
+     * StoreGroups receive this action and reduce state.
+     * @param {DispatcherPayload} payload
+     */
+    dispatch(payload) {
+        assert(payload !== undefined && payload !== null, "payload should not null or undefined");
+        assert(typeof payload.type === "string", "payload's type should be string");
+        this.emit(ON_DISPATCH, payload);
+    }
+
+    /**
+     * delegate payload object to EventEmitter.
+     * @param {CoreEventEmitter} toEventEmitter
+     * @returns {Function} un register function
+     */
+    pipe(toEventEmitter) {
+        const fromName = this.constructor.name;
+        const toName = toEventEmitter.constructor.name;
+        const displayName = `delegate-payload:${fromName}-to-${toName}`;
+        const delegatePayload = function delegatePayload(payload) {
+            delegatePayload.displayName = displayName;
+            toEventEmitter.dispatch(payload);
+        };
+        return this.onDispatch(delegatePayload);
+    }
 }

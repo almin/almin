@@ -1,7 +1,7 @@
 // LICENSE : MIT
 "use strict";
 const assert = require("assert");
-import CoreEventEmitter from "./CoreEventEmitter";
+import Dispatcher from "./Dispatcher";
 import UseCase from "./UseCase";
 const STATE_CHANGE_EVENT = "STATE_CHANGE_EVENT";
 /**
@@ -22,7 +22,7 @@ const STATE_CHANGE_EVENT = "STATE_CHANGE_EVENT";
  *
  */
 
-export default class Store extends CoreEventEmitter {
+export default class Store extends Dispatcher {
     static isStore(v) {
         if (v instanceof Store) {
             return true;
