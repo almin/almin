@@ -59,21 +59,7 @@ export default class Dispatcher extends CoreEventEmitter {
     onError() {
         throw new Error("rename to onErrorDispatch");
     }
-
-    /**
-     * add onAction handler and return unbind function
-     * @param {Function} payloadHandler
-     * @returns {Function} return unbind function
-     * @override
-     */
-    onDispatch(payloadHandler) {
-        return super.onDispatch(payload => {
-            if (payload.type !== ON_WILL_EXECUTE_EACH_USECASE || payload.type !== ON_DID_EXECUTE_EACH_USECASE) {
-                payloadHandler(payload);
-            }
-        });
-    }
-
+    
     /**
      * called the {@link errorHandler} with error when error is occurred.
      * @param {function(error: Error)} errorHandler
