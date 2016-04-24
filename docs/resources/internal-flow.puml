@@ -1,0 +1,28 @@
+@startuml
+!include "./plantuml.skin"
+
+Context -- Store
+Context -- Dispatcher
+Context -- UseCaseExecutor
+
+' UseCase
+UseCase <- UseCaseExecutor: invoke
+UseCase --|> UseCaseExecutor: error
+UseCase --|> UseCaseExecutor: will
+UseCase --|> UseCaseExecutor: execute
+UseCase --|> UseCaseExecutor: did
+UseCaseExecutor ---|> Dispatcher: error
+UseCaseExecutor ---|> Dispatcher: will
+UseCaseExecutor ---|> Dispatcher: execute
+UseCaseExecutor ---|> Dispatcher: did
+
+
+' Store
+Dispatcher --|> Store: error
+Dispatcher --|> Store: dispatch
+
+' User Land
+UseCase --|> Repository: Save
+Repository -[#0000FF]-> Store: emit Change
+
+@enduml

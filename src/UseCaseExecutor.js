@@ -1,14 +1,15 @@
 // LICENSE : MIT
 "use strict";
 const assert = require("assert");
+import {ActionTypes} from "./Context";
 import Dispatcher from "./Dispatcher";
 import UseCase from "./UseCase";
 export default class UseCaseExecutor {
     /**
      * @param {UseCase} useCase
-     * @param {Dispatcher} dispatcher
+     * @param {Dispatcher|UseCase} parentDispatcher is parent dispatcher-like object
      */
-    constructor(useCase, dispatcher) {
+    constructor(useCase, parentDispatcher) {
         // execute and finish =>
         const useCaseName = useCase.constructor.name;
         assert(typeof useCaseName !== "undefined" && typeof useCaseName === "string", "UseCase instance should have constructor.name " + useCase);
@@ -24,7 +25,7 @@ export default class UseCaseExecutor {
         /**
          * @type {Dispatcher}
          */
-        this.dispatcher = dispatcher;
+        this.parentDispatcher = parentDispatcher;
         /**
          * callable release handlers that are called in release()
          * @type {Function[]}
@@ -32,26 +33,60 @@ export default class UseCaseExecutor {
          */
         this._releaseHandlers = [];
         // delegate userCase#onDispatch to central dispatcher
-        const unListenHandler = this.useCase.pipe(this.dispatcher);
+        const unListenHandler = this.useCase.pipe(this.parentDispatcher);
         this._releaseHandlers.push(unListenHandler);
     }
 
     /**
-     * @param {*[]} args arguments of the usecase
+     * @param {*[]} [args] arguments of the usecase
      */
     willExecute(args) {
         // emit event for System
-        this.dispatcher.dispatchWillExecuteUseCase(this.useCase, args);
+        this.parentDispatcher.dispatch({
+            type: ActionTypes.ON_WILL_EXECUTE_EACH_USECASE,
+            useCase: this.useCase,
+            args
+        });
     }
 
     /**
      *
      */
-    didExecute(result) {
-        // emit event for Store
-        this.dispatcher.dispatchDidExecuteUseCase(this.useCase);
+    didExecute() {
+        this.parentDispatcher.dispatch({
+            type: ActionTypes.ON_DID_EXECUTE_EACH_USECASE,
+            useCase: this.useCase
+        });
     }
-    
+
+    /**
+     * called the {@link handler} with useCase when the useCase will do.
+     * @param {function(useCase: UseCase, args: *)} handler
+     */
+    onWillExecuteEachUseCase(handler) {
+        const releaseHandler = this.parentDispatcher.onDispatch(function onWillExecuteEachUseCaseInUseCaseExecutor(payload) {
+            if (payload.type === ActionTypes.ON_WILL_EXECUTE_EACH_USECASE) {
+                handler(payload.useCase, payload.args);
+            }
+        });
+        this._releaseHandlers.push(releaseHandler);
+        return releaseHandler;
+    }
+
+    /**
+     * called the {@link handler} with useCase when the useCase is done.
+     * @param {function(useCase: UseCase)} handler
+     */
+    onDidExecuteEachUseCase(handler) {
+        const releaseHandler = this.parentDispatcher.onDispatch(function onDidExecuteEachUseCaseInUseCaseExecutor(payload){
+            if (payload.type === ActionTypes.ON_DID_EXECUTE_EACH_USECASE) {
+                handler(payload.useCase);
+            }
+        });
+        this._releaseHandlers.push(releaseHandler);
+        return releaseHandler;
+    }
+
     /**
      * execute UseCase instance.
      * UseCase is a executable object. it means that has `execute` method.
