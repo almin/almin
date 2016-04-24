@@ -36,12 +36,12 @@ export default class ContextLogger {
         };
         // release handler
         this.releaseHandlers = [
-            context._dispatcher.onWillExecuteEachUseCase(onWillExecuteEachUseCase),
-            context._dispatcher.onDispatch(onDispatch),
             context.onChange(onChange),
-            context._dispatcher.onDidExecuteEachUseCase(onDidExecuteEachUseCase),
-            context._dispatcher.onErrorDispatch(onErrorHandler)
-        ]
+            context.onWillExecuteEachUseCase(onWillExecuteEachUseCase),
+            context.onDispatch(onDispatch),
+            context.onDidExecuteEachUseCase(onDidExecuteEachUseCase),
+            context.onErrorDispatch(onErrorHandler)
+        ];
     }
 
     logError(payload) {

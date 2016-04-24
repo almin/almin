@@ -18,6 +18,11 @@ class TestStore extends Store {
     }
 }
 
+class TestUseCase extends UseCase {
+    execute() {
+
+    }
+}
 class ThrowUseCase extends UseCase {
     execute() {
         this.dispatch({
@@ -45,7 +50,7 @@ describe("Context", function () {
                 constructor() {
                     super();
                     this.onDispatch(payload => {
-                        if(payload.type === DISPATCHED_EVENT.type) {
+                        if (payload.type === DISPATCHED_EVENT.type) {
                             assert.deepEqual(payload, DISPATCHED_EVENT);
                             done();
                         }
@@ -108,6 +113,90 @@ describe("Context", function () {
             // multiple change event at same time.
             aStore.emitChange();
             bStore.emitChange();
+        });
+    });
+    describe("#onWillExecuteEachUseCase", function () {
+        it("should called before UseCase will execute", function (done) {
+            const dispatcher = new Dispatcher();
+            const appContext = new Context({
+                dispatcher,
+                store: new Store()
+            });
+            const testUseCase = new TestUseCase();
+            // then
+            appContext.onWillExecuteEachUseCase(useCase => {
+                assert.equal(useCase, testUseCase);
+                done();
+            });
+            // when
+            appContext.useCase(testUseCase).execute();
+        });
+    });
+    describe("#onDispatch", function () {
+        it("should called the other of built-in event", function (done) {
+            const dispatcher = new Dispatcher();
+            const appContext = new Context({
+                dispatcher,
+                store: new Store()
+            });
+            const expectedPayload = {
+                type: "event"
+            };
+            class EventUseCase extends UseCase {
+                execute() {
+                    this.dispatch(expectedPayload);
+                }
+            }
+            const eventUseCase = new EventUseCase();
+            // then
+            appContext.onWillExecuteEachUseCase(useCase => {
+                assert.equal(useCase, eventUseCase);
+            });
+            // onDispatch should not called when UseCase will/did execute.
+            appContext.onDispatch(payload => {
+                assert.equal(payload, expectedPayload);
+            });
+            appContext.onDidExecuteEachUseCase(useCase => {
+                assert.equal(useCase, eventUseCase);
+                done();
+            });
+            // when
+            appContext.useCase(eventUseCase).execute();
+        });
+    });
+    describe("#onDidExecuteEachUseCase", function () {
+        it("should called after UseCase did execute", function (done) {
+            const dispatcher = new Dispatcher();
+            const appContext = new Context({
+                dispatcher,
+                store: new Store()
+            });
+            const testUseCase = new TestUseCase();
+            // then
+            appContext.onDidExecuteEachUseCase(useCase => {
+                assert.equal(useCase, testUseCase);
+                done();
+            });
+            // when
+            appContext.useCase(testUseCase).execute();
+        });
+    });
+    describe("#onError", function () {
+        it("should called after UseCase did execute", function (done) {
+            const dispatcher = new Dispatcher();
+            const appContext = new Context({
+                dispatcher,
+                store: new Store()
+            });
+            const throwUseCase = new ThrowUseCase();
+            // then
+            appContext.onErrorDispatch(payload => {
+                assert(payload.error instanceof Error);
+                assert.equal(payload.useCase, throwUseCase);
+                done();
+            });
+            // when
+            appContext.useCase(throwUseCase).execute();
         });
     });
     describe("#useCase", function () {

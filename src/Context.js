@@ -94,8 +94,8 @@ export default class Context {
         const releaseHandler = this._dispatcher.onDispatch(payload => {
             // call handler, if payload's type is not built-in event.
             // It means that `onDispatch` is called when dispatching user event.
-            if (ActionTypes[payload.type] !== undefined) {
-                handler(payload.useCase);
+            if (ActionTypes[payload.type] === undefined) {
+                handler(payload);
             }
         });
         this._releaseHandlers.push(releaseHandler);
