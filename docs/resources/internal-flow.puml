@@ -1,9 +1,6 @@
 @startuml
 !include "./plantuml.skin"
 
-' Logger
-Logger --> Context
-
 Context -- Store
 Context -- Dispatcher
 Context -- UseCaseExecutor
@@ -27,6 +24,5 @@ Dispatcher --|> Store: dispatch
 ' User Land
 UseCase --|> Repository: Save
 Repository -[#0000FF]-> Store: emit Change
-
 
 @enduml
