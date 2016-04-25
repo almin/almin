@@ -1,4 +1,3 @@
-// LICENSE : MIT
 "use strict";
 const EventEmitter = require("events");
 const REPOSITORY_CHANGE = "REPOSITORY_CHANGE";

@@ -1,4 +1,3 @@
-// LICENSE : MIT
 "use strict";
 const uuid = require('uuid');
 const assert = require("assert");

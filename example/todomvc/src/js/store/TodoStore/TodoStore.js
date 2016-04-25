@@ -1,4 +1,3 @@
-// LICENSE : MIT
 "use strict";
 import {Store} from "almin";
 import TodoState from "./TodoState";

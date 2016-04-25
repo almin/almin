@@ -1,4 +1,3 @@
-// LICENSE : MIT
 "use strict";
 const assert = require("assert");
 /*
