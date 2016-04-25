@@ -36,6 +36,3 @@ export default class App extends React.Component {
         </div>;
     }
 }
-App.propTypes = {
-    documentStateStore: React.PropTypes.any
-};

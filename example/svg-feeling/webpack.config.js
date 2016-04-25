@@ -10,6 +10,11 @@ module.exports = {
         path: path.join(__dirname, "public", "build"),
         filename: "bundle.js"
     },
+    plugins: [
+        new webpack.DefinePlugin({
+            'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+        })
+    ],
     module: {
         loaders: [
             {test: /\.json$/, loader: "json"},

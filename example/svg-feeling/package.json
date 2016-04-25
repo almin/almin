@@ -26,7 +26,7 @@
     "build:js": "NODE_ENV=production webpack -p",
     "build:css": "postcss --config postcss.config.js",
     "build": "npm-run-all clean --parallel build:*",
-    "watch:js": "webpack -D --watch",
+    "watch:js": "NODE_ENV=development webpack -D --watch",
     "watch:css": "chokidar --initial 'src/**/*.css' -c 'postcss --config postcss.config.js'",
     "watch": "npm-run-all clean --parallel watch:*",
     "prepublish": "npm run --if-present build",
@@ -36,6 +36,7 @@
     "svg"
   ],
   "devDependencies": {
+    "almin-logger": "^1.0.5",
     "autoprefixer": "^6.3.6",
     "babel-loader": "^6.2.4",
     "babel-plugin-transform-runtime": "^6.7.5",
