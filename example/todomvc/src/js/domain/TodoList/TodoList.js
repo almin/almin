@@ -6,6 +6,10 @@ import TodoItem from "./TodoItem";
 export default class TodoList {
     constructor() {
         this.id = uuid.v1();
+        /**
+         * @type {TodoItem[]}
+         * @private
+         */
         this._items = [];
     }
 
@@ -41,6 +45,7 @@ export default class TodoList {
     }
 
     /**
+     * update item with updated object.
      * @param {Object} updated
      * @returns {TodoItem}
      */
@@ -55,15 +60,18 @@ export default class TodoList {
     }
 
     /**
-     * @param {{title:string}} title
+     * @param {title} title
      * @return {TodoList}
      */
-    addItem({title}) {
+    addItem(title) {
         const todoItem = new TodoItem({title});
         this._items.push(todoItem);
         return todoItem;
     }
 
+    /**
+     * toggle status of all items
+     */
     toggleCompleteAll() {
         this.getAllTodoItems().forEach(item => {
             return this.toggleComplete(item.id);
@@ -71,6 +79,7 @@ export default class TodoList {
     }
 
     /**
+     * toggle status of the item
      * @param {string} id
      * @returns {TodoItem|undefined}
      */
@@ -81,6 +90,11 @@ export default class TodoList {
         return item;
     }
 
+    /**
+     * remove item
+     * @param {string} id
+     * @returns {TodoItem|undefined}
+     */
     removeItem(id) {
         const item = this.getItem(id);
         const index = this._items.indexOf(item);
@@ -88,6 +102,9 @@ export default class TodoList {
         return item;
     }
 
+    /**
+     * remove all completed items
+     */
     removeAllCompletedItems() {
         this.getAllTodoItems()
             .filter(item => item.completed)

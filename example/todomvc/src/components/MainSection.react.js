@@ -7,13 +7,13 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-var React = require('react');
-var ReactPropTypes = React.PropTypes;
+const React = require('react');
+const ReactPropTypes = React.PropTypes;
 import AppLocator from "../AppLocator";
 import {ToggleCompleteAllTodoItemFactory} from "../js/usecase/ToggleCompleteAll";
-var TodoItem = require('./TodoItem.react');
+const TodoItem = require('./TodoItem.react');
 
-var MainSection = React.createClass({
+const MainSection = React.createClass({
 
     propTypes: {
         allTodos: ReactPropTypes.array.isRequired,
@@ -30,8 +30,8 @@ var MainSection = React.createClass({
             return null;
         }
 
-        var allTodos = this.props.allTodos;
-        var todos = allTodos.map(todo => {
+        const allTodos = this.props.allTodos;
+        const todos = allTodos.map(todo => {
             return <TodoItem key={todo.id} todo={todo}/>;
         });
 

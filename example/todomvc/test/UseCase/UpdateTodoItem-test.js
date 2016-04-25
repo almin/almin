@@ -8,7 +8,7 @@ import {UpdateTodoItemTitleUseCase} from "../../src/js/UseCase/UpdateTodoItemTit
 describe("UpdateTodoItem", function () {
     it("should add TodoItem with title", function (done) {
         const mockTodoList = new TodoList();
-        const existingTodoItem = mockTodoList.addItem({title: "before "});
+        const existingTodoItem = mockTodoList.addItem("before ");
         // prepare
         const todoListRepository = new TodoListRepository(new MemoryDB());
         todoListRepository.save(mockTodoList);

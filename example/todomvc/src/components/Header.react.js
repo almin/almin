@@ -7,12 +7,12 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-var React = require('react');
+const React = require('react');
 import AppLocator from "../AppLocator";
 import {AddTodoItemFactory} from "../js/usecase/AddTodoItem";
-var TodoTextInput = require('./TodoTextInput.react');
+import TodoTextInput from "./TodoTextInput.react";
 
-var Header = React.createClass({
+const Header = React.createClass({
 
     /**
      * @return {object}

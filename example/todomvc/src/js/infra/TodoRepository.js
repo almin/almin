@@ -2,7 +2,6 @@
 "use strict";
 const EventEmitter = require("events");
 const REPOSITORY_CHANGE = "REPOSITORY_CHANGE";
-import TodoListFactory from "../domain/TodoList/TodoListFactory";
 import TodoList from "../domain/TodoList/TodoList";
 import MemoryDB from "./adpter/MemoryDB";
 const shallowClone = (todoList) => {

@@ -7,12 +7,10 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-var React = require('react');
-var ReactPropTypes = React.PropTypes;
-
-var ENTER_KEY_CODE = 13;
-
-var TodoTextInput = React.createClass({
+const React = require('react');
+const ReactPropTypes = React.PropTypes;
+const ENTER_KEY_CODE = 13;
+const TodoTextInput = React.createClass({
 
   propTypes: {
     className: ReactPropTypes.string,

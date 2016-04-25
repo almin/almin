@@ -7,17 +7,16 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-var React = require('react');
-var ReactPropTypes = React.PropTypes;
+const React = require('react');
+const ReactPropTypes = React.PropTypes;
+const classNames = require('classnames');
 import AppLocator from "../AppLocator";
 import {UpdateTodoItemTitleFactory} from "../js/usecase/UpdateTodoItemTitle";
 import {ToggleCompleteTodoItemFactory} from "../js/usecase/ToggleCompleteTodoItem";
 import {RemoveTodoItemFactory} from "../js/usecase/RemoveTodoItem";
-var TodoTextInput = require('./TodoTextInput.react');
+import TodoTextInput from "./TodoTextInput.react";
 
-var classNames = require('classnames');
-
-var TodoItem = React.createClass({
+const TodoItem = React.createClass({
 
     propTypes: {
         todo: ReactPropTypes.object.isRequired
@@ -40,9 +39,9 @@ var TodoItem = React.createClass({
      * @return {object}
      */
     render: function () {
-        var todo = this.props.todo;
+        const todo = this.props.todo;
 
-        var input;
+        let input;
         if (this.state.isEditing) {
             input =
                 <TodoTextInput

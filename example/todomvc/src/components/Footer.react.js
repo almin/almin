@@ -7,14 +7,14 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-var React = require('react');
-var ReactPropTypes = React.PropTypes;
+const React = require('react');
+const ReactPropTypes = React.PropTypes;
 const classNames = require("classnames");
 import AppLocator from "../AppLocator";
 import {RemoveTodoItemFactory} from "../js/usecase/RemoveAllCompletedItems";
 import {FilterTodoListFactory} from "../js/usecase/FilterTodoList";
 import {FilterTypes} from "../js/store/TodoStore/TodoState";
-var Footer = React.createClass({
+const Footer = React.createClass({
     propTypes: {
         allTodos: ReactPropTypes.array.isRequired
     },
@@ -23,23 +23,23 @@ var Footer = React.createClass({
      * @return {object}
      */
     render: function () {
-        var allTodos = this.props.allTodos;
-        var filterType = this.props.filterType;
-        var total = allTodos.length;
+        const allTodos = this.props.allTodos;
+        const filterType = this.props.filterType;
+        const total = allTodos.length;
         if (total === 0) {
             return null;
         }
 
-        var completed = allTodos.reduce((total, item) => {
+        const completed = allTodos.reduce((total, item) => {
             return total + (item.completed ? 1 : 0);
         }, 0);
 
-        var itemsLeft = total - completed;
-        var itemsLeftPhrase = itemsLeft === 1 ? ' item ' : ' items ';
+        const itemsLeft = total - completed;
+        let itemsLeftPhrase = itemsLeft === 1 ? ' item ' : ' items ';
         itemsLeftPhrase += 'left';
 
         // Undefined and thus not rendered if no completed items are left.
-        var clearCompletedButton;
+        let clearCompletedButton;
         if (completed) {
             clearCompletedButton =
                 <button

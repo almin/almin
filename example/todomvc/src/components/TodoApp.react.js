@@ -12,11 +12,11 @@
  * the TodoStore and passes the new data to its children.
  */
 
-var Footer = require('./Footer.react');
-var Header = require('./Header.react');
-var MainSection = require('./MainSection.react');
-var React = require('react');
-var TodoApp = React.createClass({
+const React = require('react');
+import Footer from "./Footer.react";
+import Header from "./Header.react";
+import MainSection from "./MainSection.react";
+const TodoApp = React.createClass({
 
     getInitialState: function () {
         const appContext = this.props.appContext;
@@ -34,9 +34,6 @@ var TodoApp = React.createClass({
         this.releaseChange();
     },
 
-    /**
-     * @return {object}
-     */
     render: function () {
         const TodoState = this.state.TodoState;
         return (

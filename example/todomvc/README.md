@@ -1,54 +1,36 @@
-# shopping-cart
-
-Original example from:
-
-- [voronianski/flux-comparison: Practical comparison of different Flux solutions](https://github.com/voronianski/flux-comparison "voronianski/flux-comparison: Practical comparison of different Flux solutions")
-
-## Usage
-
-    npm install
-    npm run build
-    open index.html
+# TodoMVC
 
 ## What's learn from this
 
-shopping-cart example explain the reason we encourage you to normalize your data is to avoid duplication.
+TodoMVC is popular example for MV* library.
 
-- How to test UseCase and Store/State.
-- How to set initial data.
-    - See [example/shopping-cart/src/usecase/Initial](example/shopping-cart/src/usecase/Initial)
+We've created Todo app with almin.js.
+
+- [ ] Tutorial Link
 
 ### Domain Layer
 
-- Cart
-    - `Cart` is shopping cart
-- Product
-    - `Product` is catalog of product.
-    - It has `inventory` level.
-    - The Customer can pick up a `ProductItem` and add the item to the own `Cart`. 
-- Customer
-    - `Customer` is abstraction of user.
-    - This example tread a single `AnonymousCustomer`. It means that exist one Customer in the global. 
+- TodoList
+    - `TodoList` is a collection of TodoItem
 
 #### Value Object
 
-- `ProductItem`
-    - `ProductItem` is a item object.
+- TodoItem
+    - `TodoItem` is a value object for todo item.
 
 ### Store
 
-shopping-cart example has three stores:
+- TodoStore
+    - TodoStore merge with `TodoList`
+    - TodoStore has state for filtering
 
-- CartStore
-    - Display Cart information
-    - Total price
-    - Count of items in the cart
-- ProductStore
-    - Display Window for product
-- CustomerStore
-    - current customer 
+## License
 
-### AppLocator
+BSD
 
-- `Customer` always is a single. So, AppLocator have global `customer` property.
-    - It is easy to use `customer`.
+## Credit
+   
+This TodoMVC's component was created by [Bill Fisher](https://www.facebook.com/bill.fisher.771).
+
+- [TodoMVC](http://todomvc.com/)
+- [flux/examples/flux-todomvc at master · facebook/flux](https://github.com/facebook/flux/tree/master/examples/flux-todomvc)
