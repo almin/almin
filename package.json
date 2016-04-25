@@ -15,7 +15,7 @@
   "bugs": {
     "url": "https://github.com/azu/almin/issues"
   },
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Flux, DDD and CQRS like architecture library.",
   "main": "lib/index.js",
   "directories": {
