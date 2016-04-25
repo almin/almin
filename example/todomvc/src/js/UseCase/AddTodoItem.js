@@ -1,4 +1,3 @@
-// LICENSE : MIT
 "use strict";
 import {UseCase} from "almin";
 import todoListRepository, {TodoListRepository} from "../infra/TodoRepository"
@@ -21,7 +20,7 @@ export class AddTodoItemUseCase extends UseCase {
 
     execute(title) {
         const todoList = this.todoListRepository.lastUsed();
-        todoList.addItem({title});
+        todoList.addItem(title);
         this.todoListRepository.save(todoList);
     }
 }
