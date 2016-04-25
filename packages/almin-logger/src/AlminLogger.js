@@ -1,6 +1,7 @@
 // LICENSE : MIT
 "use strict";
 const EventEmitter = require("events");
+// performance.now polyfill
 import now from "./performance-now";
 const DefaultOptions = {
     console: console
