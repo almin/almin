@@ -4,7 +4,7 @@ const assert = require("power-assert");
 import {MemoryDB} from "../../src/js/infra/adpter/MemoryDB";
 import TodoList from "../../src/js/domain/TodoList/TodoList";
 import {TodoListRepository} from "../../src/js/infra/TodoRepository";
-import {RemoveTodoItemUseCase} from "../../src/js/UseCase/RemoveTodoItem";
+import {RemoveTodoItemUseCase} from "../../src/js/usecase/RemoveTodoItem";
 describe("RemoveTodoItemUseCase", function () {
     it("should add TodoItem with title", function (done) {
         const mockTodoList = new TodoList();
