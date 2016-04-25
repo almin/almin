@@ -3,7 +3,7 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import TodoApp from './components/TodoApp.react';
-import AppContextLocator from "./AppContextLocator";
+import AppLocator from "./AppLocator";
 // store
 import AppStoreGroup from "./js/store/AppStoreGroup";
 // context
@@ -12,16 +12,15 @@ import {Dispatcher} from "almin";
 import AlminLogger from "almin-logger";
 // instances
 const dispatcher = new Dispatcher();
-const appStoreGroup = new AppStoreGroup();
 // context connect dispatch with stores
 const appContext = new Context({
     dispatcher,
-    store: appStoreGroup
+    store: AppStoreGroup.create()
 });
 // start logger
 const logger = new AlminLogger();
 logger.startLogging(appContext);
 // Singleton
-AppContextLocator.context = appContext;
+AppLocator.context = appContext;
 // entry point
 ReactDOM.render(<TodoApp appContext={appContext}/>, document.getElementById("todoapp"));

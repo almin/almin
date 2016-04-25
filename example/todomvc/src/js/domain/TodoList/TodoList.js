@@ -1,6 +1,7 @@
 // LICENSE : MIT
 "use strict";
 const uuid = require('uuid');
+const assert = require("assert");
 import TodoItem from "./TodoItem";
 export default class TodoList {
     constructor() {
@@ -30,6 +31,7 @@ export default class TodoList {
      * @returns {TodoItem|undefined}
      */
     getItem(id) {
+        assert(id, "need id");
         const items = this._items.filter(item => {
             return item.id === id;
         });
@@ -46,8 +48,10 @@ export default class TodoList {
         assert(updated.id !== undefined, "should have {id}");
         const item = this.getItem(updated.id);
         const newItem = item.updateItem(updated);
-        this._items[this._items.indexOf(item)] = newItem;
-        return this;
+        const index = this._items.indexOf(item);
+        assert(index !== -1, "item should contained list");
+        this._items[index] = newItem;
+        return item;
     }
 
     /**
@@ -66,6 +70,10 @@ export default class TodoList {
         });
     }
 
+    /**
+     * @param {string} id
+     * @returns {TodoItem|undefined}
+     */
     toggleComplete(id) {
         const item = this.getItem(id);
         item.completed = !item.completed;

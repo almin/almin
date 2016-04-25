@@ -9,9 +9,9 @@
 
 var React = require('react');
 var ReactPropTypes = React.PropTypes;
-var TodoActions = require('../actions/TodoActions');
 import AppLocator from "../AppLocator";
 import {UpdateTodoItemTitleFactory} from "../js/usecase/UpdateTodoItemTitle";
+import {ToggleCompleteTodoItemFactory} from "../js/usecase/ToggleCompleteTodoItem";
 import {RemoveTodoItemFactory} from "../js/usecase/RemoveTodoItem";
 var TodoTextInput = require('./TodoTextInput.react');
 
@@ -25,10 +25,17 @@ var TodoItem = React.createClass({
 
     getInitialState: function () {
         return {
-            isEditing: false
+            isEditing: false,
+            completed: false
         };
     },
 
+    componentWillReceiveProps(nextPros, nextState){
+        const todo = nextPros.todo;
+        this.setState({
+            completed: todo.completed
+        })
+    },
     /**
      * @return {object}
      */
@@ -41,7 +48,7 @@ var TodoItem = React.createClass({
                 <TodoTextInput
                     className="edit"
                     onSave={this._onSave}
-                    value={todo.text}
+                    value={todo.title}
                 />;
         }
 
@@ -53,7 +60,7 @@ var TodoItem = React.createClass({
         return (
             <li
                 className={classNames({
-          'completed': todo.complete,
+          'completed': todo.completed,
           'editing': this.state.isEditing
         })}
                 key={todo.id}>
@@ -61,11 +68,11 @@ var TodoItem = React.createClass({
                     <input
                         className="toggle"
                         type="checkbox"
-                        checked={todo.complete}
+                        checked={this.state.completed}
                         onChange={this._onToggleComplete}
                     />
                     <label onDoubleClick={this._onDoubleClick}>
-                        {todo.text}
+                        {todo.title}
                     </label>
                     <button className="destroy" onClick={this._onDestroyClick}/>
                 </div>
@@ -75,7 +82,7 @@ var TodoItem = React.createClass({
     },
 
     _onToggleComplete: function () {
-        TodoActions.toggleComplete(this.props.todo);
+        AppLocator.context.useCase(ToggleCompleteTodoItemFactory.create()).execute(this.props.todo.id);
     },
 
     _onDoubleClick: function () {
@@ -86,12 +93,12 @@ var TodoItem = React.createClass({
      * Event handler called within TodoTextInput.
      * Defining this here allows TodoTextInput to be used in multiple places
      * in different ways.
-     * @param  {string} text
+     * @param  {string} title
      */
-    _onSave: function (text) {
+    _onSave: function (title) {
         AppLocator.context.useCase(UpdateTodoItemTitleFactory.create()).execute({
             id: this.props.todo.id,
-            text
+            title
         });
         this.setState({isEditing: false});
     },

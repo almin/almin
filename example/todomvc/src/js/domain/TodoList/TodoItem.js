@@ -14,19 +14,17 @@ const uuid = require('uuid');
 export default class TodoItem {
     constructor({
         id,
-        completed,
         order,
         title,
-        url,
+        completed,
     }) {
-        this.id = id || uuid.v1();
+        this.id = id || uuid();
         this.title = title;
         this.order = order;
-        this.url = url;
         this.completed = completed;
     }
 
     updateItem(updated) {
-        return new TodoItem(Object.assign({}, this, updated));
+        return new TodoItem(Object.assign(this, updated));
     }
 }

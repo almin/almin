@@ -20,12 +20,10 @@ export class TodoListRepository extends EventEmitter {
     }
 
     /**
-     * データを取り出し、複製したモデルを返す
      * @param id
      * @private
      */
     _get(id) {
-        // 本当はコンテキストを先頭に
         // Domain.<id>
         return shallowClone(this._database.get(`${TodoList.name}.${id}`));
     }
@@ -39,6 +37,9 @@ export class TodoListRepository extends EventEmitter {
      */
     lastUsed() {
         const todoList = this._database.get(`${TodoList.name}.lastUsed`);
+        if (!todoList) {
+            return new TodoList();
+        }
         return this._get(todoList.id);
     }
 
@@ -59,7 +60,7 @@ export class TodoListRepository extends EventEmitter {
         this.emit(REPOSITORY_CHANGE);
     }
 
-    onChange(handler){
+    onChange(handler) {
         this.on(REPOSITORY_CHANGE, handler);
     }
 }

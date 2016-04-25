@@ -3,7 +3,6 @@
 import todoListRepository, {TodoListRepository} from "../infra/TodoRepository"
 export class UpdateTodoItemTitleFactory {
     static create() {
-        const todoBackendServer = new TodoBackendServer();
         return new UpdateTodoItemTitleUseCase({
             todoListRepository
         });

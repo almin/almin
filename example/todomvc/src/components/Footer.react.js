@@ -14,7 +14,7 @@ import {RemoveTodoItemFactory} from "../js/usecase/RemoveAllCompletedItems";
 var Footer = React.createClass({
 
     propTypes: {
-        allTodos: ReactPropTypes.object.isRequired
+        allTodos: ReactPropTypes.array.isRequired
     },
 
     /**

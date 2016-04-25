@@ -16,7 +16,7 @@ var TodoItem = require('./TodoItem.react');
 var MainSection = React.createClass({
 
     propTypes: {
-        allTodos: ReactPropTypes.object.isRequired,
+        allTodos: ReactPropTypes.array.isRequired,
         areAllComplete: ReactPropTypes.bool.isRequired
     },
 
@@ -26,16 +26,14 @@ var MainSection = React.createClass({
     render: function () {
         // This section should be hidden by default
         // and shown when there are todos.
-        if (Object.keys(this.props.allTodos).length < 1) {
+        if (this.props.allTodos.length < 1) {
             return null;
         }
 
         var allTodos = this.props.allTodos;
-        var todos = [];
-
-        for (var key in allTodos) {
-            todos.push(<TodoItem key={key} todo={allTodos[key]}/>);
-        }
+        var todos = allTodos.map(todo => {
+            return <TodoItem key={todo.id} todo={todo}/>;
+        });
 
         return (
             <section id="main">

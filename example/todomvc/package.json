@@ -17,6 +17,8 @@
   "license": "MIT",
   "dependencies": {
     "almin": "file:../../",
+    "almin-logger": "^1.0.5",
+    "classnames": "^2.2.3",
     "react": "^15.0.1",
     "react-dom": "^15.0.1",
     "uuid": "^2.0.2"

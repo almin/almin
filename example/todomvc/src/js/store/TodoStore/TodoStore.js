@@ -4,6 +4,7 @@ import {Store} from "almin";
 import TodoState from "./TodoState";
 export default class TodoStore extends Store {
     constructor({todoRepository}) {
+        super();
         this.state = new TodoState();
         todoRepository.onChange(() => {
             const todoList = todoRepository.lastUsed();
