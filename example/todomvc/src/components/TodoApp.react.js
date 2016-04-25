@@ -35,16 +35,16 @@ const TodoApp = React.createClass({
     },
 
     render: function () {
-        const TodoState = this.state.TodoState;
+        const todoState = this.state.todoState;
         return (
             <div>
                 <Header />
                 <MainSection
-                    allTodos={TodoState.displayItems}
-                    areAllComplete={TodoState.areAllComplete}
+                    allTodos={todoState.displayItems}
+                    areAllComplete={todoState.areAllComplete}
                 />
-                <Footer allTodos={TodoState.items}
-                        filterType={TodoState.filterType}/>
+                <Footer allTodos={todoState.items}
+                        filterType={todoState.filterType}/>
             </div>
         );
     }

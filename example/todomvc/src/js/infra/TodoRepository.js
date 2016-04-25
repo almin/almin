@@ -3,10 +3,6 @@ const EventEmitter = require("events");
 const REPOSITORY_CHANGE = "REPOSITORY_CHANGE";
 import TodoList from "../domain/TodoList/TodoList";
 import MemoryDB from "./adpter/MemoryDB";
-const shallowClone = (todoList) => {
-    const cloneObject = JSON.parse(JSON.stringify(todoList));
-    return TodoListFactory.create(cloneObject);
-};
 // Collection repository
 export class TodoListRepository extends EventEmitter {
     constructor(database) {
@@ -23,7 +19,7 @@ export class TodoListRepository extends EventEmitter {
      */
     _get(id) {
         // Domain.<id>
-        return shallowClone(this._database.get(`${TodoList.name}.${id}`));
+        return this._database.get(`${TodoList.name}.${id}`);
     }
 
     find(todoList) {

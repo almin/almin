@@ -1,16 +1,15 @@
-// LICENSE : MIT
 "use strict";
 import {UseCase} from "almin";
 import todoListRepository, {TodoListRepository} from "../infra/TodoRepository"
-export class ToggleCompleteTodoItemFactory {
+export class ToggleAllTodoItemFactory {
     static create() {
-        return new ToggleCompleteTodoItemUseCase({
+        return new ToggleAllTodoItemUseCase({
             todoListRepository
         });
     }
 }
 
-export class ToggleCompleteTodoItemUseCase extends UseCase {
+export class ToggleAllTodoItemUseCase extends UseCase {
     /**
      * @param {TodoListRepository} todoListRepository
      */
@@ -19,9 +18,9 @@ export class ToggleCompleteTodoItemUseCase extends UseCase {
         this.todoListRepository = todoListRepository;
     }
 
-    execute(itemId) {
+    execute() {
         const todoList = this.todoListRepository.lastUsed();
-        todoList.toggleComplete(itemId);
+        todoList.toggleCompleteAll();
         this.todoListRepository.save(todoList)
     }
 }

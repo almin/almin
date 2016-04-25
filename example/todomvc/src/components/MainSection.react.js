@@ -10,7 +10,7 @@
 const React = require('react');
 const ReactPropTypes = React.PropTypes;
 import AppLocator from "../AppLocator";
-import {ToggleCompleteAllTodoItemFactory} from "../js/usecase/ToggleCompleteAll";
+import {ToggleAllTodoItemFactory} from "../js/usecase/ToggleAllTodoItems";
 const TodoItem = require('./TodoItem.react');
 
 const MainSection = React.createClass({
@@ -53,7 +53,7 @@ const MainSection = React.createClass({
      * Event handler to mark all TODOs as complete
      */
     _onToggleCompleteAll: function () {
-        AppLocator.context.useCase(ToggleCompleteAllTodoItemFactory.create()).execute();
+        AppLocator.context.useCase(ToggleAllTodoItemFactory.create()).execute();
     }
 
 });

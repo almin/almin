@@ -1,4 +1,3 @@
-// LICENSE : MIT
 "use strict";
 import {UseCase} from "almin";
 import todoListRepository, {TodoListRepository} from "../infra/TodoRepository"

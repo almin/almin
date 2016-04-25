@@ -12,7 +12,7 @@ const ReactPropTypes = React.PropTypes;
 const classNames = require('classnames');
 import AppLocator from "../AppLocator";
 import {UpdateTodoItemTitleFactory} from "../js/usecase/UpdateTodoItemTitle";
-import {ToggleCompleteTodoItemFactory} from "../js/usecase/ToggleCompleteTodoItem";
+import {ToggleTodoItemFactory} from "../js/usecase/ToggleTodoItem";
 import {RemoveTodoItemFactory} from "../js/usecase/RemoveTodoItem";
 import TodoTextInput from "./TodoTextInput.react";
 
@@ -67,7 +67,7 @@ const TodoItem = React.createClass({
                     <input
                         className="toggle"
                         type="checkbox"
-                        checked={this.state.completed}
+                        defaultChecked={this.state.completed}
                         onChange={this._onToggleComplete}
                     />
                     <label onDoubleClick={this._onDoubleClick}>
@@ -80,8 +80,8 @@ const TodoItem = React.createClass({
         );
     },
 
-    _onToggleComplete: function () {
-        AppLocator.context.useCase(ToggleCompleteTodoItemFactory.create()).execute(this.props.todo.id);
+    _onToggleComplete: function (event) {
+        AppLocator.context.useCase(ToggleTodoItemFactory.create()).execute(this.props.todo.id);
     },
 
     _onDoubleClick: function () {

@@ -1,4 +1,3 @@
-// LICENSE : MIT
 "use strict";
 import todoListRepository, {TodoListRepository} from "../infra/TodoRepository"
 export class UpdateTodoItemTitleFactory {

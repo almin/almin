@@ -60,7 +60,7 @@ export default class TodoList {
 
     /**
      * @param {title} title
-     * @return {TodoList}
+     * @return {TodoItem}
      */
     addItem(title) {
         const todoItem = new TodoItem({title});
