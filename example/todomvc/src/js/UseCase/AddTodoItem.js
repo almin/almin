@@ -19,7 +19,7 @@ export class AddTodoItemUseCase extends UseCase {
         this.todoListRepository = todoListRepository;
     }
 
-    execute({title}) {
+    execute(title) {
         const todoList = this.todoListRepository.lastUsed();
         todoList.addItem({title});
         this.todoListRepository.save(todoList);

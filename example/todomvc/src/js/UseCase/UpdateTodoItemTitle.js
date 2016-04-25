@@ -18,12 +18,12 @@ export class UpdateTodoItemTitleUseCase {
         this.todoListRepository = todoListRepository;
     }
 
-    execute({itemId, title}) {
+    execute({id, title}) {
         const todoList = this.todoListRepository.lastUsed();
-        if (!todoList.hasItem(itemId)) {
-            return Promise.reject(new Error("Not found item:" + itemId));
+        if (!todoList.hasItem(id)) {
+            return Promise.reject(new Error("Not found item:" + id));
         }
-        todoList.updateItem({id: itemId, title});
+        todoList.updateItem({id: id, title});
         this.todoListRepository.save(todoList);
     }
 }

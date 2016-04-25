@@ -27,6 +27,6 @@ describe("UpdateTodoItem", function () {
             done()
         });
         // When
-        useCase.execute({itemId: existingTodoItem.id, title: titleOfUPDATING});
+        useCase.execute({id: existingTodoItem.id, title: titleOfUPDATING});
     });
 });

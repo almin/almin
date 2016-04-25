@@ -2,15 +2,15 @@
 "use strict";
 import {UseCase} from "almin";
 import todoListRepository, {TodoListRepository} from "../infra/TodoRepository"
-export class ToggleCompleteTodoItemFactory {
+export class ToggleCompleteAllTodoItemFactory {
     static create() {
-        return new ToggleCompleteTodoItemUseCase({
+        return new ToggleCompleteAllTodoItemUseCase({
             todoListRepository
         });
     }
 }
 
-export class ToggleCompleteTodoItemUseCase extends UseCase {
+export class ToggleCompleteAllTodoItemUseCase extends UseCase {
     /**
      * @param {TodoListRepository} todoListRepository
      */

@@ -23,6 +23,6 @@ describe("RemoveTodoItemUseCase", function () {
             done();
         });
         // When
-        useCase.execute({itemId: existingTodoItem.id});
+        useCase.execute(existingTodoItem.id);
     });
 });

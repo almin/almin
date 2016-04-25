@@ -9,7 +9,7 @@
 
 var React = require('react');
 var ReactPropTypes = React.PropTypes;
-var TodoActions = require('../actions/TodoActions');
+import AppLocator from "../AppLocator";
 import {RemoveTodoItemFactory} from "../js/usecase/RemoveAllCompletedItems";
 var Footer = React.createClass({
 
@@ -67,7 +67,7 @@ var Footer = React.createClass({
      * Event handler to delete all completed TODOs
      */
     _onClearCompletedClick: function () {
-        TodoActions.destroyCompleted();
+        AppLocator.useCase(RemoveTodoItemFactory.create()).execte();
     }
 
 });

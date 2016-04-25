@@ -19,7 +19,7 @@ export class RemoveTodoItemUseCase extends UseCase {
         this.todoListRepository = todoListRepository;
     }
 
-    execute({itemId}) {
+    execute(id) {
         const todoList = this.todoListRepository.lastUsed();
         if (!todoList.hasItem(itemId)) {
             return this.throwError(new Error("Not found item:" + itemId));
