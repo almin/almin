@@ -61,7 +61,7 @@ export default class AlminLogger extends EventEmitter {
             }
         });
         this.logger.groupEnd();
-        this.emit(ContextLogger.Events.output);
+        this.emit(AlminLogger.Events.output);
     }
 
     /**
@@ -69,7 +69,7 @@ export default class AlminLogger extends EventEmitter {
      */
     flushBuffer() {
         this._logBuffer.length = 0;
-        this.emit(ContextLogger.Events.flush);
+        this.emit(AlminLogger.Events.flush);
     }
 
     /**
@@ -111,7 +111,7 @@ export default class AlminLogger extends EventEmitter {
             context.onDidExecuteEachUseCase(onDidExecuteEachUseCase),
             context.onErrorDispatch(onErrorHandler)
         ];
-        this.emit(ContextLogger.Events.start);
+        this.emit(AlminLogger.Events.start);
 
     }
 
@@ -152,6 +152,6 @@ export default class AlminLogger extends EventEmitter {
     release() {
         this._releaseHandlers.forEach(releaseHandler => releaseHandler());
         this._releaseHandlers.length = 0;
-        this.emit(ContextLogger.Events.release);
+        this.emit(AlminLogger.Events.release);
     }
 }
