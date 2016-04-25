@@ -17,7 +17,7 @@
   },
   "version": "1.0.1",
   "description": "logger for Almin.js",
-  "main": "lib/AlminLogger.js",
+  "main": "lib/index.js",
   "directories": {
     "test": "test"
   },
