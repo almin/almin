@@ -1,7 +1,7 @@
 {
-  "name": "shopping-cart",
+  "name": "todomvc",
   "version": "1.0.0",
-  "description": "Counter example",
+  "description": "TODO app example",
   "private": true,
   "directories": {
     "test": "test"
@@ -17,12 +17,13 @@
   "license": "MIT",
   "dependencies": {
     "almin": "file:../../",
+    "almin-logger": "^1.0.5",
+    "classnames": "^2.2.3",
     "react": "^15.0.1",
     "react-dom": "^15.0.1",
     "uuid": "^2.0.2"
   },
   "devDependencies": {
-    "almin-logger": "^1.0.5",
     "babel-cli": "^6.7.5",
     "babel-loader": "^6.2.4",
     "babel-plugin-transform-runtime": "^6.7.5",
