@@ -9,7 +9,7 @@ import AppStoreGroup from "./js/store/AppStoreGroup";
 // context
 import {Context}  from "almin";
 import {Dispatcher} from "almin";
-import ContextLogger from "./js/util/ContextLogger";
+import AlminLogger from "almin-logger";
 // instances
 const dispatcher = new Dispatcher();
 const appStoreGroup = new AppStoreGroup();
@@ -18,30 +18,11 @@ const appContext = new Context({
     dispatcher,
     store: appStoreGroup
 });
-// LOG
-const Perf = require('react-addons-perf');
-window.Perf = Perf;
 if (process.env.NODE_ENV === `development`) {
-    const logMap = {};
-    dispatcher.onWillExecuteEachUseCase(useCase => {
-        const startTimeStamp = performance.now();
-        console.groupCollapsed(useCase.name, startTimeStamp);
-        logMap[useCase.name] = startTimeStamp;
-        console.log(`${useCase.name} will execute`);
-    });
-    dispatcher.onDispatch(payload => {
-        ContextLogger.logDispatch(payload);
-    });
-    appContext.onChange((stores) => {
-        ContextLogger.logOnChange(stores);
-    });
-    dispatcher.onDidExecuteEachUseCase(useCase => {
-        const startTimeStamp = logMap[useCase.name];
-        const takenTime = performance.now() - startTimeStamp;
-        console.log(`${useCase.name} did executed`);
-        console.info("Take time(ms): " + takenTime);
-        console.groupEnd(useCase.name);
-    });
+    window.Perf = require('react-addons-perf');
+    // start logger
+    const logger = new AlminLogger();
+    logger.startLogging(appContext);
 }
 // Singleton
 AppContextLocator.context = appContext;

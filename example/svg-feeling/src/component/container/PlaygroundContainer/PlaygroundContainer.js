@@ -4,7 +4,7 @@ const React = require("react");
 import IconPalette from "../../project/IconPalette/IconPalette";
 import AppContextLocator from "../../../AppContextLocator";
 import {ChangeToNextColorUseCase} from "../../../js/UseCase/ChangeToNextColorUseCase";
-import {ColorState} from "../../../js/store/ColorStore/ColorStore";
+import ColorState from "../../../js/store/ColorStore/ColorState";
 const shallowCompare = require("react-addons-shallow-compare");
 export default class PlaygroundContainer extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {

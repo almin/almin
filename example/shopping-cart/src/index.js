@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from "./components/App";
 import AppLocator from "./AppLocator";
-import ContextLogger from "./utils/ContextLogger";
+import AlminLogger from "almin-logger";
 // store
 import AppStore from "./stores/AppStore";
 // context
@@ -15,7 +15,8 @@ const appContext = new Context({
     dispatcher,
     store: AppStore.create()
 });
-const logger = new ContextLogger();
+// start logger
+const logger = new AlminLogger();
 logger.startLogging(appContext);
 // update global context
 AppLocator.context = appContext;
@@ -25,3 +26,4 @@ ReactDOM.render(
     }),
     document.getElementById('flux-app')
 );
+
