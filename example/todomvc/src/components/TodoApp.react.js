@@ -43,10 +43,11 @@ var TodoApp = React.createClass({
             <div>
                 <Header />
                 <MainSection
-                    allTodos={TodoState.items}
+                    allTodos={TodoState.displayItems}
                     areAllComplete={TodoState.areAllComplete}
                 />
-                <Footer allTodos={TodoState.items}/>
+                <Footer allTodos={TodoState.items}
+                        filterType={TodoState.filterType}/>
             </div>
         );
     }

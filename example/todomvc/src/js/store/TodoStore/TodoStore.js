@@ -8,7 +8,14 @@ export default class TodoStore extends Store {
         this.state = new TodoState();
         todoRepository.onChange(() => {
             const todoList = todoRepository.lastUsed();
-            const newState = new TodoState(todoList);
+            const newState = this.state.merge(todoList);
+            if (newState !== this.state) {
+                this.state = newState;
+                this.emitChange();
+            }
+        });
+        this.onDispatch(payload => {
+            const newState = this.state.reduce(payload);
             if (newState !== this.state) {
                 this.state = newState;
                 this.emitChange();

@@ -60,9 +60,9 @@ var TodoItem = React.createClass({
         return (
             <li
                 className={classNames({
-          'completed': todo.completed,
-          'editing': this.state.isEditing
-        })}
+                  'completed': todo.completed,
+                  'editing': this.state.isEditing
+                })}
                 key={todo.id}>
                 <div className="view">
                     <input
