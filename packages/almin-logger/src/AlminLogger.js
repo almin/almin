@@ -5,7 +5,7 @@ import now from "./performance-now";
 const DefaultOptions = {
     console: console
 };
-export default class ContextLogger extends EventEmitter {
+export default class AlminLogger extends EventEmitter {
     /**
      * Event constants values
      * @returns {{start: string, output: string, flush: string, release: string}}
