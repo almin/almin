@@ -24,7 +24,7 @@ describe("AddTodoItem", function () {
             assert.equal(todoItem.title, titleOfAdding);
         });
         // When
-        useCase.execute({title: titleOfAdding});
+        useCase.execute(titleOfAdding);
     });
 
 });
