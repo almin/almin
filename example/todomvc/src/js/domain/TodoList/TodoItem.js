@@ -3,12 +3,12 @@
 const uuid = require('uuid');
 /*
  [
- {
- "completed": false,
- "order": 524,
- "title": "teast",
- "url": "http://todo-backend-express.herokuapp.com/6159"
- }
+     {
+         "completed": false,
+         "order": 524,
+         "title": "teast",
+         "url": "http://todo-backend-express.herokuapp.com/6159"
+     }
  ]
  */
 export default class TodoItem {
@@ -26,8 +26,7 @@ export default class TodoItem {
         this.completed = completed;
     }
 
-    // value object always return new Value
-    updateTitle(title) {
-        return new TodoItem(Object.assign({}, this, {title}));
+    updateItem(updated) {
+        return new TodoItem(Object.assign({}, this, updated));
     }
 }

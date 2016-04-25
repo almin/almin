@@ -2,15 +2,15 @@
 "use strict";
 import {UseCase} from "almin";
 import todoListRepository, {TodoListRepository} from "../infra/TodoRepository"
-export class AddTodoItemFactory {
+export class RemoveTodoItemFactory {
     static create() {
-        return new AddTodoItemUseCase({
+        return new RemoveTodoItemUseCase({
             todoListRepository
         });
     }
 }
 
-export class AddTodoItemUseCase extends UseCase {
+export class RemoveTodoItemUseCase extends UseCase {
     /**
      * @param {TodoListRepository} todoListRepository
      */
@@ -19,9 +19,9 @@ export class AddTodoItemUseCase extends UseCase {
         this.todoListRepository = todoListRepository;
     }
 
-    execute({title}) {
+    execute() {
         const todoList = this.todoListRepository.lastUsed();
-        todoList.addItem({title});
+        todoList.removeAllCompletedItems();
         this.todoListRepository.save(todoList);
     }
 }

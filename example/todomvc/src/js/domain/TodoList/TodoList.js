@@ -38,16 +38,21 @@ export default class TodoList {
         }
     }
 
-    updateItem({id, title}) {
-        const item = this.getItem(id);
-        const newItem = item.updateTitle(title);
+    /**
+     * @param {Object} updated
+     * @returns {TodoItem}
+     */
+    updateItem(updated) {
+        assert(updated.id !== undefined, "should have {id}");
+        const item = this.getItem(updated.id);
+        const newItem = item.updateItem(updated);
         this._items[this._items.indexOf(item)] = newItem;
-        return newItem;
+        return this;
     }
 
     /**
      * @param {{title:string}} title
-     * @return {TodoItem}
+     * @return {TodoList}
      */
     addItem({title}) {
         const todoItem = new TodoItem({title});
@@ -55,9 +60,31 @@ export default class TodoList {
         return todoItem;
     }
 
+    toggleCompleteAll() {
+        this.getAllTodoItems().forEach(item => {
+            return this.toggleComplete(item.id);
+        });
+    }
+
+    toggleComplete(id) {
+        const item = this.getItem(id);
+        item.completed = !item.completed;
+        this.updateItem(item);
+        return item;
+    }
+
     removeItem(id) {
         const item = this.getItem(id);
         const index = this._items.indexOf(item);
         this._items.splice(index, 1);
+        return item;
+    }
+
+    removeAllCompletedItems() {
+        this.getAllTodoItems()
+            .filter(item => item.completed)
+            .forEach(item => {
+                return this.removeItem(item.id);
+            });
     }
 }
