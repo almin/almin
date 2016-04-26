@@ -1,6 +1,6 @@
 # Almin.js
 
-## What is this?
+## What is Almin?
 
 Almin provide Flux/CQRS patterns for JavaScript application.
 
@@ -36,6 +36,12 @@ You may notice that these components are similar to [Flux](https://github.com/fa
 
 :memo: `State`, `Domain` and `Repository` is optional on Almin,
 because the best for these components is vary based on application.
+
+We going to learn two architecture(Flux/CQRS) using Almin :+1:
+
+## Tutorial
+
+- [ ] Counter
 
 ### Core class
 
