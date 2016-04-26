@@ -1,10 +1,22 @@
 # TodoMVC
 
-## What's learn from this
-
 TodoMVC is popular example for MV* library.
 
-We've created Todo app with almin.js.
+## Installation
+
+    npm install
+
+## Usage
+
+    npm run watch
+    # or npm run build
+    open public/index.html
+
+## Tests
+
+    npm tests
+
+## What's learn from this
 
 - [ ] Tutorial Link
 

@@ -2,6 +2,20 @@
 
 Change color of SVG icon and Background Color
 
+## Installation
+
+    npm install
+
+## Usage
+
+    npm run watch
+    # or npm run build
+    open public/index.html
+
+## Tests
+
+    npm tests
+
 
 ## Learn from this example
 
@@ -18,3 +32,7 @@ Change color of SVG icon and Background Color
 ### State
 
 - WallColor
+
+## License
+
+MIT

@@ -4,11 +4,19 @@ Original example from:
 
 - [voronianski/flux-comparison: Practical comparison of different Flux solutions](https://github.com/voronianski/flux-comparison "voronianski/flux-comparison: Practical comparison of different Flux solutions")
 
-## Usage
+## Installation
 
     npm install
-    npm run build
-    open index.html
+
+## Usage
+
+    npm run watch
+    # or npm run build
+    open public/index.html
+
+## Tests
+
+    npm tests
 
 ## What's learn from this
 
@@ -52,3 +60,7 @@ shopping-cart example has three stores:
 
 - `Customer` always is a single. So, AppLocator have global `customer` property.
     - It is easy to use `customer`.
+    
+## License
+
+MIT
