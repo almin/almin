@@ -1,26 +1,26 @@
 // LICENSE : MIT
 "use strict";
 import React from "react"
-import CountUpUseCase from "../usecase/CountUpUseCase"
+import IncrementalCounterUseCase from "../usecase/IncrementalCounterUseCase"
+import Context from "almin"
 import CounterState from "../store/CounterState"
 export default class CounterComponent extends React.Component {
     constructor(props) {
         super(props);
     }
 
-    tick() {
-        // execute CountUpUseCase with new count value
+    incrementCounter() {
+        // execute IncrementalCounterUseCase with new count value
         const context = this.props.appContext;
-        const counterState = this.props.counterState;
-        context.useCase(new CountUpUseCase()).execute(counterState.count + 1);
+        context.useCase(new IncrementalCounterUseCase()).execute();
     }
 
     render() {
-        // Call Action ----> ActionCreator
+        // execute UseCase ----> Store
         const counterState = this.props.counterState;
         return (
             <div>
-                <button onClick={this.tick.bind(this)}>Count Up</button>
+                <button onClick={this.incrementCounter.bind(this)}>Increment Counter</button>
                 <p>
                     Count: {counterState.count}
                 </p>
@@ -29,5 +29,6 @@ export default class CounterComponent extends React.Component {
     }
 }
 CounterComponent.propTypes = {
+    appContext: React.PropTypes.instanceOf(Context).isRequired,
     counterState: React.PropTypes.instanceOf(CounterState).isRequired
 };

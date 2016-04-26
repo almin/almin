@@ -9,7 +9,7 @@ export class CounterStore extends Store {
         this.state = new CounterState({
             count: 0
         });
-        // receive event from usecase, then update state
+        // receive event from UseCase, then update state
         this.onDispatch(payload => {
             const newState = this.state.reduce(payload);
             if (newState !== this.state) {

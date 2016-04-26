@@ -1,9 +1,7 @@
 // LICENSE : MIT
 "use strict";
 import React from "react";
-import ReactDOM from "react-dom";
-import {Context} from "almin";
-import {Dispatcher} from "almin";
+import {Context, Dispatcher} from "almin";
 import {CounterStore} from "../store/CounterStore";
 // a single dispatcher
 const dispatcher = new Dispatcher();
@@ -13,7 +11,7 @@ const appContext = new Context({
     dispatcher,
     store
 });
-import CounterComponent from './CounterComponent';
+import Counter from './Counter';
 export default class App extends React.Component {
     constructor(...args) {
         super(...args);
@@ -34,7 +32,7 @@ export default class App extends React.Component {
         /*
          Where is "CounterState" come from? 
          It is CounterStore#getState()'s key name
-         
+
          getState() {
              return {
                 counterState: this.state
@@ -42,7 +40,7 @@ export default class App extends React.Component {
          }
         */
         const counterState = this.state.counterState;
-        return <CounterComponent counterState={counterState}
-                                 appContext={appContext}/>
+        return <Counter counterState={counterState}
+                        appContext={appContext}/>
     }
 }

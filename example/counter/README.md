@@ -8,9 +8,8 @@ Simple increment counter.
 
 ## Usage
 
-    npm run watch
-    # or npm run build
-    open public/index.html
+    npm start
+    open http://localhost:8080/
 
 ## Tests
 

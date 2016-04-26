@@ -1,20 +1,18 @@
 // LICENSE : MIT
 "use strict";
 const assert = require("assert");
-import CountUpUseCase from "../src/usecase/CountUpUseCase"
+import IncrementalCounterUseCase from "../src/usecase/IncrementalCounterUseCase"
 describe("ActionCreator", function () {
     describe("countUp", function () {
         it("should emit `countUp` event", function (done) {
-            const expectedCount = 42;
-            const useCase = new CountUpUseCase();
+            const useCase = new IncrementalCounterUseCase();
             useCase.onDispatch(payload => {
                 assert.deepEqual(payload, {
-                    type: CountUpUseCase.name,
-                    count: expectedCount
+                    type: IncrementalCounterUseCase.name
                 });
                 done();
             });
-            useCase.execute(expectedCount);
+            useCase.execute();
         });
     });
 });
