@@ -8,11 +8,10 @@ export default class CounterComponent extends React.Component {
         super(props);
     }
 
-    tick() {
+    incrementCounter() {
         // execute IncrementalCounterUseCase with new count value
         const context = this.props.appContext;
-        const counterState = this.props.counterState;
-        context.useCase(new IncrementalCounterUseCase()).execute(counterState.count + 1);
+        context.useCase(new IncrementalCounterUseCase()).execute();
     }
 
     render() {
@@ -20,7 +19,7 @@ export default class CounterComponent extends React.Component {
         const counterState = this.props.counterState;
         return (
             <div>
-                <button onClick={this.tick.bind(this)}>Count Up</button>
+                <button onClick={this.incrementCounter.bind(this)}>Increment Counter</button>
                 <p>
                     Count: {counterState.count}
                 </p>

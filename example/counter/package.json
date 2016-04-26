@@ -10,7 +10,7 @@
     "clean": "rimraf public/build && mkdirp public/build",
     "build": "NODE_ENV=production webpack -p",
     "watch": "webpack -d -w",
-    "start": "webpack-dev-server --content-base public/ --open",
+    "start": "webpack-dev-server --hot --content-base public/ --open",
     "prepublish": "npm run --if-present build",
     "test": "mocha"
   },

@@ -1,13 +1,13 @@
 // LICENSE : MIT
 "use strict";
+"use strict";
 import {UseCase} from "almin"
 export default class IncrementalCounterUseCase extends UseCase {
-    // CountUpUseCase emit event ----> Store
+    // IncrementalCounterUseCase dispatch event ----> Store
     // UseCase should implement #execute method
-    execute(count) {
+    execute() {
         this.dispatch({
-            type: CountUpUseCase.name,
-            count
-        })
+            type: IncrementalCounterUseCase.name
+        });
     }
 }

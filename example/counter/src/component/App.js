@@ -1,7 +1,6 @@
 // LICENSE : MIT
 "use strict";
 import React from "react";
-import ReactDOM from "react-dom";
 import {Context} from "almin";
 import {Dispatcher} from "almin";
 import {CounterStore} from "../store/CounterStore";
