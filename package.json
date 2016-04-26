@@ -2,18 +2,18 @@
   "name": "almin",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/azu/almin.git"
+    "url": "git+https://github.com/almin/almin.git"
   },
   "author": "azu",
   "email": "azuciao@gmail.com",
-  "homepage": "https://github.com/azu/almin",
+  "homepage": "https://github.com/almin/almin",
   "license": "MIT",
   "files": [
     "src/",
     "lib/"
   ],
   "bugs": {
-    "url": "https://github.com/azu/almin/issues"
+    "url": "https://github.com/almin/almin/issues"
   },
   "version": "0.3.0",
   "description": "Flux, DDD and CQRS like architecture library.",
