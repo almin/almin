@@ -30,14 +30,16 @@ You may notice that these components are similar to [Flux](https://github.com/fa
 | UseCase    | ActionCreator | Actions                |
 | Store      | Store         | Store                  |
 | StoreGroup | Container     | combineReducers        |
-| State      | Store         | Reducer                |
-| Domain     |               |                        |
-| Repository |               |                        |
+| (State)    | Store         | Reducer                |
+| (Domain)   |               |                        |
+|(Repository)|               |                        |
 
 :memo: `State`, `Domain` and `Repository` is optional on Almin,
 because the best for these components is vary based on application.
 
-We going to learn two architecture(Flux/CQRS) using Almin :+1:
+Almin has not perfect solution for various application, but we can write code thinking.
+
+We are going to learn two architecture(Flux/CQRS) using Almin :+1:
 
 ## Tutorial
 
