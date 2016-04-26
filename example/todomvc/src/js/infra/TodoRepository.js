@@ -5,7 +5,7 @@ import TodoList from "../domain/TodoList/TodoList";
 import MemoryDB from "./adpter/MemoryDB";
 // Collection repository
 export class TodoListRepository extends EventEmitter {
-    constructor(database) {
+    constructor(database = new MemoryDB()) {
         super();
         /**
          * @type {MemoryDB}
@@ -59,4 +59,4 @@ export class TodoListRepository extends EventEmitter {
     }
 }
 // singleton
-export default new TodoListRepository(MemoryDB);
+export default new TodoListRepository();
