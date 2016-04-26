@@ -22,7 +22,7 @@ Almin is a implementation of Read/Write Stack Architecture that is well-known as
 
 ## Usage
 
-:note: Please See [Documents](./docs) of Almin.
+:memo: Please See [Documents](./docs) of Almin.
 
 - [Documents](./docs)
 - Tutorial
