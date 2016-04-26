@@ -12,9 +12,9 @@ But, I often hear the story that is "Control flow of Flux/Redux is cool, but whe
 
 I think that the people skip to Flux/Redux from MV* pattern.
 
-> MV* --> ( *1 ) --> Flux/Redux(CQRS+EventSourcing)
+> MV* --> ( HOLE ) --> Flux/Redux(CQRS+EventSourcing)
 
-Almin.js aim to fill the hole between MV* and Flux/Redux.
+Almin.js aim to fill the HOLE between MV* and Flux/Redux.
 
 ## Feature
 
