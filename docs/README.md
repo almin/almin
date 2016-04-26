@@ -19,9 +19,12 @@ But, Almin is not framework, provide only these components
 - StoreGroup
 
 Other components like Domain, Repository and State are written by you!
+
 Of course, Almin help you to write other components.
 
-You may notice that these components are similar to [Flux](https://github.com/facebook/flux "Flux") architecture.
+Also, You may notice that these components are similar to [Flux](https://github.com/facebook/flux "Flux") architecture.
+
+Almin is also a flux implementation library. :thumbsup:
 
 | Almin      | Flux          | Redux                  |
 |------------|---------------|------------------------|
@@ -39,7 +42,7 @@ because the best for these components is vary based on application.
 
 Almin has not perfect solution for various application, but we can write code thinking.
 
-We are going to learn two architecture(Flux/CQRS) using Almin :+1:
+We are going to learn two architecture(Flux/CQRS) using Almin :)
 
 ## Tutorial
 
