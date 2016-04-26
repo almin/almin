@@ -1,6 +1,6 @@
 // LICENSE : MIT
 "use strict";
-import CountUpUseCase from "../usecase/CountUpUseCase";
+import IncrementalCounterUseCase from "../usecase/IncrementalCounterUseCase";
 // reduce function
 export default class CounterState {
     /**
@@ -12,7 +12,7 @@ export default class CounterState {
 
     reduce(payload) {
         switch (payload.type) {
-            case CountUpUseCase.name:
+            case IncrementalCounterUseCase.name:
                 return new CounterState({
                     count: payload.count
                 });

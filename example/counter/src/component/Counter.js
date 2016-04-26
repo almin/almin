@@ -1,7 +1,7 @@
 // LICENSE : MIT
 "use strict";
 import React from "react"
-import CountUpUseCase from "../usecase/CountUpUseCase"
+import IncrementalCounterUseCase from "../usecase/IncrementalCounterUseCase"
 import CounterState from "../store/CounterState"
 export default class CounterComponent extends React.Component {
     constructor(props) {
@@ -9,14 +9,14 @@ export default class CounterComponent extends React.Component {
     }
 
     tick() {
-        // execute CountUpUseCase with new count value
+        // execute IncrementalCounterUseCase with new count value
         const context = this.props.appContext;
         const counterState = this.props.counterState;
-        context.useCase(new CountUpUseCase()).execute(counterState.count + 1);
+        context.useCase(new IncrementalCounterUseCase()).execute(counterState.count + 1);
     }
 
     render() {
-        // Call Action ----> ActionCreator
+        // execute UseCase ----> Store
         const counterState = this.props.counterState;
         return (
             <div>

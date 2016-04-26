@@ -10,6 +10,7 @@
     "clean": "rimraf public/build && mkdirp public/build",
     "build": "NODE_ENV=production webpack -p",
     "watch": "webpack -d -w",
+    "start": "webpack-dev-server --content-base public/ --open",
     "prepublish": "npm run --if-present build",
     "test": "mocha"
   },
@@ -33,6 +34,7 @@
     "mkdirp": "^0.5.1",
     "mocha": "^2.4.5",
     "rimraf": "^2.5.2",
-    "webpack": "^2.1.0-beta.6"
+    "webpack": "^2.1.0-beta.6",
+    "webpack-dev-server": "^2.0.0-beta"
   }
 }
