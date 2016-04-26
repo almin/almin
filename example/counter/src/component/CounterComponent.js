@@ -2,7 +2,7 @@
 "use strict";
 import React from "react"
 import CountUpUseCase from "../usecase/CountUpUseCase"
-import {CounterState} from "../store/CounterStore"
+import CounterState from "../store/CounterState"
 export default class CounterComponent extends React.Component {
     constructor(props) {
         super(props);
@@ -11,23 +11,23 @@ export default class CounterComponent extends React.Component {
     tick() {
         // execute CountUpUseCase with new count value
         const context = this.props.appContext;
-        const CounterState = this.props.CounterState;
-        context.useCase(new CountUpUseCase()).execute(CounterState.count + 1);
+        const counterState = this.props.counterState;
+        context.useCase(new CountUpUseCase()).execute(counterState.count + 1);
     }
 
     render() {
         // Call Action ----> ActionCreator
-        const CounterState = this.props.CounterState;
+        const counterState = this.props.counterState;
         return (
             <div>
                 <button onClick={this.tick.bind(this)}>Count Up</button>
                 <p>
-                    Count: {CounterState.count}
+                    Count: {counterState.count}
                 </p>
             </div>
         );
     }
 }
 CounterComponent.propTypes = {
-    CounterState: React.PropTypes.instanceOf(CounterState).isRequired
+    counterState: React.PropTypes.instanceOf(CounterState).isRequired
 };

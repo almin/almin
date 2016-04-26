@@ -14,7 +14,7 @@ describe("CounterStore", function () {
             const expectedCount = 42;
             store.onChange(() => {
                 const state = store.getState();
-                assert.equal(state.CounterState.count, expectedCount);
+                assert.equal(state.counterState.count, expectedCount);
                 done();
             });
             // when

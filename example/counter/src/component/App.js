@@ -37,12 +37,12 @@ export default class App extends React.Component {
          
          getState() {
              return {
-                CounterState: this.state
+                counterState: this.state
              }
          }
         */
-        const CounterState = this.state.CounterState;
-        return <CounterComponent CounterState={CounterState}
+        const counterState = this.state.counterState;
+        return <CounterComponent counterState={counterState}
                                  appContext={appContext}/>
     }
 }

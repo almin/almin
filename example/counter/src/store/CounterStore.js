@@ -1,27 +1,7 @@
 // LICENSE : MIT
 "use strict";
 import {Store} from "almin";
-import CountUpUseCase from "../usecase/CountUpUseCase";
-// reduce function
-export class CounterState {
-    /**
-     * @param {Number} count
-     */
-    constructor({count}) {
-        this.count = count;
-    }
-
-    reduce(payload) {
-        switch (payload.type) {
-            case CountUpUseCase.name:
-                return new CounterState({
-                    count: payload.count
-                });
-            default:
-                return this;
-        }
-    }
-}
+import CounterState from "./CounterState";
 export class CounterStore extends Store {
     constructor() {
         super();
@@ -41,7 +21,7 @@ export class CounterStore extends Store {
 
     getState() {
         return {
-            CounterState: this.state
+            counterState: this.state
         }
     }
 }

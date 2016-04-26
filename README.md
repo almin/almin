@@ -1,18 +1,18 @@
 # Almin.js
 
-Almin is a flux/CQRS like library.
+Flux/CQRS patterns for JavaScript application.
 
 Write code thinking :)
 
 ## Feature
 
-Almin provide a pattern, is not framework.
+Almin provide some pattern, is not framework.
 
 - Testable
 - Scalable
 - Responsibility Layers patten - well-known Domain-Driven Design
 
-Almin is a implementation of Read/Write Stack Architecture that is well-known Flux/CQRS.
+Almin is a implementation of Read/Write Stack Architecture that is well-known as Flux/CQRS.
 
 - [Read/Write Stack | JavaScriptアーキテクチャ](http://azu.github.io/slide/2016/bikeshedjs/javascript-read-write-stack.html "Read/Write Stack | JavaScriptアーキテクチャ")
 
