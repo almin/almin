@@ -34,7 +34,8 @@ You may notice that these components are similar to [Flux](https://github.com/fa
 | Domain     |               |                        |
 | Repository |               |                        |
 
-:memo: `State`, `Domain` and `Repository` is optional on Almin.
+:memo: `State`, `Domain` and `Repository` is optional on Almin,
+because the best for these components is vary based on application.
 
 ### Core class
 
