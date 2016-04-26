@@ -1,22 +1,40 @@
-# SUMMARY
+# Almin.js
 
-- What is this?
-- Work flow
-- Data flow
-- Implement flow
-    - UseCase
-    - Domain
-    - Repository
-    - Store
-    - State
-- Example
-    - Immutability
-    - Nesting UseCase
-    - 
-- Testing
-- Reference
-- FAQ
+## What is this?
 
+Almin provide Flux/CQRS patterns for JavaScript application.
+
+It aim to create scalable app.
+
+![overview of almin-architecture](./resources/almin-architecture.png)
+
+The above figure is overview of Almin architecture that is similar to CQRS([Command Query Responsibility Segregation](http://martinfowler.com/bliki/CQRS.html "Command Query Responsibility Segregation")).
+
+But, Almin is not framework, provide only these components
+
+- Dispatcher
+- Context
+- UseCase
+- Store
+- StoreGroup
+
+Other components like Domain, Repository and State are written by you!
+Of course, Almin help you to write other components.
+
+You may notice that these components are similar to [Flux](https://github.com/facebook/flux "Flux") architecture.
+
+| Almin      | Flux          | Redux                  |
+|------------|---------------|------------------------|
+| Dispatcher | Dispatcher    | store.dispatch         |
+| Context    | Container     | Middleware/React Redux |
+| UseCase    | ActionCreator | Actions                |
+| Store      | Store         | Store                  |
+| StoreGroup | Container     | combineReducers        |
+| State      | Store         | Reducer                |
+| Domain     |               |                        |
+| Repository |               |                        |
+
+:memo: `State`, `Domain` and `Repository` is optional on Almin.
 
 ### Core class
 
