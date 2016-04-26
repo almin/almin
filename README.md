@@ -4,13 +4,25 @@ Flux/CQRS patterns for JavaScript application.
 
 Write code thinking :)
 
+## Why
+
+Now, We can implement web application with Flux or Redux etc...
+
+But, I often hear the story that is "Control flow of Flux/Redux is cool, but where to implement domain logic."
+
+I think that the people skip to Flux/Redux from MV* pattern.
+
+> MV* --> ( HOLE ) --> Flux/Redux(CQRS+EventSourcing)
+
+Almin.js aim to fill the HOLE between MV* and Flux/Redux.
+
 ## Feature
 
 Almin provide some pattern, is not framework.
 
 - Testable
 - Scalable
-- Responsibility Layers patten - well-known Domain-Driven Design
+- Responsibility Layers patten - well-known as DDD(Domain-Driven Design)/CQRS
 
 Almin is a implementation of Read/Write Stack Architecture that is well-known as Flux/CQRS.
 
