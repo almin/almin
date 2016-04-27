@@ -240,7 +240,7 @@ CounterComponent.propTypes = {
 
 We have created simple counter app.
 
-It is the same of Flux pattern.
+Writing the pattern in this guide is the same of Flux pattern.
 
 ![almin-flux.png](img/almin-architecture-flux.png)
 

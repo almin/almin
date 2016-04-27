@@ -1,0 +1,7 @@
+{
+  "rules": {
+    "alex": true,
+    "no-dead-link": true,
+    "common-misspellings": true
+  }
+}

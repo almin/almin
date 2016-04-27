@@ -2,7 +2,7 @@
 
 ## UseCase
 
-It similar to ActionCreator.
+It similar to ActionCreator on Flux.
 It also become transaction script.
 
 ## Payload
@@ -26,7 +26,7 @@ is a minimal payload object.
 }
 ```
 
-`payload` object also have other properties maybe.
+`payload` object also have other properties.
 
 ### Dispatcher
 

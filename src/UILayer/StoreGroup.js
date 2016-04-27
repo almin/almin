@@ -165,5 +165,6 @@ StoreGroup#getState()["StateName"]// state
     release() {
         this._releaseHandlers.forEach(releaseHandler => releaseHandler());
         this._releaseHandlers.length = 0;
+        this._storeValueMap.clear();
     }
 }

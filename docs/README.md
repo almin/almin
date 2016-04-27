@@ -40,7 +40,7 @@ Almin is also a flux implementation library. :thumbsup:
 :memo: `State`, `Domain` and `Repository` is optional on Almin,
 because the best for these components is vary based on application.
 
-Almin has not perfect solution for various application, but we can write code thinking.
+Almin has not perfect solution for an application, but we can write code thinking.
 
 We are going to learn two architecture(Flux/CQRS) using Almin :)
 
