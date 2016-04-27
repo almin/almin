@@ -1,6 +1,6 @@
-# Almin.js [![Build Status](https://travis-ci.org/almin/almin.svg?branch=master)](https://travis-ci.org/almin/almin)
+# [Almin.js](https://github.com/almin/almin) [![Build Status](https://travis-ci.org/almin/almin.svg?branch=master)](https://travis-ci.org/almin/almin)
 
-![Almin.js logo](https://almin.github.io/media/logo/logo.png)
+[![Almin.js logo](https://almin.github.io/media/logo/logo.png)](https://github.com/almin/almin)
 
 Flux/CQRS patterns for JavaScript application.
 
