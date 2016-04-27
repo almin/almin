@@ -5,11 +5,8 @@ import InitializedProductRepository from "./helper/InitializedProductRepository"
 import AddItemToCartUseCase from "../src/usecase/AddItemToCartUseCase";
 import Customer from "../src/domain/Customer/Customer";
 import Cart from "../src/domain/Cart/Cart";
-import Product from "../src/domain/Product/Product";
 // repository
-import {ProductRepository} from "../src/infra/ProductRepository";
 import {CartRepository} from "../src/infra/CartRepository";
-import {CustomerRepository} from "../src/infra/CustomerRepository";
 describe("AddItemToCartUseCase", function () {
     context("when the customer has not cart", function () {
         it("should throw error", function (done) {

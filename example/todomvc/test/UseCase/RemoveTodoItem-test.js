@@ -1,7 +1,7 @@
 // LICENSE : MIT
 "use strict";
 const assert = require("power-assert");
-import {MemoryDB} from "../../src/js/infra/adpter/MemoryDB";
+import MemoryDB from "../../src/js/infra/adpter/MemoryDB";
 import TodoList from "../../src/js/domain/TodoList/TodoList";
 import {TodoListRepository} from "../../src/js/infra/TodoRepository";
 import {RemoveTodoItemUseCase} from "../../src/js/usecase/RemoveTodoItem";
