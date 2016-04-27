@@ -1,5 +1,7 @@
 # Almin.js
 
+![Almin.js logo](https://almin.github.io/media/logo/logo.png)
+
 Flux/CQRS patterns for JavaScript application.
 
 Write code thinking :)
