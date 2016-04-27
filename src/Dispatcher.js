@@ -61,17 +61,17 @@ export default class Dispatcher extends EventEmitter {
     }
 
     /**
-     * delegate payload object to EventEmitter.
-     * @param {Dispatcher} toEventEmitter
+     * delegate payload object to other dispatcher.
+     * @param {Dispatcher} toDispatcher
      * @returns {Function} un register function
      */
-    pipe(toEventEmitter) {
+    pipe(toDispatcher) {
         const fromName = this.constructor.name;
-        const toName = toEventEmitter.constructor.name;
+        const toName = toDispatcher.constructor.name;
         const displayName = `delegate-payload:${fromName}-to-${toName}`;
         const delegatePayload = function delegatePayload(payload) {
             delegatePayload.displayName = displayName;
-            toEventEmitter.dispatch(payload);
+            toDispatcher.dispatch(payload);
         };
         return this.onDispatch(delegatePayload);
     }
