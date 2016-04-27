@@ -242,6 +242,6 @@ We have created simple counter app.
 
 It is the same of Flux pattern.
 
-![almin-flux.png](img/almin-flux.png)
+![almin-flux.png](img/almin-architecture-flux.png)
 
 Next: We learn domain model and CQRS pattern while creating TodoMVC app.
