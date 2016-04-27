@@ -105,4 +105,4 @@ const Footer = React.createClass({
 
 });
 
-module.exports = Footer;
+export default Footer;

@@ -75,4 +75,4 @@ const TodoTextInput = React.createClass({
 
 });
 
-module.exports = TodoTextInput;
+export default TodoTextInput;

@@ -51,4 +51,4 @@ const TodoApp = React.createClass({
 
 });
 
-module.exports = TodoApp;
+export default TodoApp;

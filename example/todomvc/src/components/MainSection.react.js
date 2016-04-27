@@ -58,4 +58,4 @@ const MainSection = React.createClass({
 
 });
 
-module.exports = MainSection;
+export default MainSection;

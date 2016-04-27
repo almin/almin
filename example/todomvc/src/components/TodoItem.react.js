@@ -108,4 +108,4 @@ const TodoItem = React.createClass({
 
 });
 
-module.exports = TodoItem;
+export default TodoItem;

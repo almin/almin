@@ -25,6 +25,11 @@ export const ON_DISPATCH = "__ON_DISPATCH__";
  * If apply emit style, we cast ...args for passing other dispatcher at every time.
  */
 export default class Dispatcher extends EventEmitter {
+    /**
+     * if {@link v} is instance of Dispatcher, return true
+     * @param {Dispatcher|*} v
+     * @returns {boolean}
+     */
     static isDispatcher(v) {
         if (v instanceof Dispatcher) {
             return true;
@@ -57,7 +62,7 @@ export default class Dispatcher extends EventEmitter {
 
     /**
      * delegate payload object to EventEmitter.
-     * @param {CoreEventEmitter} toEventEmitter
+     * @param {Dispatcher} toEventEmitter
      * @returns {Function} un register function
      */
     pipe(toEventEmitter) {
