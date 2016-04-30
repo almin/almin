@@ -3,12 +3,13 @@
 const assert = require("power-assert");
 import Store from "../src/Store";
 import StoreGroup from "../src/UILayer/StoreGroup";
-import UseCase from "../src/UseCase";
+import createEchoStore from "./helper/EchoStore";
+
 describe("StoreGroup", function () {
     describe("#onChange", function () {
         it("should async called onChange ", function (done) {
-            const aStore = new Store();
-            const bStore = new Store();
+            const aStore = createEchoStore({name: "AStore"});
+            const bStore = createEchoStore({name: "BStore"});
             const storeGroup = new StoreGroup([aStore, bStore]);
             // when - a,b emit change at same time
             aStore.emitChange();
@@ -22,8 +23,8 @@ describe("StoreGroup", function () {
             });
         });
         it("should thin out change events at once", function (done) {
-            const aStore = new Store();
-            const bStore = new Store();
+            const aStore = createEchoStore({name: "AStore"});
+            const bStore = createEchoStore({name: "BStore"});
             const storeGroup = new StoreGroup([aStore, bStore]);
             // then - called change handler a one-time
             storeGroup.onChange((changedStores) => {

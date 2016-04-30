@@ -6,11 +6,7 @@ const assert = require("assert");
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
 import Dispatcher from "./../Dispatcher";
 import Store from "./../Store";
-export function validateStore(store) {
-    assert(Store.isStore(store), `${store} should be instance of Store`);
-    assert(typeof store.getState === "function", `${store} should implement getState() method.
-StoreGroup merge values of store*s*.`);
-}
+import StoreGroupValidator from "./StoreGroupValidator";
 
 /**
  * StoreGroup is a **UI** parts of Store.
@@ -25,7 +21,7 @@ export default class StoreGroup extends Dispatcher {
      */
     constructor(stores) {
         super();
-        stores.forEach(validateStore);
+        StoreGroupValidator.validateStores(stores);
         this._onChangeQueue = Promise.resolve();
         /**
          * callable release handlers
@@ -64,11 +60,11 @@ export default class StoreGroup extends Dispatcher {
              @example
 
              class ExampleStore extends Store {
-                 getState(prevState = initialState) {
-                     return {
-                         NextState: this.state
-                     };
-                 }
+             getState(prevState = initialState) {
+             return {
+             NextState: this.state
+             };
+             }
              }
              */
             const prevState = this._storeValueMap.get(store.name);

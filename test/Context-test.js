@@ -7,17 +7,7 @@ import Store from "../src/Store";
 import UseCase from "../src/UseCase";
 import UseCaseExecutor from "../src/UseCaseExecutor";
 import StoreGroup from "../src/UILayer/StoreGroup";
-class TestStore extends Store {
-    constructor(echo) {
-        super();
-        this.echo = echo;
-    }
-
-    getState() {
-        return this.echo;
-    }
-}
-
+import createEchoStore from "./helper/EchoStore";
 class TestUseCase extends UseCase {
     execute() {
 
@@ -72,7 +62,7 @@ describe("Context", function () {
             const expectedMergedObject = {
                 "1": 1
             };
-            const store = new TestStore({"1": 1});
+            const store = createEchoStore({echo: {"1": 1}});
             const appContext = new Context({
                 dispatcher,
                 store
@@ -84,7 +74,7 @@ describe("Context", function () {
     describe("#onChange", function () {
         it("should called when change some State", function (done) {
             const dispatcher = new Dispatcher();
-            const testStore = new TestStore({"1": 1});
+            const testStore = createEchoStore({echo: {"1": 1}});
             const storeGroup = new StoreGroup([testStore]);
             const appContext = new Context({
                 dispatcher,
@@ -99,8 +89,8 @@ describe("Context", function () {
         });
         it("should thin change events are happened at same time", function (done) {
             const dispatcher = new Dispatcher();
-            const aStore = new TestStore({"1": 1});
-            const bStore = new TestStore({"1": 1});
+            const aStore = createEchoStore({name: "AStore", echo: {"1": 1}});
+            const bStore = createEchoStore({name: "BStore", echo: {"1": 1}});
             const storeGroup = new StoreGroup([aStore, bStore]);
             const appContext = new Context({
                 dispatcher,
@@ -204,7 +194,7 @@ describe("Context", function () {
             const dispatcher = new Dispatcher();
             const appContext = new Context({
                 dispatcher,
-                store: new TestStore({"1": 1})
+                store: createEchoStore({echo: {"1": 1}})
             });
             const useCaseExecutor = appContext.useCase(new ThrowUseCase());
             assert(useCaseExecutor instanceof UseCaseExecutor);
