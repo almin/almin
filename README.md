@@ -56,7 +56,7 @@ Almin is a implementation of Read/Write Stack Architecture that is well-known as
     - It use only state
 - [example/todomvc](example/todomvc)
     - Todo list example
-- [example/svg-feeling](example/counter)
+- [example/svg-feeling](example/svg-feeling)
     - Separate Domain and Store/State
         - Two way update state.
     - How to implement for 60 FPS 
