@@ -1,5 +1,7 @@
 // LICENSE : MIT
 "use strict";
+// polyfill Map
+require("es6-collections");
 const assert = require("assert");
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
 import Dispatcher from "./../Dispatcher";
