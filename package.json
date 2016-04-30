@@ -50,5 +50,7 @@
     "textlint-rule-common-misspellings": "^1.0.1",
     "textlint-rule-no-dead-link": "^0.2.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "es6-collections": "^0.5.6"
+  }
 }
