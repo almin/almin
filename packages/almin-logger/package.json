@@ -2,18 +2,18 @@
   "name": "almin-logger",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/azu/almin-logger.git"
+    "url": "git+https://github.com/almin/almin-logger.git"
   },
   "author": "azu",
   "email": "azuciao@gmail.com",
-  "homepage": "https://github.com/azu/almin-logger",
+  "homepage": "https://github.com/almin/almin-logger",
   "license": "MIT",
   "files": [
     "src/",
     "lib/"
   ],
   "bugs": {
-    "url": "https://github.com/azu/almin-logger/issues"
+    "url": "https://github.com/almin/almin-logger/issues"
   },
   "version": "1.0.5",
   "description": "logger for Almin.js",
