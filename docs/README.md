@@ -44,7 +44,15 @@ Almin has not perfect solution for an application, but we can write code thinkin
 
 We are going to learn two architecture(Flux/CQRS) using Almin :)
 
-## Tutorial
+## Table of Contents
+
+Truly [Table of Contents](../SUMMARY.md) is here :arrow_left:
+
+## Rough Table of Contents
+
+Rough version of Table of Contents.
+
+### Tutorial
 
 - [Creating Counter App](./counter/)
     - Apply Flux pattern to Almin

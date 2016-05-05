@@ -67,9 +67,15 @@ Almin is a implementation of Read/Write Stack Architecture that is well-known as
     - How to test.
     - How to implement domain layer.
 
-## Tests
+## Running Tests
 
     npm test
+
+## Building Docs
+ 
+    npm run build:docs
+    # preview
+    npm run start:docs
 
 ## Contributing
 
