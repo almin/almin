@@ -1,6 +1,6 @@
-# SUMMARY
+## Table of Contents
 
-- What is this?
+- [What is Almin?](./docs/README.md)
 - [ ] Work flow
 - [ ] Data flow
 - [ ] Example: Counter
@@ -10,7 +10,8 @@
     - Repository
     - Store
     - State
-- [ ] Example
+- Example
+    - [Counter App](./docs/counter/README.md)
     - Immutability
     - Nesting UseCase
 - [ ] Testing
