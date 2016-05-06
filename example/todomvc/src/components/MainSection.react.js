@@ -10,8 +10,8 @@
 const React = require('react');
 const ReactPropTypes = React.PropTypes;
 import AppLocator from "../AppLocator";
-import {ToggleAllTodoItemFactory} from "../js/usecase/ToggleAllTodoItems";
-const TodoItem = require('./TodoItem.react');
+import {ToggleAllTodoItemFactory} from "../usecase/ToggleAllTodoItems";
+import TodoItem from "./TodoItem.react";
 
 const MainSection = React.createClass({
 
@@ -34,7 +34,6 @@ const MainSection = React.createClass({
         const todos = allTodos.map(todo => {
             return <TodoItem key={todo.id} todo={todo}/>;
         });
-
         return (
             <section id="main">
                 <input

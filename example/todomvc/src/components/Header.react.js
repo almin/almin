@@ -9,7 +9,7 @@
 
 const React = require('react');
 import AppLocator from "../AppLocator";
-import {AddTodoItemFactory} from "../js/usecase/AddTodoItem";
+import {AddTodoItemFactory} from "../usecase/AddTodoItem";
 import TodoTextInput from "./TodoTextInput.react";
 
 const Header = React.createClass({

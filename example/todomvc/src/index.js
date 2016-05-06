@@ -5,10 +5,9 @@ import ReactDOM from "react-dom";
 import TodoApp from './components/TodoApp.react';
 import AppLocator from "./AppLocator";
 // store
-import AppStoreGroup from "./js/store/AppStoreGroup";
+import AppStoreGroup from "./store/AppStoreGroup";
 // context
-import {Context}  from "almin";
-import {Dispatcher} from "almin";
+import {Context, Dispatcher}  from "almin";
 import AlminLogger from "almin-logger";
 // instances
 const dispatcher = new Dispatcher();

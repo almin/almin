@@ -8,6 +8,7 @@ module.exports = {
     devtool: process.env.WEBPACK_DEVTOOL || "eval",
     output: {
         path: path.join(__dirname, "public", "build"),
+        publicPath: "/build/",
         filename: "bundle.js"
     },
     module: {

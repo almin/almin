@@ -11,9 +11,9 @@ const React = require('react');
 const ReactPropTypes = React.PropTypes;
 const classNames = require("classnames");
 import AppLocator from "../AppLocator";
-import {RemoveTodoItemFactory} from "../js/usecase/RemoveAllCompletedItems";
-import {FilterTodoListFactory} from "../js/usecase/FilterTodoList";
-import {FilterTypes} from "../js/store/TodoStore/TodoState";
+import {RemoveTodoItemFactory} from "../usecase/RemoveAllCompletedItems";
+import {FilterTodoListFactory} from "../usecase/FilterTodoList";
+import {FilterTypes} from "../store/TodoStore/TodoState";
 const Footer = React.createClass({
     propTypes: {
         allTodos: ReactPropTypes.array.isRequired

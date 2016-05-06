@@ -11,9 +11,9 @@ const React = require('react');
 const ReactPropTypes = React.PropTypes;
 const classNames = require('classnames');
 import AppLocator from "../AppLocator";
-import {UpdateTodoItemTitleFactory} from "../js/usecase/UpdateTodoItemTitle";
-import {ToggleTodoItemFactory} from "../js/usecase/ToggleTodoItem";
-import {RemoveTodoItemFactory} from "../js/usecase/RemoveTodoItem";
+import {UpdateTodoItemTitleFactory} from "../usecase/UpdateTodoItemTitle";
+import {ToggleTodoItemFactory} from "../usecase/ToggleTodoItem";
+import {RemoveTodoItemFactory} from "../usecase/RemoveTodoItem";
 import TodoTextInput from "./TodoTextInput.react";
 
 const TodoItem = React.createClass({
@@ -40,7 +40,6 @@ const TodoItem = React.createClass({
      */
     render: function () {
         const todo = this.props.todo;
-
         let input;
         if (this.state.isEditing) {
             input =
@@ -56,12 +55,12 @@ const TodoItem = React.createClass({
         // Note that 'completed' is a classification while 'complete' is a state.
         // This differentiation between classification and state becomes important
         // in the naming of view actions toggleComplete() vs. destroyCompleted().
+        const listClassName = classNames({
+            'completed': todo.completed,
+            'editing': this.state.isEditing
+        });
         return (
-            <li
-                className={classNames({
-                  'completed': todo.completed,
-                  'editing': this.state.isEditing
-                })}
+            <li className={listClassName}
                 key={todo.id}>
                 <div className="view">
                     <input

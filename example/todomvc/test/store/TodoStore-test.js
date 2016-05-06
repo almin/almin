@@ -1,11 +1,11 @@
 // LICENSE : MIT
 "use strict";
 const assert = require("power-assert");
-import TodoList from "../../src/js/domain/TodoList/TodoList";
-import TodoStore from "../../src/js/store/TodoStore/TodoStore";
-import TodoState, {FilterTypes} from "../../src/js/store/TodoStore/TodoState";
-import {FilterTodoListUseCase} from "../../src/js/usecase/FilterTodoList";
-import {TodoListRepository} from "../../src/js/infra/TodoRepository";
+import TodoList from "../../src/domain/TodoList/TodoList";
+import TodoStore from "../../src/store/TodoStore/TodoStore";
+import TodoState, {FilterTypes} from "../../src/store/TodoStore/TodoState";
+import {FilterTodoListUseCase} from "../../src/usecase/FilterTodoList";
+import {TodoListRepository} from "../../src/infra/TodoRepository";
 describe("TodoStore", function () {
     context("when repository is changed", function () {
         it("should return todoState", function (done) {
