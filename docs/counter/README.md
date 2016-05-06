@@ -1,6 +1,6 @@
 # Counter Example
 
-In this guide, we’ll walk through the process of creating a simple Todo app.
+In this guide, we’ll walk through the process of creating a simple Counter app.
 
 ![counter](./img/counter.png)
 
