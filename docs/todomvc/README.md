@@ -53,7 +53,42 @@ We'll implement following work flow and see it.
 3. ... Loop 1,2
 4. Filter Todo list and show only non-completed todo items.
 
-## Let's create domain object!
+## Let's creating, before
+
+Previously, We learn flux pattern to create [counter app](../counter/README.md).
+
+![almin-architecture-flux](../counter/img/almin-architecture-flux.png)
+
+In this guide, We learn basic CQRS(Command Query Responsibility Segregation) pattern using Almin.
+
+CQRS split that conceptual model into separate models - Command(Write) model and Query(Read) model.
+
+![almin-architecture-simple](./img/almin-architecture-simple.png)
+
+In the figure, We called
+
+- Command(Write) model "Write Stack" (Left side of the figure)
+    - "Write Stack" get often complex.
+    - Because, it has business logic that is well-known as **domain model**.
+- Query(Read) model "Read Stack" (Right side of the figure)
+    - "Read Stack" is similar concept of ViewModel and Store.
+
+### Domain model
+
+[Domain model](https://en.wikipedia.org/wiki/Domain_model "Domain model")is a object/class that has both behavior and data.
+In other word, domain model has property(data) and method(behavior).
+
+## Let's create domain model!
+
+We want to create Todo app, then create `???` as domain model.
+
+Yes, `???` is just `TodoList`!
+
+```js
+class TodoList {
+    // both data and behavior
+}
+```
 
 ### TodoList
 
@@ -68,6 +103,10 @@ We'll implement following work flow and see it.
 
 - [ ] Repository is infra
 - [ ] Repository is confused word, we define the term in the tutorial
+
+### DIP
+
+- [ ] How to resolve dependencies?
 
 ## AddTodoItem UseCase
 
