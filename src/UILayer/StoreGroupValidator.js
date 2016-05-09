@@ -1,7 +1,7 @@
 // LICENSE : MIT
 "use strict";
 const assert = require("assert");
-import Store from "../Store";
+import Store, {defaultStoreName} from "../Store";
 import StoreGroup from "./StoreGroup";
 import Dispatcher from "../Dispatcher";
 /*
@@ -35,7 +35,10 @@ class ${storeName} extends Store { ... }
      
 
 `);
-            storeNames.push(storeName);
+            // Exception: when use default store name
+            if (storeName !== defaultStoreName) {
+                storeNames.push(storeName);
+            }
         });
     }
 
