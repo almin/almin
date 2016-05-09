@@ -2,90 +2,69 @@
 
 ## Dispatcher
 
-### Functions
+### Dispatcher
 
-<dl>
-<dt><a href="#isDispatcher">isDispatcher(v)</a> ⇒ <code>boolean</code></dt>
-<dd><p>if <a href="v">v</a> is instance of Dispatcher, return true</p>
-</dd>
-<dt><a href="#onDispatch">onDispatch(payloadHandler)</a> ⇒ <code>function</code></dt>
-<dd><p>add onAction handler and return unbind function</p>
-</dd>
-<dt><a href="#dispatch">dispatch(payload)</a></dt>
-<dd><p>dispatch action object.
-StoreGroups receive this action and reduce state.</p>
-</dd>
-<dt><a href="#pipe">pipe(toDispatcher)</a> ⇒ <code>function</code></dt>
-<dd><p>delegate payload object to other dispatcher.</p>
-</dd>
-</dl>
+Dispatcher is the **central** event bus system.
 
-### Typedefs
+also have these method.
 
-<dl>
-<dt><a href="#DispatcherPayload">DispatcherPayload</a> : <code>Object</code></dt>
-<dd><p>payload The payload object that must have <code>type</code> property.</p>
-</dd>
-</dl>
+-   onDispatch(function(payload){...}): Function
+-   dispatch(payload): void
 
-<a name="isDispatcher"></a>
+Almost event pass the (on)dispatch.
 
-### isDispatcher(v) ⇒ <code>boolean</code>
-if [v](v) is instance of Dispatcher, return true
+#### FAQ
 
-**Kind**: global function  
+Q. Why use payload object instead emit(key, ...args).
+A. It is for optimization and limitation.
+If apply emit style, we cast ...args for passing other dispatcher at every time.
 
-| Param | Type |
-| --- | --- |
-| v | <code>Dispatcher</code> &#124; <code>\*</code> | 
+#### dispatch
 
-<a name="onDispatch"></a>
-
-### onDispatch(payloadHandler) ⇒ <code>function</code>
-add onAction handler and return unbind function
-
-**Kind**: global function  
-**Returns**: <code>function</code> - return unbind function  
-
-| Param | Type |
-| --- | --- |
-| payloadHandler | <code>function</code> | 
-
-<a name="dispatch"></a>
-
-### dispatch(payload)
 dispatch action object.
 StoreGroups receive this action and reduce state.
 
-**Kind**: global function  
+**Parameters**
 
-| Param | Type |
-| --- | --- |
-| payload | <code>[DispatcherPayload](#DispatcherPayload)</code> | 
+-   `payload` **DispatcherPayload** 
 
-<a name="pipe"></a>
+#### onDispatch
 
-### pipe(toDispatcher) ⇒ <code>function</code>
+add onAction handler and return unbind function
+
+**Parameters**
+
+-   `payloadHandler`  
+
+Returns **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** return unbind function
+
+#### pipe
+
 delegate payload object to other dispatcher.
 
-**Kind**: global function  
-**Returns**: <code>function</code> - un register function  
+**Parameters**
 
-| Param | Type |
-| --- | --- |
-| toDispatcher | <code>Dispatcher</code> | 
+-   `toDispatcher` **Dispatcher** 
 
-<a name="DispatcherPayload"></a>
+Returns **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** un register function
 
-### DispatcherPayload : <code>Object</code>
+#### isDispatcher
+
+if `v` is instance of Dispatcher, return true
+
+**Parameters**
+
+-   `v` **(Dispatcher|Any)** 
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** 
+
+### DispatcherPayload
+
 payload The payload object that must have `type` property.
 
-**Kind**: global typedef  
 **Properties**
 
-| Name | Type | Description |
-| --- | --- | --- |
-| type | <code>String</code> | The event type to dispatch. |
+-   `type` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The event type to dispatch.
 
 ## Store
 
@@ -110,44 +89,48 @@ if emit change event, then call registered event handler function</p>
 <a name="getState"></a>
 
 ### getState(prevState) ⇒ <code>Object</code>
+
 implement return state object
 
 **Kind**: global function  
 **Returns**: <code>Object</code> - nextState  
 
-| Param | Type |
-| --- | --- |
-| prevState | <code>Object</code> | 
+| Param     | Type                |
+| --------- | ------------------- |
+| prevState | <code>Object</code> |
 
 <a name="onUseCaseError"></a>
 
 ### onUseCaseError(useCase, handler) ⇒ <code>function</code>
+
 invoke [handler](handler) if the [UseCase](UseCase) throw error.
 
 **Kind**: global function  
 **Returns**: <code>function</code> - return un-listen function  
 
-| Param | Type |
-| --- | --- |
-| useCase | <code>UseCase</code> | 
-| handler | <code>function</code> | 
+| Param   | Type                  |
+| ------- | --------------------- |
+| useCase | <code>UseCase</code>  |
+| handler | <code>function</code> |
 
 <a name="onChange"></a>
 
 ### onChange(cb) ⇒ <code>function</code>
+
 subscribe change event of the state(own).
 if emit change event, then call registered event handler function
 
 **Kind**: global function  
 **Returns**: <code>function</code> - return unbind function  
 
-| Param | Type |
-| --- | --- |
-| cb | <code>function</code> | 
+| Param | Type                  |
+| ----- | --------------------- |
+| cb    | <code>function</code> |
 
 <a name="emitChange"></a>
 
 ### emitChange()
+
 emit change event to subscribers
 
 **Kind**: global function  
@@ -178,32 +161,36 @@ You can call this when no more call event handler</p>
 <a name="registerStore"></a>
 
 ### registerStore(store)
+
 register store and listen onChange.
 If you release store, and do call [release](#release) method.
 
 **Kind**: global function  
 
-| Param | Type |
-| --- | --- |
-| store | <code>Store</code> | 
+| Param | Type               |
+| ----- | ------------------ |
+| store | <code>Store</code> |
 
 <a name="requestEmitChange"></a>
 
 ### requestEmitChange()
+
 emitChange if its needed.
+
 Implementation Note:
-- Anyone registered store emitChange, then set `this._isChangedStore` true.
-- if `this._isChangedStore === true`, then [emitChange](emitChange)().
+
+-   Anyone registered store emitChange, then set `this._isChangedStore` true.
+-   if `this._isChangedStore === true`, then [emitChange](emitChange)().
 
 **Kind**: global function  
 <a name="release"></a>
 
 ### release()
+
 release all events handler.
 You can call this when no more call event handler
 
 **Kind**: global function  
-
 
 ## Context
 
@@ -250,12 +237,14 @@ You can call this when no more call event handler</p>
 <a name="ActionTypes"></a>
 
 ### ActionTypes
-The use should use on* handler method instead of it
+
+The use should use on\* handler method instead of it
 
 **Kind**: global constant  
 <a name="getState"></a>
 
 ### getState() ⇒ <code>\*</code>
+
 return state value of StoreGroup.
 
 **Kind**: global function  
@@ -263,78 +252,87 @@ return state value of StoreGroup.
 <a name="onChange"></a>
 
 ### onChange(onChangeHandler) ⇒ <code>function</code>
+
 if anyone store is changed, then call onChangeHandler
 
 **Kind**: global function  
 **Returns**: <code>function</code> - release handler function.  
 
-| Param | Type |
-| --- | --- |
-| onChangeHandler | <code>function</code> | 
+| Param           | Type                  |
+| --------------- | --------------------- |
+| onChangeHandler | <code>function</code> |
 
 <a name="useCase"></a>
 
 ### useCase(useCase) ⇒ <code>UseCaseExecutor</code>
+
 **Kind**: global function  
 
-| Param | Type |
-| --- | --- |
-| useCase | <code>UseCase</code> | 
+| Param   | Type                 |
+| ------- | -------------------- |
+| useCase | <code>UseCase</code> |
 
 **Example**  
+
 ```js
 context.useCase(UseCaseFactory.create()).execute(args);
 ```
+
 <a name="onWillExecuteEachUseCase"></a>
 
 ### onWillExecuteEachUseCase(handler)
+
 called the [handler](handler) with useCase when the useCase will do.
 
 **Kind**: global function  
 
-| Param | Type |
-| --- | --- |
-| handler | <code>function</code> | 
+| Param   | Type                  |
+| ------- | --------------------- |
+| handler | <code>function</code> |
 
 <a name="onDispatch"></a>
 
 ### onDispatch(handler) ⇒ <code>function</code>
+
 called the [handler](handler) with user-defined payload object when a UseCase dispatch with payload.
 This `onDispatch` is not called at built-in event. It is filtered by Context.
-If you want to *All* dispatched event and use listen directly your `dispatcher` object.
+If you want to _All_ dispatched event and use listen directly your `dispatcher` object.
 In other word, listen the dispatcher of `new Context({dispatcher})`.
 
 **Kind**: global function  
 
 | Param |
-| --- |
+\| --- \|
 | handler | 
 
 <a name="onDidExecuteEachUseCase"></a>
 
 ### onDidExecuteEachUseCase(handler)
+
 called the [handler](handler) with useCase when the useCase is done.
 
 **Kind**: global function  
 
-| Param | Type |
-| --- | --- |
-| handler | <code>function</code> | 
+| Param   | Type                  |
+| ------- | --------------------- |
+| handler | <code>function</code> |
 
 <a name="onErrorDispatch"></a>
 
 ### onErrorDispatch(errorHandler) ⇒ <code>function</code>
+
 called the [errorHandler](errorHandler) with error when error is occurred.
 
 **Kind**: global function  
 
-| Param | Type |
-| --- | --- |
-| errorHandler | <code>function</code> | 
+| Param        | Type                  |
+| ------------ | --------------------- |
+| errorHandler | <code>function</code> |
 
 <a name="release"></a>
 
 ### release()
+
 release all events handler.
 You can call this when no more call event handler
 
@@ -366,30 +364,32 @@ this error event is caught by dispatcher.</p>
 <a name="context"></a>
 
 ### context ⇒ <code>UseCaseContext</code>
+
 get context of UseCase
 
 **Kind**: global variable  
 <a name="onError"></a>
 
 ### onError(errorHandler) ⇒ <code>function</code>
+
 called the [errorHandler](errorHandler) with error when error is occurred.
 
 **Kind**: global function  
 
-| Param | Type |
-| --- | --- |
-| errorHandler | <code>function</code> | 
+| Param        | Type                  |
+| ------------ | --------------------- |
+| errorHandler | <code>function</code> |
 
 <a name="throwError"></a>
 
 ### throwError(error)
+
 throw error event
 you can use it instead of `throw new Error()`
 this error event is caught by dispatcher.
 
 **Kind**: global function  
 
-| Param | Type |
-| --- | --- |
-| error | <code>Error</code> | 
-
+| Param | Type               |
+| ----- | ------------------ |
+| error | <code>Error</code> |

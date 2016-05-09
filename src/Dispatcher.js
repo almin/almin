@@ -13,7 +13,7 @@ export const ON_DISPATCH = "__ON_DISPATCH__";
  *
  * also have these method.
  *
- * - onDispatch(payloadHandler): Function
+ * - onDispatch(function(payload){...}): Function
  * - dispatch(payload): void
  *
  * Almost event pass the (on)dispatch.
@@ -41,7 +41,7 @@ export default class Dispatcher extends EventEmitter {
 
     /**
      * add onAction handler and return unbind function
-     * @param {Function} payloadHandler
+     * @param {{function(payload: DispatcherPayload)}} payloadHandler
      * @returns {Function} return unbind function
      */
     onDispatch(payloadHandler) {
