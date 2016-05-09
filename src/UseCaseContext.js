@@ -20,7 +20,7 @@ export default class UseCaseContext {
      * @returns {UseCaseExecutor}
      */
     useCase(useCase) {
-        assert(useCase !== this.dispatcher, `the argument useCase(${useCase}) should not equal this useCase(${this.dispatcher})`);
+        assert(useCase !== this.dispatcher, `the useCase(${useCase}) should not equal this useCase(${this.dispatcher})`);
         return new UseCaseExecutor(useCase, this.dispatcher);
     }
 }

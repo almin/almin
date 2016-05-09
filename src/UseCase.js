@@ -4,6 +4,14 @@ const assert = require("assert");
 import Dispatcher from "./Dispatcher";
 import UseCaseContext from "./UseCaseContext";
 import {ActionTypes} from "./Context";
+/**
+ * @type {string}
+ * @private
+ */
+export let defaultUseCaseName = "<Anonymous-UseCase>";
+/**
+ * UseCase class
+ */
 export default class UseCase extends Dispatcher {
     static isUseCase(v) {
         if (v instanceof UseCase) {
@@ -19,7 +27,7 @@ export default class UseCase extends Dispatcher {
         /**
          * @type {string} default: UseCase name
          */
-        this.name = this.displayName || this.constructor.name;
+        this.name = this.displayName || this.constructor.name || defaultUseCaseName;
         /**
          * @type {string} UseCase name
          */

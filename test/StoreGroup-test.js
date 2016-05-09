@@ -6,6 +6,8 @@ import StoreGroup from "../src/UILayer/StoreGroup";
 import createEchoStore from "./helper/EchoStore";
 
 describe("StoreGroup", function () {
+    before(function () {
+    });
     describe("#onChange", function () {
         it("should async called onChange ", function (done) {
             const aStore = createEchoStore({name: "AStore"});
@@ -61,13 +63,13 @@ describe("StoreGroup", function () {
             });
         });
         context("when getState() return State object", function () {
-            it("should return a single state has [State.name] as a key", function () {
+            it("should return a single state has {<key>: state} of return Store#getState", function () {
                 class AState {
                 }
                 class AStore extends Store {
                     getState() {
                         return {
-                            AState: new AState()
+                            aState: new AState()
                         };
                     }
                 }
@@ -76,7 +78,7 @@ describe("StoreGroup", function () {
                 class BStore extends Store {
                     getState() {
                         return {
-                            BState: new BState()
+                            bState: new BState()
                         };
                     }
                 }
@@ -87,10 +89,9 @@ describe("StoreGroup", function () {
                 const state = storeGroup.getState();
                 // then - return a single state object that contain each store and merge
                 const keys = Object.keys(state);
-                assert(keys.indexOf(AState.name) !== -1);
-                assert(keys.indexOf(AState.name) !== -1);
-                assert(state[AState.name] instanceof AState);
-                assert(state[BState.name] instanceof BState);
+                assert(keys.indexOf("aState") !== -1);
+                assert(state["aState"] instanceof AState);
+                assert(state["bState"] instanceof BState);
             });
         });
 
