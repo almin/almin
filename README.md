@@ -1,7 +1,8 @@
 # [Almin.js](https://github.com/almin/almin) [![Build Status](https://travis-ci.org/almin/almin.svg?branch=master)](https://travis-ci.org/almin/almin)
 
 [![Almin.js logo](https://almin.github.io/media/logo/logo.png)](https://github.com/almin/almin)
-[![Sauce Test Status](https://saucelabs.com/buildstatus/almin)](https://saucelabs.com/u/almin)
+
+[![Sauce Test Status](https://saucelabs.com/browser-matrix/almin.svg)](https://saucelabs.com/u/almin)
 
 Flux/CQRS patterns for JavaScript application.
 
