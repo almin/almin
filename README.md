@@ -2,11 +2,13 @@
 
 [![Almin.js logo](https://almin.github.io/media/logo/logo.png)](https://github.com/almin/almin)
 
+[![Sauce Test Status](https://saucelabs.com/browser-matrix/almin.svg)](https://saucelabs.com/u/almin)
+
 Flux/CQRS patterns for JavaScript application.
 
 Write code thinking :)
 
-## Why
+## Why?
 
 Now, We can implement web application with Flux or Redux etc...
 
@@ -33,6 +35,10 @@ Almin is a implementation of Read/Write Stack Architecture that is well-known as
 ## Installation
 
     npm install almin
+
+You'll also need a Promise polyfill for [older browsers](http://caniuse.com/#feat=promises).
+
+    npm install es6-promise
 
 ## Usage
 
@@ -69,7 +75,18 @@ Almin is a implementation of Read/Write Stack Architecture that is well-known as
 
 ## Running Tests
 
+Running Tests in Node.js
+
     npm test
+    
+Running Tests in Browser
+
+    npm run test:browser
+
+Running Tests in [Sauce Labs](https://saucelabs.com/ "Sauce Labs: Selenium Testing, Mobile Testing, JS Unit Testing")
+
+    # Need "~/.zuulrc" for using Sauce Labs
+    npm run test:saucelabs
 
 ## Building Docs
  

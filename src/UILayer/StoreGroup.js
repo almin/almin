@@ -2,6 +2,8 @@
 "use strict";
 // polyfill Map
 require("es6-collections");
+// polyfill Object.assign
+const ObjectAssign = require("object-assign");
 const assert = require("assert");
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
 import Dispatcher from "./../Dispatcher";
@@ -49,7 +51,7 @@ export default class StoreGroup extends Dispatcher {
          * @type {Map}
          * @private
          */
-        this._storeValueMap = new Map();
+        this._storeValueWeakMap = new WeakMap();
     }
 
     getState() {
@@ -60,19 +62,19 @@ export default class StoreGroup extends Dispatcher {
              @example
 
              class ExampleStore extends Store {
-             getState(prevState = initialState) {
-             return {
-             NextState: this.state
-             };
-             }
+                 getState(prevState = initialState) {
+                    return {
+                        NextState: this.state
+                    };
+                 }
              }
              */
-            const prevState = this._storeValueMap.get(store.name);
+            const prevState = this._storeValueWeakMap.get(store);
             if (prevState && this._previousChangingStores.indexOf(store) === -1) {
                 return prevState;
             }
             const nextState = store.getState(prevState);
-            assert(typeof nextState == "object", `${store.name}.getState() should return Object.
+            assert(typeof nextState == "object", `${store}: ${store.name}.getState() should return Object.
 e.g.)
 
  class ExampleStore extends Store {
@@ -88,10 +90,10 @@ Then, use can access by StateName.
 StoreGroup#getState()["StateName"]// state
 
 `);
-            this._storeValueMap.set(store.name, nextState);
+            this._storeValueWeakMap.set(store, nextState);
             return nextState;
         });
-        return Object.assign({}, ...stateMap);
+        return ObjectAssign({}, ...stateMap);
     }
 
     /**
@@ -163,6 +165,6 @@ StoreGroup#getState()["StateName"]// state
     release() {
         this._releaseHandlers.forEach(releaseHandler => releaseHandler());
         this._releaseHandlers.length = 0;
-        this._storeValueMap.clear();
+        this._storeValueWeakMap.clear();
     }
 }

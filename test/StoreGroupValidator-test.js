@@ -9,10 +9,10 @@ describe("StoreGroupValidator", function () {
     describe("validateStores", function () {
         context("when duplicated stores", function () {
             it("should throw error", function () {
-                const aStore = new Store();
-                const bStore = new Store();
+                const store1 = createEchoStore({name: "AStore"});
+                const store2 = createEchoStore({name: "AStore"});
                 assert.throws(() => {
-                    StoreGroupValidator.validateStores([aStore, bStore]);
+                    StoreGroupValidator.validateStores([store1, store2]);
                 });
             });
         })

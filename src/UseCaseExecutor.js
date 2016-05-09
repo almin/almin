@@ -11,8 +11,8 @@ export default class UseCaseExecutor {
      */
     constructor(useCase, parentDispatcher) {
         // execute and finish =>
-        const useCaseName = useCase.constructor.name;
-        assert(typeof useCaseName !== "undefined" && typeof useCaseName === "string", "UseCase instance should have constructor.name " + useCase);
+        const useCaseName = useCase.name;
+        assert(typeof useCaseName === "string", "UseCase instance should have constructor.name " + useCase);
         assert(typeof useCase.execute === "function", `UseCase instance should have #execute function: ${useCaseName}`);
         /**
          * @type {string} useCase name

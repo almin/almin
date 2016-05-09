@@ -22,6 +22,14 @@ const STATE_CHANGE_EVENT = "STATE_CHANGE_EVENT";
  *
  */
 
+/**
+ * @type {string}
+ * @private
+ */
+export let defaultStoreName = "<Anonymous-Store>";
+/**
+ * Store class 
+ */
 export default class Store extends Dispatcher {
     static isStore(v) {
         if (v instanceof Store) {
@@ -37,7 +45,7 @@ export default class Store extends Dispatcher {
         /**
          * @type {string} Store name
          */
-        this.name = this.displayName || this.constructor.name;
+        this.name = this.displayName || this.constructor.name || defaultStoreName;
     }
 
     /**

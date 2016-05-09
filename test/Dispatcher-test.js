@@ -23,7 +23,7 @@ describe("Dispatcher", function () {
                 dispatcher.dispatch("it is not payload");
                 throw new Error("UNREACHED");
             } catch (error) {
-                assert(error.name === assert.AssertionError.name);
+                assert(error.message !== "UNREACHED");
             }
         });
         it("should pass payload object to listening handler", function (done) {

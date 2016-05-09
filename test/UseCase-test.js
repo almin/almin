@@ -22,16 +22,18 @@ describe("UseCase", function () {
                 }
             }
             const aUseCase = new AUseCase();
+            // for reference fn.name
+            const bUseCase = new BUseCase();
             const callStack = [];
             const expectedCallStackOfAUseCase = [
                 `ON_WILL_EXECUTE_EACH_USECASE`,
                 `ON_DID_EXECUTE_EACH_USECASE`
             ];
             const expectedCallStack = [
-                `${AUseCase.name}:will`,
-                `${BUseCase.name}:will`,
-                `${BUseCase.name}:did`,
-                `${AUseCase.name}:did`
+                `${aUseCase.name}:will`,
+                `${bUseCase.name}:will`,
+                `${bUseCase.name}:did`,
+                `${aUseCase.name}:did`
             ];
             const dispatcher = new Dispatcher();
             const context = new Context({
