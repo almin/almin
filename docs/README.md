@@ -56,6 +56,9 @@ Rough version of Table of Contents.
 
 - [Creating Counter App](./counter/)
     - Apply Flux pattern to Almin
+- [Creating Todo App](./todomv/)
+    - Apply CQRS pattern to Almin
+
 
 -----
 
