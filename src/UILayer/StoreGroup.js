@@ -14,12 +14,13 @@ import StoreGroupValidator from "./StoreGroupValidator";
  * StoreGroup is a **UI** parts of Store.
  * StoreGroup has event queue system.
  * It means that StoreGroup thin out change events of stores.
- * If you want to know all change events, and directly listen {@link Store.onChange}.
+ * If you want to know all change events, and directly use `store.onChange()`.
+ * @public
  */
 export default class StoreGroup extends Dispatcher {
     /**
      * Create StoreGroup
-     * @param {Store[]} stores stores are instance of MaterialStore
+     * @param {Store[]} stores stores are instance of `Store` class
      */
     constructor(stores) {
         super();
@@ -45,7 +46,7 @@ export default class StoreGroup extends Dispatcher {
          */
         this.stores = stores;
         // listen onChange of each store.
-        this.stores.forEach(store => this.registerStore(store));
+        this.stores.forEach(store => this._registerStore(store));
 
         /**
          * @type {Map}
@@ -54,6 +55,10 @@ export default class StoreGroup extends Dispatcher {
         this._storeValueWeakMap = new WeakMap();
     }
 
+    /**
+     * return the state object that merge each stores's state
+     * @returns {Object} merged state object
+     */
     getState() {
         const stateMap = this.stores.map(store => {
             /* Why record nextState to `_storeValueMap`.
@@ -100,8 +105,9 @@ StoreGroup#getState()["StateName"]// state
      * register store and listen onChange.
      * If you release store, and do call {@link release} method.
      * @param {Store} store
+     * @private
      */
-    registerStore(store) {
+    _registerStore(store) {
         // if anyone store is changed, will call `emitChange()`.
         const releaseOnChangeHandler = store.onChange(() => {
             this._isAnyOneStoreChanged = true;
@@ -114,7 +120,7 @@ StoreGroup#getState()["StateName"]// state
             this._currentChangingStores.push(store);
             this._onChangeQueue = this._onChangeQueue.then(() => {
                 // `requestEmitChange()` is for pushing `emitChange()` to queue.
-                this.requestEmitChange();
+                this._requestEmitChange();
             }).catch(function onChangeQueueError(error) {
                 setTimeout(() => {
                     throw error;
@@ -135,7 +141,7 @@ StoreGroup#getState()["StateName"]// state
      * - Anyone registered store emitChange, then set `this._isChangedStore` true.
      * - if `this._isChangedStore === true`, then {@link emitChange}().
      */
-    requestEmitChange() {
+    _requestEmitChange() {
         if (!this._isAnyOneStoreChanged) {
             return;
         }
@@ -151,6 +157,11 @@ StoreGroup#getState()["StateName"]// state
         this._currentChangingStores.length = 0;
     }
 
+    /**
+     * listen changes of the store group.
+     * @param {function(stores: Store[])} handler the callback arguments is array of changed store.
+     * @returns {Function} call the function and release handler
+     */
     onChange(handler) {
         this.on(CHANGE_STORE_GROUP, handler);
         const releaseHandler = this.removeListener.bind(this, CHANGE_STORE_GROUP, handler);
@@ -161,6 +172,7 @@ StoreGroup#getState()["StateName"]// state
     /**
      * release all events handler.
      * You can call this when no more call event handler
+     * @public
      */
     release() {
         this._releaseHandlers.forEach(releaseHandler => releaseHandler());

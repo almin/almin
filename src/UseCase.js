@@ -13,6 +13,12 @@ export let defaultUseCaseName = "<Anonymous-UseCase>";
  * UseCase class
  */
 export default class UseCase extends Dispatcher {
+    /**
+     * return true if the `v` is UseCase .
+     * @param {*} v
+     * @returns {boolean}
+     * @public
+     */
     static isUseCase(v) {
         if (v instanceof UseCase) {
             return true;
@@ -40,8 +46,9 @@ export default class UseCase extends Dispatcher {
     }
 
     /**
-     * get context of UseCase
-     * @returns {UseCaseContext}
+     * getter to get context of UseCase
+     * @returns {UseCaseContext} the UseCaseContext has `execute()` method
+     * @public
      */
     get context() {
         return new UseCaseContext(this);
@@ -51,6 +58,7 @@ export default class UseCase extends Dispatcher {
      * called the {@link errorHandler} with error when error is occurred.
      * @param {function(error: Error)} errorHandler
      * @returns {function(this:Dispatcher)}
+     * @public
      */
     onError(errorHandler) {
         return this.onDispatch(payload => {
@@ -65,6 +73,7 @@ export default class UseCase extends Dispatcher {
      * you can use it instead of `throw new Error()`
      * this error event is caught by dispatcher.
      * @param {Error} error
+     * @public
      */
     throwError(error) {
         const payload = {

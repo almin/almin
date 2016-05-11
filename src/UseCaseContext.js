@@ -8,14 +8,14 @@ import Dispatcher from "./Dispatcher";
 const assert = require("assert");
 export default class UseCaseContext {
     /**
-     * @param {Dispatcher|UseCase} dispatcher
+     * @param {Dispatcher|UseCase} dispatcher dispatcher is Dispatcher or parent UseCase.
      */
     constructor(dispatcher) {
         this.dispatcher = dispatcher;
     }
 
     /**
-     * Create UseCaseExecutor for {@link useCase}.
+     * Create UseCaseExecutor for `useCase`.
      * @param {UseCase} useCase
      * @returns {UseCaseExecutor}
      */
