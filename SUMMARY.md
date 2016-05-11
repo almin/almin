@@ -16,5 +16,5 @@
     - Immutability
     - Nesting UseCase
 - [ ] Testing
-- [ ] Reference
+- [API Reference](./docs/api/README.md)
 - [ ] FAQ

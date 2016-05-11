@@ -7,14 +7,15 @@ export const ON_DISPATCH = "__ON_DISPATCH__";
  * payload The payload object that must have `type` property.
  * @typedef {Object} DispatcherPayload
  * @property {String} type The event type to dispatch.
+ * @public
  */
 /**
  * Dispatcher is the **central** event bus system.
  *
  * also have these method.
  *
- * - onDispatch(payloadHandler): Function
- * - dispatch(payload): void
+ * - `onDispatch(function(payload){  });`
+ * - `dispatch(payload);`
  *
  * Almost event pass the (on)dispatch.
  *
@@ -23,12 +24,14 @@ export const ON_DISPATCH = "__ON_DISPATCH__";
  * Q. Why use payload object instead emit(key, ...args).
  * A. It is for optimization and limitation.
  * If apply emit style, we cast ...args for passing other dispatcher at every time.
+ * @public
  */
 export default class Dispatcher extends EventEmitter {
     /**
      * if {@link v} is instance of Dispatcher, return true
      * @param {Dispatcher|*} v
      * @returns {boolean}
+     * @public
      */
     static isDispatcher(v) {
         if (v instanceof Dispatcher) {
@@ -41,8 +44,9 @@ export default class Dispatcher extends EventEmitter {
 
     /**
      * add onAction handler and return unbind function
-     * @param {Function} payloadHandler
-     * @returns {Function} return unbind function
+     * @param {{function(payload: DispatcherPayload)}} payloadHandler
+     * @returns {Function} call the function and release handler
+     * @public
      */
     onDispatch(payloadHandler) {
         this.on(ON_DISPATCH, payloadHandler);
@@ -53,6 +57,7 @@ export default class Dispatcher extends EventEmitter {
      * dispatch action object.
      * StoreGroups receive this action and reduce state.
      * @param {DispatcherPayload} payload
+     * @public
      */
     dispatch(payload) {
         assert(payload !== undefined && payload !== null, "payload should not null or undefined");
@@ -63,7 +68,8 @@ export default class Dispatcher extends EventEmitter {
     /**
      * delegate payload object to other dispatcher.
      * @param {Dispatcher} toDispatcher
-     * @returns {Function} un register function
+     * @returns {Function} call the function and release handler
+     * @public
      */
     pipe(toDispatcher) {
         const fromName = this.constructor.name;

@@ -5,7 +5,8 @@ import Dispatcher from "./Dispatcher";
 import UseCase from "./UseCase";
 const STATE_CHANGE_EVENT = "STATE_CHANGE_EVENT";
 /**
- * A UseCase `dispatch` {@link key} with {@link args} and receive the {@link key} with {@link args}
+ * A UseCase `dispatch(payload)` and subscribers of the dispatcher are received the payload.
+ *
  * @example
  *
  * abcUseCase
@@ -20,6 +21,7 @@ const STATE_CHANGE_EVENT = "STATE_CHANGE_EVENT";
  *      console.log(value); // 42
  *  });
  *
+ * @public
  */
 
 /**
@@ -28,9 +30,15 @@ const STATE_CHANGE_EVENT = "STATE_CHANGE_EVENT";
  */
 export let defaultStoreName = "<Anonymous-Store>";
 /**
- * Store class 
+ * Store class
  */
 export default class Store extends Dispatcher {
+    /**
+     * return true if the `v` is store.
+     * @param {*} v
+     * @returns {boolean}
+     * @public
+     */
     static isStore(v) {
         if (v instanceof Store) {
             return true;
@@ -49,7 +57,7 @@ export default class Store extends Dispatcher {
     }
 
     /**
-     * implement return state object
+     * should be overwrite. return state object
      * @param {Object} prevState
      * @return {Object} nextState
      */
@@ -58,10 +66,11 @@ export default class Store extends Dispatcher {
     }
 
     /**
-     * invoke {@link handler} if the {@link UseCase} throw error.
+     * invoke `handler` if the `useCase` throw error.
      * @param {UseCase} useCase
      * @param {Function} handler
-     * @returns {Function} return un-listen function
+     * @returns {Function} call the function and release handler
+     * @public
      */
     onUseCaseError(useCase, handler) {
         assert(UseCase.isUseCase(useCase), "useCase should be instance of UseCase: " + useCase);
@@ -76,7 +85,8 @@ export default class Store extends Dispatcher {
      * subscribe change event of the state(own).
      * if emit change event, then call registered event handler function
      * @param {Function} cb
-     * @returns {Function} return unbind function
+     * @returns {Function} call the function and release handler
+     * @public
      */
     onChange(cb) {
         this.on(STATE_CHANGE_EVENT, cb);
@@ -84,7 +94,8 @@ export default class Store extends Dispatcher {
     }
 
     /**
-     * emit change event to subscribers
+     * emit "change" event to subscribers
+     * @public
      */
     emitChange() {
         this.emit(STATE_CHANGE_EVENT);

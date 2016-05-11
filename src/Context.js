@@ -13,11 +13,13 @@ export const ActionTypes = {
     ON_DID_EXECUTE_EACH_USECASE: "ON_DID_EXECUTE_EACH_USECASE",
     ON_ERROR: "ON_ERROR"
 };
+
 export default class Context {
 
     /**
      * @param {Dispatcher} dispatcher
-     * @param {StoreGroup|Store} store
+     * @param {StoreGroup|Store} store store is either Store or StoreGroup
+     * @public
      */
     constructor({dispatcher, store}) {
         StoreGroupValidator.validateInstance(store);
@@ -41,6 +43,7 @@ export default class Context {
     /**
      * return state value of StoreGroup.
      * @returns {*} states object of stores
+     * @public
      */
     getState() {
         return this._storeGroup.getState();
@@ -50,6 +53,7 @@ export default class Context {
      * if anyone store is changed, then call onChangeHandler
      * @param {function(changingStores: Store[])} onChangeHandler
      * @return {Function} release handler function.
+     * @public
      */
     onChange(onChangeHandler) {
         return this._storeGroup.onChange(onChangeHandler);
@@ -58,6 +62,7 @@ export default class Context {
     /**
      * @param {UseCase} useCase
      * @returns {UseCaseExecutor}
+     * @public
      * @example
      *
      * context.useCase(UseCaseFactory.create()).execute(args);
@@ -70,6 +75,7 @@ export default class Context {
     /**
      * called the {@link handler} with useCase when the useCase will do.
      * @param {function(useCase: UseCase, args: *)} handler
+     * @public
      */
     onWillExecuteEachUseCase(handler) {
         const releaseHandler = this._dispatcher.onDispatch(payload => {
@@ -88,6 +94,7 @@ export default class Context {
      * In other word, listen the dispatcher of `new Context({dispatcher})`.
      * @param handler
      * @returns {Function}
+     * @public
      */
     onDispatch(handler) {
         const releaseHandler = this._dispatcher.onDispatch(payload => {
@@ -104,6 +111,7 @@ export default class Context {
     /**
      * called the {@link handler} with useCase when the useCase is done.
      * @param {function(useCase: UseCase)} handler
+     * @public
      */
     onDidExecuteEachUseCase(handler) {
         const releaseHandler = this._dispatcher.onDispatch(payload => {
@@ -119,6 +127,7 @@ export default class Context {
      * called the {@link errorHandler} with error when error is occurred.
      * @param {function(error: Error)} errorHandler
      * @returns {function(this:Dispatcher)}
+     * @public
      */
     onErrorDispatch(errorHandler) {
         const releaseHandler = this._dispatcher.onDispatch(payload => {
@@ -133,6 +142,7 @@ export default class Context {
     /**
      * release all events handler.
      * You can call this when no more call event handler
+     * @public
      */
     release() {
         if (typeof this._storeGroup === "function") {
