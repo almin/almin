@@ -14,8 +14,8 @@ Dispatcher is the **central** event bus system.
 
 also have these method.
 
--   onDispatch(function(payload){...}): Function
--   dispatch(payload): void
+-   `onDispatch(function(payload){  });`
+-   `dispatch(payload);`
 
 Almost event pass the (on)dispatch.
 
@@ -42,7 +42,7 @@ add onAction handler and return unbind function
 
 -   `payloadHandler`
 
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - return unbind function
+**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - call the function and release handler
 
 #### `pipe(toDispatcher: Dispatcher): Function`
 
@@ -52,7 +52,7 @@ delegate payload object to other dispatcher.
 
 -   `toDispatcher`: **Dispatcher**
 
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - un register function
+**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - call the function and release handler
 
 #### `isDispatcher(v: (Dispatcher | Any)): boolean`
 
@@ -74,75 +74,26 @@ payload The payload object that must have `type` property.
 
 ## Store class
 
-### `ActionTypes`
-
-The use should use on\* handler method instead of it
-
 ### `StoreGroup`
 
 StoreGroup is a **UI** parts of Store.
 StoreGroup has event queue system.
 It means that StoreGroup thin out change events of stores.
-If you want to know all change events, and directly listen {@link Store.onChange}.
+If you want to know all change events, and directly use `store.onChange()`.
 
-#### `constructor(stores: Array<Store>)`
-
-Create StoreGroup
-
-**Parameters**
-
--   `stores`: **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Store>** - stores are instance of MaterialStore
-
-#### `registerStore(store: Store)`
-
-register store and listen onChange.
-If you release store, and do call {@link release} method.
-
-**Parameters**
-
--   `store`: **Store**
-
-#### `release`
+#### `release()`
 
 release all events handler.
 You can call this when no more call event handler
 
-#### `requestEmitChange`
-
-emitChange if its needed.
-
-Implementation Note:
-
--   Anyone registered store emitChange, then set `this._isChangedStore` true.
--   if `this._isChangedStore === true`, then {@link emitChange}().
-
-### `constructor(dispatcher: (Dispatcher | UseCase))`
-
-**Parameters**
-
--   `dispatcher`: **(Dispatcher | UseCase)**
-
-### `useCase(useCase: UseCase): UseCaseExecutor`
-
-Create UseCaseExecutor for {@link useCase}.
-
-**Parameters**
-
--   `useCase`: **UseCase**
-
-**Returns**: **UseCaseExecutor**
-
-### `constructor(dispatcher: Dispatcher, store: (StoreGroup | Store), $0: Object)`
+### `constructor({ dispatcher, store })`
 
 **Parameters**
 
 -   `dispatcher`: **Dispatcher**
--   `store`: **(StoreGroup | Store)**
--   `$0`: **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)**
-    -   `$0.dispatcher`
-    -   `$0.store`
+-   `store`: **(StoreGroup | Store)** - store is either Store or StoreGroup
 
-### `getState: Any`
+### `getState(): Any`
 
 return state value of StoreGroup.
 
@@ -197,7 +148,7 @@ called the {@link handler} with useCase when the useCase will do.
 
 -   `handler`: **function (useCase: UseCase, args: Any)**
 
-### `release`
+### `release()`
 
 release all events handler.
 You can call this when no more call event handler
@@ -216,84 +167,9 @@ context.useCase(UseCaseFactory.create()).execute(args);
 
 **Returns**: **UseCaseExecutor**
 
-### `constructor(useCase: UseCase, parentDispatcher: (Dispatcher | UseCase))`
-
-**Parameters**
-
--   `useCase`: **UseCase**
--   `parentDispatcher`: **(Dispatcher | UseCase)** - is parent dispatcher-like object
-
-### `didExecute`
-
-### `execute(args: ...)`
-
-execute UseCase instance.
-UseCase is a executable object. it means that has `execute` method.
-
-**Parameters**
-
--   `args`: **...**
-
-### `onDidExecuteEachUseCase(handler: function (useCase: UseCase))`
-
-called the {@link handler} with useCase when the useCase is done.
-
-**Parameters**
-
--   `handler`: **function (useCase: UseCase)**
-
-### `onWillExecuteEachUseCase(handler: function (useCase: UseCase, args: Any))`
-
-called the {@link handler} with useCase when the useCase will do.
-
-**Parameters**
-
--   `handler`: **function (useCase: UseCase, args: Any)**
-
-### `release`
-
-release all events handler.
-You can call this when no more call event handler
-
-### `willExecute(args: [Array<Any>])`
-
-**Parameters**
-
--   `args`: **\[[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Any>]** - arguments of the usecase
-
-### `UseCase`
-
-UseCase class
-
-#### `context: UseCaseContext`
-
-get context of UseCase
-
-**Returns**: **UseCaseContext**
-
-#### `onError(errorHandler: function (error: Error)): function (this: Dispatcher)`
-
-called the {@link errorHandler} with error when error is occurred.
-
-**Parameters**
-
--   `errorHandler`: **function (error: [Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error))**
-
-**Returns**: **function (this: Dispatcher)**
-
-#### `throwError(error: Error)`
-
-throw error event
-you can use it instead of `throw new Error()`
-this error event is caught by dispatcher.
-
-**Parameters**
-
--   `error`: **[Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error)**
-
 ### `defaultStoreName`
 
-A UseCase `dispatch` {@link key} with {@link args} and receive the {@link key} with {@link args}
+A UseCase `dispatch(payload)` and subscribers of the dispatcher are received the payload.
 
 **Examples**
 
@@ -317,8 +193,8 @@ Dispatcher is the **central** event bus system.
 
 also have these method.
 
--   onDispatch(function(payload){...}): Function
--   dispatch(payload): void
+-   `onDispatch(function(payload){  });`
+-   `dispatch(payload);`
 
 Almost event pass the (on)dispatch.
 
@@ -345,7 +221,7 @@ add onAction handler and return unbind function
 
 -   `payloadHandler`
 
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - return unbind function
+**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - call the function and release handler
 
 #### `pipe(toDispatcher: Dispatcher): Function`
 
@@ -355,7 +231,7 @@ delegate payload object to other dispatcher.
 
 -   `toDispatcher`: **Dispatcher**
 
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - un register function
+**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - call the function and release handler
 
 #### `isDispatcher(v: (Dispatcher | Any)): boolean`
 
@@ -374,156 +250,29 @@ payload The payload object that must have `type` property.
 **Properties**
 
 -   `type` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The event type to dispatch.
-
-### `Store`
-
-Store class
-
-#### `emitChange`
-
-emit change event to subscribers
-
-#### `getState(prevState: Object): Object`
-
-implement return state object
-
-**Parameters**
-
--   `prevState`: **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)**
-
-**Returns**: **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** - nextState
-
-#### `onChange(cb: Function): Function`
-
-subscribe change event of the state(own).
-if emit change event, then call registered event handler function
-
-**Parameters**
-
--   `cb`: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)**
-
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - return unbind function
-
-#### `onUseCaseError(useCase: UseCase, handler: Function): Function`
-
-invoke {@link handler} if the {@link UseCase} throw error.
-
-**Parameters**
-
--   `useCase`: **UseCase**
--   `handler`: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)**
-
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - return un-listen function
-
-### `name`
-
-### `name`
-
-### `parentDispatcher`
-
-### `stores`
-
-### `useCase`
-
-### `useCaseName`
-
-### `useCaseName`
-
-### `validateInstance(storeGroup: (StoreGroup | Object))`
-
-validate the instance is StoreGroup-like object
-{@link Context} treat StoreGroup like object as StoreGroup.
-
-**Parameters**
-
--   `storeGroup`: **(StoreGroup | [Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object))**
-
-### `validateStores(stores: Array<Store>)`
-
-validate stores in StoreGroup
-
-**Parameters**
-
--   `stores`: **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Store>**
 
 ## StoreGroup class
 
-### `ActionTypes`
+### `StoreGroup`
 
-The use should use on\* handler method instead of it
+StoreGroup is a **UI** parts of Store.
+StoreGroup has event queue system.
+It means that StoreGroup thin out change events of stores.
+If you want to know all change events, and directly use `store.onChange()`.
 
-### `constructor(dispatcher: (Dispatcher | UseCase))`
-
-**Parameters**
-
--   `dispatcher`: **(Dispatcher | UseCase)**
-
-### `useCase(useCase: UseCase): UseCaseExecutor`
-
-Create UseCaseExecutor for {@link useCase}.
-
-**Parameters**
-
--   `useCase`: **UseCase**
-
-**Returns**: **UseCaseExecutor**
-
-### `constructor(useCase: UseCase, parentDispatcher: (Dispatcher | UseCase))`
-
-**Parameters**
-
--   `useCase`: **UseCase**
--   `parentDispatcher`: **(Dispatcher | UseCase)** - is parent dispatcher-like object
-
-### `didExecute`
-
-### `execute(args: ...)`
-
-execute UseCase instance.
-UseCase is a executable object. it means that has `execute` method.
-
-**Parameters**
-
--   `args`: **...**
-
-### `onDidExecuteEachUseCase(handler: function (useCase: UseCase))`
-
-called the {@link handler} with useCase when the useCase is done.
-
-**Parameters**
-
--   `handler`: **function (useCase: UseCase)**
-
-### `onWillExecuteEachUseCase(handler: function (useCase: UseCase, args: Any))`
-
-called the {@link handler} with useCase when the useCase will do.
-
-**Parameters**
-
--   `handler`: **function (useCase: UseCase, args: Any)**
-
-### `release`
+#### `release()`
 
 release all events handler.
 You can call this when no more call event handler
 
-### `willExecute(args: [Array<Any>])`
-
-**Parameters**
-
--   `args`: **\[[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Any>]** - arguments of the usecase
-
-### `constructor(dispatcher: Dispatcher, store: (StoreGroup | Store), $0: Object)`
+### `constructor({ dispatcher, store })`
 
 **Parameters**
 
 -   `dispatcher`: **Dispatcher**
--   `store`: **(StoreGroup | Store)**
--   `$0`: **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)**
-    -   `$0.dispatcher`
-    -   `$0.store`
+-   `store`: **(StoreGroup | Store)** - store is either Store or StoreGroup
 
-### `getState: Any`
+### `getState(): Any`
 
 return state value of StoreGroup.
 
@@ -578,7 +327,7 @@ called the {@link handler} with useCase when the useCase will do.
 
 -   `handler`: **function (useCase: UseCase, args: Any)**
 
-### `release`
+### `release()`
 
 release all events handler.
 You can call this when no more call event handler
@@ -597,77 +346,9 @@ context.useCase(UseCaseFactory.create()).execute(args);
 
 **Returns**: **UseCaseExecutor**
 
-### `StoreGroup`
-
-StoreGroup is a **UI** parts of Store.
-StoreGroup has event queue system.
-It means that StoreGroup thin out change events of stores.
-If you want to know all change events, and directly listen {@link Store.onChange}.
-
-#### `constructor(stores: Array<Store>)`
-
-Create StoreGroup
-
-**Parameters**
-
--   `stores`: **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Store>** - stores are instance of MaterialStore
-
-#### `registerStore(store: Store)`
-
-register store and listen onChange.
-If you release store, and do call {@link release} method.
-
-**Parameters**
-
--   `store`: **Store**
-
-#### `release`
-
-release all events handler.
-You can call this when no more call event handler
-
-#### `requestEmitChange`
-
-emitChange if its needed.
-
-Implementation Note:
-
--   Anyone registered store emitChange, then set `this._isChangedStore` true.
--   if `this._isChangedStore === true`, then {@link emitChange}().
-
-### `UseCase`
-
-UseCase class
-
-#### `context: UseCaseContext`
-
-get context of UseCase
-
-**Returns**: **UseCaseContext**
-
-#### `onError(errorHandler: function (error: Error)): function (this: Dispatcher)`
-
-called the {@link errorHandler} with error when error is occurred.
-
-**Parameters**
-
--   `errorHandler`: **function (error: [Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error))**
-
-**Returns**: **function (this: Dispatcher)**
-
-#### `throwError(error: Error)`
-
-throw error event
-you can use it instead of `throw new Error()`
-this error event is caught by dispatcher.
-
-**Parameters**
-
--   `error`: **[Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error)**
-
 ### `defaultStoreName`
 
-A UseCase `dispatch` {@link key} with {@link args} and receive the {@link key} with {@link args}
+A UseCase `dispatch(payload)` and subscribers of the dispatcher are received the payload.
 
 **Examples**
 
@@ -691,8 +372,8 @@ Dispatcher is the **central** event bus system.
 
 also have these method.
 
--   onDispatch(function(payload){...}): Function
--   dispatch(payload): void
+-   `onDispatch(function(payload){  });`
+-   `dispatch(payload);`
 
 Almost event pass the (on)dispatch.
 
@@ -719,7 +400,7 @@ add onAction handler and return unbind function
 
 -   `payloadHandler`
 
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - return unbind function
+**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - call the function and release handler
 
 #### `pipe(toDispatcher: Dispatcher): Function`
 
@@ -729,7 +410,7 @@ delegate payload object to other dispatcher.
 
 -   `toDispatcher`: **Dispatcher**
 
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - un register function
+**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - call the function and release handler
 
 #### `isDispatcher(v: (Dispatcher | Any)): boolean`
 
@@ -748,95 +429,29 @@ payload The payload object that must have `type` property.
 **Properties**
 
 -   `type` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The event type to dispatch.
-
-### `Store`
-
-Store class
-
-#### `emitChange`
-
-emit change event to subscribers
-
-#### `getState(prevState: Object): Object`
-
-implement return state object
-
-**Parameters**
-
--   `prevState`: **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)**
-
-**Returns**: **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** - nextState
-
-#### `onChange(cb: Function): Function`
-
-subscribe change event of the state(own).
-if emit change event, then call registered event handler function
-
-**Parameters**
-
--   `cb`: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)**
-
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - return unbind function
-
-#### `onUseCaseError(useCase: UseCase, handler: Function): Function`
-
-invoke {@link handler} if the {@link UseCase} throw error.
-
-**Parameters**
-
--   `useCase`: **UseCase**
--   `handler`: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)**
-
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - return un-listen function
-
-### `name`
-
-### `name`
-
-### `parentDispatcher`
-
-### `stores`
-
-### `useCase`
-
-### `useCaseName`
-
-### `useCaseName`
-
-### `validateInstance(storeGroup: (StoreGroup | Object))`
-
-validate the instance is StoreGroup-like object
-{@link Context} treat StoreGroup like object as StoreGroup.
-
-**Parameters**
-
--   `storeGroup`: **(StoreGroup | [Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object))**
-
-### `validateStores(stores: Array<Store>)`
-
-validate stores in StoreGroup
-
-**Parameters**
-
--   `stores`: **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Store>**
 
 ## Context class
 
-### `ActionTypes`
+### `StoreGroup`
 
-The use should use on\* handler method instead of it
+StoreGroup is a **UI** parts of Store.
+StoreGroup has event queue system.
+It means that StoreGroup thin out change events of stores.
+If you want to know all change events, and directly use `store.onChange()`.
 
-### `constructor(dispatcher: Dispatcher, store: (StoreGroup | Store), $0: Object)`
+#### `release()`
+
+release all events handler.
+You can call this when no more call event handler
+
+### `constructor({ dispatcher, store })`
 
 **Parameters**
 
 -   `dispatcher`: **Dispatcher**
--   `store`: **(StoreGroup | Store)**
--   `$0`: **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)**
-    -   `$0.dispatcher`
-    -   `$0.store`
+-   `store`: **(StoreGroup | Store)** - store is either Store or StoreGroup
 
-### `getState: Any`
+### `getState(): Any`
 
 return state value of StoreGroup.
 
@@ -891,7 +506,7 @@ called the {@link handler} with useCase when the useCase will do.
 
 -   `handler`: **function (useCase: UseCase, args: Any)**
 
-### `release`
+### `release()`
 
 release all events handler.
 You can call this when no more call event handler
@@ -910,138 +525,9 @@ context.useCase(UseCaseFactory.create()).execute(args);
 
 **Returns**: **UseCaseExecutor**
 
-### `constructor(useCase: UseCase, parentDispatcher: (Dispatcher | UseCase))`
-
-**Parameters**
-
--   `useCase`: **UseCase**
--   `parentDispatcher`: **(Dispatcher | UseCase)** - is parent dispatcher-like object
-
-### `didExecute`
-
-### `execute(args: ...)`
-
-execute UseCase instance.
-UseCase is a executable object. it means that has `execute` method.
-
-**Parameters**
-
--   `args`: **...**
-
-### `onDidExecuteEachUseCase(handler: function (useCase: UseCase))`
-
-called the {@link handler} with useCase when the useCase is done.
-
-**Parameters**
-
--   `handler`: **function (useCase: UseCase)**
-
-### `onWillExecuteEachUseCase(handler: function (useCase: UseCase, args: Any))`
-
-called the {@link handler} with useCase when the useCase will do.
-
-**Parameters**
-
--   `handler`: **function (useCase: UseCase, args: Any)**
-
-### `release`
-
-release all events handler.
-You can call this when no more call event handler
-
-### `willExecute(args: [Array<Any>])`
-
-**Parameters**
-
--   `args`: **\[[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Any>]** - arguments of the usecase
-
-### `constructor(dispatcher: (Dispatcher | UseCase))`
-
-**Parameters**
-
--   `dispatcher`: **(Dispatcher | UseCase)**
-
-### `useCase(useCase: UseCase): UseCaseExecutor`
-
-Create UseCaseExecutor for {@link useCase}.
-
-**Parameters**
-
--   `useCase`: **UseCase**
-
-**Returns**: **UseCaseExecutor**
-
-### `StoreGroup`
-
-StoreGroup is a **UI** parts of Store.
-StoreGroup has event queue system.
-It means that StoreGroup thin out change events of stores.
-If you want to know all change events, and directly listen {@link Store.onChange}.
-
-#### `constructor(stores: Array<Store>)`
-
-Create StoreGroup
-
-**Parameters**
-
--   `stores`: **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Store>** - stores are instance of MaterialStore
-
-#### `registerStore(store: Store)`
-
-register store and listen onChange.
-If you release store, and do call {@link release} method.
-
-**Parameters**
-
--   `store`: **Store**
-
-#### `release`
-
-release all events handler.
-You can call this when no more call event handler
-
-#### `requestEmitChange`
-
-emitChange if its needed.
-
-Implementation Note:
-
--   Anyone registered store emitChange, then set `this._isChangedStore` true.
--   if `this._isChangedStore === true`, then {@link emitChange}().
-
-### `UseCase`
-
-UseCase class
-
-#### `context: UseCaseContext`
-
-get context of UseCase
-
-**Returns**: **UseCaseContext**
-
-#### `onError(errorHandler: function (error: Error)): function (this: Dispatcher)`
-
-called the {@link errorHandler} with error when error is occurred.
-
-**Parameters**
-
--   `errorHandler`: **function (error: [Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error))**
-
-**Returns**: **function (this: Dispatcher)**
-
-#### `throwError(error: Error)`
-
-throw error event
-you can use it instead of `throw new Error()`
-this error event is caught by dispatcher.
-
-**Parameters**
-
--   `error`: **[Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error)**
-
 ### `defaultStoreName`
 
-A UseCase `dispatch` {@link key} with {@link args} and receive the {@link key} with {@link args}
+A UseCase `dispatch(payload)` and subscribers of the dispatcher are received the payload.
 
 **Examples**
 
@@ -1065,8 +551,8 @@ Dispatcher is the **central** event bus system.
 
 also have these method.
 
--   onDispatch(function(payload){...}): Function
--   dispatch(payload): void
+-   `onDispatch(function(payload){  });`
+-   `dispatch(payload);`
 
 Almost event pass the (on)dispatch.
 
@@ -1093,7 +579,7 @@ add onAction handler and return unbind function
 
 -   `payloadHandler`
 
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - return unbind function
+**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - call the function and release handler
 
 #### `pipe(toDispatcher: Dispatcher): Function`
 
@@ -1103,7 +589,7 @@ delegate payload object to other dispatcher.
 
 -   `toDispatcher`: **Dispatcher**
 
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - un register function
+**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - call the function and release handler
 
 #### `isDispatcher(v: (Dispatcher | Any)): boolean`
 
@@ -1122,95 +608,29 @@ payload The payload object that must have `type` property.
 **Properties**
 
 -   `type` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The event type to dispatch.
-
-### `Store`
-
-Store class
-
-#### `emitChange`
-
-emit change event to subscribers
-
-#### `getState(prevState: Object): Object`
-
-implement return state object
-
-**Parameters**
-
--   `prevState`: **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)**
-
-**Returns**: **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** - nextState
-
-#### `onChange(cb: Function): Function`
-
-subscribe change event of the state(own).
-if emit change event, then call registered event handler function
-
-**Parameters**
-
--   `cb`: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)**
-
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - return unbind function
-
-#### `onUseCaseError(useCase: UseCase, handler: Function): Function`
-
-invoke {@link handler} if the {@link UseCase} throw error.
-
-**Parameters**
-
--   `useCase`: **UseCase**
--   `handler`: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)**
-
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - return un-listen function
-
-### `name`
-
-### `name`
-
-### `parentDispatcher`
-
-### `stores`
-
-### `useCase`
-
-### `useCaseName`
-
-### `useCaseName`
-
-### `validateInstance(storeGroup: (StoreGroup | Object))`
-
-validate the instance is StoreGroup-like object
-{@link Context} treat StoreGroup like object as StoreGroup.
-
-**Parameters**
-
--   `storeGroup`: **(StoreGroup | [Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object))**
-
-### `validateStores(stores: Array<Store>)`
-
-validate stores in StoreGroup
-
-**Parameters**
-
--   `stores`: **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Store>**
 
 ## UseCase class
 
-### `ActionTypes`
+### `StoreGroup`
 
-The use should use on\* handler method instead of it
+StoreGroup is a **UI** parts of Store.
+StoreGroup has event queue system.
+It means that StoreGroup thin out change events of stores.
+If you want to know all change events, and directly use `store.onChange()`.
 
-### `constructor(dispatcher: Dispatcher, store: (StoreGroup | Store), $0: Object)`
+#### `release()`
+
+release all events handler.
+You can call this when no more call event handler
+
+### `constructor({ dispatcher, store })`
 
 **Parameters**
 
 -   `dispatcher`: **Dispatcher**
--   `store`: **(StoreGroup | Store)**
--   `$0`: **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)**
-    -   `$0.dispatcher`
-    -   `$0.store`
+-   `store`: **(StoreGroup | Store)** - store is either Store or StoreGroup
 
-### `getState: Any`
+### `getState(): Any`
 
 return state value of StoreGroup.
 
@@ -1265,7 +685,7 @@ called the {@link handler} with useCase when the useCase will do.
 
 -   `handler`: **function (useCase: UseCase, args: Any)**
 
-### `release`
+### `release()`
 
 release all events handler.
 You can call this when no more call event handler
@@ -1284,138 +704,9 @@ context.useCase(UseCaseFactory.create()).execute(args);
 
 **Returns**: **UseCaseExecutor**
 
-### `constructor(dispatcher: (Dispatcher | UseCase))`
-
-**Parameters**
-
--   `dispatcher`: **(Dispatcher | UseCase)**
-
-### `useCase(useCase: UseCase): UseCaseExecutor`
-
-Create UseCaseExecutor for {@link useCase}.
-
-**Parameters**
-
--   `useCase`: **UseCase**
-
-**Returns**: **UseCaseExecutor**
-
-### `constructor(useCase: UseCase, parentDispatcher: (Dispatcher | UseCase))`
-
-**Parameters**
-
--   `useCase`: **UseCase**
--   `parentDispatcher`: **(Dispatcher | UseCase)** - is parent dispatcher-like object
-
-### `didExecute`
-
-### `execute(args: ...)`
-
-execute UseCase instance.
-UseCase is a executable object. it means that has `execute` method.
-
-**Parameters**
-
--   `args`: **...**
-
-### `onDidExecuteEachUseCase(handler: function (useCase: UseCase))`
-
-called the {@link handler} with useCase when the useCase is done.
-
-**Parameters**
-
--   `handler`: **function (useCase: UseCase)**
-
-### `onWillExecuteEachUseCase(handler: function (useCase: UseCase, args: Any))`
-
-called the {@link handler} with useCase when the useCase will do.
-
-**Parameters**
-
--   `handler`: **function (useCase: UseCase, args: Any)**
-
-### `release`
-
-release all events handler.
-You can call this when no more call event handler
-
-### `willExecute(args: [Array<Any>])`
-
-**Parameters**
-
--   `args`: **\[[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Any>]** - arguments of the usecase
-
-### `StoreGroup`
-
-StoreGroup is a **UI** parts of Store.
-StoreGroup has event queue system.
-It means that StoreGroup thin out change events of stores.
-If you want to know all change events, and directly listen {@link Store.onChange}.
-
-#### `constructor(stores: Array<Store>)`
-
-Create StoreGroup
-
-**Parameters**
-
--   `stores`: **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Store>** - stores are instance of MaterialStore
-
-#### `registerStore(store: Store)`
-
-register store and listen onChange.
-If you release store, and do call {@link release} method.
-
-**Parameters**
-
--   `store`: **Store**
-
-#### `release`
-
-release all events handler.
-You can call this when no more call event handler
-
-#### `requestEmitChange`
-
-emitChange if its needed.
-
-Implementation Note:
-
--   Anyone registered store emitChange, then set `this._isChangedStore` true.
--   if `this._isChangedStore === true`, then {@link emitChange}().
-
-### `UseCase`
-
-UseCase class
-
-#### `context: UseCaseContext`
-
-get context of UseCase
-
-**Returns**: **UseCaseContext**
-
-#### `onError(errorHandler: function (error: Error)): function (this: Dispatcher)`
-
-called the {@link errorHandler} with error when error is occurred.
-
-**Parameters**
-
--   `errorHandler`: **function (error: [Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error))**
-
-**Returns**: **function (this: Dispatcher)**
-
-#### `throwError(error: Error)`
-
-throw error event
-you can use it instead of `throw new Error()`
-this error event is caught by dispatcher.
-
-**Parameters**
-
--   `error`: **[Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error)**
-
 ### `defaultStoreName`
 
-A UseCase `dispatch` {@link key} with {@link args} and receive the {@link key} with {@link args}
+A UseCase `dispatch(payload)` and subscribers of the dispatcher are received the payload.
 
 **Examples**
 
@@ -1439,8 +730,8 @@ Dispatcher is the **central** event bus system.
 
 also have these method.
 
--   onDispatch(function(payload){...}): Function
--   dispatch(payload): void
+-   `onDispatch(function(payload){  });`
+-   `dispatch(payload);`
 
 Almost event pass the (on)dispatch.
 
@@ -1467,7 +758,7 @@ add onAction handler and return unbind function
 
 -   `payloadHandler`
 
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - return unbind function
+**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - call the function and release handler
 
 #### `pipe(toDispatcher: Dispatcher): Function`
 
@@ -1477,7 +768,7 @@ delegate payload object to other dispatcher.
 
 -   `toDispatcher`: **Dispatcher**
 
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - un register function
+**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - call the function and release handler
 
 #### `isDispatcher(v: (Dispatcher | Any)): boolean`
 
@@ -1496,74 +787,3 @@ payload The payload object that must have `type` property.
 **Properties**
 
 -   `type` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The event type to dispatch.
-
-### `Store`
-
-Store class
-
-#### `emitChange`
-
-emit change event to subscribers
-
-#### `getState(prevState: Object): Object`
-
-implement return state object
-
-**Parameters**
-
--   `prevState`: **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)**
-
-**Returns**: **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** - nextState
-
-#### `onChange(cb: Function): Function`
-
-subscribe change event of the state(own).
-if emit change event, then call registered event handler function
-
-**Parameters**
-
--   `cb`: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)**
-
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - return unbind function
-
-#### `onUseCaseError(useCase: UseCase, handler: Function): Function`
-
-invoke {@link handler} if the {@link UseCase} throw error.
-
-**Parameters**
-
--   `useCase`: **UseCase**
--   `handler`: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)**
-
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - return un-listen function
-
-### `name`
-
-### `name`
-
-### `parentDispatcher`
-
-### `stores`
-
-### `useCase`
-
-### `useCaseName`
-
-### `useCaseName`
-
-### `validateInstance(storeGroup: (StoreGroup | Object))`
-
-validate the instance is StoreGroup-like object
-{@link Context} treat StoreGroup like object as StoreGroup.
-
-**Parameters**
-
--   `storeGroup`: **(StoreGroup | [Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object))**
-
-### `validateStores(stores: Array<Store>)`
-
-validate stores in StoreGroup
-
-**Parameters**
-
--   `stores`: **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Store>**
