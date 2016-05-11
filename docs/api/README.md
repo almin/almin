@@ -42,7 +42,7 @@ add onAction handler and return unbind function
 
 -   `payloadHandler`
 
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - call the function and release handler
+Returns: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - call the function and release handler
 
 #### `pipe(toDispatcher: Dispatcher): Function`
 
@@ -52,7 +52,7 @@ delegate payload object to other dispatcher.
 
 -   `toDispatcher`: **Dispatcher**
 
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - call the function and release handler
+Returns: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - call the function and release handler
 
 #### `isDispatcher(v: (Dispatcher | Any)): boolean`
 
@@ -62,7 +62,7 @@ if {@link v} is instance of Dispatcher, return true
 
 -   `v`: **(Dispatcher | Any)**
 
-**Returns**: **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)**
+Returns: **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)**
 
 ### `DispatcherPayload`
 
@@ -97,7 +97,7 @@ You can call this when no more call event handler
 
 return state value of StoreGroup.
 
-**Returns**: **Any** - states object of stores
+Returns: **Any** - states object of stores
 
 ### `onChange(onChangeHandler: function (changingStores: Array<Store>)): Function`
 
@@ -107,7 +107,7 @@ if anyone store is changed, then call onChangeHandler
 
 -   `onChangeHandler`: **function (changingStores: [Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Store>)**
 
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - release handler function.
+Returns: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - release handler function.
 
 ### `onDidExecuteEachUseCase(handler: function (useCase: UseCase))`
 
@@ -128,7 +128,7 @@ In other word, listen the dispatcher of `new Context({dispatcher})`.
 
 -   `handler`
 
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)**
+Returns: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)**
 
 ### `onErrorDispatch(errorHandler: function (error: Error)): function (this: Dispatcher)`
 
@@ -138,7 +138,7 @@ called the {@link errorHandler} with error when error is occurred.
 
 -   `errorHandler`: **function (error: [Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error))**
 
-**Returns**: **function (this: Dispatcher)**
+Returns: **function (this: Dispatcher)**
 
 ### `onWillExecuteEachUseCase(handler: function (useCase: UseCase, args: Any))`
 
@@ -165,7 +165,7 @@ You can call this when no more call event handler
 context.useCase(UseCaseFactory.create()).execute(args);
 ```
 
-**Returns**: **UseCaseExecutor**
+Returns: **UseCaseExecutor**
 
 ### `defaultStoreName`
 
@@ -221,7 +221,7 @@ add onAction handler and return unbind function
 
 -   `payloadHandler`
 
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - call the function and release handler
+Returns: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - call the function and release handler
 
 #### `pipe(toDispatcher: Dispatcher): Function`
 
@@ -231,7 +231,7 @@ delegate payload object to other dispatcher.
 
 -   `toDispatcher`: **Dispatcher**
 
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - call the function and release handler
+Returns: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - call the function and release handler
 
 #### `isDispatcher(v: (Dispatcher | Any)): boolean`
 
@@ -241,7 +241,7 @@ if {@link v} is instance of Dispatcher, return true
 
 -   `v`: **(Dispatcher | Any)**
 
-**Returns**: **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)**
+Returns: **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)**
 
 ### `DispatcherPayload`
 
@@ -276,7 +276,7 @@ You can call this when no more call event handler
 
 return state value of StoreGroup.
 
-**Returns**: **Any** - states object of stores
+Returns: **Any** - states object of stores
 
 ### `onChange(onChangeHandler: function (changingStores: Array<Store>)): Function`
 
@@ -286,7 +286,7 @@ if anyone store is changed, then call onChangeHandler
 
 -   `onChangeHandler`: **function (changingStores: [Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Store>)**
 
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - release handler function.
+Returns: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - release handler function.
 
 ### `onDidExecuteEachUseCase(handler: function (useCase: UseCase))`
 
@@ -307,7 +307,7 @@ In other word, listen the dispatcher of `new Context({dispatcher})`.
 
 -   `handler`
 
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)**
+Returns: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)**
 
 ### `onErrorDispatch(errorHandler: function (error: Error)): function (this: Dispatcher)`
 
@@ -317,7 +317,7 @@ called the {@link errorHandler} with error when error is occurred.
 
 -   `errorHandler`: **function (error: [Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error))**
 
-**Returns**: **function (this: Dispatcher)**
+Returns: **function (this: Dispatcher)**
 
 ### `onWillExecuteEachUseCase(handler: function (useCase: UseCase, args: Any))`
 
@@ -344,7 +344,7 @@ You can call this when no more call event handler
 context.useCase(UseCaseFactory.create()).execute(args);
 ```
 
-**Returns**: **UseCaseExecutor**
+Returns: **UseCaseExecutor**
 
 ### `defaultStoreName`
 
@@ -400,7 +400,7 @@ add onAction handler and return unbind function
 
 -   `payloadHandler`
 
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - call the function and release handler
+Returns: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - call the function and release handler
 
 #### `pipe(toDispatcher: Dispatcher): Function`
 
@@ -410,7 +410,7 @@ delegate payload object to other dispatcher.
 
 -   `toDispatcher`: **Dispatcher**
 
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - call the function and release handler
+Returns: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - call the function and release handler
 
 #### `isDispatcher(v: (Dispatcher | Any)): boolean`
 
@@ -420,7 +420,7 @@ if {@link v} is instance of Dispatcher, return true
 
 -   `v`: **(Dispatcher | Any)**
 
-**Returns**: **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)**
+Returns: **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)**
 
 ### `DispatcherPayload`
 
@@ -455,7 +455,7 @@ You can call this when no more call event handler
 
 return state value of StoreGroup.
 
-**Returns**: **Any** - states object of stores
+Returns: **Any** - states object of stores
 
 ### `onChange(onChangeHandler: function (changingStores: Array<Store>)): Function`
 
@@ -465,7 +465,7 @@ if anyone store is changed, then call onChangeHandler
 
 -   `onChangeHandler`: **function (changingStores: [Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Store>)**
 
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - release handler function.
+Returns: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - release handler function.
 
 ### `onDidExecuteEachUseCase(handler: function (useCase: UseCase))`
 
@@ -486,7 +486,7 @@ In other word, listen the dispatcher of `new Context({dispatcher})`.
 
 -   `handler`
 
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)**
+Returns: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)**
 
 ### `onErrorDispatch(errorHandler: function (error: Error)): function (this: Dispatcher)`
 
@@ -496,7 +496,7 @@ called the {@link errorHandler} with error when error is occurred.
 
 -   `errorHandler`: **function (error: [Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error))**
 
-**Returns**: **function (this: Dispatcher)**
+Returns: **function (this: Dispatcher)**
 
 ### `onWillExecuteEachUseCase(handler: function (useCase: UseCase, args: Any))`
 
@@ -523,7 +523,7 @@ You can call this when no more call event handler
 context.useCase(UseCaseFactory.create()).execute(args);
 ```
 
-**Returns**: **UseCaseExecutor**
+Returns: **UseCaseExecutor**
 
 ### `defaultStoreName`
 
@@ -579,7 +579,7 @@ add onAction handler and return unbind function
 
 -   `payloadHandler`
 
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - call the function and release handler
+Returns: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - call the function and release handler
 
 #### `pipe(toDispatcher: Dispatcher): Function`
 
@@ -589,7 +589,7 @@ delegate payload object to other dispatcher.
 
 -   `toDispatcher`: **Dispatcher**
 
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - call the function and release handler
+Returns: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - call the function and release handler
 
 #### `isDispatcher(v: (Dispatcher | Any)): boolean`
 
@@ -599,7 +599,7 @@ if {@link v} is instance of Dispatcher, return true
 
 -   `v`: **(Dispatcher | Any)**
 
-**Returns**: **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)**
+Returns: **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)**
 
 ### `DispatcherPayload`
 
@@ -634,7 +634,7 @@ You can call this when no more call event handler
 
 return state value of StoreGroup.
 
-**Returns**: **Any** - states object of stores
+Returns: **Any** - states object of stores
 
 ### `onChange(onChangeHandler: function (changingStores: Array<Store>)): Function`
 
@@ -644,7 +644,7 @@ if anyone store is changed, then call onChangeHandler
 
 -   `onChangeHandler`: **function (changingStores: [Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Store>)**
 
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - release handler function.
+Returns: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - release handler function.
 
 ### `onDidExecuteEachUseCase(handler: function (useCase: UseCase))`
 
@@ -665,7 +665,7 @@ In other word, listen the dispatcher of `new Context({dispatcher})`.
 
 -   `handler`
 
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)**
+Returns: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)**
 
 ### `onErrorDispatch(errorHandler: function (error: Error)): function (this: Dispatcher)`
 
@@ -675,7 +675,7 @@ called the {@link errorHandler} with error when error is occurred.
 
 -   `errorHandler`: **function (error: [Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error))**
 
-**Returns**: **function (this: Dispatcher)**
+Returns: **function (this: Dispatcher)**
 
 ### `onWillExecuteEachUseCase(handler: function (useCase: UseCase, args: Any))`
 
@@ -702,7 +702,7 @@ You can call this when no more call event handler
 context.useCase(UseCaseFactory.create()).execute(args);
 ```
 
-**Returns**: **UseCaseExecutor**
+Returns: **UseCaseExecutor**
 
 ### `defaultStoreName`
 
@@ -758,7 +758,7 @@ add onAction handler and return unbind function
 
 -   `payloadHandler`
 
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - call the function and release handler
+Returns: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - call the function and release handler
 
 #### `pipe(toDispatcher: Dispatcher): Function`
 
@@ -768,7 +768,7 @@ delegate payload object to other dispatcher.
 
 -   `toDispatcher`: **Dispatcher**
 
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - call the function and release handler
+Returns: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - call the function and release handler
 
 #### `isDispatcher(v: (Dispatcher | Any)): boolean`
 
@@ -778,7 +778,7 @@ if {@link v} is instance of Dispatcher, return true
 
 -   `v`: **(Dispatcher | Any)**
 
-**Returns**: **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)**
+Returns: **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)**
 
 ### `DispatcherPayload`
 
