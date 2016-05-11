@@ -448,6 +448,378 @@ validate stores in StoreGroup
 
 ## StoreGroup class
 
+### `ActionTypes`
+
+The use should use on\* handler method instead of it
+
+### `constructor(dispatcher: (Dispatcher | UseCase))`
+
+**Parameters**
+
+-   `dispatcher`: **(Dispatcher | UseCase)**
+
+### `useCase(useCase: UseCase): UseCaseExecutor`
+
+Create UseCaseExecutor for {@link useCase}.
+
+**Parameters**
+
+-   `useCase`: **UseCase**
+
+**Returns**: **UseCaseExecutor**
+
+### `constructor(useCase: UseCase, parentDispatcher: (Dispatcher | UseCase))`
+
+**Parameters**
+
+-   `useCase`: **UseCase**
+-   `parentDispatcher`: **(Dispatcher | UseCase)** - is parent dispatcher-like object
+
+### `didExecute`
+
+### `execute(args: ...)`
+
+execute UseCase instance.
+UseCase is a executable object. it means that has `execute` method.
+
+**Parameters**
+
+-   `args`: **...**
+
+### `onDidExecuteEachUseCase(handler: function (useCase: UseCase))`
+
+called the {@link handler} with useCase when the useCase is done.
+
+**Parameters**
+
+-   `handler`: **function (useCase: UseCase)**
+
+### `onWillExecuteEachUseCase(handler: function (useCase: UseCase, args: Any))`
+
+called the {@link handler} with useCase when the useCase will do.
+
+**Parameters**
+
+-   `handler`: **function (useCase: UseCase, args: Any)**
+
+### `release`
+
+release all events handler.
+You can call this when no more call event handler
+
+### `willExecute(args: [Array<Any>])`
+
+**Parameters**
+
+-   `args`: **\[[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Any>]** - arguments of the usecase
+
+### `constructor(dispatcher: Dispatcher, store: (StoreGroup | Store), $0: Object)`
+
+**Parameters**
+
+-   `dispatcher`: **Dispatcher**
+-   `store`: **(StoreGroup | Store)**
+-   `$0`: **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)**
+    -   `$0.dispatcher`
+    -   `$0.store`
+
+### `getState: Any`
+
+return state value of StoreGroup.
+
+**Returns**: **Any** - states object of stores
+
+### `onChange(onChangeHandler: function (changingStores: Array<Store>)): Function`
+
+if anyone store is changed, then call onChangeHandler
+
+**Parameters**
+
+-   `onChangeHandler`: **function (changingStores: [Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Store>)**
+
+**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - release handler function.
+
+### `onDidExecuteEachUseCase(handler: function (useCase: UseCase))`
+
+called the {@link handler} with useCase when the useCase is done.
+
+**Parameters**
+
+-   `handler`: **function (useCase: UseCase)**
+
+### `onDispatch(handler): Function`
+
+called the {@link handler} with user-defined payload object when a UseCase dispatch with payload.
+This `onDispatch` is not called at built-in event. It is filtered by Context.
+If you want to _All_ dispatched event and use listen directly your `dispatcher` object.
+In other word, listen the dispatcher of `new Context({dispatcher})`.
+
+**Parameters**
+
+-   `handler`
+
+**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)**
+
+### `onErrorDispatch(errorHandler: function (error: Error)): function (this: Dispatcher)`
+
+called the {@link errorHandler} with error when error is occurred.
+
+**Parameters**
+
+-   `errorHandler`: **function (error: [Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error))**
+
+**Returns**: **function (this: Dispatcher)**
+
+### `onWillExecuteEachUseCase(handler: function (useCase: UseCase, args: Any))`
+
+called the {@link handler} with useCase when the useCase will do.
+
+**Parameters**
+
+-   `handler`: **function (useCase: UseCase, args: Any)**
+
+### `release`
+
+release all events handler.
+You can call this when no more call event handler
+
+### `useCase(useCase: UseCase): UseCaseExecutor`
+
+**Parameters**
+
+-   `useCase`: **UseCase**
+
+**Examples**
+
+```javascript
+context.useCase(UseCaseFactory.create()).execute(args);
+```
+
+**Returns**: **UseCaseExecutor**
+
+### `StoreGroup`
+
+StoreGroup is a **UI** parts of Store.
+StoreGroup has event queue system.
+It means that StoreGroup thin out change events of stores.
+If you want to know all change events, and directly listen {@link Store.onChange}.
+
+#### `constructor(stores: Array<Store>)`
+
+Create StoreGroup
+
+**Parameters**
+
+-   `stores`: **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Store>** - stores are instance of MaterialStore
+
+#### `registerStore(store: Store)`
+
+register store and listen onChange.
+If you release store, and do call {@link release} method.
+
+**Parameters**
+
+-   `store`: **Store**
+
+#### `release`
+
+release all events handler.
+You can call this when no more call event handler
+
+#### `requestEmitChange`
+
+emitChange if its needed.
+
+Implementation Note:
+
+-   Anyone registered store emitChange, then set `this._isChangedStore` true.
+-   if `this._isChangedStore === true`, then {@link emitChange}().
+
+### `UseCase`
+
+UseCase class
+
+#### `context: UseCaseContext`
+
+get context of UseCase
+
+**Returns**: **UseCaseContext**
+
+#### `onError(errorHandler: function (error: Error)): function (this: Dispatcher)`
+
+called the {@link errorHandler} with error when error is occurred.
+
+**Parameters**
+
+-   `errorHandler`: **function (error: [Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error))**
+
+**Returns**: **function (this: Dispatcher)**
+
+#### `throwError(error: Error)`
+
+throw error event
+you can use it instead of `throw new Error()`
+this error event is caught by dispatcher.
+
+**Parameters**
+
+-   `error`: **[Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error)**
+
+### `defaultStoreName`
+
+A UseCase `dispatch` {@link key} with {@link args} and receive the {@link key} with {@link args}
+
+**Examples**
+
+```javascript
+abcUseCase
+ .dispatch({
+     type: "ABC",
+     value: "value"
+ })
+
+abcStore
+ .onDispatch(({ type, value }) => {
+     console.log(type);  // "ABC"
+     console.log(value); // 42
+ });
+```
+
+### `Dispatcher`
+
+Dispatcher is the **central** event bus system.
+
+also have these method.
+
+-   onDispatch(function(payload){...}): Function
+-   dispatch(payload): void
+
+Almost event pass the (on)dispatch.
+
+#### FAQ
+
+Q. Why use payload object instead emit(key, ...args).
+A. It is for optimization and limitation.
+If apply emit style, we cast ...args for passing other dispatcher at every time.
+
+#### `dispatch(payload: DispatcherPayload)`
+
+dispatch action object.
+StoreGroups receive this action and reduce state.
+
+**Parameters**
+
+-   `payload`: **DispatcherPayload**
+
+#### `onDispatch(payloadHandler): Function`
+
+add onAction handler and return unbind function
+
+**Parameters**
+
+-   `payloadHandler`
+
+**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - return unbind function
+
+#### `pipe(toDispatcher: Dispatcher): Function`
+
+delegate payload object to other dispatcher.
+
+**Parameters**
+
+-   `toDispatcher`: **Dispatcher**
+
+**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - un register function
+
+#### `isDispatcher(v: (Dispatcher | Any)): boolean`
+
+if {@link v} is instance of Dispatcher, return true
+
+**Parameters**
+
+-   `v`: **(Dispatcher | Any)**
+
+**Returns**: **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)**
+
+### `DispatcherPayload`
+
+payload The payload object that must have `type` property.
+
+**Properties**
+
+-   `type` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The event type to dispatch.
+
+### `Store`
+
+Store class
+
+#### `emitChange`
+
+emit change event to subscribers
+
+#### `getState(prevState: Object): Object`
+
+implement return state object
+
+**Parameters**
+
+-   `prevState`: **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)**
+
+**Returns**: **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** - nextState
+
+#### `onChange(cb: Function): Function`
+
+subscribe change event of the state(own).
+if emit change event, then call registered event handler function
+
+**Parameters**
+
+-   `cb`: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)**
+
+**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - return unbind function
+
+#### `onUseCaseError(useCase: UseCase, handler: Function): Function`
+
+invoke {@link handler} if the {@link UseCase} throw error.
+
+**Parameters**
+
+-   `useCase`: **UseCase**
+-   `handler`: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)**
+
+**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - return un-listen function
+
+### `name`
+
+### `name`
+
+### `parentDispatcher`
+
+### `stores`
+
+### `useCase`
+
+### `useCaseName`
+
+### `useCaseName`
+
+### `validateInstance(storeGroup: (StoreGroup | Object))`
+
+validate the instance is StoreGroup-like object
+{@link Context} treat StoreGroup like object as StoreGroup.
+
+**Parameters**
+
+-   `storeGroup`: **(StoreGroup | [Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object))**
+
+### `validateStores(stores: Array<Store>)`
+
+validate stores in StoreGroup
+
+**Parameters**
+
+-   `stores`: **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Store>**
+
 ## Context class
 
 ### `ActionTypes`
@@ -583,6 +955,22 @@ You can call this when no more call event handler
 
 -   `args`: **\[[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Any>]** - arguments of the usecase
 
+### `constructor(dispatcher: (Dispatcher | UseCase))`
+
+**Parameters**
+
+-   `dispatcher`: **(Dispatcher | UseCase)**
+
+### `useCase(useCase: UseCase): UseCaseExecutor`
+
+Create UseCaseExecutor for {@link useCase}.
+
+**Parameters**
+
+-   `useCase`: **UseCase**
+
+**Returns**: **UseCaseExecutor**
+
 ### `StoreGroup`
 
 StoreGroup is a **UI** parts of Store.
@@ -620,22 +1008,6 @@ Implementation Note:
 
 -   Anyone registered store emitChange, then set `this._isChangedStore` true.
 -   if `this._isChangedStore === true`, then {@link emitChange}().
-
-### `constructor(dispatcher: (Dispatcher | UseCase))`
-
-**Parameters**
-
--   `dispatcher`: **(Dispatcher | UseCase)**
-
-### `useCase(useCase: UseCase): UseCaseExecutor`
-
-Create UseCaseExecutor for {@link useCase}.
-
-**Parameters**
-
--   `useCase`: **UseCase**
-
-**Returns**: **UseCaseExecutor**
 
 ### `UseCase`
 
@@ -828,6 +1200,90 @@ validate stores in StoreGroup
 
 The use should use on\* handler method instead of it
 
+### `constructor(dispatcher: Dispatcher, store: (StoreGroup | Store), $0: Object)`
+
+**Parameters**
+
+-   `dispatcher`: **Dispatcher**
+-   `store`: **(StoreGroup | Store)**
+-   `$0`: **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)**
+    -   `$0.dispatcher`
+    -   `$0.store`
+
+### `getState: Any`
+
+return state value of StoreGroup.
+
+**Returns**: **Any** - states object of stores
+
+### `onChange(onChangeHandler: function (changingStores: Array<Store>)): Function`
+
+if anyone store is changed, then call onChangeHandler
+
+**Parameters**
+
+-   `onChangeHandler`: **function (changingStores: [Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Store>)**
+
+**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - release handler function.
+
+### `onDidExecuteEachUseCase(handler: function (useCase: UseCase))`
+
+called the {@link handler} with useCase when the useCase is done.
+
+**Parameters**
+
+-   `handler`: **function (useCase: UseCase)**
+
+### `onDispatch(handler): Function`
+
+called the {@link handler} with user-defined payload object when a UseCase dispatch with payload.
+This `onDispatch` is not called at built-in event. It is filtered by Context.
+If you want to _All_ dispatched event and use listen directly your `dispatcher` object.
+In other word, listen the dispatcher of `new Context({dispatcher})`.
+
+**Parameters**
+
+-   `handler`
+
+**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)**
+
+### `onErrorDispatch(errorHandler: function (error: Error)): function (this: Dispatcher)`
+
+called the {@link errorHandler} with error when error is occurred.
+
+**Parameters**
+
+-   `errorHandler`: **function (error: [Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error))**
+
+**Returns**: **function (this: Dispatcher)**
+
+### `onWillExecuteEachUseCase(handler: function (useCase: UseCase, args: Any))`
+
+called the {@link handler} with useCase when the useCase will do.
+
+**Parameters**
+
+-   `handler`: **function (useCase: UseCase, args: Any)**
+
+### `release`
+
+release all events handler.
+You can call this when no more call event handler
+
+### `useCase(useCase: UseCase): UseCaseExecutor`
+
+**Parameters**
+
+-   `useCase`: **UseCase**
+
+**Examples**
+
+```javascript
+context.useCase(UseCaseFactory.create()).execute(args);
+```
+
+**Returns**: **UseCaseExecutor**
+
 ### `constructor(dispatcher: (Dispatcher | UseCase))`
 
 **Parameters**
@@ -926,90 +1382,6 @@ Implementation Note:
 
 -   Anyone registered store emitChange, then set `this._isChangedStore` true.
 -   if `this._isChangedStore === true`, then {@link emitChange}().
-
-### `constructor(dispatcher: Dispatcher, store: (StoreGroup | Store), $0: Object)`
-
-**Parameters**
-
--   `dispatcher`: **Dispatcher**
--   `store`: **(StoreGroup | Store)**
--   `$0`: **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)**
-    -   `$0.dispatcher`
-    -   `$0.store`
-
-### `getState: Any`
-
-return state value of StoreGroup.
-
-**Returns**: **Any** - states object of stores
-
-### `onChange(onChangeHandler: function (changingStores: Array<Store>)): Function`
-
-if anyone store is changed, then call onChangeHandler
-
-**Parameters**
-
--   `onChangeHandler`: **function (changingStores: [Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Store>)**
-
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - release handler function.
-
-### `onDidExecuteEachUseCase(handler: function (useCase: UseCase))`
-
-called the {@link handler} with useCase when the useCase is done.
-
-**Parameters**
-
--   `handler`: **function (useCase: UseCase)**
-
-### `onDispatch(handler): Function`
-
-called the {@link handler} with user-defined payload object when a UseCase dispatch with payload.
-This `onDispatch` is not called at built-in event. It is filtered by Context.
-If you want to _All_ dispatched event and use listen directly your `dispatcher` object.
-In other word, listen the dispatcher of `new Context({dispatcher})`.
-
-**Parameters**
-
--   `handler`
-
-**Returns**: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)**
-
-### `onErrorDispatch(errorHandler: function (error: Error)): function (this: Dispatcher)`
-
-called the {@link errorHandler} with error when error is occurred.
-
-**Parameters**
-
--   `errorHandler`: **function (error: [Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error))**
-
-**Returns**: **function (this: Dispatcher)**
-
-### `onWillExecuteEachUseCase(handler: function (useCase: UseCase, args: Any))`
-
-called the {@link handler} with useCase when the useCase will do.
-
-**Parameters**
-
--   `handler`: **function (useCase: UseCase, args: Any)**
-
-### `release`
-
-release all events handler.
-You can call this when no more call event handler
-
-### `useCase(useCase: UseCase): UseCaseExecutor`
-
-**Parameters**
-
--   `useCase`: **UseCase**
-
-**Examples**
-
-```javascript
-context.useCase(UseCaseFactory.create()).execute(args);
-```
-
-**Returns**: **UseCaseExecutor**
 
 ### `UseCase`
 
