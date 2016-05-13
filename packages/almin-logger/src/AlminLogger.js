@@ -108,6 +108,7 @@ export default class AlminLogger extends EventEmitter {
         // release handler
         this._releaseHandlers = [
             context.onChange(onChange),
+            context.onDispatch(onDispatch),
             context.onWillExecuteEachUseCase(onWillExecuteEachUseCase),
             context.onDidExecuteEachUseCase(onDidExecuteEachUseCase),
             context.onErrorDispatch(onErrorHandler)
