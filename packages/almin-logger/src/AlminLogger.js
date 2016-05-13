@@ -102,7 +102,7 @@ export default class AlminLogger extends EventEmitter {
             const takenTime = now() - timeStamp;
             this._logBuffer.push(`${useCase.name} did executed`);
             this._logBuffer.push("Taken time(ms): " + takenTime);
-            this.outputBuffer(`\ud83d\udcbe ${useCase.name}`);
+            this.outputBuffer(`\u{1F516} ${useCase.name}`);
             this.flushBuffer();
         };
         // release handler
@@ -130,8 +130,9 @@ export default class AlminLogger extends EventEmitter {
     }
 
     _logDispatch(payload) {
+        // http://emojipedia.org/fire/
         this._logBuffer.push([
-            `Dispatch:${payload.type}`,
+            `\u{1F525} Dispatch:${payload.type}`,
             payload
         ]);
     }
@@ -141,8 +142,9 @@ export default class AlminLogger extends EventEmitter {
      */
     _logOnChange(stores) {
         stores.forEach(store => {
+            // http://emojipedia.org/floppy-disk/
             this._logBuffer.push([
-                `Store:${store.name} is Changed`,
+                `\u{1F4BE} Store:${store.name} is Changed`,
                 store.getState()
             ]);
         })
