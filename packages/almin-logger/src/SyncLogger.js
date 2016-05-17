@@ -27,16 +27,16 @@ export default class SyncLogger extends EventEmitter {
     startLogging(context) {
         const onWillExecuteEachUseCase = useCase => {
             const startTimeStamp = now();
-            this.logger.groupCollapsed(useCase.name, startTimeStamp);
+            this.logger.groupCollapsed(`\u{1F516} ${useCase.name}`, startTimeStamp);
             this._logMap[useCase.name] = startTimeStamp;
             this.logger.log(`${useCase.name} will execute`);
         };
         const onDispatch = payload => {
-            this.logger.info(`Dispatch:${payload.type}`, payload)
+            this.logger.info(`\u{1F525} Dispatch:${payload.type}`, payload)
         };
         const onChange = (stores) => {
             stores.forEach(state => {
-                this.logger.groupCollapsed(`Store:${state.name} is Changed`);
+                this.logger.groupCollapsed(`\u{1F4BE} Store:${state.name} is Changed`);
                 this.logger.info(state.getState());
                 this.logger.groupEnd();
             });
