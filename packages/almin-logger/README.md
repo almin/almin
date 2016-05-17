@@ -36,6 +36,57 @@ const logger = new ContextLogger();
 logger.startLogging(appContext);
 ```
 
+## Options:
+
+### `new ContextLogger(options)`
+
+```js
+const DefaultOptions = {
+    // output log asynchronously
+    async: true,
+    // use `console` object for logging
+    console: console,
+    // message template object
+    templates: DefaultTemplates
+};
+```
+
+### Async mode
+
+Default: output log asynchronously
+
+**Pros**
+
+- no mixed UseCase/Dispatch log and the other log.
+
+**Cons**
+
+- Async log may confuse
+
+### Sync mode
+
+Set `async: false` to options.
+
+```js
+// Create Logger
+const logger = new ContextLogger({
+    async: false
+});
+// Start logger
+logger.startLogging(appContext);
+```
+
+**Pros**
+
+- mixed UseCase/Dispatch log and the other log.
+- time-series logging
+    - A `groupCollapsed` contain the error that is occurred during executing A UseCase. 
+
+**Cons**
+
+- mixed UseCase/Dispatch log and the other log.
+- It make confuse.
+
 ## Tests
 
     npm test
