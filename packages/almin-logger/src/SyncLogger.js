@@ -2,7 +2,6 @@
 "use strict";
 import AlminLogger from "./AlminLogger";
 const EventEmitter = require("events");
-const format = require('@azu/format-text');
 // performance.now polyfill
 import now from "./performance-now";
 export default class SyncLogger extends EventEmitter {

@@ -47,7 +47,5 @@
   "peerDependencies": {
     "almin": ">= 0.3.0"
   },
-  "dependencies": {
-    "@azu/format-text": "^1.0.1"
-  }
+  "dependencies": {}
 }

@@ -1,7 +1,6 @@
 // LICENSE : MIT
 "use strict";
 const EventEmitter = require("events");
-const format = require('@azu/format-text');
 import SyncLogger from "./SyncLogger";
 import AsyncLogger from "./AsyncLogger";
 const DefaultOptions = {
