@@ -4,16 +4,11 @@ const EventEmitter = require("events");
 const format = require('@azu/format-text');
 import SyncLogger from "./SyncLogger";
 import AsyncLogger from "./AsyncLogger";
-const DefaultTemplates = {
-    WaringMixedUseCaseExecution: "Warning: Executing multiple UseCase at once {useCases}"
-};
 const DefaultOptions = {
     // output log asynchronously
     async: true,
     // use `console` object for logging
-    console: console,
-    // message template object
-    templates: DefaultTemplates
+    console: console
 };
 export default class AlminLogger extends EventEmitter {
     /**
@@ -30,11 +25,9 @@ export default class AlminLogger extends EventEmitter {
         super();
         // default logger is `console`
         const console = options.console || DefaultOptions.console;
-        const templates = options.templates || DefaultOptions.templates;
         const isAsyncMode = options.async !== undefined ? options.async : DefaultOptions.async;
         const loggerOptions = {
-            console,
-            templates
+            console
         };
         /**
          * @type {boolean} if current is async mode, return true

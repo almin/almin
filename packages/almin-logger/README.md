@@ -46,8 +46,6 @@ const DefaultOptions = {
     async: true,
     // use `console` object for logging
     console: console,
-    // message template object
-    templates: DefaultTemplates
 };
 ```
 

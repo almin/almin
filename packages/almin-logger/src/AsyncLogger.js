@@ -6,13 +6,12 @@ const format = require('@azu/format-text');
 // performance.now polyfill
 import now from "./performance-now";
 export default class AsyncLogger extends EventEmitter {
-    constructor({console, templates}) {
+    constructor({console}) {
         super();
         this._logBuffer = [];
         this._logMap = {};
         this._releaseHandlers = [];
         this.logger = console;
-        this.templates = templates;
     }
 
     /**
@@ -36,9 +35,7 @@ export default class AsyncLogger extends EventEmitter {
             const useCaseNames = currentExecuteUseCases.map(name => {
                 return name.replace(" will execute", "");
             });
-            this.logger.warn(format(this.templates.WaringMixedUseCaseExecution, {
-                useCases: useCaseNames
-            }));
+            this.logger.warn(`Warning: Executing multiple UseCase at once`, useCaseNames);
         }
         this._logBuffer.forEach(logBuffer => {
             if (Array.isArray(logBuffer)) {
