@@ -1,8 +1,11 @@
-# almin-logger
+# almin-logger [![Build Status](https://travis-ci.org/almin/almin-logger.svg?branch=master)](https://travis-ci.org/almin/almin-logger)
 
 Logger class for [Almin.js](https://github.com/azu/almin "Almin.js")
 
+[![Sauce Test Status](https://saucelabs.com/browser-matrix/almin-logger.svg)](https://saucelabs.com/u/almin-logger)
+
 ![logger](https://monosnap.com/file/hrgv2Vo1Uec5o4RXBD5APMn8FCKEIC.png)
+
 
 ## Feature
 
@@ -87,7 +90,13 @@ logger.startLogging(appContext);
 
 ## Tests
 
+In Node.js
+
     npm test
+
+In Browser
+
+    npm run test:browser
 
 ## Contributing
 
