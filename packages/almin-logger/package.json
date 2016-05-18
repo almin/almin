@@ -25,7 +25,10 @@
     "build": "NODE_ENV=production babel src --out-dir lib --source-maps",
     "watch": "babel src --out-dir lib --watch --source-maps",
     "prepublish": "npm run --if-present build",
-    "test": "mocha"
+    "test:saucelabs": "zuul -- test/*-test.js",
+    "test:browser": "zuul --local 8080 --ui mocha-bdd -- test/*-test.js",
+    "test": "mocha",
+    "travis": "npm run test && npm run test:saucelabs"
   },
   "keywords": [
     "almin",
@@ -33,16 +36,18 @@
     "log"
   ],
   "devDependencies": {
-    "almin": "^0.3.0",
+    "almin": "^0.4.0",
     "babel-cli": "^6.7.7",
-    "babel-plugin-add-module-exports": "^0.1.2",
-    "babel-preset-es2015": "^6.6.0",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-preset-es2015-ie": "^6.6.2",
     "babel-preset-jsdoc-to-assert": "^1.0.1",
     "babel-preset-power-assert": "^1.0.0",
     "babel-register": "^6.7.2",
+    "babelify": "^7.3.0",
     "mocha": "^2.4.5",
     "power-assert": "^1.3.1",
-    "simple-mock": "^0.7.0"
+    "simple-mock": "^0.7.0",
+    "zuul": "^3.10.1"
   },
   "peerDependencies": {
     "almin": ">= 0.3.0"

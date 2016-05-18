@@ -1,0 +1,17 @@
+ui: mocha-bdd
+scripts:
+  - https://cdn.polyfill.io/v2/polyfill.min.js
+browsers:
+  - name: internet explorer
+    version: 9..latest
+  - name: microsoftedge
+    version: latest
+  - name: safari
+    version: latest
+  - name: chrome
+    version: [40, 45, -1..latest]
+  - name: firefox
+    version: [30, 40, -1..latest]
+browserify:
+  - transform:
+      name: babelify
