@@ -6,17 +6,6 @@ import StoreGroup from "../src/UILayer/StoreGroup";
 import StoreGroupValidator from "../src/UILayer/StoreGroupValidator";
 import createEchoStore from "./helper/EchoStore";
 describe("StoreGroupValidator", function () {
-    describe("validateStores", function () {
-        context("when duplicated stores", function () {
-            it("should throw error", function () {
-                const store1 = createEchoStore({name: "AStore"});
-                const store2 = createEchoStore({name: "AStore"});
-                assert.throws(() => {
-                    StoreGroupValidator.validateStores([store1, store2]);
-                });
-            });
-        })
-    });
     describe("validateInstance", function () {
         context("when store is argument", function () {
             it("should not throw", function () {

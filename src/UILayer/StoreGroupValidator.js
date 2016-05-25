@@ -18,27 +18,12 @@ export default class StoreGroupValidator {
      * @param {Store[]} stores
      */
     static validateStores(stores) {
-        const storeNames = [];
         stores.forEach(store => {
             assert(Store.isStore(store), `${store} should be instance of Store`);
             assert(typeof store.getState === "function", `${store} should implement getState() method.
 StoreGroup merge values of store*s*.`);
             const storeName = store.name;
             assert(storeName, `${store} should have name property value.`);
-            // Check store.name
-            assert(storeNames.indexOf(storeName) === -1, `"${storeName}" is duplicated in the \`new StoreGroup(stores)\`.
-You should check each Store class name.
-
-class ${storeName} extends Store { ... }
-      ${new Array(storeName.length + 1).join("^")}
-      store.name
-     
-
-`);
-            // Exception: when use default store name
-            if (storeName !== defaultStoreName) {
-                storeNames.push(storeName);
-            }
         });
     }
 
