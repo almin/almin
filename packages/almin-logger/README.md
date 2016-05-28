@@ -18,6 +18,8 @@ Logger class for [Almin.js](https://github.com/azu/almin "Almin.js")
 
      npm install almin-logger
 
+Old IE need [console-polyfill](https://github.com/paulmillr/console-polyfill "console-polyfill")
+
 ## Usage
 
 ```js
