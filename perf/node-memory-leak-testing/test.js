@@ -17,7 +17,6 @@ const gc = () => {
     }
 };
 const usage = () => {
-    console.log(process.memoryUsage().heapTotal);
     return pretty(process.memoryUsage().heapTotal);
 };
 class AStore extends Store {
@@ -60,6 +59,7 @@ for (let i = 0; i < 10; i++) {
 gc();
 
 setTimeout(() => {
+    console.log("finish", usage());
     const diffHeapMemory = process.memoryUsage().heapTotal - startHeapTotal;
     const MB = 1024 * 1000 * 10;
     assert(diffHeapMemory < MB, "after gc(), HeapMemory diff should be less 10MB");

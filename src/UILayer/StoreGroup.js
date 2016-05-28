@@ -1,10 +1,10 @@
 // LICENSE : MIT
 "use strict";
-// polyfill Map
-require("es6-collections");
+
 // polyfill Object.assign
 const ObjectAssign = require("object-assign");
 const assert = require("assert");
+const LRU = require("lru-cache");
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
 import Dispatcher from "./../Dispatcher";
 import Store from "./../Store";
@@ -51,7 +51,11 @@ export default class StoreGroup extends Dispatcher {
          * @type {Map}
          * @private
          */
-        this._storeValueWeakMap = new WeakMap();
+
+        this._storeValueWeakMap = new LRU({
+            max: 100,
+            maxAge: 1000 * 60 * 60
+        });
     }
 
     /**
@@ -74,6 +78,7 @@ export default class StoreGroup extends Dispatcher {
              }
              */
             const prevState = this._storeValueWeakMap.get(store);
+            // if the `store` is changed in previous
             if (prevState && this._previousChangingStores.indexOf(store) === -1) {
                 return prevState;
             }
@@ -109,9 +114,14 @@ StoreGroup#getState()["StateName"]// state
     _registerStore(store) {
         // if anyone store is changed, will call `emitChange()`.
         const releaseOnChangeHandler = store.onChange(() => {
+            // true->false, prune previous cache
+            if (this._isAnyOneStoreChanged === false) {
+                this._prunePreviousCache();
+            }
             this._isAnyOneStoreChanged = true;
             // if the same store emit multiple, emit only once.
-            if (this._currentChangingStores.indexOf(store) !== -1) {
+            const isStoreAlreadyChanging = this._currentChangingStores.indexOf(store) !== -1;
+            if (isStoreAlreadyChanging) {
                 return;
             }
             // add change store list in now
@@ -131,6 +141,14 @@ StoreGroup#getState()["StateName"]// state
     }
 
     /**
+     * release previous changing stores
+     */
+    _prunePreviousCache() {
+        this._previousChangingStores.length = 0;
+        this._currentChangingStores.length = 0;
+    }
+
+    /**
      * emitChange if its needed.
      * Implementation Note:
      * - Anyone registered store emitChange, then set `this._isChangedStore` true.
@@ -140,16 +158,13 @@ StoreGroup#getState()["StateName"]// state
         if (!this._isAnyOneStoreChanged) {
             return;
         }
-        this.emitChange();
         this._isAnyOneStoreChanged = false; // reset changed state
+        this.emitChange();
     }
 
     emitChange() {
-        // prune previous previous stores
-        this._previousChangingStores.length = 0;
         this._previousChangingStores = this._currentChangingStores.slice();
         // release ownership  of changingStores from StoreGroup
-        this._currentChangingStores.length = 0;
         // transfer ownership of changingStores to other
         this.emit(CHANGE_STORE_GROUP, this._previousChangingStores);
     }

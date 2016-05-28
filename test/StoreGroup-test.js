@@ -24,6 +24,43 @@ describe("StoreGroup", function () {
                 done();
             });
         });
+        it("should async called onChange after 2nd", function (done) {
+            const aStore = createEchoStore({name: "AStore"});
+            const bStore = createEchoStore({name: "BStore"});
+            const storeGroup = new StoreGroup([aStore, bStore]);
+            const test1 = (callback) => {
+                // Should be failure, if emit -> onChange **sync**.
+                // But it is called async
+                // then - called change handler a one-time
+                const release = storeGroup.onChange((changedStores) => {
+                    console.log("test1 changed");
+                    assert.equal(changedStores.length, 2);
+                    release();
+                    callback();
+                });
+                // when - a,b emit change at same time
+                aStore.emitChange();
+                bStore.emitChange();
+            };
+            const test2 = (callback) => {
+                // Should be failure, if emit -> onChange **sync**.
+                // But it is called async
+                // then - called change handler a one-time
+                const release = storeGroup.onChange((changedStores) => {
+                    console.log("test2 changed");
+                    assert.equal(changedStores.length, 1);
+                    release();
+                    callback();
+                });
+                // when - a,b emit change at same time
+                aStore.emitChange();
+            };
+            test1(() => {
+                test2(() => {
+                    done();
+                })
+            })
+        });
         it("should thin out change events at once", function (done) {
             const aStore = createEchoStore({name: "AStore"});
             const bStore = createEchoStore({name: "BStore"});
