@@ -25,7 +25,6 @@ export default class StoreGroup extends Dispatcher {
     constructor(stores) {
         super();
         StoreGroupValidator.validateStores(stores);
-        this._onChangeQueue = Promise.resolve();
         /**
          * callable release handlers
          * @type {Function[]}
@@ -118,10 +117,10 @@ StoreGroup#getState()["StateName"]// state
             // add change store list in now
             // it is released by `StoreGroup#emitChange`
             this._currentChangingStores.push(store);
-            setImmediate(() => {
+            setTimeout(() => {
                 // `requestEmitChange()` is for pushing `emitChange()` to queue.
                 this._requestEmitChange();
-            });
+            }, 0);
         });
         // Implementation Note:
         // Delegate dispatch event to Store from StoreGroup 
@@ -146,7 +145,7 @@ StoreGroup#getState()["StateName"]// state
     }
 
     emitChange() {
-        // release previous previous stores
+        // prune previous previous stores
         this._previousChangingStores.length = 0;
         this._previousChangingStores = this._currentChangingStores.slice();
         // release ownership  of changingStores from StoreGroup
