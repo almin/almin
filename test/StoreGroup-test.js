@@ -6,8 +6,6 @@ import StoreGroup from "../src/UILayer/StoreGroup";
 import createEchoStore from "./helper/EchoStore";
 
 describe("StoreGroup", function () {
-    before(function () {
-    });
     describe("#onChange", function () {
         it("should async called onChange ", function (done) {
             const aStore = createEchoStore({name: "AStore"});
@@ -179,6 +177,21 @@ describe("StoreGroup", function () {
                 // then - only change AState
                 aStore.emitChange();
             });
+        });
+    });
+    describe("#release", function () {
+        it("release onChange handler", function () {
+            const aStore = createEchoStore({name: "AStore"});
+            const bStore = createEchoStore({name: "BStore"});
+            const storeGroup = new StoreGroup([aStore, bStore]);
+            // then - called change handler a one-time
+            let isCalled = false;
+            storeGroup.onChange(() => {
+                isCalled = true;
+            });
+            storeGroup.release();
+            storeGroup.emitChange();
+            assert(!isCalled);
         });
     });
 });

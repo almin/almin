@@ -34,7 +34,7 @@ export default class StoreGroup extends Dispatcher {
 
         /**
          * array of store that emit change in now!
-         * this array is weak-able set.
+         * this array is temporary cache in changing the StoreGroup
          * @type {Store[]}
          * @private
          */
@@ -48,11 +48,11 @@ export default class StoreGroup extends Dispatcher {
         this.stores.forEach(store => this._registerStore(store));
 
         /**
-         * @type {Map}
+         * LRU Cache for Store and State
+         * @type {LRU}
          * @private
          */
-
-        this._storeValueWeakMap = new LRU({
+        this._stateCache = new LRU({
             max: 100,
             maxAge: 1000 * 60 * 60
         });
@@ -77,7 +77,7 @@ export default class StoreGroup extends Dispatcher {
                  }
              }
              */
-            const prevState = this._storeValueWeakMap.get(store);
+            const prevState = this._stateCache.get(store);
             // if the `store` is changed in previous
             if (prevState && this._previousChangingStores.indexOf(store) === -1) {
                 return prevState;
@@ -99,7 +99,7 @@ Then, use can access by StateName.
 StoreGroup#getState()["StateName"]// state
 
 `);
-            this._storeValueWeakMap.set(store, nextState);
+            this._stateCache.set(store, nextState);
             return nextState;
         });
         return ObjectAssign({}, ...stateMap);
@@ -116,7 +116,7 @@ StoreGroup#getState()["StateName"]// state
         const releaseOnChangeHandler = store.onChange(() => {
             // true->false, prune previous cache
             if (this._isAnyOneStoreChanged === false) {
-                this._prunePreviousCache();
+                this._prunePreviousChangingCache();
             }
             this._isAnyOneStoreChanged = true;
             // if the same store emit multiple, emit only once.
@@ -143,7 +143,7 @@ StoreGroup#getState()["StateName"]// state
     /**
      * release previous changing stores
      */
-    _prunePreviousCache() {
+    _prunePreviousChangingCache() {
         this._previousChangingStores.length = 0;
         this._currentChangingStores.length = 0;
     }
@@ -189,6 +189,6 @@ StoreGroup#getState()["StateName"]// state
     release() {
         this._releaseHandlers.forEach(releaseHandler => releaseHandler());
         this._releaseHandlers.length = 0;
-        this._storeValueWeakMap.clear();
+        this._stateCache.reset();
     }
 }
