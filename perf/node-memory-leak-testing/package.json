@@ -1,0 +1,15 @@
+{
+  "name": "node-memory-leak-testing",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node --expose-gc test.js"
+  },
+  "author": "azu",
+  "license": "MIT",
+  "dependencies": {
+    "almin": "file:../../",
+    "prettysize": "0.0.3"
+  }
+}

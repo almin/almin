@@ -29,11 +29,12 @@
     "prepublish": "npm run --if-present build",
     "lint:docs": "textlint -f pretty-error docs/",
     "test:example": "nf start --procfile test/Procfile",
+    "test:perf": "cd perf/node-memory-leak-testing && npm install && npm test",
     "test:js": "mocha",
     "test:saucelabs": "zuul -- test/*-test.js",
     "test:browser": "zuul --local 8080 --ui mocha-bdd -- test/*-test.js",
     "test": "npm-run-all --print-label --parallel test:js lint:docs test:example",
-    "travis": "npm-run-all --print-name --print-label --parallel test:js lint:docs test:example test:saucelabs"
+    "travis": "run-s --print-label --parallel test:js lint:docs test:example test:saucelabs && run-s test:perf"
   },
   "keywords": [
     "flux",
