@@ -6,8 +6,6 @@ import StoreGroup from "../src/UILayer/StoreGroup";
 import createEchoStore from "./helper/EchoStore";
 
 describe("StoreGroup", function () {
-    before(function () {
-    });
     describe("#onChange", function () {
         it("should async called onChange ", function (done) {
             const aStore = createEchoStore({name: "AStore"});
@@ -23,6 +21,43 @@ describe("StoreGroup", function () {
                 assert.equal(changedStores.length, 2);
                 done();
             });
+        });
+        it("should async called onChange after 2nd", function (done) {
+            // it should work cache temporary.
+            // test _prunePreviousCache
+            const aStore = createEchoStore({name: "AStore"});
+            const bStore = createEchoStore({name: "BStore"});
+            const storeGroup = new StoreGroup([aStore, bStore]);
+            const test1 = (callback) => {
+                // Should be failure, if emit -> onChange **sync**.
+                // But it is called async
+                // then - called change handler a one-time
+                const release = storeGroup.onChange((changedStores) => {
+                    assert.equal(changedStores.length, 2);
+                    release();
+                    callback();
+                });
+                // when - a,b emit change at same time
+                aStore.emitChange();
+                bStore.emitChange();
+            };
+            const test2 = (callback) => {
+                // Should be failure, if emit -> onChange **sync**.
+                // But it is called async
+                // then - called change handler a one-time
+                const release = storeGroup.onChange((changedStores) => {
+                    assert.equal(changedStores.length, 1);
+                    release();
+                    callback();
+                });
+                // when - a,b emit change at same time
+                aStore.emitChange();
+            };
+            test1(() => {
+                test2(() => {
+                    done();
+                })
+            })
         });
         it("should thin out change events at once", function (done) {
             const aStore = createEchoStore({name: "AStore"});
@@ -142,6 +177,21 @@ describe("StoreGroup", function () {
                 // then - only change AState
                 aStore.emitChange();
             });
+        });
+    });
+    describe("#release", function () {
+        it("release onChange handler", function () {
+            const aStore = createEchoStore({name: "AStore"});
+            const bStore = createEchoStore({name: "BStore"});
+            const storeGroup = new StoreGroup([aStore, bStore]);
+            // then - called change handler a one-time
+            let isCalled = false;
+            storeGroup.onChange(() => {
+                isCalled = true;
+            });
+            storeGroup.release();
+            storeGroup.emitChange();
+            assert(!isCalled);
         });
     });
 });

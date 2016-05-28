@@ -1,10 +1,10 @@
 // LICENSE : MIT
 "use strict";
-// polyfill Map
-require("es6-collections");
+
 // polyfill Object.assign
 const ObjectAssign = require("object-assign");
 const assert = require("assert");
+const LRU = require("lru-cache");
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
 import Dispatcher from "./../Dispatcher";
 import Store from "./../Store";
@@ -25,7 +25,6 @@ export default class StoreGroup extends Dispatcher {
     constructor(stores) {
         super();
         StoreGroupValidator.validateStores(stores);
-        this._onChangeQueue = Promise.resolve();
         /**
          * callable release handlers
          * @type {Function[]}
@@ -35,7 +34,7 @@ export default class StoreGroup extends Dispatcher {
 
         /**
          * array of store that emit change in now!
-         * this array is weak-able set.
+         * this array is temporary cache in changing the StoreGroup
          * @type {Store[]}
          * @private
          */
@@ -49,10 +48,14 @@ export default class StoreGroup extends Dispatcher {
         this.stores.forEach(store => this._registerStore(store));
 
         /**
-         * @type {Map}
+         * LRU Cache for Store and State
+         * @type {LRU}
          * @private
          */
-        this._storeValueWeakMap = new WeakMap();
+        this._stateCache = new LRU({
+            max: 100,
+            maxAge: 1000 * 60 * 60
+        });
     }
 
     /**
@@ -74,7 +77,8 @@ export default class StoreGroup extends Dispatcher {
                  }
              }
              */
-            const prevState = this._storeValueWeakMap.get(store);
+            const prevState = this._stateCache.get(store);
+            // if the `store` is changed in previous
             if (prevState && this._previousChangingStores.indexOf(store) === -1) {
                 return prevState;
             }
@@ -95,7 +99,7 @@ Then, use can access by StateName.
 StoreGroup#getState()["StateName"]// state
 
 `);
-            this._storeValueWeakMap.set(store, nextState);
+            this._stateCache.set(store, nextState);
             return nextState;
         });
         return ObjectAssign({}, ...stateMap);
@@ -110,22 +114,23 @@ StoreGroup#getState()["StateName"]// state
     _registerStore(store) {
         // if anyone store is changed, will call `emitChange()`.
         const releaseOnChangeHandler = store.onChange(() => {
+            // true->false, prune previous cache
+            if (this._isAnyOneStoreChanged === false) {
+                this._prunePreviousChangingCache();
+            }
             this._isAnyOneStoreChanged = true;
             // if the same store emit multiple, emit only once.
-            if (this._currentChangingStores.indexOf(store) !== -1) {
+            const isStoreAlreadyChanging = this._currentChangingStores.indexOf(store) !== -1;
+            if (isStoreAlreadyChanging) {
                 return;
             }
             // add change store list in now
             // it is released by `StoreGroup#emitChange`
             this._currentChangingStores.push(store);
-            this._onChangeQueue = this._onChangeQueue.then(() => {
+            setTimeout(() => {
                 // `requestEmitChange()` is for pushing `emitChange()` to queue.
                 this._requestEmitChange();
-            }).catch(function onChangeQueueError(error) {
-                setTimeout(() => {
-                    throw error;
-                }, 0);
-            });
+            }, 0);
         });
         // Implementation Note:
         // Delegate dispatch event to Store from StoreGroup 
@@ -133,6 +138,14 @@ StoreGroup#getState()["StateName"]// state
         const releaseOnDispatchHandler = this.pipe(store);
         // add release handler
         this._releaseHandlers = this._releaseHandlers.concat([releaseOnChangeHandler, releaseOnDispatchHandler]);
+    }
+
+    /**
+     * release previous changing stores
+     */
+    _prunePreviousChangingCache() {
+        this._previousChangingStores.length = 0;
+        this._currentChangingStores.length = 0;
     }
 
     /**
@@ -145,16 +158,15 @@ StoreGroup#getState()["StateName"]// state
         if (!this._isAnyOneStoreChanged) {
             return;
         }
-        this.emitChange();
         this._isAnyOneStoreChanged = false; // reset changed state
+        this.emitChange();
     }
 
     emitChange() {
         this._previousChangingStores = this._currentChangingStores.slice();
+        // release ownership  of changingStores from StoreGroup
         // transfer ownership of changingStores to other
         this.emit(CHANGE_STORE_GROUP, this._previousChangingStores);
-        // release ownership  of changingStores from StoreGroup
-        this._currentChangingStores.length = 0;
     }
 
     /**
@@ -177,6 +189,6 @@ StoreGroup#getState()["StateName"]// state
     release() {
         this._releaseHandlers.forEach(releaseHandler => releaseHandler());
         this._releaseHandlers.length = 0;
-        this._storeValueWeakMap.clear();
+        this._stateCache.reset();
     }
 }

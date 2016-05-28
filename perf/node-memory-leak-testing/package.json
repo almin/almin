@@ -1,0 +1,20 @@
+{
+  "name": "node-memory-leak-testing",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "pretest": "rm-local-modules && npm i",
+    "perf": "node --expose-gc test.js",
+    "test": "npm run perf"
+  },
+  "author": "azu",
+  "license": "MIT",
+  "dependencies": {
+    "almin": "file:../../",
+    "prettysize": "0.0.3"
+  },
+  "devDependencies": {
+    "rm-local-modules": "0.0.1"
+  }
+}
