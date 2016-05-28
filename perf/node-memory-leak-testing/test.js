@@ -59,8 +59,9 @@ for (let i = 0; i < 10; i++) {
 gc();
 
 setTimeout(() => {
-    console.log("finish", usage());
     const diffHeapMemory = process.memoryUsage().heapTotal - startHeapTotal;
     const MB = 1024 * 1000 * 10;
+    console.log("finish", usage());
+    console.log("diffMemory:", pretty(diffHeapMemory));
     assert(diffHeapMemory < MB, "after gc(), HeapMemory diff should be less 10MB");
 }, 10);
