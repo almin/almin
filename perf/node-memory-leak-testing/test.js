@@ -2,7 +2,7 @@
 /*
     Test memory leak of StoreGroup cache.
 
-    assert(startMemory - endMemory < 1MB);
+    assert(startMemory - endMemory < 10MB);
  */
 const assert = require("assert");
 const pretty = require('prettysize');
@@ -61,6 +61,6 @@ gc();
 
 setTimeout(() => {
     const diffHeapMemory = process.memoryUsage().heapTotal - startHeapTotal;
-    const MB = 1024 * 1000;
-    assert(diffHeapMemory < MB, "after gc(), HeapMemory diff should be less 1MB");
+    const MB = 1024 * 1000 * 10;
+    assert(diffHeapMemory < MB, "after gc(), HeapMemory diff should be less 10MB");
 }, 10);

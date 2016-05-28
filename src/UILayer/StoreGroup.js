@@ -118,13 +118,9 @@ StoreGroup#getState()["StateName"]// state
             // add change store list in now
             // it is released by `StoreGroup#emitChange`
             this._currentChangingStores.push(store);
-            this._onChangeQueue = this._onChangeQueue.then(() => {
+            setImmediate(() => {
                 // `requestEmitChange()` is for pushing `emitChange()` to queue.
                 this._requestEmitChange();
-            }).catch(function onChangeQueueError(error) {
-                setTimeout(() => {
-                    throw error;
-                }, 0);
             });
         });
         // Implementation Note:
@@ -150,11 +146,13 @@ StoreGroup#getState()["StateName"]// state
     }
 
     emitChange() {
+        // release previous previous stores
+        this._previousChangingStores.length = 0;
         this._previousChangingStores = this._currentChangingStores.slice();
-        // transfer ownership of changingStores to other
-        this.emit(CHANGE_STORE_GROUP, this._previousChangingStores);
         // release ownership  of changingStores from StoreGroup
         this._currentChangingStores.length = 0;
+        // transfer ownership of changingStores to other
+        this.emit(CHANGE_STORE_GROUP, this._previousChangingStores);
     }
 
     /**
