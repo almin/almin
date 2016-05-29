@@ -13,6 +13,7 @@ Logger class for [Almin.js](https://github.com/azu/almin "Almin.js")
 - Multiple Execution warning log of UseCase
 - Changed log of Store
 - Nesting log support if the browser support`console.groupCollapsed`.
+- Async(default) and Sync logger
 
 ## Installation
 
