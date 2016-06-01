@@ -1,5 +1,5 @@
 {
-  "gitbook": "2.x.x",
+  "gitbook": "3.x.x",
   "title": "Almin.js",
   "description": "Flux/CQRS patterns for JavaScript app.",
   "githubId": "almin/almin",
@@ -10,6 +10,6 @@
   "pluginsConfig": {
   },
   "structure": {
-    "summary": "./SUMMARY.md"
+    "summary": "SUMMARY.md"
   }
 }

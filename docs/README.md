@@ -6,7 +6,7 @@ Almin provide Flux/CQRS patterns for JavaScript application.
 
 It aim to create scalable app.
 
-![overview of almin-architecture](./resources/almin-architecture.png)
+![Overview of almin-architecture](./resources/almin-architecture.png)
 
 The above figure is overview of Almin architecture that is similar to CQRS([Command Query Responsibility Segregation](http://martinfowler.com/bliki/CQRS.html "Command Query Responsibility Segregation")).
 
@@ -51,6 +51,14 @@ Truly [Table of Contents](../SUMMARY.md) is here :arrow_left:
 ## Rough Table of Contents
 
 Rough version of Table of Contents.
+
+### Overview
+
+- [Component of Almin](./abstract/README.md)
+    - [View](./abstract/README.md#view)
+    - [UseCase](./abstract/README.md#usecase)
+    - [Context](./abstract/README.md#context)
+    - [Store](./abstract/README.md#store)
 
 ### Tutorial
 
