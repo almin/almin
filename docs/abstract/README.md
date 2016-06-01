@@ -155,7 +155,7 @@ We learn simply data flow of Almin.
 
 You can see actual example in [Creating Counter App](../counter/).
 
-![Overview of almin-architecture](./resources/almin-architecture.png)
+![Overview of almin-architecture](../resources/almin-architecture.png)
 
 This page not say all thing of Almin.
 
