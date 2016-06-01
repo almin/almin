@@ -2,10 +2,10 @@
 
 - [What is Almin?](./docs/README.md)
 - [Overview: Component of Almin](./docs/abstract/README.md)
-    - [View](./docs/abstract/README.md#View)
-    - [UseCase](./docs/abstract/README.md#UseCase)
-    - [Context](./docs/abstract/README.md#Context)
-    - [Store](./docs/abstract/README.md#Store)
+    - [View](./docs/abstract/README.md#view)
+    - [UseCase](./docs/abstract/README.md#usecase)
+    - [Context](./docs/abstract/README.md#context)
+    - [Store](./docs/abstract/README.md#store)
 - [ ] Work flow
 - [ ] Data flow
 - [ ] Example: Counter

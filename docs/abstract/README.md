@@ -45,7 +45,7 @@ const useCase = new AwesomeUseCase();
 useCase.execute();
 ```
 
-## Context <del>Logging</del>
+## Context
 
 Almin has `Context` class for logging and communicating with **Store**.
 

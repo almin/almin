@@ -55,10 +55,10 @@ Rough version of Table of Contents.
 ### Overview
 
 - [Component of Almin](./abstract/README.md)
-    - [View](./abstract/README.md#View)
-    - [UseCase](./abstract/README.md#UseCase)
-    - [Context](./abstract/README.md#Context)
-    - [Store](./abstract/README.md#Store)
+    - [View](./abstract/README.md#view)
+    - [UseCase](./abstract/README.md#usecase)
+    - [Context](./abstract/README.md#context)
+    - [Store](./abstract/README.md#store)
 
 ### Tutorial
 
