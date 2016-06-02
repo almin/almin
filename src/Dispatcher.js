@@ -42,6 +42,13 @@ export default class Dispatcher extends EventEmitter {
         return false;
     }
 
+    constructor() {
+        super();
+        // suppress: memory leak warning of EventEmitter
+        // Dispatcher can listen more than 10 events
+        this.setMaxListeners(0);
+    }
+
     /**
      * add onAction handler and return unbind function
      * @param {{function(payload: DispatcherPayload)}} payloadHandler
