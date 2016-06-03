@@ -1,10 +1,8 @@
 // LICENSE : MIT
 "use strict";
 const assert = require("assert");
-import {Context, Store, Dispatcher} from "almin";
+import {UseCase, Context, Store, Dispatcher} from "almin";
 import AlminLogger from "../src/AlminLogger";
-import AsyncLogger from "../src/AsyncLogger";
-import SyncLogger from "../src/SyncLogger";
 import ConsoleMock from "./helper/ConsoleMock";
 class ExampleUseCase extends UseCase {
     execute() {

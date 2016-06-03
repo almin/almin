@@ -114,7 +114,7 @@ export default class AsyncLogger extends EventEmitter {
     _logDispatch(payload) {
         // http://emojipedia.org/fire/
         this._logBuffer.push([
-            `\u{1F525} Dispatch:${payload.type}`,
+            `\u{1F525} Dispatch:${String(payload.type)}`,
             payload
         ]);
     }

@@ -32,7 +32,7 @@ export default class SyncLogger extends EventEmitter {
             this.logger.log(`${useCase.name} will execute`);
         };
         const onDispatch = payload => {
-            this.logger.info(`\u{1F525} Dispatch:${payload.type}`, payload)
+            this.logger.info(`\u{1F525} Dispatch:${String(payload.type)}`, payload)
         };
         const onChange = (stores) => {
             stores.forEach(state => {
