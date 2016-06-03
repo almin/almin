@@ -6,7 +6,7 @@ export const ON_DISPATCH = "__ON_DISPATCH__";
 /**
  * payload The payload object that must have `type` property.
  * @typedef {Object} DispatcherPayload
- * @property {String} type The event type to dispatch.
+ * @property {*} type The event type to dispatch.
  * @public
  */
 /**
@@ -68,7 +68,7 @@ export default class Dispatcher extends EventEmitter {
      */
     dispatch(payload) {
         assert(payload !== undefined && payload !== null, "payload should not null or undefined");
-        assert(typeof payload.type === "string", "payload's type should be string");
+        assert(typeof payload.type !== "undefined", "payload's `type` should be required");
         this.emit(ON_DISPATCH, payload);
     }
 

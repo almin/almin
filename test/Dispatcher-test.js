@@ -26,6 +26,17 @@ describe("Dispatcher", function () {
                 assert(error.message !== "UNREACHED");
             }
         });
+        it("should dispatch with payload object that has type propery", function (done) {
+            const dispatcher = new Dispatcher();
+            const expectedPayload = {
+                type: { /* string Symbol anything */ }
+            };
+            dispatcher.onDispatch(payload => {
+                assert.deepEqual(payload, expectedPayload);
+                done();
+            });
+            dispatcher.dispatch(expectedPayload);
+        });
         it("should pass payload object to listening handler", function (done) {
             const dispatcher = new Dispatcher();
             const expectedPayload = {
