@@ -33,8 +33,7 @@
     "test:js": "mocha",
     "test:saucelabs": "zuul -- test/*-test.js",
     "test:browser": "zuul --local 8080 --ui mocha-bdd -- test/*-test.js",
-    "test": "run-s --print-label test:js lint:docs test:example && run-s test:perf",
-    "travis": "run-s --print-label test:js lint:docs test:example test:saucelabs && run-s test:perf"
+    "test": "run-s --print-label test:js lint:docs test:example && run-s test:perf"
   },
   "keywords": [
     "flux",
