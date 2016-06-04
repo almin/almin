@@ -51,7 +51,7 @@ export default class Dispatcher extends EventEmitter {
 
     /**
      * add onAction handler and return unbind function
-     * @param {{function(payload: DispatcherPayload)}} payloadHandler
+     * @param {function(payload: DispatcherPayload)} payloadHandler
      * @returns {Function} call the function and release handler
      * @public
      */

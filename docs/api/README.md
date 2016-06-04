@@ -34,13 +34,13 @@ StoreGroups receive this action and reduce state.
 
 -   `payload`: **DispatcherPayload**
 
-#### `onDispatch(payloadHandler): Function`
+#### `onDispatch(payloadHandler: function (payload: DispatcherPayload)): Function`
 
 add onAction handler and return unbind function
 
 **Parameters**
 
--   `payloadHandler`
+-   `payloadHandler`: **function (payload: DispatcherPayload)**
 
 Returns: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - call the function and release handler
 
@@ -70,7 +70,7 @@ payload The payload object that must have `type` property.
 
 **Properties**
 
--   `type` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The event type to dispatch.
+-   `type` **Any** The event type to dispatch.
 
 ## Store class
 
@@ -213,13 +213,13 @@ StoreGroups receive this action and reduce state.
 
 -   `payload`: **DispatcherPayload**
 
-#### `onDispatch(payloadHandler): Function`
+#### `onDispatch(payloadHandler: function (payload: DispatcherPayload)): Function`
 
 add onAction handler and return unbind function
 
 **Parameters**
 
--   `payloadHandler`
+-   `payloadHandler`: **function (payload: DispatcherPayload)**
 
 Returns: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - call the function and release handler
 
@@ -249,7 +249,7 @@ payload The payload object that must have `type` property.
 
 **Properties**
 
--   `type` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The event type to dispatch.
+-   `type` **Any** The event type to dispatch.
 
 ## StoreGroup class
 
@@ -392,13 +392,13 @@ StoreGroups receive this action and reduce state.
 
 -   `payload`: **DispatcherPayload**
 
-#### `onDispatch(payloadHandler): Function`
+#### `onDispatch(payloadHandler: function (payload: DispatcherPayload)): Function`
 
 add onAction handler and return unbind function
 
 **Parameters**
 
--   `payloadHandler`
+-   `payloadHandler`: **function (payload: DispatcherPayload)**
 
 Returns: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - call the function and release handler
 
@@ -428,7 +428,7 @@ payload The payload object that must have `type` property.
 
 **Properties**
 
--   `type` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The event type to dispatch.
+-   `type` **Any** The event type to dispatch.
 
 ## Context class
 
@@ -571,13 +571,13 @@ StoreGroups receive this action and reduce state.
 
 -   `payload`: **DispatcherPayload**
 
-#### `onDispatch(payloadHandler): Function`
+#### `onDispatch(payloadHandler: function (payload: DispatcherPayload)): Function`
 
 add onAction handler and return unbind function
 
 **Parameters**
 
--   `payloadHandler`
+-   `payloadHandler`: **function (payload: DispatcherPayload)**
 
 Returns: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - call the function and release handler
 
@@ -607,7 +607,7 @@ payload The payload object that must have `type` property.
 
 **Properties**
 
--   `type` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The event type to dispatch.
+-   `type` **Any** The event type to dispatch.
 
 ## UseCase class
 
@@ -750,13 +750,13 @@ StoreGroups receive this action and reduce state.
 
 -   `payload`: **DispatcherPayload**
 
-#### `onDispatch(payloadHandler): Function`
+#### `onDispatch(payloadHandler: function (payload: DispatcherPayload)): Function`
 
 add onAction handler and return unbind function
 
 **Parameters**
 
--   `payloadHandler`
+-   `payloadHandler`: **function (payload: DispatcherPayload)**
 
 Returns: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - call the function and release handler
 
@@ -786,4 +786,4 @@ payload The payload object that must have `type` property.
 
 **Properties**
 
--   `type` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The event type to dispatch.
+-   `type` **Any** The event type to dispatch.
