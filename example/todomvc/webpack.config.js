@@ -13,11 +13,14 @@ module.exports = {
     },
     module: {
         loaders: [
-            { test: /\.json$/, loader: "json-loader" },
+            {test: /\.json$/, loader: "json-loader"},
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
-                loader: "babel"// .babelrcを参照する
+                loader: "babel",
+                query: {
+                    cacheDirectory: true
+                }
             }
         ]
     },

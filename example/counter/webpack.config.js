@@ -17,7 +17,10 @@ module.exports = {
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
-                loader: "babel"// .babelrcを参照する
+                loader: "babel",
+                query: {
+                    cacheDirectory: true
+                }
             }
         ]
     },
