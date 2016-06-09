@@ -30,7 +30,7 @@ Almin provide some pattern, is not framework.
 
 Almin is a implementation of Read/Write Stack Architecture that is well-known as Flux/CQRS.
 
-- [Read/Write Stack | JavaScriptアーキテクチャ](http://azu.github.io/slide/2016/bikeshedjs/javascript-read-write-stack.html "Read/Write Stack | JavaScriptアーキテクチャ")
+- [Almin.js | JavaScriptアーキテクチャ](http://azu.github.io/slide/2016/child_process_sushi/almin-javascript-architecture.html "Almin.js | JavaScriptアーキテクチャ") (japanese)
 
 ## Installation
 
