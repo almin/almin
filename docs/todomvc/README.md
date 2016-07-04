@@ -92,7 +92,8 @@ class TodoList {
 
 ### TodoList
 
-- [ ] TodoList has business logic
+`TodoList` class has business logic.
+
 - [ ] Forget persistent
 
 #### TodoItem is value object
