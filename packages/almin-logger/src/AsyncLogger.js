@@ -20,7 +20,7 @@ export default class AsyncLogger extends EventEmitter {
     _outputBuffer(logTitle) {
         const output = (log) => {
             if (log instanceof Error) {
-                this.logger.error(error);
+                this.logger.error(log);
             } else {
                 this.logger.info(log);
             }

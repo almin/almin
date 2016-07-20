@@ -6,6 +6,7 @@ import AsyncLogger from "../src/AsyncLogger";
 import AlminLogger from "../src/AlminLogger";
 import ConsoleMock from "./helper/ConsoleMock";
 import ExampleUseCase from "./usecase/ExampleUseCase";
+import ErrorUseCase from "./usecase/ErrorUseCase";
 import DispatchUseCase from "./usecase/DispatchUseCase";
 describe("AsyncLogger", function () {
 
@@ -88,6 +89,31 @@ describe("AsyncLogger", function () {
         logger.on(AlminLogger.Events.output, function () {
             assert(consoleMock.groupCollapsed.called);
             assert(consoleMock.log.called);
+            done();
+        });
+        // When
+        context.useCase(useCase).execute();
+    });
+    it("should output as error", function (done) {
+        const consoleMock = ConsoleMock.create();
+        const logger = new AsyncLogger({
+            console: consoleMock
+        });
+        const dispatcher = new Dispatcher();
+        const store = new Store();
+        const useCase = new ErrorUseCase();
+        const context = new Context({
+            store,
+            dispatcher
+        });
+        logger.startLogging(context);
+        // yet not called
+        assert(!consoleMock.groupCollapsed.called);
+        assert(!consoleMock.error.called);
+        // Then
+        logger.on(AlminLogger.Events.output, function () {
+            assert(consoleMock.groupCollapsed.called);
+            assert(consoleMock.error.called);
             done();
         });
         // When
