@@ -1,6 +1,12 @@
 {
   "rules": {
-    "alex": true,
+    "alex": {
+      "allow": [
+        "execute",
+        "executed",
+        "execution"
+      ]
+    },
     "no-dead-link": true,
     "common-misspellings": true
   }
