@@ -44,6 +44,10 @@ Todo app has these UseCases.
 - [ToggleTodoItem.js](../../example/todomvc/src/usecase/ToggleTodoItem.js)
 - [UpdateTodoItemTitle.js](../../example/todomvc/src/usecase/UpdateTodoItemTitle.js)
 
+and system UseCase
+
+- [CreateDomainUseCase.js](../../example/todomvc/src/usecase/CreateDomainUseCase.js)
+
 ## Story
 
 We'll implement following work flow and see it.
@@ -156,13 +160,25 @@ Domain should not dependant to repository.
 Because, Domain don't know how to store itself.
 But, Repository can dependant to domain.
 
+## When is domain object created?
+
+We write simply to `index.js`.
+
+Execute [CreateDomainUseCase.js](../../example/todomvc/src/usecase/CreateDomainUseCase.js) and initialize `TodoList` domain and store the instance to repository.
+
+```js
+// create domain model and store to repository
+appContext.useCase(CreateDomainUseCaseFactory.create()).execute().then(() => {
+    // mount app view
+    ReactDOM.render(<TodoApp appContext={appContext}/>, document.getElementById("todoapp"));
+});
+```
+
 ## AddTodoItem UseCase
 
 Let's implement business login to `TodoList`.
 
 UseCase: [AddTodoItem](../../example/todomvc/src/usecase/AddTodoItem.js)
-
-
 
 ### TodoStore 
 
