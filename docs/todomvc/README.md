@@ -86,30 +86,83 @@ Yes, `???` is just `TodoList`!
 
 ```js
 class TodoList {
-    // both data and behavior
+    // data and behavior
 }
 ```
 
 ### TodoList
 
-`TodoList` class has business logic.
+`TodoList` class has business logic and manage todo item.
 
-- [ ] Forget persistent
+*Todo item* is also domain model.
+We going to implement `TodoItem` as value object.
 
 #### TodoItem is value object
 
-- [ ] What is value object
+`TodoItem` is a simple class that has these data
+
+- `id`: identifier
+- `title`: todo title
+- `completed`: true or false
+
+[import, TodoItem.js](../../example/todomvc/src/domain/TodoList/TodoItem.js])
 
 ### Where domain object are stored?
 
-- [ ] Repository is infra
-- [ ] Repository is confused word, we define the term in the tutorial
+Now, we can create instance of domain models like that:
+
+```js
+const todoList = new TodoList();
+const todoItem = new TodoItem({ ... });
+todoList.addTodo(todoItem);
+```
+
+But, How to store instance of domain as persistence.
+
+We want to introduce **Repository* object.
+Repository store domain model for perpetuation.
+
+In the case, repository store domain object into memory database.
+
+Repository is simple class that has these feature:
+
+- Can read/write memory database - memory database is a just `Map` object
+- Write domain instance into memory database
+- Read domain instance from memory database
+- When update memory database, emit "Change" event to subscriber
+    - Repository is a just EventEmitter
+
+![almin-architecture-simple-repository.png](img/almin-architecture-simple-repository.pngalmin-architecture-simple-repository.png)
+
+We want to store `TodoList` instance to the repository.
+As a result, We have created `TodoRepository`.
+
+[import, TodoRepository.js](../../example/todomvc/src/infra/TodoRepository.js)
+
+Repository should be persistence object.
+In other words, create repository instance as singleton.
+
+Singleton? Does it may make dependencies hell?
+
+Of course, We can resolve that dependencies issue by DIP([Dependency inversion principle](https://en.wikipedia.org/wiki/Dependency_inversion_principle "Dependency inversion principle")).
 
 ### DIP
 
-- [ ] How to resolve dependencies?
+([Dependency inversion principle](https://en.wikipedia.org/wiki/Dependency_inversion_principle "Dependency inversion principle")) is well-known layers pattern.
+
+![DIP](img/almin-architecture-dip.png)
+
+Domain should not dependant to repository.
+Because, Domain don't know how to store itself.
+But, Repository can dependant to domain.
 
 ## AddTodoItem UseCase
+
+Let's implement business login to `TodoList`.
+
+UseCase: [AddTodoItem](../../example/todomvc/src/usecase/AddTodoItem.js)
+
+
 
 ### TodoStore 
 

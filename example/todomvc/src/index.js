@@ -6,6 +6,8 @@ import TodoApp from './components/TodoApp.react';
 import AppLocator from "./AppLocator";
 // store
 import AppStoreGroup from "./store/AppStoreGroup";
+// use-case
+import {CreateDomainUseCaseFactory} from "./usecase/CreateDomainUseCase";
 // context
 import {Context, Dispatcher}  from "almin";
 import AlminLogger from "almin-logger";
@@ -21,5 +23,8 @@ const logger = new AlminLogger();
 logger.startLogging(appContext);
 // Singleton
 AppLocator.context = appContext;
-// entry point
-ReactDOM.render(<TodoApp appContext={appContext}/>, document.getElementById("todoapp"));
+// initialize domain
+appContext.useCase(CreateDomainUseCaseFactory.create()).execute().then(() => {
+    // entry point
+    ReactDOM.render(<TodoApp appContext={appContext}/>, document.getElementById("todoapp"));
+});

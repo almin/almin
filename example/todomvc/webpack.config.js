@@ -22,8 +22,8 @@ module.exports = {
                     cacheDirectory: true
                 }
             }
-        ]
-    },
-    // to avoid warning by power-assert-formatter
-    exprContextCritical: false
+        ],
+        // to avoid warning by power-assert-formatter
+        exprContextCritical: false
+    }
 };
