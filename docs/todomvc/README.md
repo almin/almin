@@ -146,7 +146,7 @@ As a result, We have created `TodoRepository`.
 Repository should be persistence object.
 In other words, create repository instance as singleton.
 
-Singleton? Does it may make dependencies hell?
+Singleton? Does it may make dependencies problem?
 
 Of course, We can resolve that dependencies issue by DIP([Dependency inversion principle](https://en.wikipedia.org/wiki/Dependency_inversion_principle "Dependency inversion principle")).
 
@@ -156,9 +156,9 @@ Of course, We can resolve that dependencies issue by DIP([Dependency inversion p
 
 ![DIP](img/almin-architecture-dip.png)
 
-Domain should not dependant to repository.
+Domain should not dependent to repository.
 Because, Domain don't know how to store itself.
-But, Repository can dependant to domain.
+But, Repository can dependent to domain.
 
 ## When is domain object created?
 
