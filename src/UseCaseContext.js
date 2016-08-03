@@ -1,7 +1,7 @@
 // LICENSE : MIT
 "use strict";
 /*
-    This class aim to execute other UseCase in the UseCase
+ This class aim to execute other UseCase in the UseCase
  */
 import UseCaseExecutor from "./UseCaseExecutor";
 import Dispatcher from "./Dispatcher";
@@ -21,6 +21,10 @@ export default class UseCaseContext {
      */
     useCase(useCase) {
         assert(useCase !== this.dispatcher, `the useCase(${useCase}) should not equal this useCase(${this.dispatcher})`);
-        return new UseCaseExecutor(useCase, this.dispatcher);
+        return new UseCaseExecutor({
+            useCase,
+            parent: this.dispatcher,
+            dispatcher: this.dispatcher
+        });
     }
 }

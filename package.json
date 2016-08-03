@@ -65,6 +65,7 @@
     "zuul": "^3.10.1"
   },
   "dependencies": {
+    "is-promise": "^2.1.0",
     "lru-cache": "^4.0.1",
     "object-assign": "^4.1.0"
   }

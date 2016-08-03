@@ -4,9 +4,9 @@ const assert = require("power-assert");
 import UseCaseExecutor from "../src/UseCaseExecutor";
 import UseCase from "../src/UseCase";
 import Dispatcher from "../src/Dispatcher";
-describe("UseCaseExecutor", function () {
-    context("when UseCase is successful completion", function () {
-        it("dispatch will -> did", function () {
+describe("UseCaseExecutor", function() {
+    context("when UseCase is successful completion", function() {
+        it("dispatch will -> did", function() {
             // given
             const expectedPayload = {
                 type: "SyncUseCase",
@@ -20,7 +20,10 @@ describe("UseCaseExecutor", function () {
             }
             const callStack = [];
             const expectedCallStack = [1, 2, 3];
-            const executor = new UseCaseExecutor(new SyncUseCase(), dispatcher);
+            const executor = new UseCaseExecutor({
+                useCase: new SyncUseCase(),
+                dispatcher
+            });
             // then
             executor.onWillExecuteEachUseCase(() => {
                 callStack.push(1);
@@ -39,9 +42,9 @@ describe("UseCaseExecutor", function () {
             });
         });
     });
-    describe("#execute", function () {
-        context("when UseCase is sync", function () {
-            it("execute is called", function (done) {
+    describe("#execute", function() {
+        context("when UseCase is sync", function() {
+            it("execute is called", function(done) {
                 // given
                 const expectedPayload = {
                     type: "SyncUseCase",
@@ -64,12 +67,15 @@ describe("UseCaseExecutor", function () {
                     }
                 });
                 // when
-                const executor = new UseCaseExecutor(new SyncUseCase(), dispatcher);
+                const executor = new UseCaseExecutor({
+                    useCase: new SyncUseCase(),
+                    dispatcher
+                });
                 executor.execute(expectedPayload);// 1
             });
         });
-        context("when UseCase is async", function () {
-            it("execute is called", function (done) {
+        context("when UseCase is async", function() {
+            it("execute is called", function(done) {
                 // given
                 const expectedPayload = {
                     type: "SyncUseCase",
@@ -95,7 +101,10 @@ describe("UseCaseExecutor", function () {
                     }
                 });
                 // when
-                const executor = new UseCaseExecutor(new AsyncUseCase(), dispatcher);
+                const executor = new UseCaseExecutor({
+                    useCase: new AsyncUseCase(),
+                    dispatcher
+                });
                 executor.onDidExecuteEachUseCase(useCase => {
                     if (useCase instanceof AsyncUseCase) {
                         assert(isCalledUseCase);

@@ -1,15 +1,21 @@
 // LICENSE : MIT
 "use strict";
 const assert = require("assert");
+const isPromise = require('is-promise');
 import {ActionTypes} from "./Context";
 import Dispatcher from "./Dispatcher";
 import UseCase from "./UseCase";
 export default class UseCaseExecutor {
     /**
      * @param {UseCase} useCase
-     * @param {Dispatcher|UseCase} parentDispatcher is parent dispatcher-like object
+     * @param {UseCase|null} parent parent is parent of `useCase`
+     * @param {Dispatcher|UseCase} dispatcher
      */
-    constructor(useCase, parentDispatcher) {
+    constructor({
+        useCase,
+        parent,
+        dispatcher
+    }) {
         // execute and finish =>
         const useCaseName = useCase.name;
         assert(typeof useCaseName === "string", "UseCase instance should have constructor.name " + useCase);
@@ -22,10 +28,23 @@ export default class UseCaseExecutor {
          * @type {UseCase} executable useCase
          */
         this.useCase = useCase;
+
+        /**
+         * @type {UseCase|null} parent useCase
+         */
+        this.parentUseCase = parent;
         /**
          * @type {Dispatcher}
          */
-        this.parentDispatcher = parentDispatcher;
+        this.parentDispatcher = dispatcher;
+
+        /**
+         * is the useCase executed
+         * @type {boolean}
+         * @private
+         */
+        this._isExecuted = false;
+
         /**
          * callable release handlers that are called in release()
          * @type {Function[]}
@@ -45,18 +64,24 @@ export default class UseCaseExecutor {
         this.parentDispatcher.dispatch({
             type: ActionTypes.ON_WILL_EXECUTE_EACH_USECASE,
             useCase: this.useCase,
+            parent: this.parentUseCase,
             args
         });
     }
 
     /**
-     *
+     * dispatch did execute each UseCase at once
      */
     didExecute() {
+        if (this._isExecuted) {
+            return;
+        }
         this.parentDispatcher.dispatch({
             type: ActionTypes.ON_DID_EXECUTE_EACH_USECASE,
-            useCase: this.useCase
+            useCase: this.useCase,
+            parent: this.parentUseCase
         });
+        this._isExecuted = true;
     }
 
     /**
@@ -78,7 +103,7 @@ export default class UseCaseExecutor {
      * @param {function(useCase: UseCase)} handler
      */
     onDidExecuteEachUseCase(handler) {
-        const releaseHandler = this.parentDispatcher.onDispatch(function onDidExecuteEachUseCaseInUseCaseExecutor(payload){
+        const releaseHandler = this.parentDispatcher.onDispatch(function onDidExecuteEachUseCaseInUseCaseExecutor(payload) {
             if (payload.type === ActionTypes.ON_DID_EXECUTE_EACH_USECASE) {
                 handler(payload.useCase);
             }
@@ -95,6 +120,10 @@ export default class UseCaseExecutor {
     execute(...args) {
         this.willExecute(args);
         const result = this.useCase.execute(...args);
+        // Sync call didExecute
+        if (!isPromise(result)) {
+            this.didExecute(result);
+        }
         return Promise.resolve(result).then((result) => {
             this.didExecute(result);
             this.release();
