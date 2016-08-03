@@ -41,6 +41,30 @@ describe("QueuedStoreGroup", function() {
                 assert(isCalled);
             });
         });
+        context("when UseCase never change any store", function() {
+            it("should not be called", function() {
+                const store = createEchoStore({name: "AStore"});
+                const storeGroup = new QueuedStoreGroup([store]);
+                let isCalled = false;
+                // then
+                storeGroup.onChange(() => {
+                    isCalled = true;
+                });
+                // when
+                const useCase = new class NopeUseCase extends UseCase {
+                    execute() {
+                        // not change any store
+                    }
+                };
+                const context = new Context({
+                    dispatcher: new Dispatcher(),
+                    store: storeGroup
+                });
+                return context.useCase(useCase).execute().then(() => {
+                    assert(isCalled === false);
+                });
+            });
+        });
         // sync
         context("when SyncUseCase change the store", function() {
             it("should be called by sync", function() {

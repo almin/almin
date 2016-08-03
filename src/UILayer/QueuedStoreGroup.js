@@ -60,12 +60,21 @@ export default class QueuedStoreGroup extends Dispatcher {
                 const parent = payload.parent;
                 // emitChange when root useCase is executed
                 // ignore child useCase is executing
-                if (!parent) {
+                if (!parent && this.hasChangingStore) {
                     this.emitChange();
                 }
             }
         };
-        this.onDispatch(didExecutedUseCase);
+        const unListenOnDispatch = this.onDispatch(didExecutedUseCase);
+        this._releaseHandlers.push(unListenOnDispatch);
+    }
+
+    /**
+     * Return true if has changing stores at least once
+     * @returns {boolean}
+     */
+    get hasChangingStore() {
+        return this.currentChangingStores.length !== 0;
     }
 
     /**
