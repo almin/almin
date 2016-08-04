@@ -32,6 +32,7 @@ const defaultOptions = {
  * QueuedStoreGroup has event queue system.
  * QueuedStoreGroup not dependant on async function like `setTimeout`.
  * QueuedStoreGroup work as Sync or Async.
+ * QueuedStoreGroup prefer strict design than ./StoreGroup.js
  *
  * ## Note
  * - QueuedStoreGroup not allow to change **stores** directly.
