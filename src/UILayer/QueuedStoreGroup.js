@@ -35,7 +35,7 @@ const defaultOptions = {
  *
  * ## Note
  * - QueuedStoreGroup not allow to change **stores** directly.
- * - Always change **stores** vis execution of UseCase.
+ * - Always change **stores** via execution of UseCase.
  * @public
  */
 export default class QueuedStoreGroup extends Dispatcher {
