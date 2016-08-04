@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "pretest": "rm-local-modules && npm i",
-    "perf": "node --expose-gc test.js",
+    "perf": "node --expose-gc StoreGroup-memory-test.js && node --expose-gc QueuedStoreGroup-memory-test.js",
     "test": "npm run perf"
   },
   "author": "azu",

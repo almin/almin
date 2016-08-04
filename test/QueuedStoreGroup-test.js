@@ -141,7 +141,7 @@ describe("QueuedStoreGroup", function() {
             });
         });
         context("when UseCase is failing", function() {
-            it("should be called before UseCase is executed", function() {
+            it("should be called", function() {
                 const aStore = createEchoStore({name: "AStore"});
                 const storeGroup = new QueuedStoreGroup([aStore]);
                 let onChangeCounter = 0;
@@ -154,7 +154,7 @@ describe("QueuedStoreGroup", function() {
                 class FailUseCase extends UseCase {
                     execute() {
                         aStore.emitChange();
-                        return Promise.reject(new Error("emit change but fail usecase"));
+                        return Promise.reject(new Error("emit change but fail UseCase"));
                     }
                 }
                 const context = new Context({
