@@ -26,10 +26,16 @@ const defaultOptions = {
     asap: false
 };
 /**
- * StoreGroup is a **UI** parts of Store.
- * StoreGroup has event queue system.
- * It means that StoreGroup thin out change events of stores.
- * If you want to know all change events, and directly use `store.onChange()`.
+ * ## Description
+ *
+ * QueuedStoreGroup is a **UI** parts of Store.
+ * QueuedStoreGroup has event queue system.
+ * QueuedStoreGroup not dependant on async function like `setTimeout`.
+ * QueuedStoreGroup work as Sync or Async.
+ *
+ * ## Note
+ * - QueuedStoreGroup not allow to change **stores** directly.
+ * - Always change **stores** vis execution of UseCase.
  * @public
  */
 export default class QueuedStoreGroup extends Dispatcher {
