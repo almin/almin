@@ -69,7 +69,11 @@ export default class Context {
      */
     useCase(useCase) {
         assert(UseCase.isUseCase(useCase), `It should be instance of UseCase: ${useCase}`);
-        return new UseCaseExecutor(useCase, this._dispatcher);
+        return new UseCaseExecutor({
+            useCase,
+            parent: null,
+            dispatcher: this._dispatcher
+        });
     }
 
     /**

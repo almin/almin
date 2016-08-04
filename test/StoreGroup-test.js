@@ -5,15 +5,12 @@ import Store from "../src/Store";
 import StoreGroup from "../src/UILayer/StoreGroup";
 import createEchoStore from "./helper/EchoStore";
 
-describe("StoreGroup", function () {
-    describe("#onChange", function () {
-        it("should async called onChange ", function (done) {
+describe("StoreGroup", function() {
+    describe("#onChange", function() {
+        it("should async called onChange ", function(done) {
             const aStore = createEchoStore({name: "AStore"});
             const bStore = createEchoStore({name: "BStore"});
             const storeGroup = new StoreGroup([aStore, bStore]);
-            // when - a,b emit change at same time
-            aStore.emitChange();
-            bStore.emitChange();
             // Should be failure, if emit -> onChange **sync**.
             // But it is called async
             // then - called change handler a one-time
@@ -21,8 +18,11 @@ describe("StoreGroup", function () {
                 assert.equal(changedStores.length, 2);
                 done();
             });
+            // when - a,b emit change at same time
+            aStore.emitChange();
+            bStore.emitChange();
         });
-        it("should async called onChange after 2nd", function (done) {
+        it("should async called onChange after 2nd", function(done) {
             // it should work cache temporary.
             // test _prunePreviousCache
             const aStore = createEchoStore({name: "AStore"});
@@ -59,7 +59,7 @@ describe("StoreGroup", function () {
                 })
             })
         });
-        it("should thin out change events at once", function (done) {
+        it("should thin out change events at once", function(done) {
             const aStore = createEchoStore({name: "AStore"});
             const bStore = createEchoStore({name: "BStore"});
             const storeGroup = new StoreGroup([aStore, bStore]);
@@ -74,8 +74,8 @@ describe("StoreGroup", function () {
             bStore.emitChange();
         });
     });
-    describe("#getState", function () {
-        it("should return a single state object", function () {
+    describe("#getState", function() {
+        it("should return a single state object", function() {
             class AStore extends Store {
                 getState() {
                     return {a: "a value"};
@@ -97,8 +97,8 @@ describe("StoreGroup", function () {
                 b: "b value"
             });
         });
-        context("when getState() return State object", function () {
-            it("should return a single state has {<key>: state} of return Store#getState", function () {
+        context("when getState() return State object", function() {
+            it("should return a single state has {<key>: state} of return Store#getState", function() {
                 class AState {
                 }
                 class AStore extends Store {
@@ -130,8 +130,8 @@ describe("StoreGroup", function () {
             });
         });
 
-        context("when a store emit change", function () {
-            it("should returned state replace with new getState() result", function (done) {
+        context("when a store emit change", function() {
+            it("should returned state replace with new getState() result", function(done) {
                 let aCalledCount = 0;
                 let bCalledCount = 0;
                 class AState {
@@ -179,8 +179,8 @@ describe("StoreGroup", function () {
             });
         });
     });
-    describe("#release", function () {
-        it("release onChange handler", function () {
+    describe("#release", function() {
+        it("release onChange handler", function() {
             const aStore = createEchoStore({name: "AStore"});
             const bStore = createEchoStore({name: "BStore"});
             const storeGroup = new StoreGroup([aStore, bStore]);

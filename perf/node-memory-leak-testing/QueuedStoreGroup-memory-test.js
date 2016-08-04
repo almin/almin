@@ -7,7 +7,8 @@
 const assert = require("assert");
 const pretty = require('prettysize');
 const Store = require("almin").Store;
-const StoreGroup = require("almin").StoreGroup;
+const QueuedStoreGroup = require("almin").QueuedStoreGroup;
+console.log("= QueuedStoreGroup perf test");
 const gc = () => {
     if (global.gc) {
         global.gc();
@@ -31,7 +32,7 @@ class BStore extends Store {
 }
 const aStore = new AStore();
 const bStore = new BStore();
-const storeGroup = new StoreGroup([aStore, bStore]);
+const storeGroup = new QueuedStoreGroup([aStore, bStore]);
 let currentState = storeGroup.getState();
 
 // ========= START ===========

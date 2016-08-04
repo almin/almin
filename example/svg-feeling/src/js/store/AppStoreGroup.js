@@ -1,6 +1,6 @@
 // LICENSE : MIT
 "use strict";
-import {StoreGroup} from "almin";
+import {QueuedStoreGroup} from "almin";
 import colorMixerRepository from "../infra/ColorMixerRepository";
 import ColorStore from "./ColorStore/ColorStore";
 import ColorHistoryStore from "./ColorHistoryStore/ColorHistoryStore";
@@ -10,7 +10,7 @@ export default class AppStoreGroup {
      * @returns {StoreGroup}
      */
     constructor() {
-        return new StoreGroup(AppStoreGroup.create());
+        return new QueuedStoreGroup(AppStoreGroup.create());
     }
 
     /**
