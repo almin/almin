@@ -35,8 +35,9 @@ export default class UseCaseExecutor {
         this.parentUseCase = parent;
         /**
          * @type {Dispatcher}
+         * @private
          */
-        this.parentDispatcher = dispatcher;
+        this.disptcher = dispatcher;
 
         /**
          * is the useCase executed
@@ -52,7 +53,7 @@ export default class UseCaseExecutor {
          */
         this._releaseHandlers = [];
         // delegate userCase#onDispatch to central dispatcher
-        const unListenHandler = this.useCase.pipe(this.parentDispatcher);
+        const unListenHandler = this.useCase.pipe(this.disptcher);
         this._releaseHandlers.push(unListenHandler);
     }
 
@@ -61,7 +62,7 @@ export default class UseCaseExecutor {
      */
     willExecute(args) {
         // emit event for System
-        this.parentDispatcher.dispatch({
+        this.disptcher.dispatch({
             type: ActionTypes.ON_WILL_EXECUTE_EACH_USECASE,
             useCase: this.useCase,
             parent: this.parentUseCase,
@@ -76,7 +77,7 @@ export default class UseCaseExecutor {
         if (this._isExecuted) {
             return;
         }
-        this.parentDispatcher.dispatch({
+        this.disptcher.dispatch({
             type: ActionTypes.ON_DID_EXECUTE_EACH_USECASE,
             useCase: this.useCase,
             parent: this.parentUseCase
@@ -89,7 +90,7 @@ export default class UseCaseExecutor {
      * @param {function(useCase: UseCase, args: *)} handler
      */
     onWillExecuteEachUseCase(handler) {
-        const releaseHandler = this.parentDispatcher.onDispatch(function onWillExecuteEachUseCaseInUseCaseExecutor(payload) {
+        const releaseHandler = this.disptcher.onDispatch(function onWillExecuteEachUseCaseInUseCaseExecutor(payload) {
             if (payload.type === ActionTypes.ON_WILL_EXECUTE_EACH_USECASE) {
                 handler(payload.useCase, payload.args);
             }
@@ -103,7 +104,7 @@ export default class UseCaseExecutor {
      * @param {function(useCase: UseCase)} handler
      */
     onDidExecuteEachUseCase(handler) {
-        const releaseHandler = this.parentDispatcher.onDispatch(function onDidExecuteEachUseCaseInUseCaseExecutor(payload) {
+        const releaseHandler = this.disptcher.onDispatch(function onDidExecuteEachUseCaseInUseCaseExecutor(payload) {
             if (payload.type === ActionTypes.ON_DID_EXECUTE_EACH_USECASE) {
                 handler(payload.useCase);
             }
