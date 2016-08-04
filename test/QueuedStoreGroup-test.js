@@ -111,32 +111,67 @@ describe("QueuedStoreGroup", function() {
             });
         });
         context("when UseCase is nesting", function() {
-            it("should be called only once", function() {
-                const aStore = createEchoStore({name: "AStore"});
-                const bStore = createEchoStore({name: "BStore"});
-                const storeGroup = new QueuedStoreGroup([aStore, bStore]);
-                let onChangeCounter = 0;
-                storeGroup.onChange((changedStores) => {
-                    assert.equal(changedStores.length, 2);
-                    assert.deepEqual(changedStores, [aStore, bStore]);
-                    onChangeCounter += 1;
-                });
-                // when
-                const changeBUseCase = createAsyncChangeStoreUseCase(bStore);
-                class ChangeAAndBUseCase extends UseCase {
-                    execute() {
-                        aStore.emitChange();
-                        return this.context.useCase(changeBUseCase).execute();
+            context("{ asap: true}", function() {
+                it("should be called by all usecase", function() {
+                    const aStore = createEchoStore({name: "AStore"});
+                    const bStore = createEchoStore({name: "BStore"});
+                    const storeGroup = new QueuedStoreGroup([aStore, bStore], {
+                        asap: true
+                    });
+                    let onChangeCounter = 0;
+                    storeGroup.onChange(() => {
+                        onChangeCounter += 1;
+                    });
+                    // when
+                    const changeBUseCase = createAsyncChangeStoreUseCase(bStore);
+                    class ChangeAAndBUseCase extends UseCase {
+                        execute() {
+                            return this.context.useCase(changeBUseCase).execute().then(() => {
+                                aStore.emitChange();
+                            });
+                        }
                     }
-                }
-                const context = new Context({
-                    dispatcher: new Dispatcher(),
-                    store: storeGroup
+                    const context = new Context({
+                        dispatcher: new Dispatcher(),
+                        store: storeGroup
+                    });
+                    // then
+                    const useCase = new ChangeAAndBUseCase();
+                    return context.useCase(useCase).execute().then(() => {
+                        assert.equal(onChangeCounter, 2);
+                    });
                 });
-                // then
-                const useCase = new ChangeAAndBUseCase();
-                return context.useCase(useCase).execute().then(() => {
-                    assert.equal(onChangeCounter, 1);
+
+            });
+            context("{ asap: false}", function() {
+                it("should be called only once", function() {
+                    const aStore = createEchoStore({name: "AStore"});
+                    const bStore = createEchoStore({name: "BStore"});
+                    const storeGroup = new QueuedStoreGroup([aStore, bStore]);
+                    let onChangeCounter = 0;
+                    storeGroup.onChange((changedStores) => {
+                        assert.equal(changedStores.length, 2);
+                        assert.deepEqual(changedStores, [bStore, aStore]);
+                        onChangeCounter += 1;
+                    });
+                    // when
+                    const changeBUseCase = createAsyncChangeStoreUseCase(bStore);
+                    class ChangeAAndBUseCase extends UseCase {
+                        execute() {
+                            return this.context.useCase(changeBUseCase).execute().then(() => {
+                                aStore.emitChange();
+                            });
+                        }
+                    }
+                    const context = new Context({
+                        dispatcher: new Dispatcher(),
+                        store: storeGroup
+                    });
+                    // then
+                    const useCase = new ChangeAAndBUseCase();
+                    return context.useCase(useCase).execute().then(() => {
+                        assert.equal(onChangeCounter, 1);
+                    });
                 });
             });
         });

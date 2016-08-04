@@ -9,6 +9,22 @@ import Dispatcher from "./../Dispatcher";
 import Store from "./../Store";
 import StoreGroupValidator from "./StoreGroupValidator";
 import {ActionTypes} from "../Context";
+
+/**
+ * QueuedStoreGroup options
+ * @type {{asap: boolean}}
+ */
+const defaultOptions = {
+    /*
+     If this is true, did executed UseCase and immediately try to call `emitChange()`
+     It make that **child** UseCase change some Store and immediately reflect the changes to UI.
+
+     If this is false,  did executed **root** UseCase and try to call `emitChange()`
+     It means that **child** UseCase change some Store, but not immediately reflect the change to UI.
+     Default: false
+     */
+    asap: false
+};
 /**
  * StoreGroup is a **UI** parts of Store.
  * StoreGroup has event queue system.
@@ -20,10 +36,12 @@ export default class QueuedStoreGroup extends Dispatcher {
     /**
      * Create StoreGroup
      * @param {Store[]} stores stores are instance of `Store` class
+     * @param {Object} [options] QueuedStoreGroup option
      */
-    constructor(stores) {
+    constructor(stores, options = {}) {
         super();
         StoreGroupValidator.validateStores(stores);
+        const asap = options.asap !== undefined ? options.asap : defaultOptions.asap;
         /**
          * callable release handlers
          * @type {Function[]}
@@ -58,9 +76,11 @@ export default class QueuedStoreGroup extends Dispatcher {
         const didExecutedUseCase = (payload) => {
             if (payload.type === ActionTypes.ON_DID_EXECUTE_EACH_USECASE) {
                 const parent = payload.parent;
-                // emitChange when root useCase is executed
-                // ignore child useCase is executing
-                if (!parent && this.hasChangingStore) {
+                // when {asap: false}, emitChange when root useCase is executed
+                if (!asap && parent) {
+                    return;
+                }
+                if (this.hasChangingStore) {
                     this.emitChange();
                 }
             }
