@@ -1,8 +1,8 @@
 sudo: false
 language: node_js
 node_js: stable
-script:
-  - npm run travis
+after_success:
+  - npm run test:saucelabs
 env:
   global:
   - secure: qGozMH6YV7O+5wXSIdONy8AuIKQMzbwSu7Qh3gae3cRAuAAj8YXCVkt1gs8e/zdUYiSit9YdsHBLbl1guMtsgVz0onTHmJEw1fkwWkfqqF9WLD8/lykfwUrLyP6LLpot90FOKW31oDlnLbl3e20Bc4gczifMFmSM4XnZ7dYJL1mAwWAkd/R6DuJGFQnl9WBxuix4Ch5Mj+otQ5uSLmHa0zqWGcrMzIB4Nf/L29P6q+W6ASf/my4S+N5TWlTt1WmiKM35Y3nteFXb+3qEwN9ywQJk4zotSIQyz9Jc675XwKUCUj1ANxQ6ZL+btCPO5l8Qfm75+IdEgsHfA3GYH15vSqTowKdqsYqIlJLi8/Rf22OpZJIAtPO/KyKU+phnsHlA/j1sBhF9p/xKCPawiAkYzIdSaJsv+EGxi3sQCm8BNoz5uy0H00LqaD3WzMrcaiZofu77s6fVDhMtfvtJ6G0AVf75LLqpIcTFlu+Qkrz/UvSDWIjIjdPvCsC8n1Q3d+tSSJW4bwq1fyENeI3iSLImVHPuty7oRsdkaPfvtYNpKHRexj4VKU/4Q1ju5bt2cVSQ0wNfqPazcpR2c9Iv2qsDqiyGY7e3th02jCTT0bt6CCb+fBi/xYUVYhV5qWv2ETY+/I3bBCY+BW76pF0Hpwq7FMBGG/cfJcTYVWratFav7wU=
