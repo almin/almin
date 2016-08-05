@@ -91,7 +91,7 @@ export default class QueuedStoreGroup extends Dispatcher {
         // `this` can catch the events of dispatchers
         // Because context delegate dispatched events to **this**
         const didExecutedUseCase = (payload) => {
-            // call handler, if payload's type is not built-in event.
+            // check stores, if payload's type is not built-in event.
             // It means that `onDispatch` is called when dispatching user event.
             if (ActionTypes[payload.type] === undefined) {
                 if (this.hasChangingStore) {
