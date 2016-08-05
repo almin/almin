@@ -68,9 +68,9 @@ export default class AsyncLogger extends EventEmitter {
         /**
          * @param {UseCase} useCase
          */
-        const onWillExecuteEachUseCase = useCase => {
+        const onWillExecuteEachUseCase = (useCase, args) => {
             this._logMap[useCase.name] = now();
-            this._logBuffer.push(`${useCase.name} will execute`)
+            this._logBuffer.push(`${useCase.name} will execute: ${args}`)
         };
         const onDispatch = payload => {
             this._logDispatch(payload);
