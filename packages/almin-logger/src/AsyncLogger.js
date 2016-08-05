@@ -95,7 +95,7 @@ export default class AsyncLogger extends EventEmitter {
         this.logger.groupCollapsed(logTitle);
         // if executing multiple UseCase at once, show warning
         const currentExecuteUseCases = this._logBuffer.filter(logBuffer=> {
-            return logBuffer.indexOf("will execute") !== -1;
+            return typeof logBuffer ==="string" && logBuffer.indexOf("will execute") !== -1;
         });
         if (currentExecuteUseCases.length > 1) {
             const useCaseNames = currentExecuteUseCases.map(name => {
