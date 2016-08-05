@@ -111,7 +111,7 @@ describe("QueuedStoreGroup", function() {
             });
         });
         context("when UseCase is nesting", function() {
-            context("{ asap: true}", function() {
+            context("{ asap: true }", function() {
                 it("should be called by all usecase", function() {
                     const aStore = createEchoStore({name: "AStore"});
                     const bStore = createEchoStore({name: "BStore"});
@@ -143,7 +143,7 @@ describe("QueuedStoreGroup", function() {
                 });
 
             });
-            context("{ asap: false}", function() {
+            context("{ asap: false }", function() {
                 it("should be called only once", function() {
                     const aStore = createEchoStore({name: "AStore"});
                     const bStore = createEchoStore({name: "BStore"});
@@ -172,6 +172,37 @@ describe("QueuedStoreGroup", function() {
                     return context.useCase(useCase).execute().then(() => {
                         assert.equal(onChangeCounter, 1);
                     });
+                });
+            });
+            context("when UseCase#dispatch is called", function() {
+                it("should be called by sync", function() {
+                    const store = createEchoStore({name: "AStore"});
+                    const storeGroup = new QueuedStoreGroup([store]);
+                    let isCalled = false;
+                    storeGroup.onChange(() => {
+                        isCalled = true;
+                    });
+                    // when
+                    class DispatchAndFinishAsyncUseCase extends UseCase {
+                        execute() {
+                            this.dispatch({
+                                type: "DispatchAndFinishAsyncUseCase"
+                            });
+                            return new Promise((resolve) => {
+                                setTimeout(resolve, 1000);
+                            });
+                        }
+                    }
+                    const context = new Context({
+                        dispatcher: new Dispatcher(),
+                        store: storeGroup
+                    });
+                    // when
+                    const useCase = new DispatchAndFinishAsyncUseCase();
+                    const resultPromise = context.useCase(useCase).execute();
+                    // then - should be called by sync
+                    assert(isCalled);
+                    return resultPromise
                 });
             });
         });
