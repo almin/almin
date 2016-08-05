@@ -201,6 +201,9 @@ StoreGroup#getState()["StateName"]; // state
     }
 
     emitChange() {
+        if(!this._isAnyOneStoreChanged) {
+            return;
+        }
         const changingStores = this._currentChangingStores.slice();
         // release ownership  of changingStores from StoreGroup
         // transfer ownership of changingStores to other
