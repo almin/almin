@@ -175,6 +175,43 @@ describe("QueuedStoreGroup", function() {
                 });
             });
             context("when UseCase#dispatch is called", function() {
+                it("should not be called - no changing store", function() {
+                    const store = createEchoStore({name: "AStore"});
+                    const storeGroup = new QueuedStoreGroup([store]);
+                    let isChanged = false;
+                    let dispatchedPayload = null;
+                    storeGroup.onChange(() => {
+                        isChanged = true;
+                    });
+                    // when
+                    class DispatchAndFinishAsyncUseCase extends UseCase {
+                        execute() {
+                            // dispatch event
+                            this.dispatch({
+                                type: "DispatchAndFinishAsyncUseCase"
+                            });
+                            return new Promise((resolve) => {
+                                setTimeout(resolve, 1000);
+                            });
+                        }
+                    }
+                    const context = new Context({
+                        dispatcher: new Dispatcher(),
+                        store: storeGroup
+                    });
+                    context.onDispatch(payload => {
+                        dispatchedPayload = payload;
+                    });
+                    // when
+                    const useCase = new DispatchAndFinishAsyncUseCase();
+                    const resultPromise = context.useCase(useCase).execute();
+                    // then - should not be changed, but it is dispatched
+                    assert(isChanged === false);
+                    assert.deepEqual(dispatchedPayload, {
+                        type: "DispatchAndFinishAsyncUseCase"
+                    });
+                    return resultPromise
+                });
                 it("should be called by sync", function() {
                     const store = createEchoStore({name: "AStore"});
                     const storeGroup = new QueuedStoreGroup([store]);
@@ -185,6 +222,9 @@ describe("QueuedStoreGroup", function() {
                     // when
                     class DispatchAndFinishAsyncUseCase extends UseCase {
                         execute() {
+                            // store is changed
+                            store.emitChange();
+                            // dispatch event
                             this.dispatch({
                                 type: "DispatchAndFinishAsyncUseCase"
                             });

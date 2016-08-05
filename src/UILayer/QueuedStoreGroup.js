@@ -16,6 +16,8 @@ import {ActionTypes} from "../Context";
  */
 const defaultOptions = {
     /*
+     As soon as possible option.
+
      If this is true, did executed UseCase and immediately try to call `emitChange()`
      It make that **child** UseCase change some Store and immediately reflect the changes to UI.
 
@@ -34,7 +36,15 @@ const defaultOptions = {
  * QueuedStoreGroup work as Sync or Async.
  * QueuedStoreGroup prefer strict design than ./StoreGroup.js
  *
+ * ## Checking Algorithm
+ *
+ * QueuedStoreGroup check changed stores and `QueuedStoreGroup#emitChange()` (if necessary) on following case:
+ *
+ * - when receive `didExecutedUseCase` events
+ * - when receive events by `UseCase#dispatch`
+ *
  * ## Note
+ *
  * - QueuedStoreGroup not allow to change **stores** directly.
  * - Always change **stores** via execution of UseCase.
  * @public
@@ -81,6 +91,13 @@ export default class QueuedStoreGroup extends Dispatcher {
         // `this` can catch the events of dispatchers
         // Because context delegate dispatched events to **this**
         const didExecutedUseCase = (payload) => {
+            // call handler, if payload's type is not built-in event.
+            // It means that `onDispatch` is called when dispatching user event.
+            if (ActionTypes[payload.type] === undefined) {
+                if (this.hasChangingStore) {
+                    this.emitChange();
+                }
+            }
             if (payload.type === ActionTypes.ON_DID_EXECUTE_EACH_USECASE) {
                 const parent = payload.parent;
                 // when {asap: false}, emitChange when root useCase is executed
