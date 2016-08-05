@@ -52,6 +52,14 @@ export default class AlminLogger extends EventEmitter {
     }
 
     /**
+     * add log to logger
+     * @param {*} chunk
+     */
+    addLog(chunk) {
+        this.logger.addLog(chunk);
+    }
+
+    /**
      * release event handlers
      */
     release() {

@@ -14,50 +14,6 @@ export default class AsyncLogger extends EventEmitter {
     }
 
     /**
-     * show current buffer using logger.
-     * @param {string} logTitle
-     */
-    _outputBuffer(logTitle) {
-        const output = (log) => {
-            if (log instanceof Error) {
-                this.logger.error(log);
-            } else {
-                this.logger.info(log);
-            }
-        };
-        this.logger.groupCollapsed(logTitle);
-        // if executing multiple UseCase at once, show warning
-        const currentExecuteUseCases = this._logBuffer.filter(logBuffer=> {
-            return logBuffer.indexOf("will execute") !== -1;
-        });
-        if (currentExecuteUseCases.length > 1) {
-            const useCaseNames = currentExecuteUseCases.map(name => {
-                return name.replace(" will execute", "");
-            });
-            this.logger.warn(`Warning: Executing multiple UseCase at once`, useCaseNames);
-        }
-        this._logBuffer.forEach(logBuffer => {
-            if (Array.isArray(logBuffer)) {
-                const title = logBuffer.shift();
-                this.logger.groupCollapsed(title);
-                logBuffer.forEach(output);
-                this.logger.groupEnd();
-            } else {
-                output(logBuffer);
-            }
-        });
-        this.logger.groupEnd();
-        this.emit(AlminLogger.Events.output);
-    }
-
-    /**
-     * flush current log buffer
-     */
-    flushBuffer() {
-        this._logBuffer.length = 0;
-    }
-
-    /**
      * start logging for {@link context}
      * @param {Context} context
      */
@@ -99,6 +55,72 @@ export default class AsyncLogger extends EventEmitter {
         ];
     }
 
+    /**
+     * add log to logger
+     * @param {*} chunk
+     */
+    addLog(chunk) {
+        this._logBuffer.push(chunk)
+    }
+
+    /**
+     * flush current log buffer
+     */
+    flushBuffer() {
+        this._logBuffer.length = 0;
+    }
+
+
+    /**
+     * release event handlers
+     */
+    release() {
+        this._releaseHandlers.forEach(releaseHandler => releaseHandler());
+        this._releaseHandlers.length = 0;
+    }
+
+    /**
+     * show current buffer using logger.
+     * @param {string} logTitle
+     * @private
+     */
+    _outputBuffer(logTitle) {
+        const output = (log) => {
+            if (log instanceof Error) {
+                this.logger.error(log);
+            } else {
+                this.logger.info(log);
+            }
+        };
+        this.logger.groupCollapsed(logTitle);
+        // if executing multiple UseCase at once, show warning
+        const currentExecuteUseCases = this._logBuffer.filter(logBuffer=> {
+            return logBuffer.indexOf("will execute") !== -1;
+        });
+        if (currentExecuteUseCases.length > 1) {
+            const useCaseNames = currentExecuteUseCases.map(name => {
+                return name.replace(" will execute", "");
+            });
+            this.logger.warn(`Warning: Executing multiple UseCase at once`, useCaseNames);
+        }
+        this._logBuffer.forEach(logBuffer => {
+            if (Array.isArray(logBuffer)) {
+                const title = logBuffer.shift();
+                this.logger.groupCollapsed(title);
+                logBuffer.forEach(output);
+                this.logger.groupEnd();
+            } else {
+                output(logBuffer);
+            }
+        });
+        this.logger.groupEnd();
+        this.emit(AlminLogger.Events.output);
+    }
+
+    /**
+     * @param {DispatcherPayload} payload
+     * @private
+     */
     _logError(payload) {
         // if has useCase and group by useCase
         if (payload.useCase) {
@@ -111,6 +133,10 @@ export default class AsyncLogger extends EventEmitter {
         }
     }
 
+    /**
+     * @param {DispatcherPayload} payload
+     * @private
+     */
     _logDispatch(payload) {
         // http://emojipedia.org/fire/
         this._logBuffer.push([
@@ -121,6 +147,7 @@ export default class AsyncLogger extends EventEmitter {
 
     /**
      * @param {Store[]} stores
+     * @private
      */
     _logOnChange(stores) {
         stores.forEach(store => {
@@ -132,11 +159,4 @@ export default class AsyncLogger extends EventEmitter {
         })
     }
 
-    /**
-     * release event handlers
-     */
-    release() {
-        this._releaseHandlers.forEach(releaseHandler => releaseHandler());
-        this._releaseHandlers.length = 0;
-    }
 }

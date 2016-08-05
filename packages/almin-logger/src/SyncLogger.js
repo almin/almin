@@ -62,6 +62,14 @@ export default class SyncLogger extends EventEmitter {
         ];
     }
 
+    /**
+     * add log to logger
+     * @param {*} chunk
+     */
+    addLog(chunk) {
+        this.logger.log(chunk);
+    }
+
     _logError(payload) {
         // if has useCase and group by useCase
         if (payload.useCase) {
