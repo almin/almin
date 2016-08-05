@@ -1,10 +1,19 @@
 // LICENSE : MIT
 "use strict";
 import {UseCase} from "almin";
+import AppLocator from "../../AppLocator";
 import AnonymousCustomer from "../../domain/Customer/AnonymousCustomer";
 import Cart from "../../domain/Cart/Cart";
 import customerRepository, {CustomerRepository} from "../../infra/CustomerRepository";
 import cartRepository, {CartRepository} from "../../infra/CartRepository";
+
+// Add log
+cartRepository.onChange(domain => {
+    AppLocator.alminLogger.addLog(["Change CartRepository", domain]);
+});
+customerRepository.onChange(domain => {
+    AppLocator.alminLogger.addLog(["Change CustomerRepository", domain]);
+});
 export default class InitializeCustomerUseCase extends UseCase {
     static create() {
         return new this({customerRepository, cartRepository})

@@ -20,6 +20,7 @@ const logger = new AlminLogger();
 logger.startLogging(appContext);
 // update global context
 AppLocator.context = appContext;
+AppLocator.alminLogger = logger;
 ReactDOM.render(
     React.createElement(App, {
         appContext

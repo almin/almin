@@ -15,14 +15,13 @@ class App extends React.Component {
         const context = AppLocator.context;
         // when change store, update component
         const onChangeHandler = () => {
-            return requestAnimationFrame(() => {
-                this.setState(context.getState());
-            })
+            this.setState(context.getState());
         };
         context.onChange(onChangeHandler);
 
-        context.useCase(InitializeCustomerUseCase.create()).execute();
-        context.useCase(InitializeProductUseCase.create()).execute();
+        context.useCase(InitializeCustomerUseCase.create()).execute().then(() => {
+            return context.useCase(InitializeProductUseCase.create()).execute();
+        });
     }
 
 
