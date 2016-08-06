@@ -1,6 +1,7 @@
 // LICENSE : MIT
 "use strict";
 const assert = require("assert");
+import {ActionTypes} from "./Context";
 import Dispatcher from "./Dispatcher";
 import UseCase from "./UseCase";
 const STATE_CHANGE_EVENT = "STATE_CHANGE_EVENT";
@@ -66,17 +67,22 @@ export default class Store extends Dispatcher {
     }
 
     /**
-     * invoke `handler` if the `useCase` throw error.
-     * @param {UseCase} useCase
-     * @param {Function} handler
+     * invoke `handler` when UseCase throw error events.
+     * @param {function(payload: UseCaseErrorPayload)} handler
      * @returns {Function} call the function and release handler
      * @public
+     * @example
+     * store.onError(payload => {
+     *  const useCase = payload.useCase;
+     *  if(useCase instanceof AUseCase){
+     *      // do something
+     *  }
+     * }):
      */
-    onUseCaseError(useCase, handler) {
-        assert(UseCase.isUseCase(useCase), "useCase should be instance of UseCase: " + useCase);
-        this.onDispatch(({type, error}) => {
-            if (type === `${this.useCaseName}:error`) {
-                handler(error);
+    onError(handler) {
+        return this.onDispatch(paylod => {
+            if (paylod.type === ActionTypes.ON_ERROR) {
+                handler(paylod);
             }
         });
     }

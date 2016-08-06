@@ -324,7 +324,7 @@ describe("QueuedStoreGroup", function() {
                 });
             });
         });
-        context("when UseCase call `throwError(){", function() {
+        context("when UseCase call `throwError()", function() {
             it("should be called", function() {
                 const store = createEchoStore({name: "AStore"});
                 const storeGroup = new QueuedStoreGroup([store]);
