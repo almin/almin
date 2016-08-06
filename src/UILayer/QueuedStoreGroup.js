@@ -42,6 +42,7 @@ const defaultOptions = {
  *
  * - when receive `didExecutedUseCase` events
  * - when receive events by `UseCase#dispatch`
+ * - when receive events by `UseCase#throwError`
  *
  * ## Note
  *
@@ -90,15 +91,18 @@ export default class QueuedStoreGroup extends Dispatcher {
         });
         // `this` can catch the events of dispatchers
         // Because context delegate dispatched events to **this**
-        const didExecutedUseCase = (payload) => {
+        const tryToEmitChange = (payload) => {
             // check stores, if payload's type is not built-in event.
             // It means that `onDispatch` is called when dispatching user event.
             if (ActionTypes[payload.type] === undefined) {
                 if (this.hasChangingStore) {
                     this.emitChange();
                 }
-            }
-            if (payload.type === ActionTypes.ON_DID_EXECUTE_EACH_USECASE) {
+            } else if (payload.type === ActionTypes.ON_ERROR) {
+                if (this.hasChangingStore) {
+                    this.emitChange();
+                }
+            } else if (payload.type === ActionTypes.ON_DID_EXECUTE_EACH_USECASE) {
                 const parent = payload.parent;
                 // when {asap: false}, emitChange when root useCase is executed
                 if (!asap && parent) {
@@ -109,7 +113,7 @@ export default class QueuedStoreGroup extends Dispatcher {
                 }
             }
         };
-        const unListenOnDispatch = this.onDispatch(didExecutedUseCase);
+        const unListenOnDispatch = this.onDispatch(tryToEmitChange);
         this._releaseHandlers.push(unListenOnDispatch);
     }
 
@@ -201,7 +205,7 @@ StoreGroup#getState()["StateName"]; // state
     }
 
     emitChange() {
-        if(!this._isAnyOneStoreChanged) {
+        if (!this._isAnyOneStoreChanged) {
             return;
         }
         const changingStores = this._currentChangingStores.slice();
