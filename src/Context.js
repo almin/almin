@@ -92,7 +92,7 @@ export default class Context {
     }
 
     /**
-     * called the {@link handler} with user-defined payload object when a UseCase dispatch with payload.
+     * called the `handler` with user-defined payload object when a UseCase dispatch with payload.
      * This `onDispatch` is not called at built-in event. It is filtered by Context.
      * If you want to *All* dispatched event and use listen directly your `dispatcher` object.
      * In other word, listen the dispatcher of `new Context({dispatcher})`.
@@ -128,8 +128,8 @@ export default class Context {
     }
 
     /**
-     * called the {@link errorHandler} with error when error is occurred.
-     * @param {function(error: Error)} errorHandler
+     * called the `errorHandler` with error when error is occurred.
+     * @param {function(payload: UseCaseErrorPayload)} errorHandler
      * @returns {function(this:Dispatcher)}
      * @public
      */

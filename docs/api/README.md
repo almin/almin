@@ -119,7 +119,7 @@ called the {@link handler} with useCase when the useCase is done.
 
 ### `onDispatch(handler: function (payload: DispatcherPayload)): Function`
 
-called the {@link handler} with user-defined payload object when a UseCase dispatch with payload.
+called the `handler` with user-defined payload object when a UseCase dispatch with payload.
 This `onDispatch` is not called at built-in event. It is filtered by Context.
 If you want to _All_ dispatched event and use listen directly your `dispatcher` object.
 In other word, listen the dispatcher of `new Context({dispatcher})`.
@@ -130,13 +130,13 @@ In other word, listen the dispatcher of `new Context({dispatcher})`.
 
 Returns: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)**
 
-### `onErrorDispatch(errorHandler: function (error: Error)): function (this: Dispatcher)`
+### `onErrorDispatch(errorHandler: function (payload: UseCaseErrorPayload)): function (this: Dispatcher)`
 
-called the {@link errorHandler} with error when error is occurred.
+called the `errorHandler` with error when error is occurred.
 
 **Parameters**
 
--   `errorHandler`: **function (error: [Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error))**
+-   `errorHandler`: **function (payload: UseCaseErrorPayload)**
 
 Returns: **function (this: Dispatcher)**
 
@@ -298,7 +298,7 @@ called the {@link handler} with useCase when the useCase is done.
 
 ### `onDispatch(handler: function (payload: DispatcherPayload)): Function`
 
-called the {@link handler} with user-defined payload object when a UseCase dispatch with payload.
+called the `handler` with user-defined payload object when a UseCase dispatch with payload.
 This `onDispatch` is not called at built-in event. It is filtered by Context.
 If you want to _All_ dispatched event and use listen directly your `dispatcher` object.
 In other word, listen the dispatcher of `new Context({dispatcher})`.
@@ -309,13 +309,13 @@ In other word, listen the dispatcher of `new Context({dispatcher})`.
 
 Returns: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)**
 
-### `onErrorDispatch(errorHandler: function (error: Error)): function (this: Dispatcher)`
+### `onErrorDispatch(errorHandler: function (payload: UseCaseErrorPayload)): function (this: Dispatcher)`
 
-called the {@link errorHandler} with error when error is occurred.
+called the `errorHandler` with error when error is occurred.
 
 **Parameters**
 
--   `errorHandler`: **function (error: [Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error))**
+-   `errorHandler`: **function (payload: UseCaseErrorPayload)**
 
 Returns: **function (this: Dispatcher)**
 
@@ -477,7 +477,7 @@ called the {@link handler} with useCase when the useCase is done.
 
 ### `onDispatch(handler: function (payload: DispatcherPayload)): Function`
 
-called the {@link handler} with user-defined payload object when a UseCase dispatch with payload.
+called the `handler` with user-defined payload object when a UseCase dispatch with payload.
 This `onDispatch` is not called at built-in event. It is filtered by Context.
 If you want to _All_ dispatched event and use listen directly your `dispatcher` object.
 In other word, listen the dispatcher of `new Context({dispatcher})`.
@@ -488,13 +488,13 @@ In other word, listen the dispatcher of `new Context({dispatcher})`.
 
 Returns: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)**
 
-### `onErrorDispatch(errorHandler: function (error: Error)): function (this: Dispatcher)`
+### `onErrorDispatch(errorHandler: function (payload: UseCaseErrorPayload)): function (this: Dispatcher)`
 
-called the {@link errorHandler} with error when error is occurred.
+called the `errorHandler` with error when error is occurred.
 
 **Parameters**
 
--   `errorHandler`: **function (error: [Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error))**
+-   `errorHandler`: **function (payload: UseCaseErrorPayload)**
 
 Returns: **function (this: Dispatcher)**
 
@@ -656,7 +656,7 @@ called the {@link handler} with useCase when the useCase is done.
 
 ### `onDispatch(handler: function (payload: DispatcherPayload)): Function`
 
-called the {@link handler} with user-defined payload object when a UseCase dispatch with payload.
+called the `handler` with user-defined payload object when a UseCase dispatch with payload.
 This `onDispatch` is not called at built-in event. It is filtered by Context.
 If you want to _All_ dispatched event and use listen directly your `dispatcher` object.
 In other word, listen the dispatcher of `new Context({dispatcher})`.
@@ -667,13 +667,13 @@ In other word, listen the dispatcher of `new Context({dispatcher})`.
 
 Returns: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)**
 
-### `onErrorDispatch(errorHandler: function (error: Error)): function (this: Dispatcher)`
+### `onErrorDispatch(errorHandler: function (payload: UseCaseErrorPayload)): function (this: Dispatcher)`
 
-called the {@link errorHandler} with error when error is occurred.
+called the `errorHandler` with error when error is occurred.
 
 **Parameters**
 
--   `errorHandler`: **function (error: [Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error))**
+-   `errorHandler`: **function (payload: UseCaseErrorPayload)**
 
 Returns: **function (this: Dispatcher)**
 
