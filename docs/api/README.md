@@ -91,7 +91,7 @@ You can call this when no more call event handler
 **Parameters**
 
 -   `dispatcher`: **Dispatcher**
--   `store`: **(StoreGroup | Store)** - store is either Store or StoreGroup
+-   `store`: **(QueuedStoreGroup | StoreGroup | Store)** - store is either Store or StoreGroup
 
 ### `getState(): Any`
 
@@ -117,7 +117,7 @@ called the {@link handler} with useCase when the useCase is done.
 
 -   `handler`: **function (useCase: UseCase)**
 
-### `onDispatch(handler): Function`
+### `onDispatch(handler: function (payload: DispatcherPayload)): Function`
 
 called the {@link handler} with user-defined payload object when a UseCase dispatch with payload.
 This `onDispatch` is not called at built-in event. It is filtered by Context.
@@ -126,7 +126,7 @@ In other word, listen the dispatcher of `new Context({dispatcher})`.
 
 **Parameters**
 
--   `handler`
+-   `handler`: **function (payload: DispatcherPayload)**
 
 Returns: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)**
 
@@ -270,7 +270,7 @@ You can call this when no more call event handler
 **Parameters**
 
 -   `dispatcher`: **Dispatcher**
--   `store`: **(StoreGroup | Store)** - store is either Store or StoreGroup
+-   `store`: **(QueuedStoreGroup | StoreGroup | Store)** - store is either Store or StoreGroup
 
 ### `getState(): Any`
 
@@ -296,7 +296,7 @@ called the {@link handler} with useCase when the useCase is done.
 
 -   `handler`: **function (useCase: UseCase)**
 
-### `onDispatch(handler): Function`
+### `onDispatch(handler: function (payload: DispatcherPayload)): Function`
 
 called the {@link handler} with user-defined payload object when a UseCase dispatch with payload.
 This `onDispatch` is not called at built-in event. It is filtered by Context.
@@ -305,7 +305,7 @@ In other word, listen the dispatcher of `new Context({dispatcher})`.
 
 **Parameters**
 
--   `handler`
+-   `handler`: **function (payload: DispatcherPayload)**
 
 Returns: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)**
 
@@ -449,7 +449,7 @@ You can call this when no more call event handler
 **Parameters**
 
 -   `dispatcher`: **Dispatcher**
--   `store`: **(StoreGroup | Store)** - store is either Store or StoreGroup
+-   `store`: **(QueuedStoreGroup | StoreGroup | Store)** - store is either Store or StoreGroup
 
 ### `getState(): Any`
 
@@ -475,7 +475,7 @@ called the {@link handler} with useCase when the useCase is done.
 
 -   `handler`: **function (useCase: UseCase)**
 
-### `onDispatch(handler): Function`
+### `onDispatch(handler: function (payload: DispatcherPayload)): Function`
 
 called the {@link handler} with user-defined payload object when a UseCase dispatch with payload.
 This `onDispatch` is not called at built-in event. It is filtered by Context.
@@ -484,7 +484,7 @@ In other word, listen the dispatcher of `new Context({dispatcher})`.
 
 **Parameters**
 
--   `handler`
+-   `handler`: **function (payload: DispatcherPayload)**
 
 Returns: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)**
 
@@ -628,7 +628,7 @@ You can call this when no more call event handler
 **Parameters**
 
 -   `dispatcher`: **Dispatcher**
--   `store`: **(StoreGroup | Store)** - store is either Store or StoreGroup
+-   `store`: **(QueuedStoreGroup | StoreGroup | Store)** - store is either Store or StoreGroup
 
 ### `getState(): Any`
 
@@ -654,7 +654,7 @@ called the {@link handler} with useCase when the useCase is done.
 
 -   `handler`: **function (useCase: UseCase)**
 
-### `onDispatch(handler): Function`
+### `onDispatch(handler: function (payload: DispatcherPayload)): Function`
 
 called the {@link handler} with user-defined payload object when a UseCase dispatch with payload.
 This `onDispatch` is not called at built-in event. It is filtered by Context.
@@ -663,7 +663,7 @@ In other word, listen the dispatcher of `new Context({dispatcher})`.
 
 **Parameters**
 
--   `handler`
+-   `handler`: **function (payload: DispatcherPayload)**
 
 Returns: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)**
 
