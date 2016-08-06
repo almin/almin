@@ -30,7 +30,7 @@ StoreGroup merge values of store*s*.`);
     /**
      * validate the instance is StoreGroup-like object
      * {@link Context} treat StoreGroup like object as StoreGroup.
-     * @param {StoreGroup|Object} storeGroup
+     * @param {*} storeGroup
      */
     static validateInstance(storeGroup) {
         assert(storeGroup !== undefined, "store should not be undefined");

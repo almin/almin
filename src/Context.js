@@ -18,7 +18,7 @@ export default class Context {
 
     /**
      * @param {Dispatcher} dispatcher
-     * @param {StoreGroup|Store} store store is either Store or StoreGroup
+     * @param {QueuedStoreGroup|StoreGroup|Store} store store is either Store or StoreGroup
      * @public
      */
     constructor({dispatcher, store}) {
@@ -96,7 +96,7 @@ export default class Context {
      * This `onDispatch` is not called at built-in event. It is filtered by Context.
      * If you want to *All* dispatched event and use listen directly your `dispatcher` object.
      * In other word, listen the dispatcher of `new Context({dispatcher})`.
-     * @param handler
+     * @param {function(payload: DispatcherPayload)} handler
      * @returns {Function}
      * @public
      */
