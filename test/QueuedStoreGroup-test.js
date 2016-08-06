@@ -28,17 +28,35 @@ const createChangeStoreUseCase = (store) => {
 describe("QueuedStoreGroup", function() {
     describe("#onChange", function() {
         context("when StoreGroup#emitChange()", function() {
-            it("should be called by sync", function() {
-                const store = createEchoStore({name: "AStore"});
-                const storeGroup = new QueuedStoreGroup([store]);
-                let isCalled = false;
-                // then
-                storeGroup.onChange(() => {
-                    isCalled = true;
+            context("some store is changed", function() {
+                it("should be called by sync", function() {
+                    const store = createEchoStore({name: "AStore"});
+                    const storeGroup = new QueuedStoreGroup([store]);
+                    let isCalled = false;
+                    // then
+                    storeGroup.onChange(() => {
+                        isCalled = true;
+                    });
+                    // when
+                    store.emitChange();
+                    storeGroup.emitChange();
+                    assert(isCalled);
                 });
-                // when
-                storeGroup.emitChange();
-                assert(isCalled);
+            });
+            context("any store is not changed", function() {
+                it("should be called by sync", function() {
+                    const store = createEchoStore({name: "AStore"});
+                    const storeGroup = new QueuedStoreGroup([store]);
+                    let isCalled = false;
+                    // then
+                    storeGroup.onChange(() => {
+                        isCalled = true;
+                    });
+                    // when
+                    // But any store is not changed
+                    storeGroup.emitChange();
+                    assert(isCalled === false);
+                });
             });
         });
         context("when UseCase never change any store", function() {
@@ -111,7 +129,7 @@ describe("QueuedStoreGroup", function() {
             });
         });
         context("when UseCase is nesting", function() {
-            context("{ asap: true}", function() {
+            context("{ asap: true }", function() {
                 it("should be called by all usecase", function() {
                     const aStore = createEchoStore({name: "AStore"});
                     const bStore = createEchoStore({name: "BStore"});
@@ -143,7 +161,7 @@ describe("QueuedStoreGroup", function() {
                 });
 
             });
-            context("{ asap: false}", function() {
+            context("{ asap: false }", function() {
                 it("should be called only once", function() {
                     const aStore = createEchoStore({name: "AStore"});
                     const bStore = createEchoStore({name: "BStore"});
@@ -174,6 +192,109 @@ describe("QueuedStoreGroup", function() {
                     });
                 });
             });
+            context("when UseCase#dispatch is called", function() {
+                it("should not be called - no changing store", function() {
+                    const store = createEchoStore({name: "AStore"});
+                    const storeGroup = new QueuedStoreGroup([store]);
+                    let isChanged = false;
+                    let dispatchedPayload = null;
+                    storeGroup.onChange(() => {
+                        isChanged = true;
+                    });
+                    // when
+                    class DispatchAndFinishAsyncUseCase extends UseCase {
+                        execute() {
+                            // dispatch event
+                            this.dispatch({
+                                type: "DispatchAndFinishAsyncUseCase"
+                            });
+                            return new Promise((resolve) => {
+                                setTimeout(resolve, 100);
+                            });
+                        }
+                    }
+                    const context = new Context({
+                        dispatcher: new Dispatcher(),
+                        store: storeGroup
+                    });
+                    context.onDispatch(payload => {
+                        dispatchedPayload = payload;
+                    });
+                    // when
+                    const useCase = new DispatchAndFinishAsyncUseCase();
+                    const resultPromise = context.useCase(useCase).execute();
+                    // then - should not be changed, but it is dispatched
+                    assert(isChanged === false);
+                    assert.deepEqual(dispatchedPayload, {
+                        type: "DispatchAndFinishAsyncUseCase"
+                    });
+                    return resultPromise
+                });
+                it("should be called by sync", function() {
+                    const store = createEchoStore({name: "AStore"});
+                    const storeGroup = new QueuedStoreGroup([store]);
+                    let isCalled = false;
+                    storeGroup.onChange(() => {
+                        isCalled = true;
+                    });
+                    // when
+                    class DispatchAndFinishAsyncUseCase extends UseCase {
+                        execute() {
+                            // store is changed
+                            store.emitChange();
+                            // dispatch event
+                            this.dispatch({
+                                type: "DispatchAndFinishAsyncUseCase"
+                            });
+                            return new Promise((resolve) => {
+                                setTimeout(resolve, 100);
+                            });
+                        }
+                    }
+                    const context = new Context({
+                        dispatcher: new Dispatcher(),
+                        store: storeGroup
+                    });
+                    // when
+                    const useCase = new DispatchAndFinishAsyncUseCase();
+                    const resultPromise = context.useCase(useCase).execute();
+                    // then - should be called by sync
+                    assert(isCalled);
+                    return resultPromise
+                });
+                it("should be called each dispatch", function() {
+                    const store = createEchoStore({name: "AStore"});
+                    const storeGroup = new QueuedStoreGroup([store]);
+                    let calledCount = 0;
+                    storeGroup.onChange(() => {
+                        calledCount++;
+                    });
+                    // when
+                    class DispatchAndFinishAsyncUseCase extends UseCase {
+                        execute() {
+                            // 1
+                            store.emitChange();
+                            this.dispatch({
+                                type: "DispatchAndFinishAsyncUseCase"
+                            });
+                            // 2
+                            store.emitChange();
+                            this.dispatch({
+                                type: "DispatchAndFinishAsyncUseCase"
+                            });
+                        }
+                    }
+                    const context = new Context({
+                        dispatcher: new Dispatcher(),
+                        store: storeGroup
+                    });
+                    // when
+                    const useCase = new DispatchAndFinishAsyncUseCase();
+                    return context.useCase(useCase).execute().then(() => {
+                        assert.equal(calledCount, 2)
+                    });
+                });
+            });
         });
         context("when UseCase is failing", function() {
             it("should be called", function() {
@@ -200,6 +321,32 @@ describe("QueuedStoreGroup", function() {
                 const useCase = new FailUseCase();
                 return context.useCase(useCase).execute().catch(() => {
                     assert.equal(onChangeCounter, 1);
+                });
+            });
+        });
+        context("when UseCase call `throwError(){", function() {
+            it("should be called", function() {
+                const store = createEchoStore({name: "AStore"});
+                const storeGroup = new QueuedStoreGroup([store]);
+                let isCalled = false;
+                // then
+                storeGroup.onChange(() => {
+                    isCalled = true;
+                });
+                // when
+                const useCase = new class ThrowErrorUseCase extends UseCase {
+                    execute() {
+                        store.emitChange();
+                        // dispatch event
+                        this.throwError(new Error("error message"));
+                    }
+                };
+                const context = new Context({
+                    dispatcher: new Dispatcher(),
+                    store: storeGroup
+                });
+                return context.useCase(useCase).execute().then(() => {
+                    assert(isCalled);
                 });
             });
         });
