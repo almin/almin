@@ -55,7 +55,7 @@ export default class UseCase extends Dispatcher {
     }
 
     /**
-     * called the {@link errorHandler} with error when error is occurred.
+     * called the `errorHandler` with error when error is occurred.
      * @param {function(error: Error)} errorHandler
      * @returns {function(this:Dispatcher)}
      * @public
@@ -69,6 +69,14 @@ export default class UseCase extends Dispatcher {
     }
 
     /**
+     * payload object that is dispatched when UseCase is failing or `throwError`.
+     * @typedef {Object} UseCaseErrorPayload
+     * @property {string} type The event type of error.
+     * @property {UseCase} useCase useCase instance
+     * @property {error} error error object that is thrown from UseCase
+     * @public
+     */
+    /**
      * throw error event
      * you can use it instead of `throw new Error()`
      * this error event is caught by dispatcher.
@@ -76,6 +84,9 @@ export default class UseCase extends Dispatcher {
      * @public
      */
     throwError(error) {
+        /**
+         * @type {UseCaseErrorPayload}
+         */
         const payload = {
             type: ActionTypes.ON_ERROR,
             useCase: this,
