@@ -3,7 +3,7 @@
 const assert = require("power-assert");
 import MemoryDB from "../../src/infra/adpter/MemoryDB";
 import TodoList from "../../src/domain/TodoList/TodoList";
-import {TodoListRepository} from "../../src/infra/TodoRepository";
+import {TodoListRepository} from "../../src/infra/TodoListRepository";
 import {AddTodoItemUseCase} from "../../src/usecase/AddTodoItem";
 describe("AddTodoItem", function () {
     it("should add TodoItem with title", function () {

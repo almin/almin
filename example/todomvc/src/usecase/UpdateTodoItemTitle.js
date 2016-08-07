@@ -1,5 +1,5 @@
 "use strict";
-import todoListRepository, {TodoListRepository} from "../infra/TodoRepository"
+import todoListRepository, {TodoListRepository} from "../infra/TodoListRepository"
 export class UpdateTodoItemTitleFactory {
     static create() {
         return new UpdateTodoItemTitleUseCase({

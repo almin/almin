@@ -1,6 +1,6 @@
 "use strict";
 import {UseCase} from "almin";
-import todoListRepository, {TodoListRepository} from "../infra/TodoRepository"
+import todoListRepository, {TodoListRepository} from "../infra/TodoListRepository"
 export class ToggleTodoItemFactory {
     static create() {
         return new ToggleTodoItemUseCase({

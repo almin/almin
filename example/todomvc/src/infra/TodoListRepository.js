@@ -40,7 +40,7 @@ export class TodoListRepository extends EventEmitter {
     save(todoList) {
         this._database.set(`${TodoList.name}.lastUsed`, todoList);
         this._database.set(`${TodoList.name}.${todoList.id}`, todoList);
-        this.emit(REPOSITORY_CHANGE);
+        this.emit(REPOSITORY_CHANGE, todoList);
     }
 
     /**

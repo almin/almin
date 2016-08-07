@@ -6,13 +6,13 @@ import TodoItem from "../../src/domain/TodoList/TodoItem";
 import TodoStore from "../../src/store/TodoStore/TodoStore";
 import TodoState, {FilterTypes} from "../../src/store/TodoStore/TodoState";
 import {FilterTodoListUseCase} from "../../src/usecase/FilterTodoList";
-import {TodoListRepository} from "../../src/infra/TodoRepository";
+import {TodoListRepository} from "../../src/infra/TodoListRepository";
 describe("TodoStore", function () {
     context("when repository is changed", function () {
         it("should return todoState", function (done) {
             const todoList = new TodoList();
-            const todoRepository = new TodoListRepository();
-            const store = new TodoStore({todoRepository});
+            const todoListRepository = new TodoListRepository();
+            const store = new TodoStore({todoListRepository});
             // then
             store.onChange(() => {
                 const {todoState} = store.getState();
@@ -20,7 +20,7 @@ describe("TodoStore", function () {
                 done();
             });
             // when
-            todoRepository.save(todoList);
+            todoListRepository.save(todoList);
         });
     });
     context("when TodoList has todo", function () {
@@ -28,8 +28,8 @@ describe("TodoStore", function () {
             const todoList = new TodoList();
             const todoItem = new TodoItem({title: "Read It Later"});
             todoList.addItem(todoItem);
-            const todoRepository = new TodoListRepository();
-            const store = new TodoStore({todoRepository});
+            const todoListRepository = new TodoListRepository();
+            const store = new TodoStore({todoListRepository});
             // then
             store.onChange(() => {
                 const {todoState} = store.getState();
@@ -39,15 +39,15 @@ describe("TodoStore", function () {
                 done();
             });
             // when
-            todoRepository.save(todoList);
+            todoListRepository.save(todoList);
         });
     });
     context("when dispatch events", function () {
         it("should update State", function (done) {
             const todoList = new TodoList();
-            const todoRepository = new TodoListRepository();
-            todoRepository.save(todoList);
-            const store = new TodoStore({todoRepository});
+            const todoListRepository = new TodoListRepository();
+            todoListRepository.save(todoList);
+            const store = new TodoStore({todoListRepository});
             const prevState = store.getState();
             assert(prevState.todoState.filterType, FilterTypes.ALL_TODOS);
             // then

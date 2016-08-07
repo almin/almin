@@ -139,9 +139,9 @@ Repository is simple class that has these feature:
 ![almin-architecture-simple-repository.png](img/almin-architecture-simple-repository.pngalmin-architecture-simple-repository.png)
 
 We want to store `TodoList` instance to the repository.
-As a result, We have created `TodoRepository`.
+As a result, We have created `TodoListRepository`.
 
-[import, TodoRepository.js](../../example/todomvc/src/infra/TodoRepository.js)
+[import, TodoListRepository.js](../../example/todomvc/src/infra/TodoListRepository.js)
 
 Repository should be persistence object.
 In other words, create repository instance as singleton.
@@ -213,13 +213,58 @@ We can write test for `AddTodoItem` UseCase.
 
 [import, AddTodoItem-test.js](../../example/todomvc/test/UseCase/AddTodoItem-test.js)
 
-Simply, `AddTodoItem` UseCase do that add TodoItem and save it.
+This pattern is well-known as [Dependency injection](https://en.wikipedia.org/wiki/Dependency_injection "Dependency injection")(DI).
 
-Next, we want to render this result to view.
+#### Conclusion of UseCase
+
+`AddTodoItem` UseCase do that add TodoItem and save it.
+
+Next, We want to render this result that new TodoItem is added.
 
 ### TodoStore 
 
-### TodoStore subscribe changes of repository
+TodoStore is a almin's Store class.
+
+In [Counter app example](../counter/README.md), you already know about **Store**.
+
+Almin's Store 
+
+- has **State** instance
+- can receive the dispatched *event* from a UseCase. 
+- :new: can observe repository.
+
+### TodoStore observe changes of repository
+
+Repository is implemented as a singleton.
+You easy to observe the repository.
+But Store should received repository as a constructor arguments.
+
+
+```js
+"use strict";
+import {Store} from "almin";
+import TodoState from "./TodoState";
+export default class TodoStore extends Store {
+    constructor({TodoListRepository}) {
+        super();
+        this.state = new TodoState();
+        todoRepository.onChange(() => {
+            const todoList = todoRepository.lastUsed();
+            const newState = this.state.merge(todoList);
+            if (newState !== this.state) {
+                this.state = newState;
+                this.emitChange();
+            }
+        });
+    }
+
+    getState() {
+        return {
+            todoState: this.state
+        }
+    }
+}
+```
 
 ### TodoState
 

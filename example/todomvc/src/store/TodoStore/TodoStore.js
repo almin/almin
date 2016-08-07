@@ -2,29 +2,40 @@
 import {Store} from "almin";
 import TodoState from "./TodoState";
 export default class TodoStore extends Store {
-    constructor({todoRepository}) {
+    constructor({todoListRepository}) {
         super();
         this.state = new TodoState();
-        todoRepository.onChange(() => {
-            const todoList = todoRepository.lastUsed();
-            const newState = this.state.merge(todoList);
-            if (newState !== this.state) {
-                this.state = newState;
-                this.emitChange();
-            }
-        });
-        this.onDispatch(payload => {
-            const newState = this.state.reduce(payload);
-            if (newState !== this.state) {
-                this.state = newState;
-                this.emitChange();
-            }
-        });
+        // when todoRepository is changed, try to update state
+        todoListRepository.onChange(this._onChange.bind(this));
+        // when UseCase dispatch event, try to update state
+        this.onDispatch(this._onDispatch.bind(this));
     }
 
     getState() {
         return {
             todoState: this.state
         }
+    }
+
+    /**
+     * set newState if the state is changed
+     * @param {TodoState} newState
+     * @private
+     */
+    _setState(newState) {
+        if (newState !== this.state) {
+            this.state = newState;
+            this.emitChange();
+        }
+    }
+
+    _onChange(todoList) {
+        const newState = this.state.merge(todoList);
+        this._setState(newState);
+    }
+
+    _onDispatch(payload) {
+        const newState = this.state.reduce(payload);
+        this._setState(newState);
     }
 }
