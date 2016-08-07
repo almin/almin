@@ -52,6 +52,7 @@ You'll also need a Promise polyfill for [older browsers](http://caniuse.com/#fea
     - [Store](./docs/abstract/README.md#store)
 - Tutorial
     - [Creating Counter App](./docs/counter/)
+    - [Creating Todo MVC](./docs/todomvc/)
 
 ## Example
 

@@ -67,18 +67,6 @@ Rough version of Table of Contents.
 - [Creating Todo App](./todomv/)
     - Apply CQRS pattern to Almin
 
-
------
-
-- [ ] :construction: :construction:
-
-### Core class
-
-- Context
-- Dispatcher
-- Store
-- UseCase
-
 ### Sub System
 
 - StoreGroup

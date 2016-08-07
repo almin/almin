@@ -109,7 +109,7 @@ We going to implement `TodoItem` as value object.
 - `title`: todo title
 - `completed`: true or false
 
-[import, TodoItem.js](../../example/todomvc/src/domain/TodoList/TodoItem.js])
+[import, TodoItem.js](../../example/todomvc/src/domain/TodoList/TodoItem.js)
 
 #### TodoList is domain model
 
@@ -193,9 +193,16 @@ But, Repository can dependent to domain.
 
 ## When is domain model created?
 
-We write simply to `index.js`.
+It is a just System UseCase.
+
+`CreateDomainUseCase` is
+
+- Actor: System
+- Purpose: initialize domain model and save this to repository
 
 Execute [CreateDomainUseCase.js](../../example/todomvc/src/usecase/CreateDomainUseCase.js) and initialize `TodoList` domain and store the instance to repository.
+
+We can put this to `index.js` that is actual entry point of this application.
 
 ```js
 // create domain model and store to repository
