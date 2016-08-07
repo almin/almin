@@ -1,8 +1,6 @@
 {
   "name": "node-memory-leak-testing",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
   "scripts": {
     "pretest": "rm-local-modules && npm i",
     "perf": "node --expose-gc StoreGroup-memory-test.js && node --expose-gc QueuedStoreGroup-memory-test.js",

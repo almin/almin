@@ -10,9 +10,9 @@ browsers:
   - name: safari
     version: latest
   - name: chrome
-    version: [40, -1..latest]
+    version: [-1..latest]
   - name: firefox
-    version: [30, -1..latest]
+    version: [-1..latest]
 browserify:
   - transform:
       name: babelify

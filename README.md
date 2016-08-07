@@ -42,7 +42,10 @@ You'll also need a Promise polyfill for [older browsers](http://caniuse.com/#fea
 
 ## Usage
 
-:memo: Please See [Documents](./docs) of Almin.
+:memo: Please See [https://almin.github.io/](https://almin.github.io/) for details.
+
+- :book: Documentation of Almin
+- [https://almin.github.io/](https://almin.github.io/)
 
 ## What is Almin?
 
