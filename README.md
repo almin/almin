@@ -92,9 +92,6 @@ We are going to learn two architecture(Flux/CQRS) using Almin :)
 
 Truly [Table of Contents](../SUMMARY.md) is here :arrow_left:
 
-### Tutorial
-
-- [Documents](./docs)
 - [Overview: Component of Almin](./docs/abstract/README.md)
     - [View](./docs/abstract/README.md#view)
     - [UseCase](./docs/abstract/README.md#usecase)
