@@ -90,7 +90,7 @@ We are going to learn two architecture(Flux/CQRS) using Almin :)
 
 ## Table of Contents
 
-Truly [Table of Contents](../SUMMARY.md) is here :arrow_left:
+Truly [Table of Contents](./SUMMARY.md) is here :arrow_left:
 
 - [Overview: Component of Almin](./docs/abstract/README.md)
     - [View](./docs/abstract/README.md#view)
