@@ -1,6 +1,5 @@
 ## Table of Contents
 
-- [What is Almin?](./docs/README.md)
 - [Overview: Component of Almin](./docs/abstract/README.md)
     - [View](./docs/abstract/README.md#view)
     - [UseCase](./docs/abstract/README.md#usecase)
