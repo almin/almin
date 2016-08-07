@@ -174,11 +174,48 @@ appContext.useCase(CreateDomainUseCaseFactory.create()).execute().then(() => {
 });
 ```
 
-## AddTodoItem UseCase
+## UseCase: AddTodoItem 
 
 Let's implement business login to `TodoList`.
 
 UseCase: [AddTodoItem](../../example/todomvc/src/usecase/AddTodoItem.js)
+
+**AddTodoItem** does following steps:
+
+1. Get TodoList from repository
+2. Create new TodoItem
+3. Add New TodoItem to TodoList
+4. Save TodoList to repository
+
+Code:
+
+```js
+    execute(title) {
+        // Get todoList from repository
+        const todoList = this.todoListRepository.lastUsed();
+        // Create TodoItem
+        const todoItem = new TodoItem({title});
+        // Add TodoItem
+        todoList.addItem(todoItem);
+        // Save todoList to  repository
+        this.todoListRepository.save(todoList);
+    }
+```
+
+All of AddTodoItem:
+
+[import, AddTodoItem.js](../../example/todomvc/src/usecase/AddTodoItem.js)
+
+You notice about `AddTodoItemFactory`.
+
+`AddTodoItemFactory` is not must, but it help to write tests.
+We can write test for `AddTodoItem` UseCase.
+
+[import, AddTodoItem-test.js](../../example/todomvc/test/UseCase/AddTodoItem-test.js)
+
+Simply, `AddTodoItem` UseCase do that add TodoItem and save it.
+
+Next, we want to render this result to view.
 
 ### TodoStore 
 

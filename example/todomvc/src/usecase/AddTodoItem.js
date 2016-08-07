@@ -1,6 +1,7 @@
 "use strict";
 import {UseCase} from "almin";
 import todoListRepository, {TodoListRepository} from "../infra/TodoRepository"
+import TodoItem from "../domain/TodoList/TodoItem";
 export class AddTodoItemFactory {
     static create() {
         return new AddTodoItemUseCase({
@@ -19,8 +20,13 @@ export class AddTodoItemUseCase extends UseCase {
     }
 
     execute(title) {
+        // Get todoList from repository
         const todoList = this.todoListRepository.lastUsed();
-        todoList.addItem(title);
+        // Create TodoItem
+        const todoItem = new TodoItem({title});
+        // Add TodoItem
+        todoList.addItem(todoItem);
+        // Save todoList to  repository
         this.todoListRepository.save(todoList);
     }
 }

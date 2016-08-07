@@ -2,6 +2,7 @@
 "use strict";
 const assert = require("power-assert");
 import TodoList from "../../src/domain/TodoList/TodoList";
+import TodoItem from "../../src/domain/TodoList/TodoItem";
 import TodoStore from "../../src/store/TodoStore/TodoStore";
 import TodoState, {FilterTypes} from "../../src/store/TodoStore/TodoState";
 import {FilterTodoListUseCase} from "../../src/usecase/FilterTodoList";
@@ -25,7 +26,8 @@ describe("TodoStore", function () {
     context("when TodoList has todo", function () {
         it("should return todoState that has todo item also", function (done) {
             const todoList = new TodoList();
-            todoList.addItem("Read It Later");
+            const todoItem = new TodoItem({title: "Read It Later"});
+            todoList.addItem(todoItem);
             const todoRepository = new TodoListRepository();
             const store = new TodoStore({todoRepository});
             // then

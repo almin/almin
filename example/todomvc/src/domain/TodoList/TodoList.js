@@ -59,11 +59,10 @@ export default class TodoList {
     }
 
     /**
-     * @param {title} title
+     * @param {TodoItem} todoItem
      * @return {TodoItem}
      */
-    addItem(title) {
-        const todoItem = new TodoItem({title});
+    addItem(todoItem) {
         this._items.push(todoItem);
         return todoItem;
     }

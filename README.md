@@ -45,15 +45,13 @@ You'll also need a Promise polyfill for [older browsers](http://caniuse.com/#fea
 :memo: Please See [Documents](./docs) of Almin.
 
 - [Documents](./docs)
+- [Overview: Component of Almin](./docs/abstract/README.md)
+    - [View](./docs/abstract/README.md#view)
+    - [UseCase](./docs/abstract/README.md#usecase)
+    - [Context](./docs/abstract/README.md#context)
+    - [Store](./docs/abstract/README.md#store)
 - Tutorial
     - [Creating Counter App](./docs/counter/)
-- [ ] Write usage instructions
-- Implement flow
-    - UseCase
-    - Domain
-    - Repository
-    - Store
-    - State
 
 ## Example
 

@@ -3,12 +3,14 @@
 const assert = require("power-assert");
 import MemoryDB from "../../src/infra/adpter/MemoryDB";
 import TodoList from "../../src/domain/TodoList/TodoList";
+import TodoItem from "../../src/domain/TodoList/TodoItem";
 import {TodoListRepository} from "../../src/infra/TodoRepository";
 import {UpdateTodoItemTitleUseCase} from "../../src/usecase/UpdateTodoItemTitle";
 describe("UpdateTodoItem", function () {
-    it("should add TodoItem with title", function (done) {
+    it("should update TodoItem with title", function (done) {
         const mockTodoList = new TodoList();
-        const existingTodoItem = mockTodoList.addItem("before ");
+        const existTodoItem = new TodoItem({title: "before"});
+        mockTodoList.addItem(existTodoItem);
         // prepare
         const todoListRepository = new TodoListRepository(new MemoryDB());
         todoListRepository.save(mockTodoList);
@@ -21,12 +23,12 @@ describe("UpdateTodoItem", function () {
         todoListRepository.onChange(() => {
             // re-get todoList
             const storedTodoList = todoListRepository.find(mockTodoList);
-            const todoItem = storedTodoList.getItem(existingTodoItem.id);
+            const todoItem = storedTodoList.getItem(existTodoItem.id);
             assert(todoItem);
             assert.equal(todoItem.title, titleOfUPDATING);
             done()
         });
         // When
-        useCase.execute({id: existingTodoItem.id, title: titleOfUPDATING});
+        useCase.execute({id: existTodoItem.id, title: titleOfUPDATING});
     });
 });
