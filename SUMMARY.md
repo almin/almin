@@ -11,6 +11,5 @@
     - [Todo App](./docs/todomvc/README.md)
     - Immutability
     - Nesting UseCase
-- [ ] Testing
 - [API Reference](./docs/api/README.md)
-- [ ] FAQ
+- [GLOSSARY](./docs/GLOSSARY.md)

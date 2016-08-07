@@ -38,7 +38,18 @@ It use `dispatch(payload)`/`onDispatch((payload) => {})` instead of `on("key", .
     - listen dispatch event and return un-listen function.
 - `dispatch(payload): void`
     - dispatch event with `payload` object.
-    
+
+## Store
+
+Store manage state object and it can be observed.
+
+View observe store and update UI.
+
+## StoreGroup
+
+StoreGroup is a class that is collection of store.
+StoreGroup wrap stores and it is a just single Store.
+
 ## Flux
 
 Flux is the application architecture for building client-side web applications.
