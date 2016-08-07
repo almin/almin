@@ -15,8 +15,11 @@ after_success:
     $(npm bin)/set-up-ssh --key "$encrypted_5d98d8341870_key" \
                           --iv "$encrypted_5d98d8341870_iv" \
                           --path-encrypted-key ".travis/github_deploy_key.enc"
+
     $(npm bin)/update-branch --commands "npm run build" \
                              --commit-message "Deploy GitBook build [skip ci]" \
                              --directory "_book" \
                              --distribution-branch "gh-pages" \
                              --source-branch "master"
+
+    npm run test:saucelabs
