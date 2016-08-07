@@ -12,15 +12,26 @@ export default class TodoState {
      * @param {string} [filterType]
      */
     constructor({items, filterType} = {}) {
-        /**
-         * @type {TodoItem[]}
-         */
         this.items = items || [];
-        this.areAllComplete = this.items.every(item => {
+        this.filterType = filterType || FilterTypes.ALL_TODOS;
+    }
+
+    /**
+     * if all items is completed, return true
+     * @returns {boolean}
+     */
+    get areAllComplete() {
+        return this.items.every(item => {
             return item.completed;
         });
-        this.filterType = filterType || FilterTypes.ALL_TODOS;
-        this.displayItems = this.items.filter(item => {
+    }
+
+    /**
+     * return items in current filterType
+     * @returns {Array.<TodoItem>}
+     */
+    get displayItems() {
+        return this.items.filter(item => {
             switch (this.filterType) {
                 case FilterTypes.ACTIVE_TODOS:
                     return !item.completed;

@@ -29,11 +29,19 @@ export default class TodoStore extends Store {
         }
     }
 
+    /**
+     * @param {TodoList} todoList
+     * @private
+     */
     _onChange(todoList) {
         const newState = this.state.merge(todoList);
         this._setState(newState);
     }
 
+    /**
+     * @param {DispatcherPayload} payload
+     * @private
+     */
     _onDispatch(payload) {
         const newState = this.state.reduce(payload);
         this._setState(newState);

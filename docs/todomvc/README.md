@@ -111,9 +111,40 @@ We going to implement `TodoItem` as value object.
 
 [import, TodoItem.js](../../example/todomvc/src/domain/TodoList/TodoItem.js])
 
-### Where domain object are stored?
+#### TodoList is domain model
 
-Now, we can create instance of domain models like that:
+`TodoList` class is domain model.
+It should be plain JavaScript object,
+
+We want to implement that adding TodoItem to TodoList.
+
+```js
+"use strict";
+export default class TodoList {
+    constructor() {
+        /**
+         * @type {TodoItem[]}
+         * @private
+         */
+        this._items = [];
+    }
+
+    /**
+     * @param {TodoItem} todoItem
+     * @return {TodoItem}
+     */
+    addItem(todoItem) {
+        this._items.push(todoItem);
+        return todoItem;
+    }
+}
+```
+
+We can focus on bushiness logic because domain model is a just plain JavaScript.
+
+### Where domain model are stored?
+
+Now, we can create instance of domain model like this:
 
 ```js
 const todoList = new TodoList();
@@ -121,12 +152,12 @@ const todoItem = new TodoItem({ ... });
 todoList.addTodo(todoItem);
 ```
 
-But, How to store instance of domain as persistence.
+But, How to store instance of domain(`TodoList`) as persistence.
 
 We want to introduce **Repository* object.
 Repository store domain model for perpetuation.
 
-In the case, repository store domain object into memory database.
+In the case, repository store domain model into memory database.
 
 Repository is simple class that has these feature:
 
@@ -160,7 +191,7 @@ Domain should not dependent to repository.
 Because, Domain don't know how to store itself.
 But, Repository can dependent to domain.
 
-## When is domain object created?
+## When is domain model created?
 
 We write simply to `index.js`.
 
@@ -187,7 +218,7 @@ UseCase: [AddTodoItem](../../example/todomvc/src/usecase/AddTodoItem.js)
 3. Add New TodoItem to TodoList
 4. Save TodoList to repository
 
-Code:
+Execution steps:
 
 ```js
     execute(title) {
@@ -205,6 +236,8 @@ Code:
 All of AddTodoItem:
 
 [import, AddTodoItem.js](../../example/todomvc/src/usecase/AddTodoItem.js)
+
+#### Factory of UseCase
 
 You notice about `AddTodoItemFactory`.
 
@@ -237,56 +270,141 @@ Almin's Store
 
 Repository is implemented as a singleton.
 You easy to observe the repository.
-But Store should received repository as a constructor arguments.
 
+But We want to implement Store that it should received repository as a constructor arguments.
+
+Why? It is a for testing.
+You already know this pattern as Dependency injection.
 
 ```js
-"use strict";
-import {Store} from "almin";
-import TodoState from "./TodoState";
 export default class TodoStore extends Store {
-    constructor({TodoListRepository}) {
-        super();
-        this.state = new TodoState();
-        todoRepository.onChange(() => {
-            const todoList = todoRepository.lastUsed();
-            const newState = this.state.merge(todoList);
-            if (newState !== this.state) {
-                this.state = newState;
-                this.emitChange();
-            }
-        });
-    }
-
-    getState() {
-        return {
-            todoState: this.state
-        }
+    // TodoListRepository instance as arguments
+    // It is received from `AppStoreGroup` that is explained below.
+    constructor({todoListRepository}) {
+        // ...
     }
 }
 ```
 
+Return to observe the repository. 
+
+You can use `TodoListRepository#onChange` for observing repository. 
+
+1. Observe change of repository 
+2. When `todoRepository` is changed, try to update state
+
+[import, TodoStore.js](../../example/todomvc/src/store/TodoStore/TodoStore.js)
+
+And you can see the test for `TodoStore.js`
+
+[example/todomvc/test/store/TodoStore-test.js](../../example/todomvc/test/store/TodoStore-test.js)
+
 ### TodoState
 
-## ToggleTodoItem UseCase
+`TodoState` is a State class.
 
-### Unidirectional data flow is simple
+There are **two way** of updating store:
 
-## FilterTodoList UseCase
+- Receive `TodoList` object and return new `TodoState`
+- Receive payload object and return new `TodoState`
+    - See [Counter app example](../counter/README.md)
 
-### UseCase directly dispatch event to Store
+You can implement `TodoState` like this.
 
-### Already know Flux architecture.
+```
+export default class TodoState {
+    /**
+     * @param {TodoItem[]} [items]
+     * @param {string} [filterType]
+     */
+    constructor({items, filterType} = {}) {
+        this.items = items || [];
+    }
+    
+    /**
+     * @param {TodoList} todoList
+     * @returns {TodoState}
+     */
+    merge(todoList) {
+        const items = todoList.getAllTodoItems();
+        return new TodoState(Object.assign(this, {
+            items
+        }));
+    }
+}
+```
 
-- [ ] Same way of counter app
+### StoreGroup
 
-## Two way of updating store
+Real application not only have a single state, but have many state.
 
-- [ ] Not meaning two way binding
-- [ ] Use unidirectional data flow, but two way
-    - Fast path
-    - Long path
+Almin has `StoreGroup` utility class that collection of stores.
 
-## View -> UseCase -> (Thinking Point) -> Store
+`AppStoreGroup` pass `TodoListRepository` instance to `TodoStore`. 
+
+[import, AppStoreGroup.js](../../example/todomvc/src/store/AppStoreGroup.js)
+
+After that, you should initialize Almin's `Context` with `AppStoreGroup`.
+
+```js
+// store
+import AppStoreGroup from "./store/AppStoreGroup";
+import {Context, Dispatcher}  from "almin";
+const dispatcher = new Dispatcher();
+// context connect dispatch with stores
+const appContext = new Context({
+    dispatcher,
+    store: AppStoreGroup.create()
+});
+```
+
+## StoreGroup -> View
+
+Entry point of App's view observe `TodoStore` via Almin's `Context`.
+
+The entry point is `TodoApp.react.js`.
+
+- [example/todomvc/src/components/TodoApp.react.js](../../example/todomvc/src/components/TodoApp.react.js)
+
+As a result, when `TodoStore` is changed, `TodoApp` is updated. 
+
+> UseCase -> Domain -> Repository -> Store -> (New State) -> View
+
+It is **Unidirectional data flow**!
+
+![almin-architecture-simple.png](./img/almin-architecture-simple.png)
+
+TodoMVC has other UseCases.
+
+You can implement these in a similar way of `AddTodoItem` or [counter app](../counter/README.md)
+
+- [FilterTodoList.js](../../example/todomvc/src/usecase/FilterTodoList.js)
+- [RemoveAllCompletedItems.js](../../example/todomvc/src/usecase/RemoveAllCompletedItems.js)
+- [RemoveTodoItem.js](../../example/todomvc/src/usecase/RemoveTodoItem.js)
+- [ToggleAllTodoItems.js](../../example/todomvc/src/usecase/ToggleAllTodoItems.js)
+- [ToggleTodoItem.js](../../example/todomvc/src/usecase/ToggleTodoItem.js)
+- [UpdateTodoItemTitle.js](../../example/todomvc/src/usecase/UpdateTodoItemTitle.js)
 
 ## Conclusion
+
+Almin provide two way for updating app's state.
+
+![two way](./img/almin-architecture.png)
+
+- Fast path
+    - Dispatch events system
+    - It is well-known as Flux
+- Long path
+    - Changes of Domain and Repository
+    - It similar with server side architecture
+
+Complex Web application need to both.
+
+For example, Animation must to use Fast path.
+On the other hand, complex business logic should be written in domain models.
+
+> View -> UseCase -> (Thinking Point) -> Store
+
+We can write code thinking :)
+
+- [ ] Help to improve this document!
