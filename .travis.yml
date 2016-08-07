@@ -21,5 +21,4 @@ after_success:
                              --directory "_book" \
                              --distribution-branch "gh-pages" \
                              --source-branch "master"
-
-    npm run test:saucelabs
+  - npm run test:saucelabs
