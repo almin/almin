@@ -34,6 +34,7 @@
     "test:saucelabs": "zuul -- test/*-test.js",
     "test:browser": "zuul --local 8080 --ui mocha-bdd -- test/*-test.js",
     "test": "run-s --print-label test:js lint:docs test:example && run-s test:perf"
+    "travis": "npm run build:docs"
   },
   "keywords": [
     "flux",
@@ -43,6 +44,7 @@
     "aluminium"
   ],
   "devDependencies": {
+    "@alrra/travis-scripts": "^3.0.1",
     "babel-cli": "^6.7.5",
     "babel-preset-es2015-ie": "^6.6.2",
     "babel-preset-jsdoc-to-assert": "^2.0.1",

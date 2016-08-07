@@ -3,10 +3,20 @@ language: node_js
 node_js: stable
 script:
   - npm test
-after_success:
-  # FIXME: saucelabs fails some times...
-  - npm run test:saucelabs
+  - npm run travis
 env:
   global:
   - secure: BDeW2Gyfxdi/Sooe1txK7/H60ELoqY4UKCDybiNpz6dAwfghdf4y53ClB7VsCBLGBRkh7xLgLj8MZz9mvfc6geS5gVIr4Ey9/WWvYQb9fOG6Y9TOv57+nT8jRBkrjblnikpnw/NDqtB34uFLoC+NzOq3AfKvdwEvqIazhAoVVxJ0CVTQJu/U2ZYmPslOcQMiGqAXZKPYN/f71AwEhlmxQBgqPO2QMWl4hDMGnkTzMgbURzixOTc5BHYh2k3xE04W34PC+ziRMFA1/ngZ+ae/EvP0jn7W7stcfF0f7+J6oqkHbiB3Tt/cHTPwUDUkOH4+G9xEPvScJqg29lyHlKZG0yAcLXDA++kY930e5NfSW9q28Hf5tEG8oXf5V1d2NvVG4POM4P+3kHBbtuHAASYPCIvXjLcbZ5nhf4RCgGPD9jCXjh20p+UljBbvNhoBxCf5+UnW+wzjb95w6obomPaak9fH9WF6oBTmZUzMu0vqk9KeOr2hr4BfTCx4yrurXLkgRwMKDgXlG2RNWkIDFox5ftm4UHHgBZwoahBhp/vUCxvlp6n3pj1oqcUSGqm7grviU9BLObXBCiQPPpcz9iL0Dp1uQ2AdgKlOF/XadgiBc3jXYmrbziQvUcJZHcubOQ7Lhl1+sXOuwTjQYRivW6+jc5ndoe/DeiuKZtsm+9Jv0dw=
   - secure: EITDmbiIPei7UI0KAhdYy/ihy85oZtietHxfSCBxGjrjnhXHUhcYVGTAr8YIAtQ6nj3y8qrZ3tqPwGA2nE/Se+AKUe2G7zhsYf+6c48bCm+JeAXgqbYbiJnltppZ7VlCR67AqmB0YgaKLaadcpCWG+59iMZp64tm6wz5V/KVB6dd6X41lyeYbqeC0jdTizKfkcfDqeJWCGR0v56AJELuUjwu/i+9pKy5Zoz3Qem2+Sg1epGPdze9RzbEblj7ShND1LW2SQipv+DfGDSKdawzZ0Ox/dt8T5gu5jq0mA6oupF1pWVVa8uY9HrlZ0VB9kzxY8gNQNCfIC9Xf4iMi5d76ESw+KPxKB1CHV+i+rTwBEqD2j3YNsZ6neBYqG9vVl9sobBIe/5G/RjY1U/4wrvDmFPwY4026vUdw+P032PABoKeiAER88WXdpRIE7AGNLGKbG3Qor+MKJEiTkq9ag1PKaQRah1jQ/O15ONl1Huo3fCJXP05JpThqqo2zuW717on/apx/VzqBUFDWIQPjp3MPbNJ3HQiM+ap9I4wzNosTCEt6AFocrWnkPHK3+1eChgGIh6QPvSOXUTFJaH354IhQea5iWDf2PfVEnc+qvEQbnR/joIQ39PeQFQL+piS508cNw9Mpb4nTykHnpYL7MlE8hhnVPtvVP1xLrhqNPFwIpc=
+  - GH_USER_EMAIL="azuciao@gmail.com"
+  - GH_USER_NAME="azu"
+after_success:
+  - |
+    $(npm bin)/set-up-ssh --key "$encrypted_5d98d8341870_key" \
+                          --iv "$encrypted_5d98d8341870_iv" \
+                          --path-encrypted-key ".travis/github_deploy_key.enc"
+    $(npm bin)/update-branch --commands "npm run build" \
+                             --commit-message "Deploy GitBook build [skip ci]" \
+                             --directory "_book" \
+                             --distribution-branch "gh-pages" \
+                             --source-branch "master"
