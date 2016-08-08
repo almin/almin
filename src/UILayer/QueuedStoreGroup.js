@@ -37,6 +37,9 @@ const defaultOptions = {
  * ## Note
  * - QueuedStoreGroup not allow to change **stores** directly.
  * - Always change **stores** via execution of UseCase.
+ * - QueuedStoreGroup has not cache state.
+ *  - Cache system should be in your Store.
+ *
  * @public
  */
 export default class QueuedStoreGroup extends Dispatcher {
@@ -123,10 +126,6 @@ export default class QueuedStoreGroup extends Dispatcher {
              It is for Use Store's getState(prevState) implementation.
              */
             const prevState = this._stateCache.get(store);
-            // if the `store` is changed in previous
-            if (prevState && this.currentChangingStores.indexOf(store) === -1) {
-                return prevState;
-            }
             const nextState = store.getState(prevState);
             assert(typeof nextState == "object", `${store}: ${store.name}.getState() should return Object.
 e.g.)

@@ -290,57 +290,6 @@ describe("QueuedStoreGroup", function() {
                 assert(state["bState"] instanceof BState);
             });
         });
-
-        context("when a store emit change", function() {
-            it("should returned state replace with new getState() result", function() {
-                let aCalledCount = 0;
-                let bCalledCount = 0;
-                class AState {
-                    constructor({count}) {
-                        this.count = count;
-                    }
-                }
-                // then - emitChange => countup
-                class AStore extends Store {
-                    getState() {
-                        aCalledCount = aCalledCount + 1;
-                        return {
-                            AState: new AState({count: aCalledCount})
-                        }
-                    }
-                }
-                class BState {
-                    constructor({count}) {
-                        this.count = count;
-                    }
-                }
-                class BStore extends Store {
-                    getState() {
-                        bCalledCount = bCalledCount + 1;
-                        return {
-                            BState: new BState({count: bCalledCount})
-                        };
-                    }
-                }
-                const aStore = new AStore();
-                const bStore = new BStore();
-                const storeGroup = new QueuedStoreGroup([aStore, bStore]);
-                assert.equal(storeGroup.getState()["AState"].count, 1);
-                assert.equal(storeGroup.getState()["BState"].count, 1);
-                assert.equal(storeGroup.getState()["AState"].count, 1);
-                assert.equal(storeGroup.getState()["BState"].count, 1);
-                // when
-                const useCase = createChangeStoreUseCase(aStore);
-                const context = new Context({
-                    dispatcher: new Dispatcher(),
-                    store: storeGroup
-                });
-                return context.useCase(useCase).execute().then(() => {
-                    assert.equal(storeGroup.getState()["AState"].count, 2);
-                    assert.equal(storeGroup.getState()["BState"].count, 1);
-                });
-            });
-        });
     });
     describe("#release", function() {
         it("release onChange handler", function() {
