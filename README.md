@@ -1,6 +1,6 @@
 # [Almin.js](https://github.com/almin/almin) [![Build Status](https://travis-ci.org/almin/almin.svg?branch=master)](https://travis-ci.org/almin/almin)
 
-[![Almin.js logo](//almin.github.io/media/logo/logo.png)](https://github.com/almin/almin)
+[![Almin.js logo](//almin.js.org/media/logo/logo.png)](https://github.com/almin/almin)
 
 [![Sauce Test Status](https://saucelabs.com/browser-matrix/almin.svg)](https://saucelabs.com/u/almin)
 
