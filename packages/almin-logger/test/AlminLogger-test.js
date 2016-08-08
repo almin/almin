@@ -32,7 +32,7 @@ describe("AlminLogger-test", function() {
         assert(!consoleMock.groupCollapsed.called);
         assert(!consoleMock.log.called);
         // Then
-        logger.on(AlminLogger.Events.output, function () {
+        logger.on(AlminLogger.Events.output, function() {
             assert(consoleMock.groupCollapsed.called);
             assert(consoleMock.log.called);
             done();
@@ -69,7 +69,7 @@ describe("AlminLogger-test", function() {
             assert(consoleMock.groupCollapsed.called);
             const expectOutput = `Dispatch:`;
             const isContain = consoleMock.log.calls.some(call => {
-                return call.arg.indexOf(expectOutput) !== -1;
+                return call.arg && call.arg.indexOf(expectOutput) !== -1;
             });
             assert(isContain, `${expectOutput} is not found.`);
             done();
@@ -101,7 +101,7 @@ describe("AlminLogger-test", function() {
             assert(consoleMock.groupCollapsed.called);
             const expectOutput = `Dispatch:example`;
             const isContain = consoleMock.log.calls.some(call => {
-                return call.arg.indexOf(expectOutput) !== -1;
+                return call.arg && call.arg.indexOf(expectOutput) !== -1;
             });
             assert(isContain, `${expectOutput} is not found.`);
             done();

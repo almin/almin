@@ -59,7 +59,7 @@ describe("AsyncLogger", function() {
             assert(consoleMock.groupCollapsed.called);
             const expectOutput = `Dispatch:example`;
             const isContain = consoleMock.log.calls.some(call => {
-                return call.arg.indexOf(expectOutput) !== -1;
+                return call.arg && call.arg.indexOf(expectOutput) !== -1;
             });
             assert(isContain, `${expectOutput} is not found.`);
             done();
@@ -122,7 +122,7 @@ describe("AsyncLogger", function() {
             // UseCase log
             // did
             // taken time
-            assert(logBuffer.length, 4);
+            assert.equal(logBuffer.length, 5);
             done();
         });
         // When
