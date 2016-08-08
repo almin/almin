@@ -1,6 +1,6 @@
 # [Almin.js](https://github.com/almin/almin) [![Build Status](https://travis-ci.org/almin/almin.svg?branch=master)](https://travis-ci.org/almin/almin)
 
-[![Almin.js logo](https://almin.github.io/almin/media/logo/logo.png)](https://github.com/almin/almin)
+[![Almin.js logo](https://almin.github.io/media/logo/logo.png)](https://github.com/almin/almin)
 
 [![Sauce Test Status](https://saucelabs.com/browser-matrix/almin.svg)](https://saucelabs.com/u/almin)
 
@@ -42,10 +42,10 @@ You'll also need a Promise polyfill for [older browsers](http://caniuse.com/#fea
 
 ## Usage
 
-:memo: Please See [https://almin.github.io/almin/](https://almin.github.io/almin/) for .
+:memo: Please See [https://almin.github.io/](https://almin.github.io/) for .
 
 - :book: Documentation of Almin
-- [https://almin.github.io/almin/](https://almin.github.io/almin/)
+- [https://almin.github.io/](https://almin.github.io/)
 
 ## What is Almin?
 
