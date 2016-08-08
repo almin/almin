@@ -94,7 +94,7 @@ describe("AsyncLogger", function() {
         // When
         context.useCase(useCase).execute();
     });
-    it("should output as error", function(done) {
+    it("should have output buffer", function(done) {
         const consoleMock = ConsoleMock.create();
         const logger = new AsyncLogger({
             console: consoleMock
