@@ -6,8 +6,8 @@
     - [Context](./docs/abstract/README.md#context)
     - [Store](./docs/abstract/README.md#store)
 - Example
-    - [Counter App](./docs/counter/README.md)
-    - [Todo App](./docs/todomvc/README.md)
+    - [Counter App](./docs/example/counter/README.md)
+    - [Todo App](./docs/example/todomvc/README.md)
     - Immutability
     - Nesting UseCase
 - [API Reference](./docs/api/README.md)

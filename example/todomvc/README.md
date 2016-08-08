@@ -6,7 +6,6 @@ TodoMVC is popular example for MV* library.
 
     npm install
 
-
 ## Usage
 
     npm start

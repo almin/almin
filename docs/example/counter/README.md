@@ -91,7 +91,7 @@ In flux:
  
 Return `IncrementalCounterUseCase` and add "dispatch increment event"
 
-[include, IncrementalCounterUseCase.js](../../example/counter/src/usecase/IncrementalCounterUseCase.js)
+[include, IncrementalCounterUseCase.js](../../../example/counter/src/usecase/IncrementalCounterUseCase.js)
 
 A class inherited `UseCase` has `this.dispatch(payload);` method.
 
@@ -167,7 +167,7 @@ We have created `CounterState.js`.
 
 - receive "payload" and return state.
 
-[include, CounterState.js](../../example/counter/src/store/CounterState.js)
+[include, CounterState.js](../../../example/counter/src/store/CounterState.js)
 
 You may have seen the pattern...
 Yes It is **reducer**!
@@ -185,7 +185,7 @@ Finally, we have added some code to `CounterStore`
 A class inherited `Store` has `this.emitChange();` method.
 It method is called and emit change to the subscribers(often View).
 
-[include, CounterStore.js](../../example/counter/src/store/CounterStore.js)
+[include, CounterStore.js](../../../example/counter/src/store/CounterStore.js)
 
 ### Side note: Testing
 
@@ -216,7 +216,7 @@ const appContext = new Context({
 });
 ```
 
-[include, App.js](../../example/counter/src/component/App.js)
+[include, App.js](../../../example/counter/src/component/App.js)
 
 ```js
 appContext.onChange(onChangeHandler);

@@ -36,17 +36,17 @@ open http://localhost:8080/
 
 Todo app has these UseCases.
 
-- [AddTodoItem.js](../../example/todomvc/src/usecase/AddTodoItem.js)
-- [FilterTodoList.js](../../example/todomvc/src/usecase/FilterTodoList.js)
-- [RemoveAllCompletedItems.js](../../example/todomvc/src/usecase/RemoveAllCompletedItems.js)
-- [RemoveTodoItem.js](../../example/todomvc/src/usecase/RemoveTodoItem.js)
-- [ToggleAllTodoItems.js](../../example/todomvc/src/usecase/ToggleAllTodoItems.js)
-- [ToggleTodoItem.js](../../example/todomvc/src/usecase/ToggleTodoItem.js)
-- [UpdateTodoItemTitle.js](../../example/todomvc/src/usecase/UpdateTodoItemTitle.js)
+- [AddTodoItem.js](../../../example/todomvc/src/usecase/AddTodoItem.js)
+- [FilterTodoList.js](../../../example/todomvc/src/usecase/FilterTodoList.js)
+- [RemoveAllCompletedItems.js](../../../example/todomvc/src/usecase/RemoveAllCompletedItems.js)
+- [RemoveTodoItem.js](../../../example/todomvc/src/usecase/RemoveTodoItem.js)
+- [ToggleAllTodoItems.js](../../../example/todomvc/src/usecase/ToggleAllTodoItems.js)
+- [ToggleTodoItem.js](../../../example/todomvc/src/usecase/ToggleTodoItem.js)
+- [UpdateTodoItemTitle.js](../../../example/todomvc/src/usecase/UpdateTodoItemTitle.js)
 
 and system UseCase
 
-- [CreateDomainUseCase.js](../../example/todomvc/src/usecase/CreateDomainUseCase.js)
+- [CreateDomainUseCase.js](../../../example/todomvc/src/usecase/CreateDomainUseCase.js)
 
 ## Story
 
@@ -109,7 +109,7 @@ We going to implement `TodoItem` as value object.
 - `title`: todo title
 - `completed`: true or false
 
-[import, TodoItem.js](../../example/todomvc/src/domain/TodoList/TodoItem.js)
+[import, TodoItem.js](../../../example/todomvc/src/domain/TodoList/TodoItem.js)
 
 #### TodoList is domain model
 
@@ -172,7 +172,7 @@ Repository is simple class that has these feature:
 We want to store `TodoList` instance to the repository.
 As a result, We have created `TodoListRepository`.
 
-[import, TodoListRepository.js](../../example/todomvc/src/infra/TodoListRepository.js)
+[import, TodoListRepository.js](../../../example/todomvc/src/infra/TodoListRepository.js)
 
 Repository should be persistence object.
 In other words, create repository instance as singleton.
@@ -200,7 +200,7 @@ It is a just System UseCase.
 - Actor: System
 - Purpose: initialize domain model and save this to repository
 
-Execute [CreateDomainUseCase.js](../../example/todomvc/src/usecase/CreateDomainUseCase.js) and initialize `TodoList` domain and store the instance to repository.
+Execute [CreateDomainUseCase.js](../../../example/todomvc/src/usecase/CreateDomainUseCase.js) and initialize `TodoList` domain and store the instance to repository.
 
 We can put this to `index.js` that is actual entry point of this application.
 
@@ -216,7 +216,7 @@ appContext.useCase(CreateDomainUseCaseFactory.create()).execute().then(() => {
 
 Let's implement business login to `TodoList`.
 
-UseCase: [AddTodoItem](../../example/todomvc/src/usecase/AddTodoItem.js)
+UseCase: [AddTodoItem](../../../example/todomvc/src/usecase/AddTodoItem.js)
 
 **AddTodoItem** does following steps:
 
@@ -242,7 +242,7 @@ Execution steps:
 
 All of AddTodoItem:
 
-[import, AddTodoItem.js](../../example/todomvc/src/usecase/AddTodoItem.js)
+[import, AddTodoItem.js](../../../example/todomvc/src/usecase/AddTodoItem.js)
 
 #### Factory of UseCase
 
@@ -251,7 +251,7 @@ You notice about `AddTodoItemFactory`.
 `AddTodoItemFactory` is not must, but it help to write tests.
 We can write test for `AddTodoItem` UseCase.
 
-[import, AddTodoItem-test.js](../../example/todomvc/test/UseCase/AddTodoItem-test.js)
+[import, AddTodoItem-test.js](../../../example/todomvc/test/UseCase/AddTodoItem-test.js)
 
 This pattern is well-known as [Dependency injection](https://en.wikipedia.org/wiki/Dependency_injection "Dependency injection")(DI).
 
@@ -300,11 +300,11 @@ You can use `TodoListRepository#onChange` for observing repository.
 1. Observe change of repository 
 2. When `todoRepository` is changed, try to update state
 
-[import, TodoStore.js](../../example/todomvc/src/store/TodoStore/TodoStore.js)
+[import, TodoStore.js](../../../example/todomvc/src/store/TodoStore/TodoStore.js)
 
 And you can see the test for `TodoStore.js`
 
-[example/todomvc/test/store/TodoStore-test.js](../../example/todomvc/test/store/TodoStore-test.js)
+[example/todomvc/test/store/TodoStore-test.js](../../../example/todomvc/test/store/TodoStore-test.js)
 
 ### TodoState
 
@@ -349,7 +349,7 @@ Almin has `StoreGroup` utility class that collection of stores.
 
 `AppStoreGroup` pass `TodoListRepository` instance to `TodoStore`. 
 
-[import, AppStoreGroup.js](../../example/todomvc/src/store/AppStoreGroup.js)
+[import, AppStoreGroup.js](../../../example/todomvc/src/store/AppStoreGroup.js)
 
 After that, you should initialize Almin's `Context` with `AppStoreGroup`.
 
@@ -371,7 +371,7 @@ Entry point of App's view observe `TodoStore` via Almin's `Context`.
 
 The entry point is `TodoApp.react.js`.
 
-- [example/todomvc/src/components/TodoApp.react.js](../../example/todomvc/src/components/TodoApp.react.js)
+- [example/todomvc/src/components/TodoApp.react.js](../../../example/todomvc/src/components/TodoApp.react.js)
 
 As a result, when `TodoStore` is changed, `TodoApp` is updated. 
 
@@ -385,12 +385,12 @@ TodoMVC has other UseCases.
 
 You can implement these in a similar way of `AddTodoItem` or [counter app](../counter/README.md)
 
-- [FilterTodoList.js](../../example/todomvc/src/usecase/FilterTodoList.js)
-- [RemoveAllCompletedItems.js](../../example/todomvc/src/usecase/RemoveAllCompletedItems.js)
-- [RemoveTodoItem.js](../../example/todomvc/src/usecase/RemoveTodoItem.js)
-- [ToggleAllTodoItems.js](../../example/todomvc/src/usecase/ToggleAllTodoItems.js)
-- [ToggleTodoItem.js](../../example/todomvc/src/usecase/ToggleTodoItem.js)
-- [UpdateTodoItemTitle.js](../../example/todomvc/src/usecase/UpdateTodoItemTitle.js)
+- [FilterTodoList.js](../../../example/todomvc/src/usecase/FilterTodoList.js)
+- [RemoveAllCompletedItems.js](../../../example/todomvc/src/usecase/RemoveAllCompletedItems.js)
+- [RemoveTodoItem.js](../../../example/todomvc/src/usecase/RemoveTodoItem.js)
+- [ToggleAllTodoItems.js](../../../example/todomvc/src/usecase/ToggleAllTodoItems.js)
+- [ToggleTodoItem.js](../../../example/todomvc/src/usecase/ToggleTodoItem.js)
+- [UpdateTodoItemTitle.js](../../../example/todomvc/src/usecase/UpdateTodoItemTitle.js)
 
 ## Conclusion
 

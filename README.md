@@ -42,7 +42,7 @@ You'll also need a Promise polyfill for [older browsers](http://caniuse.com/#fea
 
 ## Usage
 
-:memo: Please See [https://almin.github.io/](https://almin.github.io/) for .
+:memo: Please See [https://almin.github.io/](https://almin.github.io/) for details.
 
 - :book: Documentation of Almin
 - [https://almin.github.io/](https://almin.github.io/)
@@ -101,9 +101,9 @@ Truly [Table of Contents](./SUMMARY.md) is here :arrow_left:
     - [Context](./docs/abstract/README.md#context)
     - [Store](./docs/abstract/README.md#store)
 - Tutorial
-    - [Creating Counter App](./counter/)
+    - [Creating Counter App](./example/counter/)
         - Apply Flux pattern to Almin
-    - [Creating Todo App](./todomv/)
+    - [Creating Todo App](./example/todomv/)
         - Apply CQRS pattern to Almin
 
 ## Example
