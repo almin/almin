@@ -9,7 +9,7 @@
     - [Counter App](./docs/example/counter/README.md)
         - Apply Flux pattern
     - [Todo App](./docs/example/todomvc/README.md)
-        - Apply CQRS pattern
+        - Apply DDD/CQRS pattern
 - Tips
     - [Logging](./docs/tips/logging.md)
     - Nesting UseCase
