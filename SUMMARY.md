@@ -8,7 +8,8 @@
 - Example
     - [Counter App](./docs/example/counter/README.md)
     - [Todo App](./docs/example/todomvc/README.md)
-    - Immutability
+- Tips
+    - [Logging](./docs/tips/logging.md)
     - Nesting UseCase
 - [API Reference](./docs/api/README.md)
 - [GLOSSARY](./docs/GLOSSARY.md)
