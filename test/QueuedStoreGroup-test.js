@@ -380,7 +380,72 @@ describe("QueuedStoreGroup", function() {
                     assert.equal(storeGroup.currentChangingStores.length, 1);
                 });
             });
+        });
+        context("Flow example", function() {
+            it("should output", function() {
+                const aStore = createEchoStore({name: "AStore"});
+                const bStore = createEchoStore({name: "BStore"});
+                const cStore = createEchoStore({name: "CStore"});
+                const storeGroup = new QueuedStoreGroup([aStore, bStore, cStore]);
+                class ParentUseCase extends UseCase {
+                    execute() {
+                        const aUseCase = new ChildAUseCase();
+                        const bUseCase = new ChildBUseCase();
+                        return Promise.all([
+                            this.context.useCase(aUseCase).execute(),
+                            this.context.useCase(bUseCase).execute()
+                        ]).then(() => {
+                            // change cStore at same time
+                            this.dispatch({
+                                type: "END"
+                            });
+                        });
+                    }
+                }
+                class ChildAUseCase extends UseCase {
+                    execute() {
+                        return new Promise((resolve) => {
+                            aStore.emitChange();
+                            resolve();
+                        });
+                    }
+                }
+                class ChildBUseCase extends UseCase {
+                    execute() {
+                        return new Promise((resolve) => {
+                            bStore.emitChange();
+                            resolve();
+                        });
+                    }
+                }
+                const useCase = new ParentUseCase();
+                const context = new Context({
+                    dispatcher: new Dispatcher(),
+                    store: storeGroup
+                });
+                // C is changed
+                useCase.onDispatch(payload => {
+                    if (payload.type === "END") {
+                        cStore.emitChange();
+                    }
+                });
+                // then - called change handler a one-time
+                let changed = [];
+                storeGroup.onChange((changedStores) => {
+                    changed = changed.concat(changedStores);
+                });
+                // when
+                return context.useCase(useCase).execute().then(() => {
+                    assert.equal(changed.length, 3);
+                    assert.deepEqual(changed, [
+                        aStore,
+                        bStore,
+                        cStore
+                    ]);
+                });
+            });
         })
+
     });
     describe("#getState", function() {
         it("should return a single state object", function() {
