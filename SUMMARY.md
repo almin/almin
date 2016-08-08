@@ -6,10 +6,15 @@
     - [Context](./docs/abstract/README.md#context)
     - [Store](./docs/abstract/README.md#store)
 - Tutorial
-    - [Counter App](./docs/example/counter/README.md)
+    - [Counter App](./docs/tutorial/counter/README.md)
         - Apply Flux pattern
-    - [Todo App](./docs/example/todomvc/README.md)
+    - [Todo App](./docs/tutorial/todomvc/README.md)
         - Apply DDD/CQRS pattern
+- Examples
+    - [example/counter](https://github.com/almin/almin/tree/master/example/counter)
+    - [example/todomvc](https://github.com/almin/almin/tree/master/example/todomvc)
+    - [example/svg-feeling](https://github.com/almin/almin/tree/master/example/svg-feeling)
+    - [example/shopping-cart](https://github.com/almin/almin/tree/master/example/shopping-cart)
 - Tips
     - [Logging](./docs/tips/logging.md)
     - Nesting UseCase

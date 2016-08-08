@@ -167,7 +167,7 @@ Repository is simple class that has these feature:
 - When update memory database, emit "Change" event to subscriber
     - Repository is a just EventEmitter
 
-![almin-architecture-simple-repository.png](img/almin-architecture-simple-repository.pngalmin-architecture-simple-repository.png)
+![almin-architecture-simple-repository.png](img/almin-architecture-simple-repository.png)
 
 We want to store `TodoList` instance to the repository.
 As a result, We have created `TodoListRepository`.

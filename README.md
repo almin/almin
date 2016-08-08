@@ -106,23 +106,24 @@ Truly [Table of Contents](./SUMMARY.md) is here :arrow_left:
     - [Creating Todo App](./example/todomv/)
         - Apply CQRS pattern to Almin
 
-## Example
+## Examples
 
-- [example/counter](example/counter)
+- [example/counter](https://github.com/almin/almin/tree/master/example/counter)
     - Simple Counter example
     - It use only state
-- [example/todomvc](example/todomvc)
-    - Todo list example
-- [example/svg-feeling](example/svg-feeling)
+- [example/todomvc](https://github.com/almin/almin/tree/master/example/todomvc)
+    - TodoMVC implementation
+    - DDD/CQRS
+- [example/svg-feeling](https://github.com/almin/almin/tree/master/example/svg-feeling)
     - Separate Domain and Store/State
         - Two way update state.
-    - How to implement for 60 FPS 
+    - How to implement 60 FPS application? 
         - Component should implement `shouldComponentUpdate()`
-- [example/shopping-cart](example/shopping-cart)
+- [example/shopping-cart](https://github.com/almin/almin/tree/master/example/shopping-cart)
     - Shopping Cart is a complex example.
     - This example is implemented of [flux-comparison](https://github.com/voronianski/flux-comparison "flux-comparison").
-    - How to test.
-    - How to implement domain layer.
+    - How to test?
+    - How to implement domain layer?
 
 ## Running Tests
 
