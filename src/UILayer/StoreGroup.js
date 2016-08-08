@@ -78,7 +78,8 @@ export default class StoreGroup extends Dispatcher {
              }
              */
             const prevState = this._stateCache.get(store);
-            // if the `store` is changed in previous
+            // if the `store` is not changed in previous, return cached state
+            // Otherwise, the store is changed return new Store#getState()
             if (prevState && this._previousChangingStores.indexOf(store) === -1) {
                 return prevState;
             }
