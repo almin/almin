@@ -23,10 +23,11 @@ export default class AsyncLogger extends EventEmitter {
         this._releaseHandlers = [];
         /**
          * @param {UseCase} useCase
+         * @param {*[]} args
          */
         const onWillExecuteEachUseCase = (useCase, args) => {
             this._logMap[useCase.name] = now();
-            this._logBuffer.push(`${useCase.name} will execute: ${args}`)
+            this.addLog(`${useCase.name} will execute: ${args}`)
         };
         const onDispatch = payload => {
             this._logDispatch(payload);
@@ -40,8 +41,8 @@ export default class AsyncLogger extends EventEmitter {
         const onDidExecuteEachUseCase = useCase => {
             const timeStamp = this._logMap[useCase.name];
             const takenTime = now() - timeStamp;
-            this._logBuffer.push(`${useCase.name} did executed`);
-            this._logBuffer.push("Taken time(ms): " + takenTime);
+            this.addLog(`${useCase.name} did executed`);
+            this.addLog("Taken time(ms): " + takenTime);
             this._outputBuffer(`\u{1F516} ${useCase.name}`);
             this.flushBuffer();
         };
@@ -95,7 +96,7 @@ export default class AsyncLogger extends EventEmitter {
         this.logger.groupCollapsed(logTitle);
         // if executing multiple UseCase at once, show warning
         const currentExecuteUseCases = this._logBuffer.filter(logBuffer=> {
-            return typeof logBuffer ==="string" && logBuffer.indexOf("will execute") !== -1;
+            return typeof logBuffer === "string" && logBuffer.indexOf("will execute") !== -1;
         });
         if (currentExecuteUseCases.length > 1) {
             const useCaseNames = currentExecuteUseCases.map(name => {
@@ -124,12 +125,12 @@ export default class AsyncLogger extends EventEmitter {
     _logError(payload) {
         // if has useCase and group by useCase
         if (payload.useCase) {
-            this._logBuffer.push([
+            this.addLog([
                 payload.useCase.name,
                 payload.error
             ]);
         } else {
-            this._logBuffer.push(payload.error);
+            this.addLog(payload.error);
         }
     }
 
@@ -139,7 +140,7 @@ export default class AsyncLogger extends EventEmitter {
      */
     _logDispatch(payload) {
         // http://emojipedia.org/fire/
-        this._logBuffer.push([
+        this.addLog([
             `\u{1F525} Dispatch:${String(payload.type)}`,
             payload
         ]);
@@ -152,7 +153,7 @@ export default class AsyncLogger extends EventEmitter {
     _logOnChange(stores) {
         stores.forEach(store => {
             // http://emojipedia.org/floppy-disk/
-            this._logBuffer.push([
+            this.addLog([
                 `\u{1F4BE} Store:${store.name} is Changed`,
                 store.getState()
             ]);
