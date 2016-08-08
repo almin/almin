@@ -4,7 +4,9 @@ Simple increment counter.
 
 ## Tutorial
 
-- [ ] Add Tutorial link
+:memo: Please see tutorial documents!
+
+- https://almin.js.org/docs/tutorial/counter/
 
 ## Installation
 
