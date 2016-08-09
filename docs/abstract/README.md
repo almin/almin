@@ -4,6 +4,9 @@ Abstract of Almin.
 
 ## View
 
+Almin is not View library.
+Almin is not dependent on any view library.
+
 We can create **View** using UI library like [React](https://facebook.github.io/react/ "React").
 Next, We want to add **action** to a component of **View**.
 
@@ -19,6 +22,8 @@ class MyComponent extends React.Component {
 ```
 
 ## UseCase
+
+Almin has `UseCase` class that is similar with ActionCreator.
 
 For example, We want to add **action** to the `<button>Awesome button</button>` and 
 We going to create **UseCase** that `dispatch` action.
