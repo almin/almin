@@ -17,6 +17,6 @@
     - [example/shopping-cart](https://github.com/almin/almin/tree/master/example/shopping-cart)
 - Tips
     - [Logging](./docs/tips/logging.md)
-    - Nesting UseCase
+    - [Nesting UseCase](./docs/tips/nesting-usecase.md)
 - [API Reference](./docs/api/README.md)
 - [GLOSSARY](./docs/GLOSSARY.md)
