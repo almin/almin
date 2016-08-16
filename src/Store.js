@@ -3,7 +3,6 @@
 const assert = require("assert");
 import {ActionTypes} from "./Context";
 import Dispatcher from "./Dispatcher";
-import UseCase from "./UseCase";
 const STATE_CHANGE_EVENT = "STATE_CHANGE_EVENT";
 /**
  * A UseCase `dispatch(payload)` and subscribers of the dispatcher are received the payload.
