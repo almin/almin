@@ -38,7 +38,7 @@ describe("Store", function() {
     });
     describe("#onError", function() {
         context("when UseCase is failed", function() {
-            it("should be called", function(done) {
+            it("should be called", function() {
                 const store = new Store();
                 class TestUseCase extends UseCase {
                     execute() {
@@ -57,7 +57,6 @@ describe("Store", function() {
                     isCalled = true;
                     assert(payload.useCase instanceof TestUseCase);
                     assert.equal(payload.error.name, "TestUseCaseError");
-                    done();
                 });
                 // when
                 return context.useCase(useCase).execute().catch((error) => {
