@@ -1,12 +1,16 @@
 {
-  "presets": [
-    "es2015-ie"
-  ],
+  "passPerPreset": true,
   "env": {
+    "production": {
+      "presets": [
+        "es2015-ie"
+      ]
+    },
     "development": {
       "presets": [
         "jsdoc-to-assert",
-        "power-assert"
+        "power-assert",
+        "es2015-ie"
       ]
     }
   }
