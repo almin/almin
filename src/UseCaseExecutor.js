@@ -1,7 +1,6 @@
 // LICENSE : MIT
 "use strict";
 const assert = require("assert");
-const isPromise = require('is-promise');
 import {ActionTypes} from "./Context";
 import Dispatcher from "./Dispatcher";
 import UseCase from "./UseCase";
@@ -38,14 +37,6 @@ export default class UseCaseExecutor {
          * @private
          */
         this.disptcher = dispatcher;
-
-        /**
-         * is the useCase executed
-         * @type {boolean}
-         * @private
-         */
-        this._isExecuted = false;
-
         /**
          * callable release handlers that are called in release()
          * @type {Function[]}
@@ -58,7 +49,7 @@ export default class UseCaseExecutor {
     }
 
     /**
-     * @param {*[]} [args] arguments of the usecase
+     * @param {*[]} [args] arguments of the UseCase
      */
     willExecute(args) {
         // emit event for System
@@ -71,18 +62,25 @@ export default class UseCaseExecutor {
     }
 
     /**
-     * dispatch did execute each UseCase at once
+     * dispatch did execute each UseCase
      */
     didExecute() {
-        if (this._isExecuted) {
-            return;
-        }
         this.disptcher.dispatch({
             type: ActionTypes.ON_DID_EXECUTE_EACH_USECASE,
             useCase: this.useCase,
             parent: this.parentUseCase
         });
-        this._isExecuted = true;
+    }
+
+    /**
+     * dispatch complete each UseCase
+     */
+    complete() {
+        this.disptcher.dispatch({
+            type: ActionTypes.ON_COMPLETE_EACH_USECASE,
+            useCase: this.useCase,
+            parent: this.parentUseCase
+        });
     }
 
     /**
@@ -90,7 +88,7 @@ export default class UseCaseExecutor {
      * @param {function(useCase: UseCase, args: *)} handler
      */
     onWillExecuteEachUseCase(handler) {
-        const releaseHandler = this.disptcher.onDispatch(function onWillExecuteEachUseCaseInUseCaseExecutor(payload) {
+        const releaseHandler = this.disptcher.onDispatch(function onWillExecute(payload) {
             if (payload.type === ActionTypes.ON_WILL_EXECUTE_EACH_USECASE) {
                 handler(payload.useCase, payload.args);
             }
@@ -100,12 +98,27 @@ export default class UseCaseExecutor {
     }
 
     /**
-     * called the {@link handler} with useCase when the useCase is done.
+     * called the `handler` with useCase when the useCase is executed.
      * @param {function(useCase: UseCase)} handler
      */
     onDidExecuteEachUseCase(handler) {
-        const releaseHandler = this.disptcher.onDispatch(function onDidExecuteEachUseCaseInUseCaseExecutor(payload) {
+        const releaseHandler = this.disptcher.onDispatch(function onDidExecuted(payload) {
             if (payload.type === ActionTypes.ON_DID_EXECUTE_EACH_USECASE) {
+                handler(payload.useCase);
+            }
+        });
+        this._releaseHandlers.push(releaseHandler);
+        return releaseHandler;
+    }
+
+    /**
+     * called the `handler` with useCase when the useCase is completed.
+     * @param {function(useCase: UseCase)} handler
+     * @returns {Function}
+     */
+    onCompleteExecuteEachUseCase(handler) {
+        const releaseHandler = this.disptcher.onDispatch(function onCompleted(payload) {
+            if (payload.type === ActionTypes.ON_COMPLETE_EACH_USECASE) {
                 handler(payload.useCase);
             }
         });
@@ -122,15 +135,14 @@ export default class UseCaseExecutor {
         this.willExecute(args);
         const result = this.useCase.execute(...args);
         // Sync call didExecute
-        if (!isPromise(result)) {
-            this.didExecute(result);
-        }
+        this.didExecute(result);
+        // When UseCase#execute is completed, dispatch "complete".
         return Promise.resolve(result).then((result) => {
-            this.didExecute(result);
+            this.complete(result);
             this.release();
         }).catch(error => {
             this.useCase.throwError(error);
-            this.didExecute();
+            this.complete();
             this.release();
             return Promise.reject(error);
         });
