@@ -75,7 +75,7 @@ describe("UseCaseExecutor", function() {
             });
         });
         context("when UseCase is async", function() {
-            it("execute is called", function(done) {
+            it("execute is called", function() {
                 // given
                 const expectedPayload = {
                     type: "SyncUseCase",
@@ -93,6 +93,8 @@ describe("UseCaseExecutor", function() {
                 }
                 // then
                 let isCalledUseCase = false;
+                let isCalledDidExecuted = false;
+                let isCalledCompleted = false;
                 // 4
                 dispatcher.onDispatch(({type, value}) => {
                     if (type === expectedPayload.type) {
@@ -107,12 +109,20 @@ describe("UseCaseExecutor", function() {
                 });
                 executor.onDidExecuteEachUseCase(useCase => {
                     if (useCase instanceof AsyncUseCase) {
-                        assert(isCalledUseCase);
-                        done();
+                        isCalledDidExecuted = true;
+                    }
+                });
+                executor.onCompleteExecuteEachUseCase(useCase => {
+                    if (useCase instanceof AsyncUseCase) {
+                        isCalledCompleted = true;
                     }
                 });
                 // 1
-                executor.execute(expectedPayload);
+                return executor.execute(expectedPayload).then(() => {
+                    assert(isCalledUseCase);
+                    assert(isCalledDidExecuted);
+                    assert(isCalledCompleted);
+                });
             });
         });
     });

@@ -114,6 +114,15 @@ export default class QueuedStoreGroup extends Dispatcher {
                 if (this.hasChangingStore) {
                     this.emitChange();
                 }
+            } else if (payload.type === ActionTypes.ON_COMPLETE_EACH_USECASE) {
+                const parent = payload.parent;
+                // when {asap: false}, emitChange when root useCase is executed
+                if (!asap && parent) {
+                    return;
+                }
+                if (this.hasChangingStore) {
+                    this.emitChange();
+                }
             }
         };
         const unListenOnDispatch = this.onDispatch(tryToEmitChange);

@@ -121,11 +121,11 @@ describe("QueuedStoreGroup", function() {
                 });
                 // then
                 const promise = context.useCase(asyncUseCase).execute().then(() => {
-                    assert(isCalled);
+                    assert(isCalled, "after");
                 });
                 // not yet change
-                assert(isCalled === false);
-                return promise
+                assert(isCalled === false, "before");
+                return promise;
             });
         });
         context("when UseCase is nesting", function() {
@@ -378,6 +378,36 @@ describe("QueuedStoreGroup", function() {
                     aStore.emitChange();
                     // reset changing stores
                     assert.equal(storeGroup.currentChangingStores.length, 1);
+                });
+            });
+        });
+        context("Sync Change and Async Change in Edge case", function() {
+            it("should emit Change twice", function() {
+                const store = createEchoStore({name: "AStore"});
+                const storeGroup = new QueuedStoreGroup([store]);
+                const asyncUseCase = createAsyncChangeStoreUseCase(store);
+                class ChangeTheStoreUseCase extends UseCase {
+                    execute() {
+                        store.emitChange();
+                        this.context.useCase(asyncUseCase).execute(); // 2
+                    } // 1
+                }
+                const context = new Context({
+                    dispatcher: new Dispatcher(),
+                    store: storeGroup
+                });
+                // count
+                let changedStoresEachEvent = [];
+                storeGroup.onChange((changedStores) => {
+                    changedStoresEachEvent.push(changedStores);
+                });
+                const useCase = new ChangeTheStoreUseCase();
+                // when
+                return context.useCase(useCase).execute().then(() => {
+                    assert.equal(changedStoresEachEvent.length, 2);
+                    const [first, second] = changedStoresEachEvent;
+                    assert.equal(first.length, 1);
+                    assert.equal(second.length, 1);
                 });
             });
         });

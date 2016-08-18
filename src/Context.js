@@ -9,8 +9,10 @@ import StoreGroupValidator from "./UILayer/StoreGroupValidator";
  * The use should use on* handler method instead of it
  */
 export const ActionTypes = {
+    // will -> execute -> did -> (promise resolved) -> complete
     ON_WILL_EXECUTE_EACH_USECASE: "ON_WILL_EXECUTE_EACH_USECASE",
     ON_DID_EXECUTE_EACH_USECASE: "ON_DID_EXECUTE_EACH_USECASE",
+    ON_COMPLETE_EACH_USECASE: "ON_COMPLETE_EACH_USECASE",
     ON_ERROR: "ON_ERROR"
 };
 
@@ -113,7 +115,7 @@ export default class Context {
     }
 
     /**
-     * called the {@link handler} with useCase when the useCase is done.
+     * called the `handler` with useCase when the useCase is executed..
      * @param {function(useCase: UseCase)} handler
      * @public
      */
@@ -126,6 +128,23 @@ export default class Context {
         this._releaseHandlers.push(releaseHandler);
         return releaseHandler;
     }
+
+    /**
+     * called the `handler` with useCase when the useCase is completed.
+     * @param {function(useCase: UseCase)} handler
+     * @public
+     */
+    onCompleteExecuteEachUseCase(handler) {
+        const releaseHandler = this._dispatcher.onDispatch(payload => {
+            if (payload.type === ActionTypes.ON_COMPLETE_EACH_USECASE) {
+                handler(payload.useCase);
+            }
+        });
+        this._releaseHandlers.push(releaseHandler);
+        return releaseHandler;
+    }
+
+
 
     /**
      * called the `errorHandler` with error when error is occurred.
