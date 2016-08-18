@@ -121,8 +121,10 @@ describe("AsyncLogger", function() {
             // will
             // UseCase log
             // did
+            // throw
+            // complete
             // taken time
-            assert.equal(logBuffer.length, 5);
+            assert.equal(logBuffer.length, 6);
             done();
         });
         // When

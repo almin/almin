@@ -42,15 +42,19 @@ export default class SyncLogger extends EventEmitter {
             });
         };
         const onDidExecuteEachUseCase = (useCase) => {
-            const startTimeStamp = this._logMap[useCase.name];
-            const takenTime = now() - startTimeStamp;
             this.logger.log(`${useCase.name} did executed`);
-            this.logger.info("Take time(ms): " + takenTime);
-            this.logger.groupEnd(useCase.name);
-            this.emit(AlminLogger.Events.output);
         };
         const onErrorHandler = (error) => {
             this._logError(error);
+        };
+
+        const onCompleteUseCase = (useCase) => {
+            const startTimeStamp = this._logMap[useCase.name];
+            const takenTime = now() - startTimeStamp;
+            this.logger.log(`${useCase.name} is completed`);
+            this.logger.info("Take time(ms): " + takenTime);
+            this.logger.groupEnd(useCase.name);
+            this.emit(AlminLogger.Events.output);
         };
         // release handler
         this._releaseHandlers = [
@@ -58,6 +62,7 @@ export default class SyncLogger extends EventEmitter {
             context.onDispatch(onDispatch),
             context.onWillExecuteEachUseCase(onWillExecuteEachUseCase),
             context.onDidExecuteEachUseCase(onDidExecuteEachUseCase),
+            context.onCompleteExecuteEachUseCase(onCompleteUseCase),
             context.onErrorDispatch(onErrorHandler)
         ];
     }

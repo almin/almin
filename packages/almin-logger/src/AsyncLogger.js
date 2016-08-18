@@ -40,10 +40,13 @@ export default class AsyncLogger extends EventEmitter {
         const onErrorHandler = (error) => {
             this._logError(error);
         };
-        const onDidExecuteEachUseCase = useCase => {
+        const onDidExecuteEachUseCase = (useCase) => {
+            this.addLog(`${useCase.name} did executed`);
+        };
+        const onCompleteUseCase = (useCase) => {
             const timeStamp = this._logMap[useCase.name];
             const takenTime = now() - timeStamp;
-            this.addLog(`${useCase.name} did executed`);
+            this.addLog(`${useCase.name} is completed`);
             this.addLog("Taken time(ms): " + takenTime);
             this._outputBuffer(`\u{1F516} ${useCase.name}`);
             this.flushBuffer();
@@ -54,6 +57,7 @@ export default class AsyncLogger extends EventEmitter {
             context.onDispatch(onDispatch),
             context.onWillExecuteEachUseCase(onWillExecuteEachUseCase),
             context.onDidExecuteEachUseCase(onDidExecuteEachUseCase),
+            context.onCompleteExecuteEachUseCase(onCompleteUseCase),
             context.onErrorDispatch(onErrorHandler)
         ];
     }
