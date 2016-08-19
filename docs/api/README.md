@@ -109,9 +109,17 @@ if anyone store is changed, then call onChangeHandler
 
 Returns: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - release handler function.
 
+### `onCompleteExecuteEachUseCase(handler: function (useCase: UseCase))`
+
+called the `handler` with useCase when the useCase is completed.
+
+**Parameters**
+
+-   `handler`: **function (useCase: UseCase)**
+
 ### `onDidExecuteEachUseCase(handler: function (useCase: UseCase))`
 
-called the {@link handler} with useCase when the useCase is done.
+called the `handler` with useCase when the useCase is executed..
 
 **Parameters**
 
@@ -288,9 +296,17 @@ if anyone store is changed, then call onChangeHandler
 
 Returns: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - release handler function.
 
+### `onCompleteExecuteEachUseCase(handler: function (useCase: UseCase))`
+
+called the `handler` with useCase when the useCase is completed.
+
+**Parameters**
+
+-   `handler`: **function (useCase: UseCase)**
+
 ### `onDidExecuteEachUseCase(handler: function (useCase: UseCase))`
 
-called the {@link handler} with useCase when the useCase is done.
+called the `handler` with useCase when the useCase is executed..
 
 **Parameters**
 
@@ -467,9 +483,17 @@ if anyone store is changed, then call onChangeHandler
 
 Returns: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - release handler function.
 
+### `onCompleteExecuteEachUseCase(handler: function (useCase: UseCase))`
+
+called the `handler` with useCase when the useCase is completed.
+
+**Parameters**
+
+-   `handler`: **function (useCase: UseCase)**
+
 ### `onDidExecuteEachUseCase(handler: function (useCase: UseCase))`
 
-called the {@link handler} with useCase when the useCase is done.
+called the `handler` with useCase when the useCase is executed..
 
 **Parameters**
 
@@ -646,9 +670,17 @@ if anyone store is changed, then call onChangeHandler
 
 Returns: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** - release handler function.
 
+### `onCompleteExecuteEachUseCase(handler: function (useCase: UseCase))`
+
+called the `handler` with useCase when the useCase is completed.
+
+**Parameters**
+
+-   `handler`: **function (useCase: UseCase)**
+
 ### `onDidExecuteEachUseCase(handler: function (useCase: UseCase))`
 
-called the {@link handler} with useCase when the useCase is done.
+called the `handler` with useCase when the useCase is executed..
 
 **Parameters**
 
