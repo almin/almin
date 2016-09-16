@@ -134,7 +134,7 @@ export default class Context {
      * @param {function(useCase: UseCase)} handler
      * @public
      */
-    onCompleteExecuteEachUseCase(handler) {
+    onCompleteEachUseCase(handler) {
         const releaseHandler = this._dispatcher.onDispatch(payload => {
             if (payload.type === ActionTypes.ON_COMPLETE_EACH_USECASE) {
                 handler(payload.useCase);

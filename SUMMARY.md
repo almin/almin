@@ -18,5 +18,6 @@
 - Tips
     - [Logging](./docs/tips/logging.md)
     - [Nesting UseCase](./docs/tips/nesting-usecase.md)
+    - [LifeCycle of UseCase](./docs/tips/usecase-lifecycle.md)
 - [API Reference](./docs/api/README.md)
 - [GLOSSARY](./docs/GLOSSARY.md)
