@@ -35,7 +35,7 @@ Almost event pass the (on)dispatch.
 
 #### FAQ
 
-Q. Why use payload object instead emit(key, ...args).
+Q. Why use `DispatcherPayload` object instead emit(key, ...args).
 
 A. It is for optimization and limitation.
 If apply emit style, we cast ...args for passing other dispatcher at every time.
