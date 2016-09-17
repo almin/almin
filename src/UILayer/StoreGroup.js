@@ -21,6 +21,7 @@ export default class StoreGroup extends Dispatcher {
     /**
      * Create StoreGroup
      * @param {Store[]} stores stores are instance of `Store` class
+     * @public
      */
     constructor(stores) {
         super();
@@ -61,6 +62,7 @@ export default class StoreGroup extends Dispatcher {
     /**
      * return the state object that merge each stores's state
      * @returns {Object} merged state object
+     * @public
      */
     getState() {
         const stateMap = this.stores.map(store => {
@@ -163,6 +165,10 @@ StoreGroup#getState()["StateName"]// state
         this.emitChange();
     }
 
+    /**
+     * emit Change Event
+     * @public
+     */
     emitChange() {
         this._previousChangingStores = this._currentChangingStores.slice();
         // release ownership  of changingStores from StoreGroup
@@ -174,6 +180,7 @@ StoreGroup#getState()["StateName"]// state
      * listen changes of the store group.
      * @param {function(stores: Store[])} handler the callback arguments is array of changed store.
      * @returns {Function} call the function and release handler
+     * @public
      */
     onChange(handler) {
         this.on(CHANGE_STORE_GROUP, handler);

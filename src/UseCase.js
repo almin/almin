@@ -11,6 +11,7 @@ import {ActionTypes} from "./Context";
 export let defaultUseCaseName = "<Anonymous-UseCase>";
 /**
  * UseCase class
+ * @public
  */
 export default class UseCase extends Dispatcher {
     /**

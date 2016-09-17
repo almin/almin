@@ -13,6 +13,7 @@ import {ActionTypes} from "../Context";
 /**
  * QueuedStoreGroup options
  * @type {{asap: boolean}}
+ * @public
  */
 const defaultOptions = {
     /*
@@ -58,6 +59,7 @@ export default class QueuedStoreGroup extends Dispatcher {
      * Create StoreGroup
      * @param {Store[]} stores stores are instance of `Store` class
      * @param {Object} [options] QueuedStoreGroup option
+     * @public
      */
     constructor(stores, options = {}) {
         super();
@@ -132,6 +134,7 @@ export default class QueuedStoreGroup extends Dispatcher {
     /**
      * Return true if has changing stores at least once
      * @returns {boolean}
+     * @private
      */
     get hasChangingStore() {
         return this.currentChangingStores.length !== 0;
@@ -140,6 +143,7 @@ export default class QueuedStoreGroup extends Dispatcher {
     /**
      * Return current changing stores.
      * @returns {Store[]}
+     * @private
      */
     get currentChangingStores() {
         return this._currentChangingStores;
@@ -148,6 +152,7 @@ export default class QueuedStoreGroup extends Dispatcher {
     /**
      * return the state object that merge each stores's state
      * @returns {Object} merged state object
+     * @public
      */
     getState() {
         const stateMap = this.stores.map(store => {
@@ -212,6 +217,10 @@ StoreGroup#getState()["StateName"]; // state
         this._releaseHandlers = this._releaseHandlers.concat([releaseOnChangeHandler, releaseOnDispatchHandler]);
     }
 
+    /**
+     * emit change event
+     * @public
+     */
     emitChange() {
         if (!this._isAnyOneStoreChanged) {
             return;
@@ -228,6 +237,7 @@ StoreGroup#getState()["StateName"]; // state
      * listen changes of the store group.
      * @param {function(stores: Store[])} handler the callback arguments is array of changed store.
      * @returns {Function} call the function and release handler
+     * @public
      */
     onChange(handler) {
         this.on(CHANGE_STORE_GROUP, handler);

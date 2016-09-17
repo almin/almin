@@ -31,6 +31,7 @@ const STATE_CHANGE_EVENT = "STATE_CHANGE_EVENT";
 export let defaultStoreName = "<Anonymous-Store>";
 /**
  * Store class
+ * @public
  */
 export default class Store extends Dispatcher {
     /**
@@ -60,6 +61,7 @@ export default class Store extends Dispatcher {
      * should be overwrite. return state object
      * @param {Object} prevState
      * @return {Object} nextState
+     * @public
      */
     getState(prevState) {
         throw new Error(this.name + " should be implemented Store#getState(): Object");

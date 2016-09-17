@@ -16,8 +16,10 @@ export const ActionTypes = {
     ON_ERROR: "ON_ERROR"
 };
 
+/**
+ * @public
+ */
 export default class Context {
-
     /**
      * @param {Dispatcher} dispatcher
      * @param {QueuedStoreGroup|StoreGroup|Store} store store is either Store or StoreGroup
