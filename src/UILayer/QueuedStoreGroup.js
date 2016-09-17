@@ -31,11 +31,11 @@ const defaultOptions = {
 /**
  * ## Description
  *
- * QueuedStoreGroup is a **UI** parts of Store.
- * QueuedStoreGroup has event queue system.
- * QueuedStoreGroup not dependant on async function like `setTimeout`.
- * QueuedStoreGroup work as Sync or Async.
- * QueuedStoreGroup prefer strict design than ./StoreGroup.js
+ * - QueuedStoreGroup is a **UI** parts of Store.
+ * - QueuedStoreGroup has event queue system.
+ * - QueuedStoreGroup not dependent on async function like `setTimeout`.
+ * - QueuedStoreGroup work as Sync or Async.
+ * - QueuedStoreGroup prefer strict design than ./StoreGroup.js
  *
  * ## Checking Algorithm
  *
@@ -81,6 +81,7 @@ export default class QueuedStoreGroup extends Dispatcher {
         this._currentChangingStores = [];
         /**
          * @type {Store[]}
+         * @private
          */
         this.stores = stores;
         // listen onChange of each store.
