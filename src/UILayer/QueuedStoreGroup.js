@@ -13,7 +13,7 @@ import {ActionTypes} from "../Context";
 /**
  * QueuedStoreGroup options
  * @type {{asap: boolean}}
- * @public
+ * @private
  */
 const defaultOptions = {
     /*

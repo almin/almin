@@ -203,10 +203,6 @@ Returns: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Re
 release all events handler.
 You can call this when no more call event handler
 
-## `defaultOptions`
-
-QueuedStoreGroup options
-
 ## `QueuedStoreGroup`
 
 **Extends Dispatcher**
@@ -290,6 +286,16 @@ called the `errorHandler` with error when error is occurred.
 
 Returns: **function (this: Dispatcher)**
 
+### `throwError(error: Error)`
+
+throw error event
+you can use it instead of `throw new Error()`
+this error event is caught by dispatcher.
+
+**Parameters**
+
+-   `error`: **[Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error)**
+
 ### `UseCaseErrorPayload`
 
 payload object that is dispatched when UseCase is failing or `throwError`.
@@ -303,16 +309,6 @@ payload object that is dispatched when UseCase is failing or `throwError`.
 -   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The event type of error.
 -   `useCase` **UseCase** useCase instance
 -   `error` **[error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error)** error object that is thrown from UseCase
-
-### `throwError(error: Error)`
-
-throw error event
-you can use it instead of `throw new Error()`
-this error event is caught by dispatcher.
-
-**Parameters**
-
--   `error`: **[Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error)**
 
 ### `isUseCase(v: Any): boolean`
 
