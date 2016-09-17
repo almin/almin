@@ -79,9 +79,9 @@ export default class Store extends Dispatcher {
      * }):
      */
     onError(handler) {
-        return this.onDispatch(paylod => {
-            if (paylod.type === ActionTypes.ON_ERROR) {
-                handler(paylod);
+        return this.onDispatch(payload => {
+            if (payload.type === ActionTypes.ON_ERROR) {
+                handler(payload);
             }
         });
     }

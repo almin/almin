@@ -19,9 +19,10 @@ export const ON_DISPATCH = "__ON_DISPATCH__";
  *
  * Almost event pass the (on)dispatch.
  *
- * ## FAQ
+ * ### FAQ
  *
  * Q. Why use payload object instead emit(key, ...args).
+ *
  * A. It is for optimization and limitation.
  * If apply emit style, we cast ...args for passing other dispatcher at every time.
  * @public
