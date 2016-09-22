@@ -5,9 +5,14 @@
   "githubId": "almin/almin",
   "author": "azu",
   "plugins": [
-    "include-codeblock"
+    "include-codeblock",
+    "forkmegithub"
   ],
   "pluginsConfig": {
+    "forkmegithub": {
+      "url": "https://github.com/almin/almin",
+      "color": "darkblue"
+    }
   },
   "structure": {
     "summary": "SUMMARY.md"
