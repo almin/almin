@@ -62,7 +62,7 @@ export default class SyncLogger extends EventEmitter {
             context.onDispatch(onDispatch),
             context.onWillExecuteEachUseCase(onWillExecuteEachUseCase),
             context.onDidExecuteEachUseCase(onDidExecuteEachUseCase),
-            context.onCompleteExecuteEachUseCase(onCompleteUseCase),
+            context.onCompleteEachUseCase(onCompleteUseCase),
             context.onErrorDispatch(onErrorHandler)
         ];
     }
