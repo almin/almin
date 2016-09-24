@@ -50,7 +50,7 @@
     "zuul": "^3.10.1"
   },
   "peerDependencies": {
-    "almin": ">= 0.3.0"
+    "almin": ">= 0.8.0"
   },
   "dependencies": {}
 }
