@@ -1,6 +1,5 @@
 // LICENSE : MIT
 "use strict";
-const assert = require("assert");
 import {ActionTypes} from "./Context";
 import Dispatcher from "./Dispatcher";
 const STATE_CHANGE_EVENT = "STATE_CHANGE_EVENT";

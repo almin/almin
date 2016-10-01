@@ -5,30 +5,7 @@
  */
 
 type DispatcherPayload = Object;
-declare class Dispatcher extends EventEmitter {
-  static isDispatcher(maybeDispatcher: mixed): boolean;
-
-  onDispatch(payloadHandler: (payload: DispatcherPayload) => mixed): Function;
-  dispatch(payload: DispatcherPayload): void;
-  pipe(toDispatcher: Dispatcher): Function;
-}
-
 type UseCaseErrorPayload = Object;
-declare class Store extends Dispatcher {
-  static isStore(maybeStore: mixed): boolean;
-
-  getState(prevState: Object): Object;
-  onError(handler: (payload: UseCaseErrorPayload) => mixed): Function;
-  onChange(callback: Function): Function;
-  emitChange(): void;
-}
-
-declare class StoreGroup extends Dispatcher {
-  getState(): Object;
-  emitChange(): void;
-  onChange(handler: (stores: Array<Store>) => mixed): Function;
-  release(): void;
-}
 
 declare class QueuedStoreGroup extends Dispatcher {
   hasChangingStore(): boolean;
@@ -40,27 +17,11 @@ declare class QueuedStoreGroup extends Dispatcher {
   release(): void;
 }
 
-declare class UseCaseExecutor {
-  willExecute(args: Array<mixed>): void;
-  didExecute(): void;
-  complete(): void;
-  onWillExecuteEachUseCase(handler: (useCase: UseCase, args: mixed) => mixed): void;
-  onDidExecuteEachUseCase(handler: (useCase: UseCase) => mixed): void;
-  onCompleteExecuteEachUseCase(handler: (useCase: UseCase) => mixed): Function;
-  execute(args: Array<mixed>): void;
+declare class StoreGroup extends Dispatcher {
+  getState(): Object;
+  emitChange(): void;
+  onChange(handler: (stores: Array<Store>) => mixed): Function;
   release(): void;
-}
-
-declare class UseCaseContext {
-  useCase(useCase: UseCase): UseCaseExecutor;
-}
-
-declare class UseCase extends Dispatcher {
-  static isUseCase(maybeUseCase: mixed): boolean;
-
-  context(): UseCaseContext;
-  onError(errorHandler: (error: Error) => mixed): (this: Dispatcher) => mixed;
-  throwError(error: Error): void;
 }
 
 declare class Context {
@@ -72,6 +33,46 @@ declare class Context {
   onDidExecuteEachUseCase(handler: (useCase: UseCase) => mixed): void;
   onCompleteExecuteEachUseCase(handler: (useCase: UseCase) => mixed): void;
   onErrorDispatch(errorHandler: (payload: UseCaseErrorPayload) => mixed): (this: Dispatcher) => mixed;
+  release(): void;
+}
+
+declare class Dispatcher extends EventEmitter {
+  static isDispatcher(maybeDispatcher: mixed): boolean;
+
+  onDispatch(payloadHandler: (payload: DispatcherPayload) => mixed): Function;
+  dispatch(payload: DispatcherPayload): void;
+  pipe(toDispatcher: Dispatcher): Function;
+}
+
+declare class Store extends Dispatcher {
+  static isStore(maybeStore: mixed): boolean;
+
+  getState(prevState: Object): Object;
+  onError(handler: (payload: UseCaseErrorPayload) => mixed): Function;
+  onChange(callback: Function): Function;
+  emitChange(): void;
+}
+
+declare class UseCase extends Dispatcher {
+  static isUseCase(maybeUseCase: mixed): boolean;
+
+  context(): UseCaseContext;
+  onError(errorHandler: (error: Error) => mixed): (this: Dispatcher) => mixed;
+  throwError(error: Error): void;
+}
+
+declare class UseCaseContext {
+  useCase(useCase: UseCase): UseCaseExecutor;
+}
+
+declare class UseCaseExecutor {
+  willExecute(args: Array<mixed>): void;
+  didExecute(): void;
+  complete(): void;
+  onWillExecuteEachUseCase(handler: (useCase: UseCase, args: mixed) => mixed): void;
+  onDidExecuteEachUseCase(handler: (useCase: UseCase) => mixed): void;
+  onCompleteExecuteEachUseCase(handler: (useCase: UseCase) => mixed): Function;
+  execute(args: Array<mixed>): void;
   release(): void;
 }
 

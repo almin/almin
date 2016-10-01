@@ -1,6 +1,5 @@
 // LICENSE : MIT
 "use strict";
-const assert = require("assert");
 import Dispatcher from "./Dispatcher";
 import UseCaseContext from "./UseCaseContext";
 import {ActionTypes} from "./Context";

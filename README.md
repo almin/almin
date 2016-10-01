@@ -30,7 +30,11 @@ Almin provide some pattern, is not framework.
 
 Almin is a implementation of Read/Write Stack Architecture that is well-known as Flux/CQRS.
 
-- [Almin.js | JavaScriptアーキテクチャ](http://azu.github.io/slide/2016/child_process_sushi/almin-javascript-architecture.html "Almin.js | JavaScriptアーキテクチャ") (japanese)
+- [Almin.js | JavaScriptアーキテクチャ](http://azu.github.io/slide/2016/child_process_sushi/almin-javascript-architecture.html "Almin.js | JavaScriptアーキテクチャ") (Japanese)
+- Patterns For Large-Scale JavaScript Application Architecture (Japanese)
+    - [複雑なJavaScriptアプリケーションを考えながら作る話](http://azu.github.io/slide/2016/react-meetup/large-scale-javascript.html)
+    - [azu/large-scale-javascript: 複雑なJavaScriptアプリケーションを作るために考えること](https://github.com/azu/large-scale-javascript)
+
 
 ## Installation
 

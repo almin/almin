@@ -20,7 +20,9 @@ export default class UseCaseContext {
      * @returns {UseCaseExecutor}
      */
     useCase(useCase) {
-        assert(useCase !== this.dispatcher, `the useCase(${useCase}) should not equal this useCase(${this.dispatcher})`);
+        if (process.env.NODE_ENV !== "production") {
+            assert(useCase !== this.dispatcher, `the useCase(${useCase}) should not equal this useCase(${this.dispatcher})`);
+        }
         return new UseCaseExecutor({
             useCase,
             parent: this.dispatcher,

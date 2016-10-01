@@ -5,7 +5,7 @@ module.exports = {
     entry: [
         "./src/index.js"
     ],
-    devtool: process.env.WEBPACK_DEVTOOL || "eval",
+    devtool: process.env.WEBPACK_DEVTOOL || "source-map",
     output: {
         path: path.join(__dirname, "public", "build"),
         publicPath: "/build/",
@@ -22,9 +22,9 @@ module.exports = {
                     cacheDirectory: true
                 }
             }
-        ]
-    },
-    // Allow expression as dependency to suppress warnings
-    // http://webpack.github.io/docs/configuration.html#automatically-created-contexts-defaults-module-xxxcontextxxx
-    exprContextCritical: false
+        ],
+        // Allow expression as dependency to suppress warnings
+        // http://webpack.github.io/docs/configuration.html#automatically-created-contexts-defaults-module-xxxcontextxxx
+        exprContextCritical: false
+    }
 };
