@@ -4,7 +4,7 @@
 // polyfill Object.assign
 const ObjectAssign = require("object-assign");
 const assert = require("assert");
-const LRU = require("lru-cache");
+const LRU = require("lru-map-like");
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
 import Dispatcher from "./../Dispatcher";
 import Store from "./../Store";
@@ -53,10 +53,7 @@ export default class StoreGroup extends Dispatcher {
          * @type {LRU}
          * @private
          */
-        this._stateCache = new LRU({
-            max: 100,
-            maxAge: 1000 * 60 * 60
-        });
+        this._stateCache = new LRU(100);
     }
 
     /**
@@ -86,7 +83,8 @@ export default class StoreGroup extends Dispatcher {
                 return prevState;
             }
             const nextState = store.getState(prevState);
-            assert(typeof nextState == "object", `${store}: ${store.name}.getState() should return Object.
+            if (process.env.NODE_ENV !== "production") {
+                assert(typeof nextState == "object", `${store}: ${store.name}.getState() should return Object.
 e.g.)
 
  class ExampleStore extends Store {
@@ -102,6 +100,7 @@ Then, use can access by StateName.
 StoreGroup#getState()["StateName"]// state
 
 `);
+            }
             this._stateCache.set(store, nextState);
             return nextState;
         });
@@ -197,6 +196,6 @@ StoreGroup#getState()["StateName"]// state
     release() {
         this._releaseHandlers.forEach(releaseHandler => releaseHandler());
         this._releaseHandlers.length = 0;
-        this._stateCache.reset();
+        this._stateCache.clear();
     }
 }

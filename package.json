@@ -71,7 +71,7 @@
     "zuul": "^3.10.1"
   },
   "dependencies": {
-    "lru-cache": "^4.0.1",
+    "lru-map-like": "^1.0.1",
     "object-assign": "^4.1.0"
   }
 }

@@ -68,8 +68,10 @@ export default class Dispatcher extends EventEmitter {
      * @public
      */
     dispatch(payload) {
-        assert(payload !== undefined && payload !== null, "payload should not null or undefined");
-        assert(typeof payload.type !== "undefined", "payload's `type` should be required");
+        if (process.env.NODE_ENV !== "production") {
+            assert(payload !== undefined && payload !== null, "payload should not null or undefined");
+            assert(typeof payload.type !== "undefined", "payload's `type` should be required");
+        }
         this.emit(ON_DISPATCH, payload);
     }
 
