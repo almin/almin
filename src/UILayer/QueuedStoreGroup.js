@@ -3,8 +3,9 @@
 // polyfill Object.assign
 const ObjectAssign = require("object-assign");
 const assert = require("assert");
-const LRU = require("lru-cache");
+const LRU = require("lru-map-like");
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
+
 import Dispatcher from "./../Dispatcher";
 import Store from "./../Store";
 import StoreGroupValidator from "./StoreGroupValidator";
@@ -91,10 +92,7 @@ export default class QueuedStoreGroup extends Dispatcher {
          * @type {LRU}
          * @private
          */
-        this._stateCache = new LRU({
-            max: 100,
-            maxAge: 1000 * 60 * 60
-        });
+        this._stateCache = new LRU(100);
         // `this` can catch the events of dispatchers
         // Because context delegate dispatched events to **this**
         const tryToEmitChange = (payload) => {
@@ -255,7 +253,7 @@ StoreGroup#getState()["StateName"]; // state
     release() {
         this._releaseHandlers.forEach(releaseHandler => releaseHandler());
         this._releaseHandlers.length = 0;
-        this._stateCache.reset();
+        this._stateCache.clear();
     }
 
     /**
