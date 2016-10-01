@@ -18,7 +18,7 @@ export default class TodoState {
      * @param {TodoItem[]} [items]
      * @param {string} [filterType]
      */
-    constructor({items, filterType}: {items: Array<TodoItem>, filterType: string} = {}): void {
+    constructor({items, filterType}: {items: Array<TodoItem>, filterType: string} = {}) {
         this.items = items || [];
         this.filterType = filterType || FilterTypes.ALL_TODOS;
     }

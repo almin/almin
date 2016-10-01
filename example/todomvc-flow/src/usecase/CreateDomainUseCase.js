@@ -16,7 +16,7 @@ export class CreateDomainUseCase extends UseCase {
     /**
      * @param {TodoListRepository}todoListRepository
      */
-    constructor({todoListRepository}: {todoListRepository: TodoListRepository}): void {
+    constructor({todoListRepository}: {todoListRepository: TodoListRepository}) {
         super();
         this.todoListRepository = todoListRepository;
     }

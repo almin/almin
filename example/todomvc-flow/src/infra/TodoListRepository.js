@@ -8,7 +8,7 @@ import MemoryDB from "./adpter/MemoryDB";
 export class TodoListRepository extends EventEmitter {
     _database: MemoryDB;
 
-    constructor(database: MemoryDB = new MemoryDB()): void {
+    constructor(database: MemoryDB = new MemoryDB()) {
         super();
         /**
          * @type {MemoryDB}

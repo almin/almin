@@ -8,7 +8,7 @@ import typeof TodoListRepository from '../../infra/TodoListRepository';
 export default class TodoStore extends Store {
     state: TodoState;
 
-    constructor({todoListRepository}: {todoListRepository: TodoListRepository}): void {
+    constructor({todoListRepository}: {todoListRepository: TodoListRepository}) {
         super();
         this.state = new TodoState();
         // when todoRepository is changed, try to update state

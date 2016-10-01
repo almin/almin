@@ -15,7 +15,7 @@ export class UpdateTodoItemTitleUseCase {
     /**
      * @param {TodoListRepository} todoListRepository
      */
-    constructor({todoListRepository}: {todoListRepository: TodoListRepository}): void {
+    constructor({todoListRepository}: {todoListRepository: TodoListRepository}) {
         this.todoListRepository = todoListRepository;
     }
 

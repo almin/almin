@@ -8,7 +8,7 @@ const assert = require("assert");
 export default class MapLike {
     _store: Object;
 
-    constructor(entries: Array<Object> = []): void {
+    constructor(entries: Array<Object> = []) {
         this._store = Object.create(null);
         entries.forEach(entry => {
             assert(Array.isArray(entry), "new MapLike([ [key, value] ])");
