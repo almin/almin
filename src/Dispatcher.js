@@ -2,7 +2,9 @@
 "use strict";
 const assert = require("assert");
 const EventEmitter = require("events");
-export const ON_DISPATCH = "__ON_DISPATCH__";
+export const ON_WILL_DISPATCH = "ON_WILL_DISPATCH";
+export const ON_DISPATCH = "ON_DISPATCH";
+export const ON_DID_DISPATCH = "ON_DID_DISPATCH";
 /**
  * payload The payload object that must have `type` property.
  * @typedef {Object} DispatcherPayload
@@ -51,7 +53,18 @@ export default class Dispatcher extends EventEmitter {
     }
 
     /**
-     * add onAction handler and return unbind function
+     * register onWillDispatch handler and return unbind function
+     * @param {function(payload: DispatcherPayload)} payloadHandler
+     * @returns {Function} call the function and release handler
+     * @public
+     */
+    onWillDispatch(payloadHandler) {
+        this.on(ON_WILL_DISPATCH, payloadHandler);
+        return this.removeListener.bind(this, ON_WILL_DISPATCH, payloadHandler);
+    }
+
+    /**
+     * register onDispatch handler and return unbind function
      * @param {function(payload: DispatcherPayload)} payloadHandler
      * @returns {Function} call the function and release handler
      * @public
@@ -59,6 +72,17 @@ export default class Dispatcher extends EventEmitter {
     onDispatch(payloadHandler) {
         this.on(ON_DISPATCH, payloadHandler);
         return this.removeListener.bind(this, ON_DISPATCH, payloadHandler);
+    }
+
+    /**
+     * register onDidDispatch handler and return unbind function
+     * @param {function(payload: DispatcherPayload)} payloadHandler
+     * @returns {Function} call the function and release handler
+     * @public
+     */
+    onDidDispatch(payloadHandler) {
+        this.on(ON_DID_DISPATCH, payloadHandler);
+        return this.removeListener.bind(this, ON_DID_DISPATCH, payloadHandler);
     }
 
     /**
@@ -70,7 +94,9 @@ export default class Dispatcher extends EventEmitter {
     dispatch(payload) {
         assert(payload !== undefined && payload !== null, "payload should not null or undefined");
         assert(typeof payload.type !== "undefined", "payload's `type` should be required");
+        this.emit(ON_WILL_DISPATCH, payload);
         this.emit(ON_DISPATCH, payload);
+        this.emit(ON_DID_DISPATCH, payload);
     }
 
     /**
