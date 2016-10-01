@@ -8,7 +8,7 @@ const assert = require("assert");
 export default class MapLike {
     _store: Object;
 
-    constructor(entries: Array<Object> = []) {
+    constructor(entries: Array<Object> = []): void {
         this._store = Object.create(null);
         entries.forEach(entry => {
             assert(Array.isArray(entry), "new MapLike([ [key, value] ])");
@@ -19,7 +19,7 @@ export default class MapLike {
     /**
      * @returns {Object}
      */
-    toJSON() {
+    toJSON(): Object {
         return this._store;
     }
 
@@ -27,7 +27,7 @@ export default class MapLike {
      * get keys
      * @returns {Array}
      */
-    keys() {
+    keys(): Array<mixed> {
         return Object.keys(this._store);
     }
 
@@ -35,7 +35,7 @@ export default class MapLike {
      * get values
      * @returns {Array}
      */
-    values() {
+    values(): Array<mixed> {
         /* eslint-disable guard-for-in */
         const keys = this.keys();
         const store = this._store;
@@ -51,7 +51,7 @@ export default class MapLike {
      * @param {string} key
      * @returns {*}
      */
-    get(key: string) {
+    get(key: ?string): void {
         return this._store[key];
     }
 
@@ -61,7 +61,7 @@ export default class MapLike {
      * @param key
      * @returns {boolean}
      */
-    has(key: string) {
+    has(key: string): boolean {
         return this.get(key) != null;
     }
 
@@ -72,7 +72,7 @@ export default class MapLike {
      * @param {*} value
      * @return {MapLike}
      */
-    set(key: string, value: mixed) {
+    set(key: string, value: mixed): MapLike {
         this._store[key] = value;
         return this;
     }
@@ -81,7 +81,7 @@ export default class MapLike {
      * delete value for key
      * @param {string} key
      */
-    delete(key: string) {
+    delete(key: string): void {
         this._store[key] = null;
     }
 
@@ -89,7 +89,7 @@ export default class MapLike {
      * clear defined key,value
      * @returns {MapLike}
      */
-    clear() {
+    clear(): MapLike {
         this._store = Object.create(null);
         return this;
     }

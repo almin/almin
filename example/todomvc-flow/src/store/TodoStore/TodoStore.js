@@ -17,7 +17,7 @@ export default class TodoStore extends Store {
         this.onDispatch(this._onDispatch.bind(this));
     }
 
-    getState() {
+    getState(): {todoState: TodoState} {
         return {
             todoState: this.state
         }
@@ -28,7 +28,7 @@ export default class TodoStore extends Store {
      * @param {TodoState} newState
      * @private
      */
-    _setState(newState: TodoState) {
+    _setState(newState: TodoState): void {
         if (newState !== this.state) {
             this.state = newState;
             this.emitChange();
@@ -39,7 +39,7 @@ export default class TodoStore extends Store {
      * @param {TodoList} todoList
      * @private
      */
-    _onChange(todoList: TodoList) {
+    _onChange(todoList: TodoList): void {
         const newState = this.state.merge(todoList);
         this._setState(newState);
     }
@@ -48,7 +48,7 @@ export default class TodoStore extends Store {
      * @param {DispatcherPayload} payload
      * @private
      */
-    _onDispatch(payload: DispatcherPayload) {
+    _onDispatch(payload: DispatcherPayload): void {
         const newState = this.state.reduce(payload);
         this._setState(newState);
     }

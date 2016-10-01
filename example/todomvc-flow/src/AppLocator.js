@@ -25,7 +25,7 @@ export class AppContextLocator {
     /**
      * @param {Context} newContext
      */
-    set context(newContext) {
+    set context(newContext): void {
         this._context = newContext;
     }
 }

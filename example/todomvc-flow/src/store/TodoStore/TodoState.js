@@ -54,7 +54,7 @@ export default class TodoState {
      * @param {TodoList} todoList
      * @returns {TodoState}
      */
-    merge(todoList: TodoList) {
+    merge(todoList: TodoList): TodoState {
         const items = todoList.getAllTodoItems();
         return new TodoState(Object.assign(this, {
             items
@@ -65,7 +65,7 @@ export default class TodoState {
      * @param {DispatcherPayload} payload
      * @returns {TodoState}
      */
-    reduce(payload: DispatcherPayload) {
+    reduce(payload: DispatcherPayload): TodoState {
         switch (payload.type) {
             case FilterTodoListUseCase.name:
                 return new TodoState(Object.assign(this, {
