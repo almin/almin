@@ -6,7 +6,7 @@ TodoMVC is popular example for MV* library.
 
 :memo: Please see tutorial documents!
 
-- https://almin.js.org/docs/tutorial/todomvc/
+- https://almin.js.org/docs/tutorial/todomvc-flow/
 
 ## Installation
 
@@ -43,7 +43,7 @@ TodoMVC is popular example for MV* library.
 BSD
 
 ## Credit
-   
+
 This TodoMVC's component was created by [Bill Fisher](https://www.facebook.com/bill.fisher.771).
 
 - [TodoMVC](http://todomvc.com/)
