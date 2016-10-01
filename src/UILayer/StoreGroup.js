@@ -9,7 +9,7 @@ const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
 import Dispatcher from "./../Dispatcher";
 import Store from "./../Store";
 import StoreGroupValidator from "./StoreGroupValidator";
-
+import raq from "./raq";
 /**
  * StoreGroup is a **UI** parts of Store.
  * StoreGroup has event queue system.
@@ -129,10 +129,10 @@ StoreGroup#getState()["StateName"]// state
             // add change store list in now
             // it is released by `StoreGroup#emitChange`
             this._currentChangingStores.push(store);
-            setTimeout(() => {
+            raq(() => {
                 // `requestEmitChange()` is for pushing `emitChange()` to queue.
                 this._requestEmitChange();
-            }, 0);
+            });
         });
         // Implementation Note:
         // Delegate dispatch event to Store from StoreGroup 

@@ -7,20 +7,22 @@ import createEchoStore from "./helper/EchoStore";
 
 describe("StoreGroup", function() {
     describe("#onChange", function() {
-        it("should async called onChange ", function(done) {
-            const aStore = createEchoStore({name: "AStore"});
-            const bStore = createEchoStore({name: "BStore"});
-            const storeGroup = new StoreGroup([aStore, bStore]);
-            // Should be failure, if emit -> onChange **sync**.
-            // But it is called async
-            // then - called change handler a one-time
-            storeGroup.onChange((changedStores) => {
-                assert.equal(changedStores.length, 2);
-                done();
+        context("when some store emitChange()", function() {
+            it("should async called StoreGroup#onChange", function(done) {
+                const aStore = createEchoStore({name: "AStore"});
+                const bStore = createEchoStore({name: "BStore"});
+                const storeGroup = new StoreGroup([aStore, bStore]);
+                // Should be failure, if emit -> onChange **sync**.
+                // But it is called async
+                // then - called change handler a one-time
+                storeGroup.onChange((changedStores) => {
+                    assert.equal(changedStores.length, 2);
+                    done();
+                });
+                // when - a,b emit change at same time
+                aStore.emitChange();
+                bStore.emitChange();
             });
-            // when - a,b emit change at same time
-            aStore.emitChange();
-            bStore.emitChange();
         });
         it("should async called onChange after 2nd", function(done) {
             // it should work cache temporary.
