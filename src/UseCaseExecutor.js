@@ -17,8 +17,10 @@ export default class UseCaseExecutor {
     }) {
         // execute and finish =>
         const useCaseName = useCase.name;
-        assert(typeof useCaseName === "string", "UseCase instance should have constructor.name " + useCase);
-        assert(typeof useCase.execute === "function", `UseCase instance should have #execute function: ${useCaseName}`);
+        if (process.env.NODE_ENV !== "production") {
+            assert(typeof useCaseName === "string", "UseCase instance should have constructor.name " + useCase);
+            assert(typeof useCase.execute === "function", `UseCase instance should have #execute function: ${useCaseName}`);
+        }
         /**
          * @type {string} useCase name
          */

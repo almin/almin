@@ -83,7 +83,8 @@ export default class StoreGroup extends Dispatcher {
                 return prevState;
             }
             const nextState = store.getState(prevState);
-            assert(typeof nextState == "object", `${store}: ${store.name}.getState() should return Object.
+            if (process.env.NODE_ENV !== "production") {
+                assert(typeof nextState == "object", `${store}: ${store.name}.getState() should return Object.
 e.g.)
 
  class ExampleStore extends Store {
@@ -99,6 +100,7 @@ Then, use can access by StateName.
 StoreGroup#getState()["StateName"]// state
 
 `);
+            }
             this._stateCache.set(store, nextState);
             return nextState;
         });
