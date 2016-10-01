@@ -121,13 +121,17 @@ Truly [Table of Contents](./SUMMARY.md) is here :arrow_left:
 - [example/svg-feeling](https://github.com/almin/almin/tree/master/example/svg-feeling)
     - Separate Domain and Store/State
         - Two way update state.
-    - How to implement 60 FPS application? 
+    - How to implement 60 FPS application?
         - Component should implement `shouldComponentUpdate()`
 - [example/shopping-cart](https://github.com/almin/almin/tree/master/example/shopping-cart)
     - Shopping Cart is a complex example.
     - This example is implemented of [flux-comparison](https://github.com/voronianski/flux-comparison "flux-comparison").
     - How to test?
     - How to implement domain layer?
+- [example/todomvc-flow](https://github.com/almin/almin/tree/master/example/todomvc-flow)
+    - TodoMVC implementation
+    - DDD/CQRS
+    - With Flow type checker
 
 ## Real Examples
 
@@ -141,7 +145,7 @@ Welcome to pull request!
 Running Tests in Node.js
 
     npm test
-    
+
 Running Tests in Browser
 
     npm run test:browser
@@ -152,7 +156,7 @@ Running Tests in [Sauce Labs](https://saucelabs.com/ "Sauce Labs: Selenium Testi
     npm run test:saucelabs
 
 ## Building Docs
- 
+
     npm run build:docs
     # preview
     npm run start:docs
