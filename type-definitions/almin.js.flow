@@ -8,9 +8,6 @@ type DispatcherPayload = Object;
 type UseCaseErrorPayload = Object;
 
 declare class QueuedStoreGroup extends Dispatcher {
-    hasChangingStore(): boolean;
-    currentChangingStores(): Array<Store>;
-
     getState(): Object;
     emitChange(): void;
     onChange(handler: (stores: Array<Store>) => mixed): Function;
@@ -66,9 +63,6 @@ declare class UseCaseContext {
 }
 
 declare class UseCaseExecutor {
-    willExecute(args: Array<mixed>): void;
-    didExecute(): void;
-    complete(): void;
     onWillExecuteEachUseCase(handler: (useCase: UseCase, args: mixed) => mixed): void;
     onDidExecuteEachUseCase(handler: (useCase: UseCase) => mixed): void;
     onCompleteExecuteEachUseCase(handler: (useCase: UseCase) => mixed): Function;
@@ -81,7 +75,6 @@ export {
     Store,
     StoreGroup,
     QueuedStoreGroup,
-    UseCaseExecutor,
     UseCaseContext,
     UseCase,
     Context,
