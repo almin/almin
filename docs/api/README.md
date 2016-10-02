@@ -268,7 +268,23 @@ You can call this when no more call event handler
 
 **Extends Dispatcher**
 
-UseCase class
+UseCase class is inherited Dispatcher.
+The user implement own user-case that is inherited UseCase class
+
+**Examples**
+
+```javascript
+import {UseCase} from "almin";
+class AwesomeUseCase extends UseCase {
+execute(){
+// implementation own use-case
+}
+}
+```
+
+### `execute()`
+
+`execute()` method should be overwrite by subclass.
 
 ### `context`
 
@@ -312,13 +328,25 @@ payload object that is dispatched when UseCase is failing or `throwError`.
 
 ### `isUseCase(v: Any): boolean`
 
-return true if the `v` is UseCase .
+return true if the `v` is a UseCase.
 
 **Parameters**
 
 -   `v`: **Any**
 
 Returns: **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)**
+
+## `UseCaseContext`
+
+UseCase internally use UseCaseContext insteadof Context.
+It has limitation as against to Context.
+Because, UseCaseContext is for UseCase.
+
+### `constructor(dispatcher: (Dispatcher | UseCase))`
+
+**Parameters**
+
+-   `dispatcher`: **(Dispatcher | UseCase)** - dispatcher is Dispatcher or parent UseCase.
 
 ## `Context`
 
@@ -405,6 +433,58 @@ called the `errorHandler` with error when error is occurred.
 -   `errorHandler`: **function (payload: UseCaseErrorPayload)**
 
 Returns: **function (this: Dispatcher)**
+
+### `release()`
+
+release all events handler.
+You can call this when no more call event handler
+
+## `UseCaseExecutor`
+
+UseCaseExecutor is a helper class for executing UseCase.
+
+### `constructor({ useCase, parent, dispatcher })`
+
+**Parameters**
+
+-   `useCase`: **UseCase**
+-   `parent`: **(UseCase | null)** - parent is parent of `useCase`
+-   `dispatcher`: **(Dispatcher | UseCase)**
+
+### `onWillExecuteEachUseCase(handler: function (useCase: UseCase, args: Any))`
+
+called the [handler](handler) with useCase when the useCase will do.
+
+**Parameters**
+
+-   `handler`: **function (useCase: UseCase, args: Any)**
+
+### `onDidExecuteEachUseCase(handler: function (useCase: UseCase))`
+
+called the `handler` with useCase when the useCase is executed.
+
+**Parameters**
+
+-   `handler`: **function (useCase: UseCase)**
+
+### `onCompleteExecuteEachUseCase(handler: function (useCase: UseCase)): Function`
+
+called the `handler` with useCase when the useCase is completed.
+
+**Parameters**
+
+-   `handler`: **function (useCase: UseCase)**
+
+Returns: **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)**
+
+### `execute(args: ...)`
+
+execute UseCase instance.
+UseCase is a executable object. it means that has `execute` method.
+
+**Parameters**
+
+-   `args`: **...**
 
 ### `release()`
 
