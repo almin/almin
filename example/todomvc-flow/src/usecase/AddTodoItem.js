@@ -28,9 +28,7 @@ export class AddTodoItemUseCase extends UseCase {
         // Create TodoItem
         const todoItem: TodoItem = new TodoItem({title});
         // Add TodoItem
-        if (todoList != null) {
-          todoList.addItem(todoItem);
-        }
+        todoList.addItem(todoItem);
         // Save todoList to  repository
         this.todoListRepository.save(todoList);
     }
