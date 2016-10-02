@@ -4,7 +4,7 @@
 ../../src/
 
 [libs]
-../../type-definition
+../../type-definitions
 
 [options]
 module.system.node.resolve_dirname=node_modules
