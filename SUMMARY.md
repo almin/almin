@@ -13,6 +13,7 @@
 - Examples
     - [example/counter](https://github.com/almin/almin/tree/master/example/counter)
     - [example/todomvc](https://github.com/almin/almin/tree/master/example/todomvc)
+    - [example/todomvc-flow](https://github.com/almin/almin/tree/master/example/todomvc-flow)
     - [example/svg-feeling](https://github.com/almin/almin/tree/master/example/svg-feeling)
     - [example/shopping-cart](https://github.com/almin/almin/tree/master/example/shopping-cart)
 - Tips
