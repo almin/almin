@@ -11,7 +11,7 @@
   "files": [
     "src/",
     "lib/",
-    "type-definitions"
+    "type-definitions/"
   ],
   "bugs": {
     "url": "https://github.com/almin/almin/issues"
