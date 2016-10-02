@@ -10,7 +10,8 @@
   "license": "MIT",
   "files": [
     "src/",
-    "lib/"
+    "lib/",
+    "type-definitions"
   ],
   "bugs": {
     "url": "https://github.com/almin/almin/issues"

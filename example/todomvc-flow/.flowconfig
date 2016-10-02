@@ -1,0 +1,11 @@
+[ignore]
+
+[include]
+../../src/
+
+[libs]
+../../type-definitions
+
+[options]
+module.system.node.resolve_dirname=node_modules
+unsafe.enable_getters_and_setters=true
