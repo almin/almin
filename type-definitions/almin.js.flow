@@ -33,7 +33,7 @@ declare class Context {
     release(): void;
 }
 
-declare class Dispatcher extends EventEmitter {
+declare class Dispatcher extends events$EventEmitter {
     static isDispatcher(maybeDispatcher: mixed): boolean;
 
     onDispatch(payloadHandler: (payload: DispatcherPayload) => mixed): Function;
