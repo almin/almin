@@ -12,7 +12,8 @@
     "build": "NODE_ENV=production webpack -p",
     "watch": "NODE_ENV=development webpack -d -w",
     "prepublish": "npm run --if-present build",
-    "test": "mocha"
+    "test": "mocha && npm run flow_check",
+    "flow_check": "flow check"
   },
   "author": "azu",
   "license": "MIT",
@@ -34,11 +35,15 @@
     "babel-preset-power-assert": "^1.0.0",
     "babel-preset-react": "^6.5.0",
     "babel-register": "^6.7.2",
+    "flow-bin": "^0.33.0",
     "json-loader": "^0.5.4",
     "mkdirp": "^0.5.1",
     "mocha": "^3.0.2",
     "rimraf": "^2.5.2",
     "webpack": "^2.1.0-beta.6",
     "webpack-dev-server": "^2.0.0-beta"
+  },
+  "bin": {
+    "flow": "./node_modules/.bin/flow"
   }
 }
