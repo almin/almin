@@ -9,12 +9,21 @@ import {ActionTypes} from "./Context";
  */
 export let defaultUseCaseName = "<Anonymous-UseCase>";
 /**
- * UseCase class
+ * UseCase class is inherited Dispatcher.
+ * The user implement own user-case that is inherited UseCase class
+ * @example
+ import {UseCase} from "almin";
+ class AwesomeUseCase extends UseCase {
+    execute(){
+        // implementation own use-case
+    }
+ }
+ *
  * @public
  */
 export default class UseCase extends Dispatcher {
     /**
-     * return true if the `v` is UseCase .
+     * return true if the `v` is a UseCase.
      * @param {*} v
      * @returns {boolean}
      * @public
@@ -41,6 +50,10 @@ export default class UseCase extends Dispatcher {
 
     }
 
+    /**
+     * `execute()` method should be overwrite by subclass.
+     * @public
+     */
     execute() {
         throw new TypeError(`should be overwrite ${this.constructor.name}#execute()`);
     }

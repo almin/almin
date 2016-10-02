@@ -4,11 +4,16 @@ const assert = require("assert");
 import {ActionTypes} from "./Context";
 import Dispatcher from "./Dispatcher";
 import UseCase from "./UseCase";
+/**
+ * UseCaseExecutor is a helper class for executing UseCase.
+ * @public
+ */
 export default class UseCaseExecutor {
     /**
      * @param {UseCase} useCase
      * @param {UseCase|null} parent parent is parent of `useCase`
      * @param {Dispatcher|UseCase} dispatcher
+     * @public
      */
     constructor({
         useCase,
@@ -52,6 +57,7 @@ export default class UseCaseExecutor {
 
     /**
      * @param {*[]} [args] arguments of the UseCase
+     * @private
      */
     willExecute(args) {
         // emit event for System
@@ -65,6 +71,7 @@ export default class UseCaseExecutor {
 
     /**
      * dispatch did execute each UseCase
+     * @private
      */
     didExecute() {
         this.disptcher.dispatch({
@@ -76,6 +83,7 @@ export default class UseCaseExecutor {
 
     /**
      * dispatch complete each UseCase
+     * @private
      */
     complete() {
         this.disptcher.dispatch({
@@ -88,6 +96,7 @@ export default class UseCaseExecutor {
     /**
      * called the {@link handler} with useCase when the useCase will do.
      * @param {function(useCase: UseCase, args: *)} handler
+     * @public
      */
     onWillExecuteEachUseCase(handler) {
         const releaseHandler = this.disptcher.onDispatch(function onWillExecute(payload) {
@@ -102,6 +111,7 @@ export default class UseCaseExecutor {
     /**
      * called the `handler` with useCase when the useCase is executed.
      * @param {function(useCase: UseCase)} handler
+     * @public
      */
     onDidExecuteEachUseCase(handler) {
         const releaseHandler = this.disptcher.onDispatch(function onDidExecuted(payload) {
@@ -117,6 +127,7 @@ export default class UseCaseExecutor {
      * called the `handler` with useCase when the useCase is completed.
      * @param {function(useCase: UseCase)} handler
      * @returns {Function}
+     * @public
      */
     onCompleteExecuteEachUseCase(handler) {
         const releaseHandler = this.disptcher.onDispatch(function onCompleted(payload) {
@@ -132,6 +143,7 @@ export default class UseCaseExecutor {
      * execute UseCase instance.
      * UseCase is a executable object. it means that has `execute` method.
      * @param args
+     * @public
      */
     execute(...args) {
         this.willExecute(args);
@@ -153,6 +165,7 @@ export default class UseCaseExecutor {
     /**
      * release all events handler.
      * You can call this when no more call event handler
+     * @public
      */
     release() {
         this._releaseHandlers.forEach(releaseHandler => releaseHandler());
