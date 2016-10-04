@@ -23,7 +23,7 @@ export default class UseCaseContext {
      * Create UseCaseExecutor for `useCase`.
      * @param {UseCase} useCase
      * @returns {UseCaseExecutor}
-     * @private
+     * @public
      */
     useCase(useCase) {
         if (process.env.NODE_ENV !== "production") {
