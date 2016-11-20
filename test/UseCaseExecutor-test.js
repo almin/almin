@@ -28,7 +28,7 @@ describe("UseCaseExecutor", function() {
             executor.onWillExecuteEachUseCase(() => {
                 callStack.push(1);
             });
-            dispatcher.onDispatch(({type, value}) => {
+            dispatcher.onDispatch(({ type, value }) => {
                 if (type === expectedPayload.type) {
                     callStack.push(2);
                 }
@@ -60,7 +60,7 @@ describe("UseCaseExecutor", function() {
                 }
                 // then
                 // 4
-                dispatcher.onDispatch(({type, value}) => {
+                dispatcher.onDispatch(({ type, value }) => {
                     if (type === expectedPayload.type) {
                         assert.equal(value, expectedPayload.value);
                         done();
@@ -96,9 +96,9 @@ describe("UseCaseExecutor", function() {
                 let isCalledDidExecuted = false;
                 let isCalledCompleted = false;
                 // 4
-                dispatcher.onDispatch(({type, value}) => {
-                    if (type === expectedPayload.type) {
-                        assert.equal(value, value);
+                dispatcher.onDispatch((payload) => {
+                    if (payload.type === expectedPayload.type) {
+                        assert.equal(payload.value, expectedPayload.value);
                         isCalledUseCase = true;
                     }
                 });
@@ -107,13 +107,13 @@ describe("UseCaseExecutor", function() {
                     useCase: new AsyncUseCase(),
                     dispatcher
                 });
-                executor.onDidExecuteEachUseCase(useCase => {
-                    if (useCase instanceof AsyncUseCase) {
+                executor.onDidExecuteEachUseCase((payload, meta) => {
+                    if (meta.useCase instanceof AsyncUseCase) {
                         isCalledDidExecuted = true;
                     }
                 });
-                executor.onCompleteExecuteEachUseCase(useCase => {
-                    if (useCase instanceof AsyncUseCase) {
+                executor.onCompleteExecuteEachUseCase((payload, meta) => {
+                    if (meta.useCase instanceof AsyncUseCase) {
                         isCalledCompleted = true;
                     }
                 });

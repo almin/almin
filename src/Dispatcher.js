@@ -2,11 +2,13 @@
 "use strict";
 const assert = require("assert");
 const EventEmitter = require("events");
+import DispatcherPayloadMeta from "./DispatcherPayloadMeta";
 export const ON_DISPATCH = "__ON_DISPATCH__";
 /**
- * payload The payload object that must have `type` property.
+ * DispatcherPayload is an object.
+ * The payload object that must have `type` property.
+ * `type` property is a good idea to use string constants or Symbol for dispatch types.
  * @typedef {Object} DispatcherPayload
- * @property {*} type The event type to dispatch.
  * @public
  */
 /**
@@ -52,27 +54,33 @@ export default class Dispatcher extends EventEmitter {
 
     /**
      * add onAction handler and return unbind function
-     * @param {function(payload: DispatcherPayload)} payloadHandler
+     * @param {function(payload: DispatcherPayload, meta: DispatcherPayloadMeta)} handler
      * @returns {Function} call the function and release handler
      * @public
      */
-    onDispatch(payloadHandler) {
-        this.on(ON_DISPATCH, payloadHandler);
-        return this.removeListener.bind(this, ON_DISPATCH, payloadHandler);
+    onDispatch(handler) {
+        this.on(ON_DISPATCH, handler);
+        return this.removeListener.bind(this, ON_DISPATCH, handler);
     }
 
     /**
      * dispatch action object.
      * StoreGroups receive this action and reduce state.
      * @param {DispatcherPayload} payload
+     * @param {DispatcherPayloadMeta} [meta]
      * @public
      */
-    dispatch(payload) {
+    dispatch(payload, meta) {
         if (process.env.NODE_ENV !== "production") {
             assert(payload !== undefined && payload !== null, "payload should not null or undefined");
             assert(typeof payload.type !== "undefined", "payload's `type` should be required");
         }
-        this.emit(ON_DISPATCH, payload);
+        if (meta === undefined) {
+            const dispatchOnlyMeta = new DispatcherPayloadMeta();
+            this.emit(ON_DISPATCH, payload, dispatchOnlyMeta);
+        } else {
+            this.emit(ON_DISPATCH, payload, meta);
+        }
     }
 
     /**
@@ -85,9 +93,9 @@ export default class Dispatcher extends EventEmitter {
         const fromName = this.constructor.name;
         const toName = toDispatcher.constructor.name;
         const displayName = `delegate-payload:${fromName}-to-${toName}`;
-        const delegatePayload = function delegatePayload(payload) {
+        const delegatePayload = function delegatePayload(payload, meta) {
             delegatePayload.displayName = displayName;
-            toDispatcher.dispatch(payload);
+            toDispatcher.dispatch(payload, meta);
         };
         return this.onDispatch(delegatePayload);
     }

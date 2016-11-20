@@ -80,8 +80,8 @@ describe("Store", function() {
                 // delegate
                 testUseCase.pipe(store);
                 // then
-                store.onError(payload => {
-                    assert(payload.useCase instanceof TestUseCase);
+                store.onError((payload, meta) => {
+                    assert(meta.useCase instanceof TestUseCase);
                     assert.equal(payload.error.name, "DomainError");
                     done();
                 });
@@ -102,8 +102,8 @@ describe("Store", function() {
             // delegate
             testUseCase.pipe(store);
             // then
-            store.onError((payload) => {
-                assert(payload.useCase instanceof TestUseCase);
+            store.onError((payload, meta) => {
+                assert(meta.useCase instanceof TestUseCase);
                 assert.equal(payload.error.name, "DomainError");
                 done();
             });

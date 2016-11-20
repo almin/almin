@@ -68,7 +68,7 @@ export default class Store extends Dispatcher {
 
     /**
      * invoke `handler` when UseCase throw error events.
-     * @param {function(payload: UseCaseErrorPayload)} handler
+     * @param {function(payload: DispatcherPayload, meta: DispatcherPayloadMeta)} handler
      * @returns {Function} call the function and release handler
      * @public
      * @example
@@ -80,9 +80,9 @@ export default class Store extends Dispatcher {
      * }):
      */
     onError(handler) {
-        return this.onDispatch(payload => {
+        return this.onDispatch((payload, meta) => {
             if (payload.type === ActionTypes.ON_ERROR) {
-                handler(payload);
+                handler(payload, meta);
             }
         });
     }

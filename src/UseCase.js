@@ -3,6 +3,7 @@
 import Dispatcher from "./Dispatcher";
 import UseCaseContext from "./UseCaseContext";
 import {ActionTypes} from "./Context";
+import DispatcherPayloadMeta from "./DispatcherPayloadMeta";
 /**
  * @type {string}
  * @private
@@ -97,14 +98,16 @@ export default class UseCase extends Dispatcher {
      * @public
      */
     throwError(error) {
+        const meta = new DispatcherPayloadMeta({
+            useCase: this
+        });
         /**
          * @type {UseCaseErrorPayload}
          */
         const payload = {
             type: ActionTypes.ON_ERROR,
-            useCase: this,
             error: error
         };
-        this.dispatch(payload);
+        this.dispatch(payload, meta);
     }
 }

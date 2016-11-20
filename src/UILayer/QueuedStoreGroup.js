@@ -95,7 +95,7 @@ export default class QueuedStoreGroup extends Dispatcher {
         this._stateCache = new LRU(100);
         // `this` can catch the events of dispatchers
         // Because context delegate dispatched events to **this**
-        const tryToEmitChange = (payload) => {
+        const tryToEmitChange = (payload, meta) => {
             // check stores, if payload's type is not built-in event.
             // It means that `onDispatch` is called when dispatching user event.
             if (ActionTypes[payload.type] === undefined) {
@@ -107,7 +107,7 @@ export default class QueuedStoreGroup extends Dispatcher {
                     this.emitChange();
                 }
             } else if (payload.type === ActionTypes.ON_DID_EXECUTE_EACH_USECASE) {
-                const parent = payload.parent;
+                const parent = meta.parentDispatcher;
                 // when {asap: false}, emitChange when root useCase is executed
                 if (!asap && parent) {
                     return;
@@ -116,7 +116,7 @@ export default class QueuedStoreGroup extends Dispatcher {
                     this.emitChange();
                 }
             } else if (payload.type === ActionTypes.ON_COMPLETE_EACH_USECASE) {
-                const parent = payload.parent;
+                const parent = meta.parentDispatcher;
                 // when {asap: false}, emitChange when root useCase is executed
                 if (!asap && parent) {
                     return;
