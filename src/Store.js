@@ -72,14 +72,16 @@ export default class Store extends Dispatcher {
      * @returns {Function} call the function and release handler
      * @public
      * @example
-     * store.onError(payload => {
-     *  const useCase = payload.useCase;
+     * store.onError((payload, meta) => {
+     *  const useCase = meta.useCase;
      *  if(useCase instanceof AUseCase){
-     *      // do something
+     *      console.log(payload.error);
      *  }
      * }):
+     * @deprecated
      */
     onError(handler) {
+        console.warn("Store#onError is deprecated. Please use Store#onDispatch.");
         return this.onDispatch((payload, meta) => {
             if (payload.type === ActionTypes.ON_ERROR) {
                 handler(payload, meta);

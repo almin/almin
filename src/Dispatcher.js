@@ -9,6 +9,7 @@ export const ON_DISPATCH = "__ON_DISPATCH__";
  * The payload object that must have `type` property.
  * `type` property is a good idea to use string constants or Symbol for dispatch types.
  * @typedef {Object} DispatcherPayload
+ * @property {*} type type of the payload
  * @public
  */
 /**

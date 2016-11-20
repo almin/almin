@@ -60,12 +60,11 @@ export default class UseCaseExecutor {
      * @param {*[]} [args] arguments of the UseCase
      * @private
      */
-    willExecute(args) {
+    _willExecute(args) {
         // emit event for System
         const meta = new DispatcherPayloadMeta({
             useCase: this.useCase,
-            parentDispatcher: this.parentUseCase,
-            args
+            parentDispatcher: this.parentUseCase
         });
         this.disptcher.dispatch({
             type: ActionTypes.ON_WILL_EXECUTE_EACH_USECASE,
@@ -77,7 +76,7 @@ export default class UseCaseExecutor {
      * dispatch did execute each UseCase
      * @private
      */
-    didExecute() {
+    _didExecute() {
         const meta = new DispatcherPayloadMeta({
             useCase: this.useCase,
             parentDispatcher: this.parentUseCase
@@ -91,7 +90,7 @@ export default class UseCaseExecutor {
      * dispatch complete each UseCase
      * @private
      */
-    complete() {
+    _complete() {
         const meta = new DispatcherPayloadMeta({
             useCase: this.useCase,
             parentDispatcher: this.parentUseCase
@@ -103,13 +102,13 @@ export default class UseCaseExecutor {
 
     /**
      * called the {@link handler} with useCase when the useCase will do.
-     * @param {function(useCase: UseCase, args: *)} handler
+     * @param {function(payload: DispatcherPayload, meta: DispatcherPayloadMeta)} handler
      * @public
      */
     onWillExecuteEachUseCase(handler) {
-        const releaseHandler = this.disptcher.onDispatch(function onWillExecute(payload) {
+        const releaseHandler = this.disptcher.onDispatch(function onWillExecute(payload, meta) {
             if (payload.type === ActionTypes.ON_WILL_EXECUTE_EACH_USECASE) {
-                handler(payload.useCase, payload.args);
+                handler(payload, meta);
             }
         });
         this._releaseHandlers.push(releaseHandler);
@@ -154,17 +153,17 @@ export default class UseCaseExecutor {
      * @public
      */
     execute(...args) {
-        this.willExecute(args);
+        this._willExecute(args);
         const result = this.useCase.execute(...args);
         // Sync call didExecute
-        this.didExecute(result);
+        this._didExecute(result);
         // When UseCase#execute is completed, dispatch "complete".
         return Promise.resolve(result).then((result) => {
-            this.complete(result);
+            this._complete(result);
             this.release();
         }).catch(error => {
             this.useCase.throwError(error);
-            this.complete();
+            this._complete();
             this.release();
             return Promise.reject(error);
         });
