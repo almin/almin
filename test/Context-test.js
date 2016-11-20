@@ -148,6 +148,9 @@ describe("Context", function() {
             });
             appContext.onDidExecuteEachUseCase((payload, meta) => {
                 assert.equal(meta.useCase, eventUseCase);
+            });
+            appContext.onCompleteEachUseCase((payload, meta) => {
+                assert.equal(meta.useCase, eventUseCase);
                 done();
             });
             // when
@@ -171,7 +174,29 @@ describe("Context", function() {
             appContext.useCase(testUseCase).execute();
         });
     });
-    describe("#onError", function() {
+    describe("#onCompleteEachUseCase", function() {
+        it("always should be called by async", function() {
+            const dispatcher = new Dispatcher();
+            const appContext = new Context({
+                dispatcher,
+                store: new Store()
+            });
+            const testUseCase = new TestUseCase();
+            // then
+            let isCalled = false;
+            appContext.onCompleteEachUseCase((payload, meta) => {
+                isCalled = true;
+            });
+            // when
+            let promise = appContext.useCase(testUseCase).execute();
+            // should not be called at time
+            assert(isCalled === false);
+            return promise.then(() => {
+                assert(isCalled);
+            });
+        });
+    });
+    describe("#onErrorDispatch", function() {
         it("should called after UseCase did execute", function(done) {
             const dispatcher = new Dispatcher();
             const appContext = new Context({
