@@ -1,10 +1,16 @@
 // LICENSE : MIT
 "use strict";
 const assert = require("assert");
-import {ActionTypes} from "./Context";
 import Dispatcher from "./Dispatcher";
 import UseCase from "./UseCase";
 import DispatcherPayloadMeta from "./DispatcherPayloadMeta";
+
+// payloads
+import CompletedPayload from "./payload/CompletedPayload";
+import DidExecutedPayload from "./payload/DidExecutedPayload";
+import Payload from "./payload/Payload";
+import ErrorPayload from "./payload/ErrorPayload";
+import WillExecutedPayload from "./payload/WillExecutedPayload";
 /**
  * UseCaseExecutor is a helper class for executing UseCase.
  * @public
@@ -61,53 +67,59 @@ export default class UseCaseExecutor {
      * @private
      */
     _willExecute(args) {
-        // emit event for System
+        const payload = new WillExecutedPayload({
+            args
+        });
         const meta = new DispatcherPayloadMeta({
             useCase: this.useCase,
-            parentDispatcher: this.parentUseCase
+            parentDispatcher: this.parentUseCase,
+            isTrusted: true
         });
-        this.disptcher.dispatch({
-            type: ActionTypes.ON_WILL_EXECUTE_EACH_USECASE,
-            args
-        }, meta);
+        this.disptcher.dispatch(payload, meta);
     }
 
     /**
      * dispatch did execute each UseCase
+     * @param {*} value result value of the useCase executed
      * @private
      */
-    _didExecute() {
+    _didExecute(value) {
+        const payload = new DidExecutedPayload({
+            value
+        });
         const meta = new DispatcherPayloadMeta({
             useCase: this.useCase,
-            parentDispatcher: this.parentUseCase
+            parentDispatcher: this.parentUseCase,
+            isTrusted: true
         });
-        this.disptcher.dispatch({
-            type: ActionTypes.ON_DID_EXECUTE_EACH_USECASE
-        }, meta);
+        this.disptcher.dispatch(payload, meta);
     }
 
     /**
      * dispatch complete each UseCase
+     * @param {*} value unwrapped result value of the useCase executed
      * @private
      */
-    _complete() {
+    _complete(value) {
+        const payload = new CompletedPayload({
+            value
+        });
         const meta = new DispatcherPayloadMeta({
             useCase: this.useCase,
-            parentDispatcher: this.parentUseCase
+            parentDispatcher: this.parentUseCase,
+            isTrusted: true
         });
-        this.disptcher.dispatch({
-            type: ActionTypes.ON_COMPLETE_EACH_USECASE
-        }, meta);
+        this.disptcher.dispatch(payload, meta);
     }
 
     /**
      * called the {@link handler} with useCase when the useCase will do.
-     * @param {function(payload: DispatcherPayload, meta: DispatcherPayloadMeta)} handler
+     * @param {function(payload: WillExecutedPayload, meta: DispatcherPayloadMeta)} handler
      * @public
      */
     onWillExecuteEachUseCase(handler) {
         const releaseHandler = this.disptcher.onDispatch(function onWillExecute(payload, meta) {
-            if (payload.type === ActionTypes.ON_WILL_EXECUTE_EACH_USECASE) {
+            if (payload.type === WillExecutedPayload.Type) {
                 handler(payload, meta);
             }
         });
@@ -117,12 +129,12 @@ export default class UseCaseExecutor {
 
     /**
      * called the `handler` with useCase when the useCase is executed.
-     * @param {function(payload: DispatcherPayload, meta: DispatcherPayloadMeta)} handler
+     * @param {function(payload: DidExecutedPayload, meta: DispatcherPayloadMeta)} handler
      * @public
      */
     onDidExecuteEachUseCase(handler) {
         const releaseHandler = this.disptcher.onDispatch(function onDidExecuted(payload, meta) {
-            if (payload.type === ActionTypes.ON_DID_EXECUTE_EACH_USECASE) {
+            if (payload.type === DidExecutedPayload.Type) {
                 handler(payload, meta);
             }
         });
@@ -132,13 +144,13 @@ export default class UseCaseExecutor {
 
     /**
      * called the `handler` with useCase when the useCase is completed.
-     * @param {function(payload: DispatcherPayload, meta: DispatcherPayloadMeta)} handler
+     * @param {function(payload: CompletedPayload, meta: DispatcherPayloadMeta)} handler
      * @returns {Function}
      * @public
      */
     onCompleteExecuteEachUseCase(handler) {
         const releaseHandler = this.disptcher.onDispatch(function onCompleted(payload, meta) {
-            if (payload.type === ActionTypes.ON_COMPLETE_EACH_USECASE) {
+            if (payload.type === CompletedPayload.Type) {
                 handler(payload, meta);
             }
         });

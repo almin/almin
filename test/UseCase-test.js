@@ -4,7 +4,8 @@ const assert = require("power-assert");
 import UseCase from "../src/UseCase";
 import Dispatcher from "../src/Dispatcher";
 import Store from "../src/Store";
-import Context, {ActionTypes} from "../src/Context";
+import Context from "../src/Context";
+import {WillExecutedPayload, DidExecutedPayload, CompletedPayload} from "../src/index";
 import UseCaseContext from "../src/UseCaseContext";
 describe("UseCase", function() {
     context("when execute B UseCase in A UseCase", function() {
@@ -26,9 +27,9 @@ describe("UseCase", function() {
             const bUseCase = new BUseCase();
             const callStack = [];
             const expectedCallStackOfAUseCase = [
-                ActionTypes.ON_WILL_EXECUTE_EACH_USECASE,
-                ActionTypes.ON_DID_EXECUTE_EACH_USECASE,
-                ActionTypes.ON_COMPLETE_EACH_USECASE
+                WillExecutedPayload.Type,
+                DidExecutedPayload.Type,
+                CompletedPayload.Type
             ];
             const expectedCallStack = [
                 `${aUseCase.name}:will`,

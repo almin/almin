@@ -2,8 +2,8 @@
 "use strict";
 import Dispatcher from "./Dispatcher";
 import UseCaseContext from "./UseCaseContext";
-import {ActionTypes} from "./Context";
 import DispatcherPayloadMeta from "./DispatcherPayloadMeta";
+import ErrorPayload from "./payload/ErrorPayload";
 /**
  * @type {string}
  * @private
@@ -76,20 +76,12 @@ export default class UseCase extends Dispatcher {
      */
     onError(errorHandler) {
         return this.onDispatch(payload => {
-            if (payload.type === ActionTypes.ON_ERROR) {
+            if (payload.type === ErrorPayload.Type) {
                 errorHandler(payload.error);
             }
         });
     }
 
-    /**
-     * payload object that is dispatched when UseCase is failing or `throwError`.
-     * @typedef {Object} UseCaseErrorPayload
-     * @property {string} type The event type of error.
-     * @property {UseCase} useCase useCase instance
-     * @property {error} error error object that is thrown from UseCase
-     * @public
-     */
     /**
      * throw error event
      * you can use it instead of `throw new Error()`
@@ -99,15 +91,12 @@ export default class UseCase extends Dispatcher {
      */
     throwError(error) {
         const meta = new DispatcherPayloadMeta({
-            useCase: this
+            useCase: this,
+            isTrusted: true
         });
-        /**
-         * @type {UseCaseErrorPayload}
-         */
-        const payload = {
-            type: ActionTypes.ON_ERROR,
+        const payload = new ErrorPayload({
             error: error
-        };
+        });
         this.dispatch(payload, meta);
     }
 }

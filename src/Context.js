@@ -5,17 +5,12 @@ import StoreGroup from "./UILayer/StoreGroup";
 import UseCase from "./UseCase";
 import UseCaseExecutor  from "./UseCaseExecutor";
 import StoreGroupValidator from "./UILayer/StoreGroupValidator";
-/**
- * The use should use on* handler method instead of it
- */
-export const ActionTypes = {
-    // will -> execute -> did -> (promise resolved) -> complete
-    ON_WILL_EXECUTE_EACH_USECASE: "ON_WILL_EXECUTE_EACH_USECASE",
-    ON_DID_EXECUTE_EACH_USECASE: "ON_DID_EXECUTE_EACH_USECASE",
-    ON_COMPLETE_EACH_USECASE: "ON_COMPLETE_EACH_USECASE",
-    ON_ERROR: "ON_ERROR"
-};
-
+// payloads
+import CompletedPayload from "./payload/CompletedPayload";
+import DidExecutedPayload from "./payload/DidExecutedPayload";
+import Payload from "./payload/Payload";
+import ErrorPayload from "./payload/ErrorPayload";
+import WillExecutedPayload from "./payload/WillExecutedPayload";
 /**
  * @public
  */
@@ -82,12 +77,12 @@ export default class Context {
 
     /**
      * called the {@link handler} with useCase when the useCase will do.
-     * @param {function(payload: DispatcherPayload, meta: DispatcherPayloadMeta)} handler
+     * @param {function(payload: WillExecutedPayload, meta: DispatcherPayloadMeta)} handler
      * @public
      */
     onWillExecuteEachUseCase(handler) {
         const releaseHandler = this._dispatcher.onDispatch((payload, meta) => {
-            if (payload.type === ActionTypes.ON_WILL_EXECUTE_EACH_USECASE) {
+            if (payload.type === WillExecutedPayload.Type) {
                 handler(payload, meta);
             }
         });
@@ -100,7 +95,7 @@ export default class Context {
      * This `onDispatch` is not called at built-in event. It is filtered by Context.
      * If you want to *All* dispatched event and use listen directly your `dispatcher` object.
      * In other word, listen the dispatcher of `new Context({dispatcher})`.
-     * @param {function(payload: DispatcherPayload, meta: DispatcherPayloadMeta)} handler
+     * @param {function(payload: DispatchedPayload, meta: DispatcherPayloadMeta)} handler
      * @returns {Function}
      * @public
      */
@@ -108,7 +103,7 @@ export default class Context {
         const releaseHandler = this._dispatcher.onDispatch((payload, meta) => {
             // call handler, if payload's type is not built-in event.
             // It means that `onDispatch` is called when dispatching user event.
-            if (ActionTypes[payload.type] === undefined) {
+            if (!meta.isTrusted) {
                 handler(payload, meta);
             }
         });
@@ -118,12 +113,12 @@ export default class Context {
 
     /**
      * called the `handler` with useCase when the useCase is executed..
-     * @param {function(payload: DispatcherPayload, meta: DispatcherPayloadMeta)} handler
+     * @param {function(payload: DidExecutedPayload, meta: DispatcherPayloadMeta)} handler
      * @public
      */
     onDidExecuteEachUseCase(handler) {
         const releaseHandler = this._dispatcher.onDispatch((payload, meta) => {
-            if (payload.type === ActionTypes.ON_DID_EXECUTE_EACH_USECASE) {
+            if (payload.type === DidExecutedPayload.Type) {
                 handler(payload, meta);
             }
         });
@@ -133,12 +128,12 @@ export default class Context {
 
     /**
      * called the `handler` with useCase when the useCase is completed.
-     * @param {function(payload: DispatcherPayload, meta: DispatcherPayloadMeta)} handler
+     * @param {function(payload: CompletedPayload, meta: DispatcherPayloadMeta)} handler
      * @public
      */
     onCompleteEachUseCase(handler) {
         const releaseHandler = this._dispatcher.onDispatch((payload, meta) => {
-            if (payload.type === ActionTypes.ON_COMPLETE_EACH_USECASE) {
+            if (payload.type === CompletedPayload.Type) {
                 handler(payload, meta);
             }
         });
@@ -149,13 +144,13 @@ export default class Context {
 
     /**
      * called the `errorHandler` with error when error is occurred.
-     * @param {function(payload: DispatcherPayload, meta: DispatcherPayloadMeta)} handler
+     * @param {function(payload: ErrorPayload, meta: DispatcherPayloadMeta)} handler
      * @returns {function(this:Dispatcher)}
      * @public
      */
     onErrorDispatch(handler) {
         const releaseHandler = this._dispatcher.onDispatch((payload, meta) => {
-            if (payload.type === ActionTypes.ON_ERROR) {
+            if (payload.type === ErrorPayload.Type) {
                 handler(payload, meta);
             }
         });

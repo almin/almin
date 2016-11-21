@@ -9,7 +9,7 @@ const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
 import Dispatcher from "./../Dispatcher";
 import Store from "./../Store";
 import StoreGroupValidator from "./StoreGroupValidator";
-import {ActionTypes} from "../Context";
+import {ErrorPayload, DidExecutedPayload, CompletedPayload} from "../index";
 
 /**
  * QueuedStoreGroup options
@@ -96,17 +96,17 @@ export default class QueuedStoreGroup extends Dispatcher {
         // `this` can catch the events of dispatchers
         // Because context delegate dispatched events to **this**
         const tryToEmitChange = (payload, meta) => {
-            // check stores, if payload's type is not built-in event.
+            // check stores, if payload's type is not system event.
             // It means that `onDispatch` is called when dispatching user event.
-            if (ActionTypes[payload.type] === undefined) {
+            if (!meta.isTrusted) {
                 if (this.hasChangingStore) {
                     this.emitChange();
                 }
-            } else if (payload.type === ActionTypes.ON_ERROR) {
+            } else if (payload.type === ErrorPayload.Type) {
                 if (this.hasChangingStore) {
                     this.emitChange();
                 }
-            } else if (payload.type === ActionTypes.ON_DID_EXECUTE_EACH_USECASE) {
+            } else if (payload.type === DidExecutedPayload.Type) {
                 const parent = meta.parentDispatcher;
                 // when {asap: false}, emitChange when root useCase is executed
                 if (!asap && parent) {
@@ -115,7 +115,7 @@ export default class QueuedStoreGroup extends Dispatcher {
                 if (this.hasChangingStore) {
                     this.emitChange();
                 }
-            } else if (payload.type === ActionTypes.ON_COMPLETE_EACH_USECASE) {
+            } else if (payload.type === CompletedPayload.Type) {
                 const parent = meta.parentDispatcher;
                 // when {asap: false}, emitChange when root useCase is executed
                 if (!asap && parent) {
