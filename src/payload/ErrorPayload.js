@@ -2,7 +2,7 @@
 "use strict";
 import Payload from "./Payload";
 /**
- * @extend {Payload}
+ * This payload is executed
  */
 export default class ErrorPayload extends Payload {
     /**
@@ -12,8 +12,15 @@ export default class ErrorPayload extends Payload {
         return "ALMIN__ErrorPayload__";
     }
 
+    /**
+     * @param {Error} error
+     */
     constructor({ error }) {
         super({ type: ErrorPayload.Type });
+        /**
+         * the `error` in the UseCase
+         * @type {Error}
+         */
         this.error = error;
     }
 }

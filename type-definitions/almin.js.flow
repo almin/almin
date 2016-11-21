@@ -5,6 +5,12 @@
  */
 
 type DispatcherPayload = Object;
+// Internal class
+declare class DispatcherPayloadMeta {
+    useCase: ?UseCase;
+    parentDispatcher: ?Dispatcher;
+    timeStamp: number;
+}
 
 declare class QueuedStoreGroup extends Dispatcher {
     getState(): Object;
@@ -32,11 +38,7 @@ declare class Context {
     release(): void;
 }
 
-declare class DispatcherPayloadMeta {
-    useCase: ?UseCase;
-    parentDispatcher: ?Dispatcher;
-    timeStamp: number;
-}
+
 declare class Dispatcher extends events$EventEmitter {
     static isDispatcher(maybeDispatcher: mixed): boolean;
 
