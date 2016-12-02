@@ -8,6 +8,9 @@ import UseCase from "../src/UseCase";
 import UseCaseExecutor from "../src/UseCaseExecutor";
 import StoreGroup from "../src/UILayer/StoreGroup";
 import createEchoStore from "./helper/EchoStore";
+// payload
+
+import {Payload, WillExecutedPayload, DidExecutedPayload, CompletedPayload, ErrorPayload} from "../src/index";
 class TestUseCase extends UseCase {
     execute() {
 
@@ -62,7 +65,7 @@ describe("Context", function() {
             const expectedMergedObject = {
                 "1": 1
             };
-            const store = createEchoStore({ echo: { "1": 1 } });
+            const store = createEchoStore({echo: {"1": 1}});
             const appContext = new Context({
                 dispatcher,
                 store
@@ -74,7 +77,7 @@ describe("Context", function() {
     describe("#onChange", function() {
         it("should called when change some State", function(done) {
             const dispatcher = new Dispatcher();
-            const testStore = createEchoStore({ echo: { "1": 1 } });
+            const testStore = createEchoStore({echo: {"1": 1}});
             const storeGroup = new StoreGroup([testStore]);
             const appContext = new Context({
                 dispatcher,
@@ -89,8 +92,8 @@ describe("Context", function() {
         });
         it("should thin change events are happened at same time", function(done) {
             const dispatcher = new Dispatcher();
-            const aStore = createEchoStore({ name: "AStore", echo: { "1": 1 } });
-            const bStore = createEchoStore({ name: "BStore", echo: { "1": 1 } });
+            const aStore = createEchoStore({name: "AStore", echo: {"1": 1}});
+            const bStore = createEchoStore({name: "BStore", echo: {"1": 1}});
             const storeGroup = new StoreGroup([aStore, bStore]);
             const appContext = new Context({
                 dispatcher,
@@ -123,7 +126,7 @@ describe("Context", function() {
         });
     });
     describe("#onDispatch", function() {
-        it("should called the other of built-in event", function(done) {
+        it("should called the other of built-in event", function() {
             const dispatcher = new Dispatcher();
             const appContext = new Context({
                 dispatcher,
@@ -138,23 +141,40 @@ describe("Context", function() {
                 }
             }
             const eventUseCase = new EventUseCase();
+            const isCalled = {
+                will: false,
+                dispatch: false,
+                did: false,
+                complete: false
+            };
             // then
             appContext.onWillExecuteEachUseCase((payload, meta) => {
+                isCalled.will = true;
+                assert(payload instanceof WillExecutedPayload);
                 assert.equal(meta.useCase, eventUseCase);
             });
             // onDispatch should not called when UseCase will/did execute.
-            appContext.onDispatch(payload => {
+            appContext.onDispatch((payload, meta) => {
+                isCalled.dispatch = true;
+                assert(typeof payload === "object");
                 assert.equal(payload, expectedPayload);
             });
             appContext.onDidExecuteEachUseCase((payload, meta) => {
+                isCalled.did = true;
+                assert(payload instanceof DidExecutedPayload);
                 assert.equal(meta.useCase, eventUseCase);
             });
             appContext.onCompleteEachUseCase((payload, meta) => {
+                isCalled.complete = true;
+                assert(payload instanceof CompletedPayload);
                 assert.equal(meta.useCase, eventUseCase);
-                done();
             });
             // when
-            appContext.useCase(eventUseCase).execute();
+            return appContext.useCase(eventUseCase).execute().then(() => {
+                Object.keys(isCalled).forEach((key) => {
+                    assert(isCalled[key] === true, `${key} should be called`);
+                });
+            });
         });
     });
     describe("#onDidExecuteEachUseCase", function() {
@@ -219,7 +239,7 @@ describe("Context", function() {
             const dispatcher = new Dispatcher();
             const appContext = new Context({
                 dispatcher,
-                store: createEchoStore({ echo: { "1": 1 } })
+                store: createEchoStore({echo: {"1": 1}})
             });
             const useCaseExecutor = appContext.useCase(new ThrowUseCase());
             assert(useCaseExecutor instanceof UseCaseExecutor);
