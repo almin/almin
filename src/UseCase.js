@@ -44,11 +44,6 @@ export default class UseCase extends Dispatcher {
          * @type {string} default: UseCase name
          */
         this.name = this.displayName || this.constructor.name || defaultUseCaseName;
-        /**
-         * @type {string} UseCase name
-         */
-        this.useCaseName = this.constructor.name;
-
     }
 
     /**

@@ -5,6 +5,7 @@ import Context from "../src/Context";
 import Dispatcher from "../src/Dispatcher";
 import Store from "../src/Store";
 import UseCase from "../src/UseCase";
+import ErrorPayload from "../src/payload/ErrorPayload";
 describe("Store", function() {
     describe("#onDispatch", function() {
         it("should called when dispatched", function(done) {
@@ -66,7 +67,7 @@ describe("Store", function() {
             });
         });
         context("when useCaseName is minified", function() {
-            it("should receive error from UseCase", function(done) {
+            it("can receive error from UseCase", function(done) {
                 const store = new Store();
                 class TestUseCase extends UseCase {
                     execute() {
@@ -76,14 +77,16 @@ describe("Store", function() {
                     }
                 }
                 const testUseCase = new TestUseCase();
-                testUseCase.useCaseName = "minified";
+                testUseCase.name = "minified";
                 // delegate
                 testUseCase.pipe(store);
                 // then
-                store.onError((payload, meta) => {
-                    assert(meta.useCase instanceof TestUseCase);
-                    assert.equal(payload.error.name, "DomainError");
-                    done();
+                store.onDispatch((payload, meta) => {
+                    if (payload instanceof ErrorPayload) {
+                        assert(meta.useCase instanceof TestUseCase);
+                        assert.equal(payload.error.name, "DomainError");
+                        done();
+                    }
                 });
                 // when
                 testUseCase.execute();
@@ -102,10 +105,12 @@ describe("Store", function() {
             // delegate
             testUseCase.pipe(store);
             // then
-            store.onError((payload, meta) => {
-                assert(meta.useCase instanceof TestUseCase);
-                assert.equal(payload.error.name, "DomainError");
-                done();
+            store.onDispatch((payload, meta) => {
+                if (payload instanceof ErrorPayload) {
+                    assert(meta.useCase instanceof TestUseCase);
+                    assert.equal(payload.error.name, "DomainError");
+                    done();
+                }
             });
             // when
             testUseCase.execute();

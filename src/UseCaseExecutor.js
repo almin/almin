@@ -34,10 +34,6 @@ export default class UseCaseExecutor {
             assert(typeof useCase.execute === "function", `UseCase instance should have #execute function: ${useCaseName}`);
         }
         /**
-         * @type {string} useCase name
-         */
-        this.useCaseName = useCaseName;
-        /**
          * @type {UseCase} executable useCase
          */
         this.useCase = useCase;
