@@ -86,7 +86,7 @@ export default class UseCase extends Dispatcher {
      * throw error event
      * you can use it instead of `throw new Error()`
      * this error event is caught by dispatcher.
-     * @param {Error} error
+     * @param {Error|*} [error]
      * @public
      */
     throwError(error) {

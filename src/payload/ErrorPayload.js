@@ -13,13 +13,13 @@ export default class ErrorPayload extends Payload {
     }
 
     /**
-     * @param {Error} error
+     * @param {Error|*} [error]
      */
-    constructor({ error }) {
-        super({ type: ErrorPayload.Type });
+    constructor({error}) {
+        super({type: ErrorPayload.Type});
         /**
          * the `error` in the UseCase
-         * @type {Error}
+         * @type {Error|*}
          */
         this.error = error;
     }
