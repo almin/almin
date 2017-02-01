@@ -118,11 +118,31 @@ describe("Context", function() {
             const testUseCase = new TestUseCase();
             // then
             appContext.onWillExecuteEachUseCase((payload, meta) => {
+                assert(Array.isArray(payload.args));
+                assert(typeof meta.timeStamp === "number");
                 assert.equal(meta.useCase, testUseCase);
                 done();
             });
             // when
             appContext.useCase(testUseCase).execute();
+        });
+        it("payload.args is the same with context.execute arguments", function(done) {
+            const dispatcher = new Dispatcher();
+            const appContext = new Context({
+                dispatcher,
+                store: new Store()
+            });
+            const testUseCase = new TestUseCase();
+            const expectedArguments = "param";
+            // then
+            appContext.onWillExecuteEachUseCase((payload, meta) => {
+                assert(payload.args.length === 1);
+                const [arg] = payload.args;
+                assert(arg === expectedArguments);
+                done();
+            });
+            // when
+            appContext.useCase(testUseCase).execute(expectedArguments);
         });
     });
     describe("#onDispatch", function() {

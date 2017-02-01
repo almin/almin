@@ -10,9 +10,9 @@ export default class WillExecutedPayload extends Payload {
     }
 
     /**
-     * @param {*[]} args
+     * @param {*[]} [args]
      */
-    constructor({ args }) {
+    constructor({ args = [] }) {
         super({ type: WillExecutedPayload.Type });
         /**
          * a array for argument of the useCase
