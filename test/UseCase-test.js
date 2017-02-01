@@ -8,6 +8,22 @@ import Context from "../src/Context";
 import {WillExecutedPayload, DidExecutedPayload, CompletedPayload} from "../src/index";
 import UseCaseContext from "../src/UseCaseContext";
 describe("UseCase", function() {
+    describe("id", () => {
+        it("should have unique id in instance", () => {
+            const aUseCase = new UseCase();
+            assert(typeof aUseCase.id === "string");
+            const bUseCase = new UseCase();
+            assert(typeof bUseCase.id === "string");
+            assert(aUseCase.id !== bUseCase.id);
+        });
+    });
+    describe("name", () => {
+        it("should have name that same with UseCase.name by default", () => {
+            const ExampleUseCase = class ExampleUseCase extends UseCase {};
+            const useCase = new ExampleUseCase();
+            assert(useCase.name === "ExampleUseCase");
+        });
+    });
     context("when execute B UseCase in A UseCase", function() {
         it("should execute A:will -> B:will -> B:did -> A:did", function() {
             class BUseCase extends UseCase {
@@ -99,7 +115,7 @@ describe("UseCase", function() {
             }
             const testUseCase = new TestUseCase();
             // then
-            testUseCase.onDispatch(({ type, error }) => {
+            testUseCase.onDispatch(({type, error}) => {
                 assert(error instanceof Error);
                 done();
             });

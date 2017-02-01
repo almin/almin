@@ -32,7 +32,7 @@ export default class DispatcherPayloadMeta {
          */
         this.parentDispatcher = parentDispatcher;
         /**
-         *  timeStamp is created time of the meta.
+         * timeStamp is created time of the meta.
          * @type {number}
          * @readonly
          * @public

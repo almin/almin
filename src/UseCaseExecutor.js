@@ -76,7 +76,7 @@ export default class UseCaseExecutor {
 
     /**
      * dispatch did execute each UseCase
-     * @param {*} value result value of the useCase executed
+     * @param {*} [value] result value of the useCase executed
      * @private
      */
     _didExecute(value) {
@@ -93,7 +93,7 @@ export default class UseCaseExecutor {
 
     /**
      * dispatch complete each UseCase
-     * @param {*} value unwrapped result value of the useCase executed
+     * @param {*} [value] unwrapped result value of the useCase executed
      * @private
      */
     _complete(value) {

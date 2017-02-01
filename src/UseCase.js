@@ -5,6 +5,20 @@ import UseCaseContext from "./UseCaseContext";
 import DispatcherPayloadMeta from "./DispatcherPayloadMeta";
 import ErrorPayload from "./payload/ErrorPayload";
 /**
+ * UseCase incremental count is for Unique ID.
+ * @type {number}
+ * @private
+ */
+let _UseCaseCount = 0;
+/**
+ * create new id
+ * @returns {String}
+ */
+const createNewID = () => {
+    _UseCaseCount++;
+    return String(_UseCaseCount);
+};
+/**
  * @type {string}
  * @private
  */
@@ -40,6 +54,11 @@ export default class UseCase extends Dispatcher {
 
     constructor() {
         super();
+        /**
+         * unique id in each UseCase instances.
+         * @type {String}
+         */
+        this.id = createNewID();
         /**
          * @type {string} default: UseCase name
          */
