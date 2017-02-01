@@ -58,6 +58,8 @@ declare class Store extends Dispatcher {
 declare class UseCase extends Dispatcher {
     static isUseCase(maybeUseCase: mixed): boolean;
 
+    id: string;
+    name: string;
     context(): UseCaseContext;
     onError(errorHandler: (error: Error) => mixed): Function;
     throwError(error: Error): void;
