@@ -26,7 +26,7 @@ class ThrowUseCase extends UseCase {
     }
 }
 describe("Context", function() {
-    describe("dispatch in UseCase", function() {
+    describe("UseCase can dispatch in Context", function() {
         it("should dispatch Store", function(done) {
             const dispatcher = new Dispatcher();
             const DISPATCHED_EVENT = {
@@ -42,9 +42,12 @@ describe("Context", function() {
             class ReceiveStore extends Store {
                 constructor() {
                     super();
-                    this.onDispatch(payload => {
+                    this.onDispatch((payload, meta) => {
                         if (payload.type === DISPATCHED_EVENT.type) {
                             assert.deepEqual(payload, DISPATCHED_EVENT);
+                            assert(meta.useCase === useCase);
+                            assert(meta.parentDispatcher === useCase);
+                            assert(typeof meta.timeStamp === "number");
                             done();
                         }
                     });
@@ -56,7 +59,8 @@ describe("Context", function() {
                 dispatcher,
                 store
             });
-            appContext.useCase(new DispatchUseCase()).execute();
+            const useCase = new DispatchUseCase();
+            appContext.useCase(useCase).execute();
         });
     });
     describe("#getStates", function() {
