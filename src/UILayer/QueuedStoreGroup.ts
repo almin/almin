@@ -1,15 +1,19 @@
 // LICENSE : MIT
 "use strict";
 // polyfill Object.assign
-const ObjectAssign = require("object-assign");
-const assert = require("assert");
-const LRU = require("lru-map-like");
+import * as assert from "assert";
+import ObjectAssign from "./object-assign";
+import LRU from "./lru-map-like";
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
 
 import Dispatcher from "./../Dispatcher";
+import { DispatchedPayload } from "./../Dispatcher";
+import DispatcherPayloadMeta from "./../DispatcherPayloadMeta";
 import Store from "./../Store";
 import StoreGroupValidator from "./StoreGroupValidator";
-import {ErrorPayload, DidExecutedPayload, CompletedPayload} from "../index";
+import DidExecutedPayload from "../payload/DidExecutedPayload";
+import ErrorPayload from "../payload/ErrorPayload";
+import CompletedPayload from "../payload/CompletedPayload";
 
 /**
  * QueuedStoreGroup options
@@ -29,6 +33,11 @@ const defaultOptions = {
      */
     asap: false
 };
+
+export interface QueuedStoreGroupOption {
+    asap?: boolean;
+}
+
 /**
  * ## Description
  *
@@ -56,13 +65,20 @@ const defaultOptions = {
  * @public
  */
 export default class QueuedStoreGroup extends Dispatcher {
+
+    private _releaseHandlers: Array<Function>;
+    private _currentChangingStores: Array<Store>;
+    private stores: Array<Store>;
+    private _stateCache: LRU<Store, any>;
+    private _isAnyOneStoreChanged: boolean;
+
     /**
      * Create StoreGroup
      * @param {Store[]} stores stores are instance of `Store` class
      * @param {Object} [options] QueuedStoreGroup option
      * @public
      */
-    constructor(stores, options = {}) {
+    constructor(stores: Array<Store>, options: QueuedStoreGroupOption = {}) {
         super();
         StoreGroupValidator.validateStores(stores);
         const asap = options.asap !== undefined ? options.asap : defaultOptions.asap;
@@ -92,10 +108,10 @@ export default class QueuedStoreGroup extends Dispatcher {
          * @type {LRU}
          * @private
          */
-        this._stateCache = new LRU(100);
+        this._stateCache = new LRU<Store, any>(100);
         // `this` can catch the events of dispatchers
         // Because context delegate dispatched events to **this**
-        const tryToEmitChange = (payload, meta) => {
+        const tryToEmitChange = (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => {
             // check stores, if payload's type is not system event.
             // It means that `onDispatch` is called when dispatching user event.
             if (!meta.isTrusted) {
@@ -135,7 +151,7 @@ export default class QueuedStoreGroup extends Dispatcher {
      * @returns {boolean}
      * @private
      */
-    get hasChangingStore() {
+    get hasChangingStore(): boolean {
         return this.currentChangingStores.length !== 0;
     }
 
@@ -144,7 +160,7 @@ export default class QueuedStoreGroup extends Dispatcher {
      * @returns {Store[]}
      * @private
      */
-    get currentChangingStores() {
+    get currentChangingStores(): Array<Store> {
         return this._currentChangingStores;
     }
 
@@ -153,7 +169,7 @@ export default class QueuedStoreGroup extends Dispatcher {
      * @returns {Object} merged state object
      * @public
      */
-    getState() {
+    getState<T>(): T {
         const stateMap = this.stores.map(store => {
             /*
              Why record nextState to `_storeValueMap`?
@@ -162,7 +178,7 @@ export default class QueuedStoreGroup extends Dispatcher {
             const prevState = this._stateCache.get(store);
             const nextState = store.getState(prevState);
             if (process.env.NODE_ENV !== "production") {
-                assert(typeof nextState == "object", `${store}: ${store.name}.getState() should return Object.
+                assert.ok(typeof nextState == "object", `${store}: ${store.name}.getState() should return Object.
 e.g.)
 
  class ExampleStore extends Store {
@@ -191,7 +207,7 @@ StoreGroup#getState()["StateName"]; // state
      * @param {Store} store
      * @private
      */
-    _registerStore(store) {
+    private _registerStore(store: Store) {
         // if anyone store is changed, will call `emitChange()`.
         const releaseOnChangeHandler = store.onChange(() => {
             // ====
@@ -222,7 +238,7 @@ StoreGroup#getState()["StateName"]; // state
      * emit change event
      * @public
      */
-    emitChange() {
+    emitChange(): void {
         if (!this._isAnyOneStoreChanged) {
             return;
         }
@@ -240,7 +256,7 @@ StoreGroup#getState()["StateName"]; // state
      * @returns {Function} call the function and release handler
      * @public
      */
-    onChange(handler) {
+    onChange(handler: (stores: Array<Store>) => void ): () => void {
         this.on(CHANGE_STORE_GROUP, handler);
         const releaseHandler = this.removeListener.bind(this, CHANGE_STORE_GROUP, handler);
         this._releaseHandlers.push(releaseHandler);
@@ -252,7 +268,7 @@ StoreGroup#getState()["StateName"]; // state
      * You can call this when no more call event handler
      * @public
      */
-    release() {
+    release(): void {
         this._releaseHandlers.forEach(releaseHandler => releaseHandler());
         this._releaseHandlers.length = 0;
         this._stateCache.clear();
@@ -262,7 +278,7 @@ StoreGroup#getState()["StateName"]; // state
      * prune changing stores
      * @private
      */
-    _pruneCurrentChangingStores() {
+    private _pruneCurrentChangingStores(): void {
         this._currentChangingStores.length = 0;
     }
 }
