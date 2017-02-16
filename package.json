@@ -26,7 +26,7 @@
     "start:docs": "gitbook serve",
     "build:docs": "gitbook build",
     "build": "npm-run-all -p build:tsc build:cp_obj -s build:down_transform",
-    "build:cp_obj" :"cpx 'src/**/*.{js, jsx}' __obj/ --preserve",
+    "build:cp_obj": "cpx 'src/**/*.{js, jsx}' __obj/ --preserve",
     "build:tsc": "tsc --project .",
     "build:down_transform": "NODE_ENV=production babel __obj --out-dir lib --source-maps",
     "watch": "babel src --out-dir lib --watch --source-maps",
@@ -50,6 +50,7 @@
   ],
   "devDependencies": {
     "@alrra/travis-scripts": "^3.0.1",
+    "@types/node": "^7.0.5",
     "add-text-to-markdown": "^1.0.2",
     "babel-cli": "^6.7.5",
     "babel-preset-es2015-ie": "^6.6.2",

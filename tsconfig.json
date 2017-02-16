@@ -33,7 +33,9 @@
         "strictNullChecks": true,
         "suppressImplicitAnyIndexErrors": false,
         "target": "esnext",
-        "types": []
+        "types": [
+            "node"
+        ]
     },
 
     "include": [
