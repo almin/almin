@@ -1,6 +1,8 @@
 // LICENSE : MIT
 "use strict";
 import Dispatcher from "./Dispatcher";
+import DispatcherPayloadMeta from "./DispatcherPayloadMeta";
+import Payload from "./payload/Payload";
 import ErrorPayload from "./payload/ErrorPayload";
 const STATE_CHANGE_EVENT = "STATE_CHANGE_EVENT";
 /**
@@ -39,7 +41,7 @@ export default class Store extends Dispatcher {
      * @returns {boolean}
      * @public
      */
-    static isStore(v) {
+    static isStore(v: any): v is Store {
         if (v instanceof Store) {
             return true;
         } else if (typeof v === "object" && typeof v.getState === "function" && v.onChange === "function") {
@@ -47,6 +49,9 @@ export default class Store extends Dispatcher {
         }
         return false
     }
+
+    name: string;
+    displayName: string;
 
     constructor() {
         super();
@@ -62,7 +67,7 @@ export default class Store extends Dispatcher {
      * @return {Object} nextState
      * @public
      */
-    getState(prevState) {
+    getState<T>(_prevState: T): T {
         throw new Error(this.name + " should be implemented Store#getState(): Object");
     }
 
@@ -80,7 +85,7 @@ export default class Store extends Dispatcher {
      * }):
      * @deprecated
      */
-    onError(handler) {
+    onError(handler: (payload: Payload, meta: DispatcherPayloadMeta) => void): () => void {
         console.warn("Store#onError is deprecated. Please use Store#onDispatch.");
         return this.onDispatch((payload, meta) => {
             if (payload.type === ErrorPayload.Type) {
@@ -96,7 +101,7 @@ export default class Store extends Dispatcher {
      * @returns {Function} call the function and release handler
      * @public
      */
-    onChange(cb) {
+    onChange(cb: Function): () => void {
         this.on(STATE_CHANGE_EVENT, cb);
         return this.removeListener.bind(this, STATE_CHANGE_EVENT, cb);
     }
@@ -105,7 +110,7 @@ export default class Store extends Dispatcher {
      * emit "change" event to subscribers
      * @public
      */
-    emitChange() {
+    emitChange(): void {
         this.emit(STATE_CHANGE_EVENT);
     }
-};
+}
