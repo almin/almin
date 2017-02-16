@@ -1,0 +1,47 @@
+{
+    "compilerOptions": {
+        "allowJs": false, // use as a static type checker
+        "allowSyntheticDefaultImports": false,
+        "allowUnreachableCode": false,
+        "allowUnusedLabels": false,
+        // ES Modules are always parsed as in strict mode.
+        // Basically, we use modules, so we don't have to enable this option.
+        "alwaysStrict": false,
+        "diagnostics": true,
+        "declaration": true,
+        "forceConsistentCasingInFileNames": true,
+        "jsx": "preserve", // Transform jsx syntax in babels phase
+        "lib": [
+            "es2016",
+            "dom"
+        ],
+        "module": "es2015",
+        "moduleResolution": "node",
+        "newLine": "LF",
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitAny": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "noImplicitUseStrict": false,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "outDir": "./__obj/",
+        "pretty": true,
+        "preserveConstEnums": true,
+        "removeComments": false,
+        "sourceMap": true,
+        "strictNullChecks": true,
+        "suppressImplicitAnyIndexErrors": false,
+        "target": "esnext",
+        "types": []
+    },
+
+    "include": [
+        "src/**/*"
+    ],
+
+    "exclude": [
+        ".git",
+        "node_modules"
+    ]
+}

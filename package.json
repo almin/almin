@@ -25,7 +25,10 @@
   "scripts": {
     "start:docs": "gitbook serve",
     "build:docs": "gitbook build",
-    "build": "NODE_ENV=production babel src --out-dir lib --source-maps",
+    "build": "npm-run-all -p build:tsc build:cp_obj -s build:down_transform",
+    "build:cp_obj" :"cpx 'src/**/*.{js, jsx}' __obj/ --preserve",
+    "build:tsc": "tsc --project .",
+    "build:down_transform": "NODE_ENV=production babel __obj --out-dir lib --source-maps",
     "watch": "babel src --out-dir lib --watch --source-maps",
     "prepublish": "npm run --if-present build",
     "lint:docs": "textlint -f pretty-error docs/",
@@ -54,6 +57,7 @@
     "babel-preset-power-assert": "^1.0.0",
     "babel-register": "^6.7.2",
     "babelify": "^7.3.0",
+    "cpx": "^1.5.0",
     "documentation": "^4.0.0-beta10",
     "documentation-markdown-api-theme": "^1.0.2",
     "documentation-wrapper": "^1.2.3",
@@ -70,6 +74,7 @@
     "textlint-rule-alex": "^1.0.1",
     "textlint-rule-common-misspellings": "^1.0.1",
     "textlint-rule-no-dead-link": "^3.0.1",
+    "typescript": "^2.1.6",
     "zuul": "^3.10.1"
   },
   "dependencies": {

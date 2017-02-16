@@ -85,3 +85,6 @@ crashlytics-build.properties
 
 
 /lib
+
+# Build cache.
+/__obj/
