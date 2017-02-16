@@ -26,7 +26,7 @@
     "build:js": "NODE_ENV=production webpack -p",
     "build:css": "postcss --config postcss.config.js",
     "build": "npm-run-all clean --parallel build:*",
-    "watch:js": "NODE_ENV=development webpack -D --watch",
+    "watch:js": "NODE_ENV=development webpack -d --watch",
     "watch:css": "chokidar --initial 'src/**/*.css' -c 'postcss --config postcss.config.js'",
     "watch": "npm-run-all clean --parallel watch:*",
     "prepublish": "npm run --if-present build",
@@ -45,23 +45,23 @@
     "babel-preset-react": "^6.5.0",
     "babel-register": "^6.7.2",
     "chokidar-cli": "^1.2.0",
-    "gh-pages": "^0.11.0",
+    "gh-pages": "^0.12.0",
     "json-loader": "^0.5.4",
     "mkdirp": "^0.5.1",
     "mocha": "^3.0.2",
-    "npm-run-all": "^3.1.0",
+    "npm-run-all": "^4.0.1",
     "postcss-calc": "^5.2.0",
     "postcss-cli": "^2.5.1",
     "postcss-custom-media": "^5.0.1",
     "postcss-custom-properties": "^5.0.0",
-    "postcss-easy-import": "^1.0.1",
+    "postcss-easy-import": "^2.0.0",
     "power-assert": "^1.3.1",
     "rimraf": "^2.5.2",
-    "suitcss-preprocessor": "^2.0.0",
-    "webpack": "^1.12.14"
+    "suitcss-preprocessor": "^3.0.1",
+    "webpack": "^2.0.0"
   },
   "dependencies": {
-    "almin": "file:../../",
+    "almin": "^0.9.1",
     "almin-logger": "^3.0.0",
     "babel-runtime": "^6.6.1",
     "classnames": "^2.2.3",
@@ -74,6 +74,6 @@
     "react-dom": "^15.0.1",
     "suitcss-base": "^2.0.0",
     "suitcss-classnames": "^1.1.0",
-    "uuid": "^2.0.2"
+    "uuid": "^3.0.1"
   }
 }
