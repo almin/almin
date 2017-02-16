@@ -74,7 +74,7 @@ export default class UseCase extends Dispatcher {
     /**
      * `execute()` method should be overwrite by subclass.
      */
-    execute(): never {
+    execute<R>(..._: Array<any>): R {
         throw new TypeError(`should be overwrite ${this.constructor.name}#execute()`);
     }
 
