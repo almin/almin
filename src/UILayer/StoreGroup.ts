@@ -2,14 +2,17 @@
 "use strict";
 
 // polyfill Object.assign
-const ObjectAssign = require("object-assign");
-const assert = require("assert");
-const LRU = require("lru-map-like");
-const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
+import ObjectAssign from "./object-assign";
+import * as assert from "assert";
+import LRU from "./lru-map-like";
+
 import Dispatcher from "./../Dispatcher";
 import Store from "./../Store";
 import StoreGroupValidator from "./StoreGroupValidator";
 import raq from "./raq";
+
+const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
+
 /**
  * StoreGroup is a **UI** parts of Store.
  * StoreGroup has event queue system.
@@ -18,12 +21,21 @@ import raq from "./raq";
  * @public
  */
 export default class StoreGroup extends Dispatcher {
+
+    private _releaseHandlers: Array<Function>;
+    private _currentChangingStores: Array<Store>;
+    private _previousChangingStores: Array<Store>;
+
+    stores: Array<Store>;
+    private _stateCache: LRU<Store, any>;
+    private _isAnyOneStoreChanged: boolean;
+
     /**
      * Create StoreGroup
      * @param {Store[]} stores stores are instance of `Store` class
      * @public
      */
-    constructor(stores) {
+    constructor(stores: Array<Store>) {
         super();
         StoreGroupValidator.validateStores(stores);
         /**
@@ -53,7 +65,7 @@ export default class StoreGroup extends Dispatcher {
          * @type {LRU}
          * @private
          */
-        this._stateCache = new LRU(100);
+        this._stateCache = new LRU<Store, any>(100);
     }
 
     /**
@@ -61,7 +73,7 @@ export default class StoreGroup extends Dispatcher {
      * @returns {Object} merged state object
      * @public
      */
-    getState() {
+    getState<T>(): T {
         const stateMap = this.stores.map(store => {
             /* Why record nextState to `_storeValueMap`.
              It is for Use Store's getState(prevState) implementation.
@@ -84,7 +96,7 @@ export default class StoreGroup extends Dispatcher {
             }
             const nextState = store.getState(prevState);
             if (process.env.NODE_ENV !== "production") {
-                assert(typeof nextState == "object", `${store}: ${store.name}.getState() should return Object.
+                assert.ok(typeof nextState == "object", `${store}: ${store.name}.getState() should return Object.
 e.g.)
 
  class ExampleStore extends Store {
@@ -113,7 +125,7 @@ StoreGroup#getState()["StateName"]// state
      * @param {Store} store
      * @private
      */
-    _registerStore(store) {
+    private _registerStore(store: Store): void {
         // if anyone store is changed, will call `emitChange()`.
         const releaseOnChangeHandler = store.onChange(() => {
             // true->false, prune previous cache
@@ -145,7 +157,7 @@ StoreGroup#getState()["StateName"]// state
     /**
      * release previous changing stores
      */
-    _prunePreviousChangingCache() {
+    private _prunePreviousChangingCache(): void {
         this._previousChangingStores.length = 0;
         this._currentChangingStores.length = 0;
     }
@@ -156,7 +168,7 @@ StoreGroup#getState()["StateName"]// state
      * - Anyone registered store emitChange, then set `this._isChangedStore` true.
      * - if `this._isChangedStore === true`, then {@link emitChange}().
      */
-    _requestEmitChange() {
+    private _requestEmitChange(): void {
         if (!this._isAnyOneStoreChanged) {
             return;
         }
@@ -168,7 +180,7 @@ StoreGroup#getState()["StateName"]// state
      * emit Change Event
      * @public
      */
-    emitChange() {
+    emitChange(): void {
         this._previousChangingStores = this._currentChangingStores.slice();
         // release ownership  of changingStores from StoreGroup
         // transfer ownership of changingStores to other
@@ -181,7 +193,7 @@ StoreGroup#getState()["StateName"]// state
      * @returns {Function} call the function and release handler
      * @public
      */
-    onChange(handler) {
+    onChange(handler: (stores: Array<Store>) => void): () => void {
         this.on(CHANGE_STORE_GROUP, handler);
         const releaseHandler = this.removeListener.bind(this, CHANGE_STORE_GROUP, handler);
         this._releaseHandlers.push(releaseHandler);
@@ -193,7 +205,7 @@ StoreGroup#getState()["StateName"]// state
      * You can call this when no more call event handler
      * @public
      */
-    release() {
+    release(): void {
         this._releaseHandlers.forEach(releaseHandler => releaseHandler());
         this._releaseHandlers.length = 0;
         this._stateCache.clear();
