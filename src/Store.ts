@@ -34,7 +34,7 @@ export let defaultStoreName = "<Anonymous-Store>";
  * Store class
  * @public
  */
-export default class Store extends Dispatcher {
+abstract class Store extends Dispatcher {
     /**
      * return true if the `v` is store.
      * @param {*} v
@@ -66,6 +66,8 @@ export default class Store extends Dispatcher {
      * @param {Object} prevState
      * @return {Object} nextState
      * @public
+     * 
+     * FIXME: mark this as `abstract` property.
      */
     getState<T>(_prevState: T): T {
         throw new Error(this.name + " should be implemented Store#getState(): Object");
@@ -114,3 +116,5 @@ export default class Store extends Dispatcher {
         this.emit(STATE_CHANGE_EVENT);
     }
 }
+
+export default Store;

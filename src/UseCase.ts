@@ -30,7 +30,7 @@ export let defaultUseCaseName = "<Anonymous-UseCase>";
     }
  }
  */
-export default class UseCase extends Dispatcher {
+abstract class UseCase extends Dispatcher {
 
     /**
      * return true if the `v` is a UseCase.
@@ -73,6 +73,8 @@ export default class UseCase extends Dispatcher {
 
     /**
      * `execute()` method should be overwrite by subclass.
+     *
+     *  FIXME: mark this as `abstract` property.
      */
     execute<R>(..._: Array<any>): R {
         throw new TypeError(`should be overwrite ${this.constructor.name}#execute()`);
@@ -131,3 +133,5 @@ export default class UseCase extends Dispatcher {
         this.dispatch(payload, meta);
     }
 }
+
+export default UseCase;
