@@ -1,7 +1,9 @@
 // LICENSE : MIT
 "use strict";
 const assert = require("assert");
-import Dispatcher from "../src/Dispatcher";
+
+import Dispatcher from "../lib/Dispatcher";
+
 describe("Dispatcher", function() {
     describe("#onDispatch", function() {
         it("should return un-listen function", function() {
