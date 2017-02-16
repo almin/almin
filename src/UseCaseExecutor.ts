@@ -123,7 +123,7 @@ export default class UseCaseExecutor {
     onWillExecuteEachUseCase(handler: (payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         const releaseHandler = this.disptcher.onDispatch(function onWillExecute(payload, meta) {
             if (payload.type === WillExecutedPayload.Type) {
-                handler(payload, meta);
+                handler(payload as WillExecutedPayload, meta); // TODO: this should be guarded by type guarde function
             }
         });
         this._releaseHandlers.push(releaseHandler);
@@ -137,7 +137,7 @@ export default class UseCaseExecutor {
     onDidExecuteEachUseCase(handler: (payload: DidExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         const releaseHandler = this.disptcher.onDispatch(function onDidExecuted(payload, meta) {
             if (payload.type === DidExecutedPayload.Type) {
-                handler(payload, meta);
+                handler(payload as DidExecutedPayload, meta); // TODO: this should be guarded by type guarde function
             }
         });
         this._releaseHandlers.push(releaseHandler);
@@ -152,7 +152,7 @@ export default class UseCaseExecutor {
     onCompleteExecuteEachUseCase(handler: (payload: CompletedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         const releaseHandler = this.disptcher.onDispatch(function onCompleted(payload, meta) {
             if (payload.type === CompletedPayload.Type) {
-                handler(payload, meta);
+                handler(payload as CompletedPayload, meta); // TODO: this should be guarded by type guarde function
             }
         });
         this._releaseHandlers.push(releaseHandler);

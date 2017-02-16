@@ -111,7 +111,7 @@ abstract class UseCase extends Dispatcher {
     onError(errorHandler: (error: Error) => void): (this: Dispatcher) => void {
         return this.onDispatch(payload => {
             if (payload.type === ErrorPayload.Type) {
-                errorHandler(payload.error);
+                errorHandler((payload as ErrorPayload).error); // TODO: this should be guarded by type guarde function
             }
         });
     }

@@ -5,13 +5,18 @@ import * as assert from "assert";
 import { EventEmitter } from "events";
 import DispatcherPayloadMeta from "./DispatcherPayloadMeta";
 
+import Payload from "./payload/Payload";
+import ErrorPayload from "./payload/ErrorPayload";
+import CompletedPayload from "./payload/CompletedPayload";
+import DidExecutedPayload from "./payload/DidExecutedPayload";
+import WillExecutedPayload from "./payload/WillExecutedPayload";
+
 export const ON_DISPATCH = "__ON_DISPATCH__";
 
 /**
- * Actual payload object types
- * @typedef {Payload|ErrorPayload|CompletedPayload|DidExecutedPayload|WillExecutedPayload|Object} DispatchedPayload
+ *  Actual payload object types
  */
-export type DispatchedPayload = any; // FIXME
+export type DispatchedPayload = Payload | ErrorPayload | CompletedPayload | DidExecutedPayload | WillExecutedPayload;
 
 /**
  * Dispatcher is the **central** event bus system.

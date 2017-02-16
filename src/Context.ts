@@ -91,7 +91,7 @@ export default class Context {
     onWillExecuteEachUseCase(handler: (payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         const releaseHandler = this._dispatcher.onDispatch((payload, meta) => {
             if (payload.type === WillExecutedPayload.Type) {
-                handler(payload, meta);
+                handler(payload as WillExecutedPayload, meta); // TODO: this should be guarded by type guarde function
             }
         });
         this._releaseHandlers.push(releaseHandler);
@@ -142,7 +142,7 @@ export default class Context {
     onCompleteEachUseCase(handler: (payload: CompletedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         const releaseHandler = this._dispatcher.onDispatch((payload, meta) => {
             if (payload.type === CompletedPayload.Type) {
-                handler(payload, meta);
+                handler(payload as CompletedPayload, meta); // TODO: this should be guarded by type guarde function
             }
         });
         this._releaseHandlers.push(releaseHandler);
@@ -159,7 +159,7 @@ export default class Context {
     onErrorDispatch(handler: (payload: ErrorPayload, meta: DispatcherPayloadMeta) => void): () => void {
         const releaseHandler = this._dispatcher.onDispatch((payload, meta) => {
             if (payload.type === ErrorPayload.Type) {
-                handler(payload, meta);
+                handler(payload as ErrorPayload, meta); // TODO: this should be guarded by type guarde function
             }
         });
         this._releaseHandlers.push(releaseHandler);
