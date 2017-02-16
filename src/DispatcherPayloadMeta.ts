@@ -1,9 +1,8 @@
 // LICENSE : MIT
 "use strict";
 
-export type UseCase = any; // FIXME
-export type Dispatcher = any; // FIXME
 import Dispatcher from "./Dispatcher";
+import UseCase from "./UseCase";
 
 export interface DispatcherPayloadMetaArgs {
     useCase?: UseCase;
