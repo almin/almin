@@ -2,13 +2,13 @@
 "use strict";
 const nextTick = (function() {
     // Browser
-    if (typeof requestFrameAnimation === "function") {
-        return requestFrameAnimation;
+    if (typeof requestAnimationFrame === "function") {
+        return requestAnimationFrame;
     }
 
     // Other
     if (typeof setTimeout === "function") {
-        return function nextTick(handler) {
+        return function nextTick(handler: Function) {
             setTimeout(handler, 0);
         };
     }
