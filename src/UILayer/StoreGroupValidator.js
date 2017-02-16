@@ -1,7 +1,7 @@
 // LICENSE : MIT
 "use strict";
 const assert = require("assert");
-import Store, {defaultStoreName} from "../Store";
+import Store from "../Store";
 import StoreGroup from "./StoreGroup";
 import Dispatcher from "../Dispatcher";
 /*

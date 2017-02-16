@@ -5,10 +5,32 @@ import UseCase from "../src/UseCase";
 import Dispatcher from "../src/Dispatcher";
 import Store from "../src/Store";
 import Context from "../src/Context";
+import {WillExecutedPayload, DidExecutedPayload, CompletedPayload} from "../src/index";
 import UseCaseContext from "../src/UseCaseContext";
-describe("UseCase", function () {
-    context("when execute B UseCase in A UseCase", function () {
-        it("should execute A:will -> B:will -> B:did -> A:did", function () {
+describe("UseCase", function() {
+    describe("id", () => {
+        it("should have unique id in instance", () => {
+            const aUseCase = new UseCase();
+            assert(typeof aUseCase.id === "string");
+            const bUseCase = new UseCase();
+            assert(typeof bUseCase.id === "string");
+            assert(aUseCase.id !== bUseCase.id);
+        });
+    });
+    describe("name", () => {
+        // IE9, 10 not have Function.name
+        xit("should have name that same with UseCase.name by default", () => {
+            class ExampleUseCase extends UseCase {
+                execute() {
+
+                }
+            }
+            const useCase = new ExampleUseCase();
+            assert(useCase.name === "ExampleUseCase");
+        });
+    });
+    context("when execute B UseCase in A UseCase", function() {
+        it("should execute A:will -> B:will -> B:did -> A:did", function() {
             class BUseCase extends UseCase {
                 execute() {
                     return "b"
@@ -26,8 +48,9 @@ describe("UseCase", function () {
             const bUseCase = new BUseCase();
             const callStack = [];
             const expectedCallStackOfAUseCase = [
-                `ON_WILL_EXECUTE_EACH_USECASE`,
-                `ON_DID_EXECUTE_EACH_USECASE`
+                WillExecutedPayload.Type,
+                DidExecutedPayload.Type,
+                CompletedPayload.Type
             ];
             const expectedCallStack = [
                 `${aUseCase.name}:will`,
@@ -46,18 +69,18 @@ describe("UseCase", function () {
                 const expectedType = expectedCallStackOfAUseCase.shift();
                 assert.equal(type, expectedType);
             });
-            context.onWillExecuteEachUseCase(useCase => {
-                callStack.push(`${useCase.name}:will`);
+            context.onWillExecuteEachUseCase((payload, meta) => {
+                callStack.push(`${meta.useCase.name}:will`);
             });
-            context.onDidExecuteEachUseCase(useCase => {
-                callStack.push(`${useCase.name}:did`);
+            context.onDidExecuteEachUseCase((payload, meta) => {
+                callStack.push(`${meta.useCase.name}:did`);
             });
             // when
             return context.useCase(aUseCase).execute().then(() => {
                 assert.deepEqual(callStack, expectedCallStack);
             });
         });
-        it("UseCase should have `context` that is Context instance", function () {
+        it("UseCase should have `context` that is Context instance", function() {
             class TestUseCase extends UseCase {
                 execute() {
                     // then
@@ -75,8 +98,8 @@ describe("UseCase", function () {
             context.useCase(useCase).execute();
         });
     });
-    context("when not implemented execute()", function () {
-        it("should assert error on constructor", function () {
+    context("when not implemented execute()", function() {
+        it("should assert error on constructor", function() {
             class TestUseCase extends UseCase {
             }
             try {
@@ -88,8 +111,8 @@ describe("UseCase", function () {
             }
         });
     });
-    describe("#throwError", function () {
-        it("should dispatch thought onDispatch event", function (done) {
+    describe("#throwError", function() {
+        it("should dispatch thought onDispatch event", function(done) {
             class TestUseCase extends UseCase {
                 execute() {
                     this.throwError(new Error("error"));

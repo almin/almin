@@ -9,8 +9,8 @@ describe("StoreGroup", function() {
     describe("#onChange", function() {
         context("when some store emitChange()", function() {
             it("should async called StoreGroup#onChange", function(done) {
-                const aStore = createEchoStore({name: "AStore"});
-                const bStore = createEchoStore({name: "BStore"});
+                const aStore = createEchoStore({ name: "AStore" });
+                const bStore = createEchoStore({ name: "BStore" });
                 const storeGroup = new StoreGroup([aStore, bStore]);
                 // Should be failure, if emit -> onChange **sync**.
                 // But it is called async
@@ -27,8 +27,8 @@ describe("StoreGroup", function() {
         it("should async called onChange after 2nd", function(done) {
             // it should work cache temporary.
             // test _prunePreviousCache
-            const aStore = createEchoStore({name: "AStore"});
-            const bStore = createEchoStore({name: "BStore"});
+            const aStore = createEchoStore({ name: "AStore" });
+            const bStore = createEchoStore({ name: "BStore" });
             const storeGroup = new StoreGroup([aStore, bStore]);
             const test1 = (callback) => {
                 // Should be failure, if emit -> onChange **sync**.
@@ -62,8 +62,8 @@ describe("StoreGroup", function() {
             })
         });
         it("should thin out change events at once", function(done) {
-            const aStore = createEchoStore({name: "AStore"});
-            const bStore = createEchoStore({name: "BStore"});
+            const aStore = createEchoStore({ name: "AStore" });
+            const bStore = createEchoStore({ name: "BStore" });
             const storeGroup = new StoreGroup([aStore, bStore]);
             // then - called change handler a one-time
             storeGroup.onChange((changedStores) => {
@@ -80,12 +80,12 @@ describe("StoreGroup", function() {
         it("should return a single state object", function() {
             class AStore extends Store {
                 getState() {
-                    return {a: "a value"};
+                    return { a: "a value" };
                 }
             }
             class BStore extends Store {
                 getState() {
-                    return {b: "b value"};
+                    return { b: "b value" };
                 }
             }
             const aStore = new AStore();
@@ -137,7 +137,7 @@ describe("StoreGroup", function() {
                 let aCalledCount = 0;
                 let bCalledCount = 0;
                 class AState {
-                    constructor({count}) {
+                    constructor({ count }) {
                         this.count = count;
                     }
                 }
@@ -146,12 +146,12 @@ describe("StoreGroup", function() {
                     getState() {
                         aCalledCount = aCalledCount + 1;
                         return {
-                            AState: new AState({count: aCalledCount})
+                            AState: new AState({ count: aCalledCount })
                         }
                     }
                 }
                 class BState {
-                    constructor({count}) {
+                    constructor({ count }) {
                         this.count = count;
                     }
                 }
@@ -159,7 +159,7 @@ describe("StoreGroup", function() {
                     getState() {
                         bCalledCount = bCalledCount + 1;
                         return {
-                            BState: new BState({count: bCalledCount})
+                            BState: new BState({ count: bCalledCount })
                         };
                     }
                 }
@@ -183,8 +183,8 @@ describe("StoreGroup", function() {
     });
     describe("#release", function() {
         it("release onChange handler", function() {
-            const aStore = createEchoStore({name: "AStore"});
-            const bStore = createEchoStore({name: "BStore"});
+            const aStore = createEchoStore({ name: "AStore" });
+            const bStore = createEchoStore({ name: "BStore" });
             const storeGroup = new StoreGroup([aStore, bStore]);
             // then - called change handler a one-time
             let isCalled = false;

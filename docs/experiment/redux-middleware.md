@@ -2,7 +2,7 @@
 
 **WIP**
 
-Use [redux-logger](https://github.com/theaqua/redux-logger "redux-logger") with Almin.
+Use [redux-logger](https://github.com/evgenyrodionov/redux-logger "redux-logger") with Almin.
 
 - `applyMiddlewares(...<reduxMiddleWare>)`
 

@@ -2,9 +2,9 @@
 "use strict";
 const assert = require("assert");
 import Dispatcher from "../src/Dispatcher";
-describe("Dispatcher", function () {
-    describe("#onDispatch", function () {
-        it("should return un-listen function", function () {
+describe("Dispatcher", function() {
+    describe("#onDispatch", function() {
+        it("should return un-listen function", function() {
             const dispatcher = new Dispatcher();
             const unListen = dispatcher.onDispatch(() => {
                 // should not called
@@ -13,11 +13,11 @@ describe("Dispatcher", function () {
             // when
             unListen();
             // then
-            dispatcher.dispatch({type: "???"});
+            dispatcher.dispatch({ type: "???" });
         });
     });
-    describe("#dispatch", function () {
-        it("should dispatch with payload object, otherwise throw error", function () {
+    describe("#dispatch", function() {
+        it("should dispatch with payload object, otherwise throw error", function() {
             const dispatcher = new Dispatcher();
             try {
                 dispatcher.dispatch("it is not payload");
@@ -26,7 +26,7 @@ describe("Dispatcher", function () {
                 assert(error.message !== "UNREACHED");
             }
         });
-        it("should dispatch with payload object that has type propery", function (done) {
+        it("should dispatch with payload object that has type propery", function(done) {
             const dispatcher = new Dispatcher();
             const expectedPayload = {
                 type: { /* string Symbol anything */ }
@@ -37,7 +37,7 @@ describe("Dispatcher", function () {
             });
             dispatcher.dispatch(expectedPayload);
         });
-        it("should pass payload object to listening handler", function (done) {
+        it("should pass payload object to listening handler", function(done) {
             const dispatcher = new Dispatcher();
             const expectedPayload = {
                 type: "pay",

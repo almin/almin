@@ -1,7 +1,7 @@
 // LICENSE : MIT
 "use strict";
-import {ActionTypes} from "./Context";
 import Dispatcher from "./Dispatcher";
+import ErrorPayload from "./payload/ErrorPayload";
 const STATE_CHANGE_EVENT = "STATE_CHANGE_EVENT";
 /**
  * A UseCase `dispatch(payload)` and subscribers of the dispatcher are received the payload.
@@ -68,21 +68,23 @@ export default class Store extends Dispatcher {
 
     /**
      * invoke `handler` when UseCase throw error events.
-     * @param {function(payload: UseCaseErrorPayload)} handler
+     * @param {function(payload: Payload, meta: DispatcherPayloadMeta)} handler
      * @returns {Function} call the function and release handler
      * @public
      * @example
-     * store.onError(payload => {
-     *  const useCase = payload.useCase;
+     * store.onError((payload, meta) => {
+     *  const useCase = meta.useCase;
      *  if(useCase instanceof AUseCase){
-     *      // do something
+     *      console.log(payload.error);
      *  }
      * }):
+     * @deprecated
      */
     onError(handler) {
-        return this.onDispatch(payload => {
-            if (payload.type === ActionTypes.ON_ERROR) {
-                handler(payload);
+        console.warn("Store#onError is deprecated. Please use Store#onDispatch.");
+        return this.onDispatch((payload, meta) => {
+            if (payload.type === ErrorPayload.Type) {
+                handler(payload, meta);
             }
         });
     }

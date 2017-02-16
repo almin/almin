@@ -5,7 +5,14 @@
  */
 
 type DispatcherPayload = Object;
-type UseCaseErrorPayload = Object;
+// Internal class
+declare class DispatcherPayloadMeta {
+    useCase: ?UseCase;
+    dispatcher: ?Dispatcher | UseCase;
+    parentUseCase: ?UseCase;
+    timeStamp: number;
+    isTrusted: boolean;
+}
 
 declare class QueuedStoreGroup extends Dispatcher {
     getState(): Object;
@@ -25,13 +32,14 @@ declare class Context {
     getState(): mixed;
     onChange(onChangeHandler: (changingStores: Array<Store>) => mixed): Function;
     useCase(useCase: UseCase): UseCaseExecutor;
-    onWillExecuteEachUseCase(handler: (useCase: UseCase, args: mixed) => mixed): void;
-    onDispatch(handler: (payload: DispatcherPayload) => mixed): Function;
-    onDidExecuteEachUseCase(handler: (useCase: UseCase) => mixed): void;
-    onCompleteExecuteEachUseCase(handler: (useCase: UseCase) => mixed): void;
-    onErrorDispatch(errorHandler: (payload: UseCaseErrorPayload) => mixed): (this: Dispatcher) => mixed;
+    onWillExecuteEachUseCase(handler: (payload: DispatcherPayload, meta: DispatcherPayloadMeta) => mixed): Function;
+    onDispatch(handler: (payload: DispatcherPayload, meta: DispatcherPayloadMeta) => mixed): Function;
+    onDidExecuteEachUseCase(handler: (payload: DispatcherPayload, meta: DispatcherPayloadMeta) => mixed): Function;
+    onCompleteExecuteEachUseCase(handler: (payload: DispatcherPayload, meta: DispatcherPayloadMeta) => mixed): Function;
+    onErrorDispatch(handler: (payload: DispatcherPayload, meta: DispatcherPayloadMeta) => mixed): Function;
     release(): void;
 }
+
 
 declare class Dispatcher extends events$EventEmitter {
     static isDispatcher(maybeDispatcher: mixed): boolean;
@@ -45,7 +53,6 @@ declare class Store extends Dispatcher {
     static isStore(maybeStore: mixed): boolean;
 
     getState(prevState: Object): Object;
-    onError(handler: (payload: UseCaseErrorPayload) => mixed): Function;
     onChange(callback: Function): Function;
     emitChange(): void;
 }
@@ -53,8 +60,10 @@ declare class Store extends Dispatcher {
 declare class UseCase extends Dispatcher {
     static isUseCase(maybeUseCase: mixed): boolean;
 
+    id: string;
+    name: string;
     context(): UseCaseContext;
-    onError(errorHandler: (error: Error) => mixed): (this: Dispatcher) => mixed;
+    onError(errorHandler: (error: Error) => mixed): Function;
     throwError(error: Error): void;
 }
 
@@ -63,9 +72,9 @@ declare class UseCaseContext {
 }
 
 declare class UseCaseExecutor {
-    onWillExecuteEachUseCase(handler: (useCase: UseCase, args: mixed) => mixed): void;
-    onDidExecuteEachUseCase(handler: (useCase: UseCase) => mixed): void;
-    onCompleteExecuteEachUseCase(handler: (useCase: UseCase) => mixed): Function;
+    onWillExecuteEachUseCase(handler: (payload: DispatcherPayload, meta: DispatcherPayloadMeta) => mixed): void;
+    onDidExecuteEachUseCase(handler: (payload: DispatcherPayload, meta: DispatcherPayloadMeta) => mixed): void;
+    onCompleteExecuteEachUseCase(handler: (payload: DispatcherPayload, meta: DispatcherPayloadMeta) => mixed): Function;
     execute(args: Array<mixed>): void;
     release(): void;
 }

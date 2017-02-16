@@ -8,6 +8,9 @@ import UseCase from "../src/UseCase";
 import UseCaseExecutor from "../src/UseCaseExecutor";
 import StoreGroup from "../src/UILayer/StoreGroup";
 import createEchoStore from "./helper/EchoStore";
+// payload
+
+import {Payload, WillExecutedPayload, DidExecutedPayload, CompletedPayload, ErrorPayload} from "../src/index";
 class TestUseCase extends UseCase {
     execute() {
 
@@ -22,9 +25,9 @@ class ThrowUseCase extends UseCase {
         this.throwError(new Error("test"));
     }
 }
-describe("Context", function () {
-    describe("dispatch in UseCase", function () {
-        it("should dispatch Store", function (done) {
+describe("Context", function() {
+    context("UseCase can dispatch in Context", function() {
+        it("should dispatch Store", function(done) {
             const dispatcher = new Dispatcher();
             const DISPATCHED_EVENT = {
                 type: "update",
@@ -39,9 +42,13 @@ describe("Context", function () {
             class ReceiveStore extends Store {
                 constructor() {
                     super();
-                    this.onDispatch(payload => {
+                    this.onDispatch((payload, meta) => {
                         if (payload.type === DISPATCHED_EVENT.type) {
                             assert.deepEqual(payload, DISPATCHED_EVENT);
+                            assert(meta.useCase === useCase);
+                            assert(meta.dispatcher === useCase);
+                            assert(meta.parentUseCase === null);
+                            assert(typeof meta.timeStamp === "number");
                             done();
                         }
                     });
@@ -53,11 +60,12 @@ describe("Context", function () {
                 dispatcher,
                 store
             });
-            appContext.useCase(new DispatchUseCase()).execute();
+            const useCase = new DispatchUseCase();
+            appContext.useCase(useCase).execute();
         });
     });
-    describe("#getStates", function () {
-        it("should get a single state from State", function () {
+    describe("#getStates", function() {
+        it("should get a single state from State", function() {
             const dispatcher = new Dispatcher();
             const expectedMergedObject = {
                 "1": 1
@@ -71,8 +79,8 @@ describe("Context", function () {
             assert.deepEqual(states, expectedMergedObject);
         });
     });
-    describe("#onChange", function () {
-        it("should called when change some State", function (done) {
+    describe("#onChange", function() {
+        it("should called when change some State", function(done) {
             const dispatcher = new Dispatcher();
             const testStore = createEchoStore({echo: {"1": 1}});
             const storeGroup = new StoreGroup([testStore]);
@@ -87,7 +95,7 @@ describe("Context", function () {
             });
             testStore.emitChange();
         });
-        it("should thin change events are happened at same time", function (done) {
+        it("should thin change events are happened at same time", function(done) {
             const dispatcher = new Dispatcher();
             const aStore = createEchoStore({name: "AStore", echo: {"1": 1}});
             const bStore = createEchoStore({name: "BStore", echo: {"1": 1}});
@@ -105,8 +113,8 @@ describe("Context", function () {
             bStore.emitChange();
         });
     });
-    describe("#onWillExecuteEachUseCase", function () {
-        it("should called before UseCase will execute", function (done) {
+    describe("#onWillExecuteEachUseCase", function() {
+        it("should called before UseCase will execute", function(done) {
             const dispatcher = new Dispatcher();
             const appContext = new Context({
                 dispatcher,
@@ -114,16 +122,38 @@ describe("Context", function () {
             });
             const testUseCase = new TestUseCase();
             // then
-            appContext.onWillExecuteEachUseCase(useCase => {
-                assert.equal(useCase, testUseCase);
+            appContext.onWillExecuteEachUseCase((payload, meta) => {
+                assert(Array.isArray(payload.args));
+                assert(typeof meta.timeStamp === "number");
+                assert.equal(meta.useCase, testUseCase);
+                assert.equal(meta.dispatcher, dispatcher);
+                assert.equal(meta.parentUseCase, null);
                 done();
             });
             // when
             appContext.useCase(testUseCase).execute();
         });
+        it("payload.args is the same with context.execute arguments", function(done) {
+            const dispatcher = new Dispatcher();
+            const appContext = new Context({
+                dispatcher,
+                store: new Store()
+            });
+            const testUseCase = new TestUseCase();
+            const expectedArguments = "param";
+            // then
+            appContext.onWillExecuteEachUseCase((payload, meta) => {
+                assert(payload.args.length === 1);
+                const [arg] = payload.args;
+                assert(arg === expectedArguments);
+                done();
+            });
+            // when
+            appContext.useCase(testUseCase).execute(expectedArguments);
+        });
     });
-    describe("#onDispatch", function () {
-        it("should called the other of built-in event", function (done) {
+    describe("#onDispatch", function() {
+        it("should called the other of built-in event", function() {
             const dispatcher = new Dispatcher();
             const appContext = new Context({
                 dispatcher,
@@ -138,24 +168,50 @@ describe("Context", function () {
                 }
             }
             const eventUseCase = new EventUseCase();
+            const isCalled = {
+                will: false,
+                dispatch: false,
+                did: false,
+                complete: false
+            };
             // then
-            appContext.onWillExecuteEachUseCase(useCase => {
-                assert.equal(useCase, eventUseCase);
+            appContext.onWillExecuteEachUseCase((payload, meta) => {
+                isCalled.will = true;
+                assert(payload instanceof WillExecutedPayload);
+                assert.equal(meta.useCase, eventUseCase);
+                assert.equal(meta.dispatcher, dispatcher);
+                assert.equal(meta.parentUseCase, null);
             });
             // onDispatch should not called when UseCase will/did execute.
-            appContext.onDispatch(payload => {
+            appContext.onDispatch((payload, meta) => {
+                isCalled.dispatch = true;
+                assert(typeof payload === "object");
                 assert.equal(payload, expectedPayload);
             });
-            appContext.onDidExecuteEachUseCase(useCase => {
-                assert.equal(useCase, eventUseCase);
-                done();
+            appContext.onDidExecuteEachUseCase((payload, meta) => {
+                isCalled.did = true;
+                assert(payload instanceof DidExecutedPayload);
+                assert.equal(meta.useCase, eventUseCase);
+                assert.equal(meta.dispatcher, dispatcher);
+                assert.equal(meta.parentUseCase, null);
+            });
+            appContext.onCompleteEachUseCase((payload, meta) => {
+                isCalled.complete = true;
+                assert(payload instanceof CompletedPayload);
+                assert.equal(meta.useCase, eventUseCase);
+                assert.equal(meta.dispatcher, dispatcher);
+                assert.equal(meta.parentUseCase, null);
             });
             // when
-            appContext.useCase(eventUseCase).execute();
+            return appContext.useCase(eventUseCase).execute().then(() => {
+                Object.keys(isCalled).forEach((key) => {
+                    assert(isCalled[key] === true, `${key} should be called`);
+                });
+            });
         });
     });
-    describe("#onDidExecuteEachUseCase", function () {
-        it("should called after UseCase did execute", function (done) {
+    describe("#onDidExecuteEachUseCase", function() {
+        it("should called after UseCase did execute", function(done) {
             const dispatcher = new Dispatcher();
             const appContext = new Context({
                 dispatcher,
@@ -163,16 +219,38 @@ describe("Context", function () {
             });
             const testUseCase = new TestUseCase();
             // then
-            appContext.onDidExecuteEachUseCase(useCase => {
-                assert.equal(useCase, testUseCase);
+            appContext.onDidExecuteEachUseCase((payload, meta) => {
+                assert.equal(meta.useCase, testUseCase);
                 done();
             });
             // when
             appContext.useCase(testUseCase).execute();
         });
     });
-    describe("#onError", function () {
-        it("should called after UseCase did execute", function (done) {
+    describe("#onCompleteEachUseCase", function() {
+        it("always should be called by async", function() {
+            const dispatcher = new Dispatcher();
+            const appContext = new Context({
+                dispatcher,
+                store: new Store()
+            });
+            const testUseCase = new TestUseCase();
+            // then
+            let isCalled = false;
+            appContext.onCompleteEachUseCase((payload, meta) => {
+                isCalled = true;
+            });
+            // when
+            let promise = appContext.useCase(testUseCase).execute();
+            // should not be called at time
+            assert(isCalled === false);
+            return promise.then(() => {
+                assert(isCalled);
+            });
+        });
+    });
+    describe("#onErrorDispatch", function() {
+        it("should called after UseCase did execute", function(done) {
             const dispatcher = new Dispatcher();
             const appContext = new Context({
                 dispatcher,
@@ -180,17 +258,20 @@ describe("Context", function () {
             });
             const throwUseCase = new ThrowUseCase();
             // then
-            appContext.onErrorDispatch(payload => {
+            appContext.onErrorDispatch((payload, meta) => {
                 assert(payload.error instanceof Error);
-                assert.equal(payload.useCase, throwUseCase);
+                assert.equal(typeof meta.timeStamp, "number");
+                assert.equal(meta.useCase, throwUseCase);
+                assert.equal(meta.dispatcher, throwUseCase);
+                assert.equal(meta.parentUseCase, null);
                 done();
             });
             // when
             appContext.useCase(throwUseCase).execute();
         });
     });
-    describe("#useCase", function () {
-        it("should return UseCaseExecutor", function () {
+    describe("#useCase", function() {
+        it("should return UseCaseExecutor", function() {
             const dispatcher = new Dispatcher();
             const appContext = new Context({
                 dispatcher,
