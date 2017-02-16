@@ -3,6 +3,7 @@
 
 export type UseCase = any; // FIXME
 export type Dispatcher = any; // FIXME
+import Dispatcher from "./Dispatcher";
 
 export interface DispatcherPayloadMetaArgs {
     useCase?: UseCase;
