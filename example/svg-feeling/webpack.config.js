@@ -1,28 +1,20 @@
 const path = require("path");
-const webpack = require("webpack");
 
 module.exports = {
-    entry: [
-        "./src/index.js"
-    ],
-    devtool: process.env.WEBPACK_DEVTOOL || "eval",
+    entry: "./src/index.js",
+    devtool: process.env.WEBPACK_DEVTOOL || "source-map",
     output: {
         path: path.join(__dirname, "public", "build"),
+        publicPath: "/build/",
         filename: "bundle.js"
     },
-    plugins: [
-        new webpack.DefinePlugin({
-            'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
-        })
-    ],
     module: {
-        loaders: [
-            {test: /\.json$/, loader: "json"},
+        rules: [
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
-                loader: "babel",
-                query: {
+                loader: "babel-loader",
+                options: {
                     cacheDirectory: true
                 }
             }
