@@ -8,7 +8,6 @@ import StoreGroupValidator from "./UILayer/StoreGroupValidator";
 // payloads
 import CompletedPayload from "./payload/CompletedPayload";
 import DidExecutedPayload from "./payload/DidExecutedPayload";
-import Payload from "./payload/Payload";
 import ErrorPayload from "./payload/ErrorPayload";
 import WillExecutedPayload from "./payload/WillExecutedPayload";
 /**

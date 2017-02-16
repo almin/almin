@@ -107,7 +107,7 @@ export default class QueuedStoreGroup extends Dispatcher {
                     this.emitChange();
                 }
             } else if (payload.type === DidExecutedPayload.Type) {
-                const parent = meta.parentDispatcher;
+                const parent = meta.parentUseCase;
                 // when {asap: false}, emitChange when root useCase is executed
                 if (!asap && parent) {
                     return;
@@ -116,7 +116,7 @@ export default class QueuedStoreGroup extends Dispatcher {
                     this.emitChange();
                 }
             } else if (payload.type === CompletedPayload.Type) {
-                const parent = meta.parentDispatcher;
+                const parent = meta.parentUseCase;
                 // when {asap: false}, emitChange when root useCase is executed
                 if (!asap && parent) {
                     return;

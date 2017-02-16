@@ -8,8 +8,6 @@ import DispatcherPayloadMeta from "./DispatcherPayloadMeta";
 // payloads
 import CompletedPayload from "./payload/CompletedPayload";
 import DidExecutedPayload from "./payload/DidExecutedPayload";
-import Payload from "./payload/Payload";
-import ErrorPayload from "./payload/ErrorPayload";
 import WillExecutedPayload from "./payload/WillExecutedPayload";
 /**
  * UseCaseExecutor is a helper class for executing UseCase.
@@ -68,7 +66,8 @@ export default class UseCaseExecutor {
         });
         const meta = new DispatcherPayloadMeta({
             useCase: this.useCase,
-            parentDispatcher: this.parentUseCase,
+            dispatcher: this.disptcher,
+            parentUseCase: this.parentUseCase,
             isTrusted: true
         });
         this.disptcher.dispatch(payload, meta);
@@ -85,7 +84,8 @@ export default class UseCaseExecutor {
         });
         const meta = new DispatcherPayloadMeta({
             useCase: this.useCase,
-            parentDispatcher: this.parentUseCase,
+            dispatcher: this.disptcher,
+            parentUseCase: this.parentUseCase,
             isTrusted: true
         });
         this.disptcher.dispatch(payload, meta);
@@ -102,7 +102,8 @@ export default class UseCaseExecutor {
         });
         const meta = new DispatcherPayloadMeta({
             useCase: this.useCase,
-            parentDispatcher: this.parentUseCase,
+            dispatcher: this.disptcher,
+            parentUseCase: this.parentUseCase,
             isTrusted: true
         });
         this.disptcher.dispatch(payload, meta);

@@ -26,7 +26,7 @@ class ThrowUseCase extends UseCase {
     }
 }
 describe("Context", function() {
-    describe("UseCase can dispatch in Context", function() {
+    context("UseCase can dispatch in Context", function() {
         it("should dispatch Store", function(done) {
             const dispatcher = new Dispatcher();
             const DISPATCHED_EVENT = {
@@ -46,7 +46,8 @@ describe("Context", function() {
                         if (payload.type === DISPATCHED_EVENT.type) {
                             assert.deepEqual(payload, DISPATCHED_EVENT);
                             assert(meta.useCase === useCase);
-                            assert(meta.parentDispatcher === useCase);
+                            assert(meta.dispatcher === useCase);
+                            assert(meta.parentUseCase === null);
                             assert(typeof meta.timeStamp === "number");
                             done();
                         }
@@ -125,6 +126,8 @@ describe("Context", function() {
                 assert(Array.isArray(payload.args));
                 assert(typeof meta.timeStamp === "number");
                 assert.equal(meta.useCase, testUseCase);
+                assert.equal(meta.dispatcher, dispatcher);
+                assert.equal(meta.parentUseCase, null);
                 done();
             });
             // when
@@ -176,6 +179,8 @@ describe("Context", function() {
                 isCalled.will = true;
                 assert(payload instanceof WillExecutedPayload);
                 assert.equal(meta.useCase, eventUseCase);
+                assert.equal(meta.dispatcher, dispatcher);
+                assert.equal(meta.parentUseCase, null);
             });
             // onDispatch should not called when UseCase will/did execute.
             appContext.onDispatch((payload, meta) => {
@@ -187,11 +192,15 @@ describe("Context", function() {
                 isCalled.did = true;
                 assert(payload instanceof DidExecutedPayload);
                 assert.equal(meta.useCase, eventUseCase);
+                assert.equal(meta.dispatcher, dispatcher);
+                assert.equal(meta.parentUseCase, null);
             });
             appContext.onCompleteEachUseCase((payload, meta) => {
                 isCalled.complete = true;
                 assert(payload instanceof CompletedPayload);
                 assert.equal(meta.useCase, eventUseCase);
+                assert.equal(meta.dispatcher, dispatcher);
+                assert.equal(meta.parentUseCase, null);
             });
             // when
             return appContext.useCase(eventUseCase).execute().then(() => {
@@ -251,7 +260,10 @@ describe("Context", function() {
             // then
             appContext.onErrorDispatch((payload, meta) => {
                 assert(payload.error instanceof Error);
+                assert.equal(typeof meta.timeStamp, "number");
                 assert.equal(meta.useCase, throwUseCase);
+                assert.equal(meta.dispatcher, throwUseCase);
+                assert.equal(meta.parentUseCase, null);
                 done();
             });
             // when

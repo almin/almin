@@ -8,8 +8,10 @@ type DispatcherPayload = Object;
 // Internal class
 declare class DispatcherPayloadMeta {
     useCase: ?UseCase;
-    parentDispatcher: ?Dispatcher;
+    dispatcher: ?Dispatcher | UseCase;
+    parentUseCase: ?UseCase;
     timeStamp: number;
+    isTrusted: boolean;
 }
 
 declare class QueuedStoreGroup extends Dispatcher {
