@@ -1,8 +1,13 @@
 // LICENSE : MIT
 "use strict";
-const assert = require("assert");
+import * as assert from "assert";
 import StoreGroup from "./UILayer/StoreGroup";
+import QueuedStoreGroup from "./UILayer/QueuedStoreGroup";
+import Dispatcher from "./Dispatcher";
+import { DispatchedPayload } from "./Dispatcher";
+import DispatcherPayloadMeta from "./DispatcherPayloadMeta";
 import UseCase from "./UseCase";
+import Store from "./Store";
 import UseCaseExecutor  from "./UseCaseExecutor";
 import StoreGroupValidator from "./UILayer/StoreGroupValidator";
 // payloads
@@ -14,12 +19,16 @@ import WillExecutedPayload from "./payload/WillExecutedPayload";
  * @public
  */
 export default class Context {
+    private _dispatcher: Dispatcher;
+    private _storeGroup: QueuedStoreGroup | StoreGroup | Store;
+    private _releaseHandlers: Array<() => void>;
+
     /**
      * @param {Dispatcher} dispatcher
      * @param {QueuedStoreGroup|StoreGroup|Store} store store is either Store or StoreGroup
      * @public
      */
-    constructor({ dispatcher, store }) {
+    constructor({ dispatcher, store }: { dispatcher: Dispatcher; store: QueuedStoreGroup | StoreGroup | Store;}) {
         StoreGroupValidator.validateInstance(store);
         // central dispatcher
         this._dispatcher = dispatcher;
@@ -43,8 +52,8 @@ export default class Context {
      * @returns {*} states object of stores
      * @public
      */
-    getState() {
-        return this._storeGroup.getState();
+    getState<T>(): T {
+        return (this._storeGroup as any).getState(); // TODO: remove casting `any`
     }
 
     /**
@@ -53,8 +62,8 @@ export default class Context {
      * @return {Function} release handler function.
      * @public
      */
-    onChange(onChangeHandler) {
-        return this._storeGroup.onChange(onChangeHandler);
+    onChange(onChangeHandler: (hangingStores: Array<Store>) => void) {
+        return (this._storeGroup as any).onChange(onChangeHandler); // TODO: remove casting `any`
     }
 
     /**
@@ -65,8 +74,8 @@ export default class Context {
      *
      * context.useCase(UseCaseFactory.create()).execute(args);
      */
-    useCase(useCase) {
-        assert(UseCase.isUseCase(useCase), `It should be instance of UseCase: ${useCase}`);
+    useCase(useCase: UseCase): UseCaseExecutor {
+        assert.ok(UseCase.isUseCase(useCase), `It should be instance of UseCase: ${useCase}`);
         return new UseCaseExecutor({
             useCase,
             parent: null,
@@ -79,7 +88,7 @@ export default class Context {
      * @param {function(payload: WillExecutedPayload, meta: DispatcherPayloadMeta)} handler
      * @public
      */
-    onWillExecuteEachUseCase(handler) {
+    onWillExecuteEachUseCase(handler: (payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         const releaseHandler = this._dispatcher.onDispatch((payload, meta) => {
             if (payload.type === WillExecutedPayload.Type) {
                 handler(payload, meta);
@@ -98,7 +107,7 @@ export default class Context {
      * @returns {Function}
      * @public
      */
-    onDispatch(handler) {
+    onDispatch(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         const releaseHandler = this._dispatcher.onDispatch((payload, meta) => {
             // call handler, if payload's type is not built-in event.
             // It means that `onDispatch` is called when dispatching user event.
@@ -115,7 +124,7 @@ export default class Context {
      * @param {function(payload: DidExecutedPayload, meta: DispatcherPayloadMeta)} handler
      * @public
      */
-    onDidExecuteEachUseCase(handler) {
+    onDidExecuteEachUseCase(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         const releaseHandler = this._dispatcher.onDispatch((payload, meta) => {
             if (payload.type === DidExecutedPayload.Type) {
                 handler(payload, meta);
@@ -130,7 +139,7 @@ export default class Context {
      * @param {function(payload: CompletedPayload, meta: DispatcherPayloadMeta)} handler
      * @public
      */
-    onCompleteEachUseCase(handler) {
+    onCompleteEachUseCase(handler: (payload: CompletedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         const releaseHandler = this._dispatcher.onDispatch((payload, meta) => {
             if (payload.type === CompletedPayload.Type) {
                 handler(payload, meta);
@@ -147,7 +156,7 @@ export default class Context {
      * @returns {function(this:Dispatcher)}
      * @public
      */
-    onErrorDispatch(handler) {
+    onErrorDispatch(handler: (payload: ErrorPayload, meta: DispatcherPayloadMeta) => void): () => void {
         const releaseHandler = this._dispatcher.onDispatch((payload, meta) => {
             if (payload.type === ErrorPayload.Type) {
                 handler(payload, meta);
@@ -164,7 +173,7 @@ export default class Context {
      */
     release() {
         if (typeof this._storeGroup === "function") {
-            this._storeGroup.release();
+            (this._storeGroup as any).release(); // TODO: remove casting to any
         }
         this._releaseHandlers.forEach(releaseHandler => releaseHandler());
         this._releaseHandlers.length = 0;
