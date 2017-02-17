@@ -38,6 +38,7 @@
   "devDependencies": {
     "almin": "^0.8.0",
     "babel-cli": "^6.7.7",
+    "babel-loader": "^6.2.10",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-preset-es2015-ie": "^6.6.2",
     "babel-preset-jsdoc-to-assert": "^4.0.0",
@@ -47,10 +48,14 @@
     "mocha": "^3.0.1",
     "power-assert": "^1.3.1",
     "simple-mock": "^0.7.0",
+    "webpack": "^2.2.1",
     "zuul": "^3.10.1"
   },
   "peerDependencies": {
     "almin": ">= 0.8.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "almin": "file:///Users/azu/.ghq/github.com/almin/almin",
+    "map-like": "^1.0.3"
+  }
 }

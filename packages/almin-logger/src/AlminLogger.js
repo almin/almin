@@ -51,6 +51,10 @@ export default class AlminLogger extends EventEmitter {
         this.logger.startLogging(context);
     }
 
+    stopLogging(context) {
+        this.logger.stopLogging(context);
+    }
+
     /**
      * add log to logger
      * @param {*} chunk

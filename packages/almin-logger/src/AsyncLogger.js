@@ -1,16 +1,47 @@
 // LICENSE : MIT
 "use strict";
 import AlminLogger from "./AlminLogger";
+import LogGroup from "./log/LogGroup";
+import LogChunk from "./log/LogChunk";
+import PrintLogger from "./log/PrintLogger";
 const EventEmitter = require("events");
-// performance.now polyfill
-import now from "./performance-now";
+const Map = require("map-like");
+/**
+ * Pattern
+ *
+ * AUseCase will
+ * AUseCase did
+ * AUseCase complete => output
+ *
+ * --------
+ *
+ * AUseCase will
+ *  CUseCase will
+ *  CUseCase did
+ * AUseCase did
+ * CUseCase Complete
+ * AUseCase Complete
+ *
+ */
 export default class AsyncLogger extends EventEmitter {
     constructor({console}) {
         super();
-        this._logBuffer = [];
-        this._logMap = {};
+        /**
+         * Will show log buffer
+         * @type {MapLike[]}
+         * @private
+         */
+        this._currentLogBuffer = [];
+        /**
+         * @type {MapLike}
+         */
+        this._logMap = new Map();
         this._releaseHandlers = [];
+        /**
+         * @type {Console|Object|*}
+         */
         this.logger = console;
+        this.printLogger = new PrintLogger(this.logger);
     }
 
     /**
@@ -18,38 +49,125 @@ export default class AsyncLogger extends EventEmitter {
      * @param {Context} context
      */
     startLogging(context) {
-        this._logMap = {};
-        this._logBuffer = [];
-        this._releaseHandlers = [];
         /**
-         * @param {UseCase} useCase
-         * @param {*[]} args
+         * @param {WillExecutedPayload} payload
+         * @param {DispatcherPayloadMeta} meta
          */
-        const onWillExecuteEachUseCase = (useCase, args) => {
-            this._logMap[useCase.name] = now();
-            this.addLog(`${useCase.name} will execute`);
-            this.addLog([`${useCase.name} execute`, args]);
-
+        const onWillExecuteEachUseCase = (payload, meta) => {
+            const useCase = meta.useCase;
+            const parentUseCase = meta.parentUseCase !== useCase ? meta.parentUseCase : null;
+            const parentSuffix = parentUseCase ? ` <- ${parentUseCase.name}` : "";
+            const title = `${useCase.name}${parentSuffix}`;
+            const logGroup = new LogGroup({title, useCaseName: useCase.name});
+            logGroup.addChunk(new LogChunk({
+                useCase,
+                payload,
+                log: [`${useCase.name} execute:`, ...payload.args],
+                timeStamp: meta.timeStamp
+            }));
+            if (parentUseCase) {
+                const parentLogMap = this._logMap.get(parentUseCase);
+                parentLogMap.addGroup(logGroup);
+            }
+            this._logMap.set(useCase, logGroup);
+            if (!parentUseCase) {
+                // if logGroup is of root
+                this._currentLogBuffer.push(logGroup);
+            }
         };
-        const onDispatch = payload => {
-            this._logDispatch(payload);
+        /**
+         *
+         * @param {Payload} payload
+         * @param {DispatcherPayloadMeta} meta
+         */
+        const onDispatch = (payload, meta) => {
+            const useCase = meta.useCase;
+            if (!useCase) {
+                // TODO: add log
+                return;
+            }
+            const logGroup = this._logMap.get(useCase);
+            // http://emojipedia.org/fire/
+            logGroup.addChunk(new LogChunk({
+                useCase,
+                payload,
+                log: [`\u{1F525} Dispatch:${String(payload.type)}`, payload],
+                timeStamp: meta.timeStamp
+            }));
         };
-        const onChange = (stores) => {
-            this._logOnChange(stores);
+        const onChange = (changeStores) => {
+            // one, or more stores
+            const stores = [].concat(changeStores);
+            const useCases = this._logMap.keys();
+            const workingUseCaseNames = useCases.map(useCase => {
+                return useCase.name;
+            });
+            useCases.forEach(useCase => {
+                const logGroup = this._logMap.get(useCase);
+                stores.forEach(store => {
+                    logGroup.addChunk(new LogChunk({
+                        log: [
+                            `\u{1F4BE} Store:${store.name} is Changed`,
+                            store.getState(),
+                            `Currently executing UseCase: ${workingUseCaseNames.join(", ")}`
+                        ]
+                    }));
+                });
+            });
         };
-        const onErrorHandler = (error) => {
-            this._logError(error);
+        /**
+         * @param {ErrorPayload} payload
+         * @param {DispatcherPayloadMeta} meta
+         */
+        const onErrorHandler = (payload, meta) => {
+            // if has useCase and group by useCase
+            const error = payload.error || "Something wrong";
+            const useCase = meta.useCase;
+            const logGroup = this._logMap.get(useCase);
+            logGroup.addChunk(new LogChunk({
+                log: [
+                    `${useCase.name} throw Error:`,
+                    error
+                ],
+                timeStamp: meta.timeStamp
+            }));
         };
-        const onDidExecuteEachUseCase = (useCase) => {
-            this.addLog(`${useCase.name} did executed`);
+        /**
+         * @type {DidExecutedPayload}
+         * @param {DispatcherPayloadMeta} meta
+         */
+        const onDidExecuteEachUseCase = (payload, meta) => {
+            const useCase = meta.useCase;
+            const resultValue = meta.value;
+            const logGroup = this._logMap.get(useCase);
+            logGroup.addChunk(new LogChunk({
+                useCase,
+                payload,
+                log: [`${useCase.name} did executed:`, resultValue],
+                timeStamp: meta.timeStamp
+            }));
         };
-        const onCompleteUseCase = (useCase) => {
-            const timeStamp = this._logMap[useCase.name];
-            const takenTime = now() - timeStamp;
-            this.addLog(`${useCase.name} is completed`);
-            this.addLog("Taken time(ms): " + takenTime);
-            this._outputBuffer(`\u{1F516} ${useCase.name}`);
-            this.flushBuffer();
+        /**
+         * @param {CompletedPayload} payload
+         * @param {DispatcherPayloadMeta} meta
+         */
+        const onCompleteUseCase = (payload, meta) => {
+            const useCase = meta.useCase;
+            const resultValue = meta.value;
+            const logGroup = this._logMap.get(useCase);
+            logGroup.addChunk(new LogChunk({
+                useCase,
+                payload,
+                log: [`${useCase.name} is completed:`, resultValue],
+                timeStamp: meta.timeStamp
+            }));
+            const index = this._currentLogBuffer.indexOf(logGroup);
+            if (index !== -1) {
+                this._currentLogBuffer.splice(index, 1);
+                this.printLogger.printLogGroup(logGroup);
+                this.emit(AlminLogger.Events.output, logGroup);
+            }
+            this._logMap.delete(useCase);
         };
         // release handler
         this._releaseHandlers = [
@@ -64,17 +182,23 @@ export default class AsyncLogger extends EventEmitter {
 
     /**
      * add log to logger
-     * @param {*} chunk
+     * @param {*[]} log
      */
-    addLog(chunk) {
-        this._logBuffer.push(chunk)
+    addLog(log) {
+        const useCases = this._logMap.keys();
+        useCases.forEach(useCase => {
+            const logGroup = this._logMap.get(useCase);
+            logGroup.addChunk(new LogChunk({
+                log: log
+            }));
+        });
     }
 
     /**
      * flush current log buffer
      */
     flushBuffer() {
-        this._logBuffer.length = 0;
+        this._logMap.clear();
     }
 
 
@@ -84,86 +208,6 @@ export default class AsyncLogger extends EventEmitter {
     release() {
         this._releaseHandlers.forEach(releaseHandler => releaseHandler());
         this._releaseHandlers.length = 0;
+        this._logMap.clear();
     }
-
-    /**
-     * show current buffer using logger.
-     * @param {string} logTitle
-     * @private
-     */
-    _outputBuffer(logTitle) {
-        const output = (log) => {
-            if (log instanceof Error) {
-                this.logger.error(log);
-            } else {
-                this.logger.info(log);
-            }
-        };
-        this.logger.groupCollapsed(logTitle);
-        // if executing multiple UseCase at once, show warning
-        const currentExecuteUseCases = this._logBuffer.filter(logBuffer=> {
-            return typeof logBuffer === "string" && logBuffer.indexOf("will execute") !== -1;
-        });
-        if (currentExecuteUseCases.length > 1) {
-            const useCaseNames = currentExecuteUseCases.map(name => {
-                return name.replace(" will execute", "");
-            });
-            this.logger.warn(`Warning: Executing multiple UseCase at once`, useCaseNames);
-        }
-        this._logBuffer.forEach(logBuffer => {
-            if (Array.isArray(logBuffer)) {
-                const title = logBuffer.shift();
-                this.logger.groupCollapsed(title);
-                logBuffer.forEach(output);
-                this.logger.groupEnd();
-            } else {
-                output(logBuffer);
-            }
-        });
-        this.logger.groupEnd();
-        this.emit(AlminLogger.Events.output);
-    }
-
-    /**
-     * @param {DispatcherPayload} payload
-     * @private
-     */
-    _logError(payload) {
-        // if has useCase and group by useCase
-        if (payload.useCase) {
-            this.addLog([
-                payload.useCase.name,
-                payload.error
-            ]);
-        } else {
-            this.addLog(payload.error);
-        }
-    }
-
-    /**
-     * @param {DispatcherPayload} payload
-     * @private
-     */
-    _logDispatch(payload) {
-        // http://emojipedia.org/fire/
-        this.addLog([
-            `\u{1F525} Dispatch:${String(payload.type)}`,
-            payload
-        ]);
-    }
-
-    /**
-     * @param {Store[]} stores
-     * @private
-     */
-    _logOnChange(stores) {
-        stores.forEach(store => {
-            // http://emojipedia.org/floppy-disk/
-            this.addLog([
-                `\u{1F4BE} Store:${store.name} is Changed`,
-                store.getState()
-            ]);
-        })
-    }
-
 }

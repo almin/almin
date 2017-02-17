@@ -2,15 +2,12 @@
 "use strict";
 import AlminLogger from "./AlminLogger";
 const EventEmitter = require("events");
-// performance.now polyfill
-import now from "./performance-now";
 export default class SyncLogger extends EventEmitter {
-    constructor({console, templates}) {
+    constructor({console}) {
         super();
         this._logMap = {};
         this._releaseHandlers = [];
         this.logger = console;
-        this.templates = templates;
     }
 
     /**
@@ -25,11 +22,10 @@ export default class SyncLogger extends EventEmitter {
      * @param {Context} context
      */
     startLogging(context) {
-        const onWillExecuteEachUseCase = useCase => {
-            const startTimeStamp = now();
-            this.logger.groupCollapsed(`\u{1F516} ${useCase.name}`, startTimeStamp);
-            this._logMap[useCase.name] = startTimeStamp;
-            this.logger.log(`${useCase.name} will execute`);
+        const onWillExecuteEachUseCase = (payload, meta) => {
+            this.logger.groupCollapsed(`\u{1F516} ${meta.name}`, meta.timeStamp);
+            this._logMap[meta.useCase.name] = meta.timeStamp;
+            this.logger.log(`${meta.useCase.name} will execute`);
         };
         const onDispatch = payload => {
             this.logger.info(`\u{1F525} Dispatch:${String(payload.type)}`, payload)
@@ -41,11 +37,11 @@ export default class SyncLogger extends EventEmitter {
                 this.logger.groupEnd();
             });
         };
-        const onDidExecuteEachUseCase = (useCase) => {
-            this.logger.log(`${useCase.name} did executed`);
+        const onDidExecuteEachUseCase = (payload, meta) => {
+            this.logger.log(`${meta.useCase.name} did executed`);
         };
-        const onErrorHandler = (error) => {
-            this._logError(error);
+        const onErrorHandler = (payload, meta) => {
+            this._logError(payload, meta);
         };
 
         const onCompleteUseCase = (useCase) => {
@@ -75,15 +71,16 @@ export default class SyncLogger extends EventEmitter {
         this.logger.log(chunk);
     }
 
-    _logError(payload) {
+    _logError(payload, meta) {
         // if has useCase and group by useCase
-        if (payload.useCase) {
+        const error = payload.error || "something wrong";
+        if (meta.useCase) {
             this.logger.error(
-                payload.useCase.name,
-                payload.error
+                meta.useCase.name,
+                error
             );
         } else {
-            this.logger.error(payload.error);
+            this.logger.error(error);
         }
     }
 
