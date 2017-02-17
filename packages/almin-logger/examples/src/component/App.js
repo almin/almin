@@ -15,6 +15,7 @@ const appContext = new Context({
 });
 const logger = new AlminLogger();
 logger.startLogging(appContext);
+window.alminLogger = logger;
 export default class App extends React.Component {
     constructor(...args) {
         super(...args);

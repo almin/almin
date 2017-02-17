@@ -5,6 +5,7 @@ import AsyncIncreamentalUseCase from "../usecase/AsyncIncreamentalUseCase"
 import IncrementalCounterUseCase from "../usecase/IncrementalCounterUseCase"
 import DecrementalCounterUseCase from "../usecase/DecrementalCounterUseCase"
 import UpDownCounterUseCase from "../usecase/UpDownCounterUseCase"
+import ManuallLoggingUseCase from "../usecase/ManuallLoggingUseCase"
 import {Context} from "almin"
 import CounterState from "../store/CounterState"
 export default class CounterComponent extends React.Component {
@@ -27,13 +28,18 @@ export default class CounterComponent extends React.Component {
         const both = () => {
             context.useCase(new UpDownCounterUseCase()).execute();
         };
+        const manuallLogging = () => {
+            context.useCase(new ManuallLoggingUseCase()).execute(window.alminLogger);
+        };
         const counterState = this.props.counterState;
+
         return (
             <div>
                 <button onClick={asyncIncrement}>Async Counter ++</button>
                 <button onClick={increment}>Counter ++</button>
                 <button onClick={decrement}>Counter --</button>
                 <button onClick={both}>Counter +-</button>
+                <button onClick={manuallLogging}>Manuall Logging</button>
                 <p>
                     Count: {counterState.count}
                 </p>
