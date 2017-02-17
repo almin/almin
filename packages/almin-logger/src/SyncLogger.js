@@ -44,9 +44,10 @@ export default class SyncLogger extends EventEmitter {
             this._logError(payload, meta);
         };
 
-        const onCompleteUseCase = (useCase) => {
+        const onCompleteUseCase = (payload, meta) => {
+            const useCase = meta.useCase;
             const startTimeStamp = this._logMap[useCase.name];
-            const takenTime = now() - startTimeStamp;
+            const takenTime = startTimeStamp - meta.timeStamp;
             this.logger.log(`${useCase.name} is completed`);
             this.logger.info("Take time(ms): " + takenTime);
             this.logger.groupEnd(useCase.name);

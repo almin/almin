@@ -129,6 +129,8 @@ export default class AsyncLogger extends EventEmitter {
                     `${useCase.name} throw Error:`,
                     error
                 ],
+                payload,
+                useCase,
                 timeStamp: meta.timeStamp
             }));
         };
@@ -182,7 +184,7 @@ export default class AsyncLogger extends EventEmitter {
 
     /**
      * add log to logger
-     * @param {*[]} log
+     * @param {*} log
      */
     addLog(log) {
         const useCases = this._logMap.keys();

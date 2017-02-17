@@ -5,8 +5,8 @@ import {Context, Store, Dispatcher} from "almin";
 import SyncLogger from "../src/SyncLogger";
 import AlminLogger from "../src/AlminLogger";
 import ConsoleMock from "./helper/ConsoleMock";
-import ExampleUseCase from "./usecase/ExampleUseCase";
-describe("SyncLogger", function () {
+import NoDispatchUseCase from "./usecase/NoDispatchUseCase";
+describe("SyncLogger", function() {
     it("should output", function (done) {
         const consoleMock = ConsoleMock.create();
         const logger = new SyncLogger({
@@ -18,7 +18,7 @@ describe("SyncLogger", function () {
             store,
             dispatcher
         });
-        const useCase = new ExampleUseCase();
+        const useCase = new NoDispatchUseCase();
         logger.startLogging(context);
         // yet not called
         assert(!consoleMock.groupCollapsed.called);
