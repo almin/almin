@@ -1,7 +1,7 @@
 // LICENSE : MIT
 "use strict";
 import Dispatcher from "./Dispatcher";
-import { DispatchedPayload } from "./Dispatcher";
+import {DispatchedPayload} from "./Dispatcher";
 import UseCaseContext from "./UseCaseContext";
 import DispatcherPayloadMeta from "./DispatcherPayloadMeta";
 import ErrorPayload from "./payload/ErrorPayload";
@@ -33,6 +33,11 @@ export let defaultUseCaseName = "<Anonymous-UseCase>";
 abstract class UseCase extends Dispatcher {
 
     /**
+     * Debuggable name if it needed
+     */
+    static displayName?: string;
+
+    /**
      * return true if the `v` is a UseCase.
      */
     static isUseCase(v: any): v is UseCase {
@@ -44,11 +49,11 @@ abstract class UseCase extends Dispatcher {
         return false
     }
 
+
     /**
      * unique id in each UseCase instances.
      */
     id: string;
-    displayName: string;
 
     /**
      * The default is UseCase name
@@ -59,7 +64,8 @@ abstract class UseCase extends Dispatcher {
         super();
 
         this.id = createNewID();
-        this.name = this.displayName || this.constructor.name || defaultUseCaseName;
+        const own = this.constructor as typeof UseCase;
+        this.name = own.displayName || own.name || defaultUseCaseName;
     }
 
 

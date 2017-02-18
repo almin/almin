@@ -36,6 +36,11 @@ export let defaultStoreName = "<Anonymous-Store>";
  */
 abstract class Store extends Dispatcher {
     /**
+     * Debuggable name
+     */
+    static displayName?: string;
+
+    /**
      * return true if the `v` is store.
      * @param {*} v
      * @returns {boolean}
@@ -51,14 +56,14 @@ abstract class Store extends Dispatcher {
     }
 
     name: string;
-    displayName: string;
 
     constructor() {
         super();
+        const own = this.constructor as typeof Store;
         /**
          * @type {string} Store name
          */
-        this.name = this.displayName || this.constructor.name || defaultStoreName;
+        this.name = own.displayName || own.name || defaultStoreName;
     }
 
     /**
@@ -66,7 +71,7 @@ abstract class Store extends Dispatcher {
      * @param {Object} prevState
      * @return {Object} nextState
      * @public
-     * 
+     *
      * FIXME: mark this as `abstract` property.
      */
     getState<T>(_prevState: T): T {

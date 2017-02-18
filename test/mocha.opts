@@ -1,2 +1,3 @@
 --recursive
+--require env-test
 --compilers js:babel-register
