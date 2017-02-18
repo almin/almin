@@ -30,6 +30,16 @@ describe("UseCase", function() {
             const useCase = new ExampleUseCase();
             assert(useCase.name === "ExampleUseCase");
         });
+        context("when define displayName", () => {
+            it("#name is same with displayName", () => {
+                class MyUseCase extends UseCase {
+                }
+                const expectedName = "Expected UseCase";
+                MyUseCase.displayName = expectedName;
+                const store = new MyUseCase();
+                assert.equal(store.name, expectedName);
+            });
+        });
     });
     context("when execute B UseCase in A UseCase", function() {
         it("should execute A:will -> B:will -> B:did -> A:did", function() {
