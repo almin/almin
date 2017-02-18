@@ -24,6 +24,9 @@ const Map = require("map-like");
  *
  */
 export default class AsyncLogger extends EventEmitter {
+    /**
+     * @param {Object} console
+     */
     constructor({console}) {
         super();
         /**
@@ -59,10 +62,12 @@ export default class AsyncLogger extends EventEmitter {
             const parentSuffix = parentUseCase ? ` <- ${parentUseCase.name}` : "";
             const title = `${useCase.name}${parentSuffix}`;
             const logGroup = new LogGroup({title, useCaseName: useCase.name});
+            const args = payload.args.length && payload.args.length > 0 ? payload.args : undefined;
+            const log = [`${useCase.name} execute:`].concat(args);
             logGroup.addChunk(new LogChunk({
                 useCase,
                 payload,
-                log: [`${useCase.name} execute:`, ...payload.args],
+                log,
                 timeStamp: meta.timeStamp
             }));
             if (parentUseCase) {
@@ -83,7 +88,9 @@ export default class AsyncLogger extends EventEmitter {
         const onDispatch = (payload, meta) => {
             const useCase = meta.useCase;
             if (!useCase) {
-                // TODO: add log
+                this.addLog([
+                    `\u{1F525} Dispatch:${String(payload.type)}`, payload
+                ]);
                 return;
             }
             const logGroup = this._logMap.get(useCase);
@@ -91,28 +98,40 @@ export default class AsyncLogger extends EventEmitter {
             logGroup.addChunk(new LogChunk({
                 useCase,
                 payload,
-                log: [`\u{1F525} Dispatch:${String(payload.type)}`, payload],
+                log: [`${useCase.name} dispatch:${String(payload.type)}`, payload],
                 timeStamp: meta.timeStamp
             }));
         };
-        const onChange = (changeStores) => {
+        const onChangeStores = (changeStores) => {
             // one, or more stores
             const stores = [].concat(changeStores);
             const useCases = this._logMap.keys();
             const workingUseCaseNames = useCases.map(useCase => {
                 return useCase.name;
             });
-            useCases.forEach(useCase => {
-                const logGroup = this._logMap.get(useCase);
-                stores.forEach(store => {
-                    logGroup.addChunk(new LogChunk({
-                        log: [
-                            `\u{1F4BE} Store:${store.name} is Changed`,
-                            store.getState(),
-                            `Currently executing UseCase: ${workingUseCaseNames.join(", ")}`
-                        ]
-                    }));
+            // if Store#emitChange is called by async, parallel logging UseCase and Store
+            // It support Almin's StoreGroup implementation.
+            if (workingUseCaseNames.length === 0) {
+                const storeLogGroup = new LogGroup({
+                    title: `Store is changed`
                 });
+                const timeStamp = Date.now();
+                stores.forEach(store => {
+                    storeLogGroup.addChunk(new LogChunk({
+                        log: [`\u{1F4BE} Store:${store.name} is changed`, store.getState()],
+                        timeStamp
+                    }))
+                });
+                this.printLogger.printLogGroup(storeLogGroup);
+                return;
+            }
+            // It support Almin's QueuedStoreGroup implementation.
+            stores.forEach(store => {
+                this.addLog([
+                    `\u{1F4BE} Store:${store.name} is changed`,
+                    store.getState(),
+                    `Currently executing UseCase: ${workingUseCaseNames.join(", ")}`
+                ]);
             });
         };
         /**
@@ -173,7 +192,7 @@ export default class AsyncLogger extends EventEmitter {
         };
         // release handler
         this._releaseHandlers = [
-            context.onChange(onChange),
+            context.onChange(onChangeStores),
             context.onDispatch(onDispatch),
             context.onWillExecuteEachUseCase(onWillExecuteEachUseCase),
             context.onDidExecuteEachUseCase(onDidExecuteEachUseCase),
@@ -191,7 +210,8 @@ export default class AsyncLogger extends EventEmitter {
         useCases.forEach(useCase => {
             const logGroup = this._logMap.get(useCase);
             logGroup.addChunk(new LogChunk({
-                log: log
+                log: log,
+                timeStamp: Date.now()
             }));
         });
     }

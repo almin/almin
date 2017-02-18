@@ -14,7 +14,7 @@ export default class SyncLogger extends EventEmitter {
      * flush current log buffer
      */
     flushBuffer() {
-        this._logBuffer.length = 0;
+        this._logMap.clear();
     }
 
     /**

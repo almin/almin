@@ -4,7 +4,7 @@ Logger class for [Almin.js](https://github.com/azu/almin "Almin.js")
 
 [![Sauce Test Status](https://saucelabs.com/browser-matrix/almin-logger.svg)](https://saucelabs.com/u/almin-logger)
 
-![logger](https://monosnap.com/file/hrgv2Vo1Uec5o4RXBD5APMn8FCKEIC.png)
+![logger](https://monosnap.com/file/OuOnrag1xXpoA39j5P75fuN4GSOEEL.png)
 
 
 ## Feature
@@ -13,7 +13,7 @@ Logger class for [Almin.js](https://github.com/azu/almin "Almin.js")
 - Multiple Execution warning log of UseCase
 - Changed log of Store
 - Nesting log support if the browser support`console.groupCollapsed`.
-- Async(default) and Sync logger
+- Async(by default) and Sync logger
 
 ## Installation
 
@@ -24,7 +24,7 @@ Old IE need [console-polyfill](https://github.com/paulmillr/console-polyfill "co
 ## Usage
 
 ```js
-import ContextLogger from "./utils/ContextLogger";
+import ContextLogger from "almin-logger";
 // your store
 import AppStore from "./stores/AppStore";
 // context
@@ -41,6 +41,8 @@ const logger = new ContextLogger();
 // Start logger
 logger.startLogging(appContext);
 ```
+
+See [Examples](./examples) for more details.
 
 ## Options:
 
@@ -90,6 +92,16 @@ logger.startLogging(appContext);
 
 - mixed UseCase/Dispatch log and the other log.
 - It make confuse.
+
+## FAQ
+
+### IE 11 always show log like "Dispatch".
+
+IE 11 not have `Function.name`.
+almin-logger depended on `Function.name` or `Function.displayName`.
+
+You can resolve this issue by using [babel-plugin-class-display-name](https://www.npmjs.com/package/babel-plugin-class-display-name "babel-plugin-class-display-name").
+This plugin set `displayName` to each UseCase class.
 
 ## Tests
 

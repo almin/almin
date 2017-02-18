@@ -166,7 +166,7 @@ describe("AsyncLogger", function() {
             type: "example"
         }).then(() => {
             assert(consoleMock.groupCollapsed.called);
-            const expectOutput = `Dispatch:example`;
+            const expectOutput = `dispatch:example`;
             const isContain = consoleMock.log.calls.some(call => {
                 return call.arg && call.arg.indexOf(expectOutput) !== -1;
             });
@@ -221,7 +221,7 @@ describe("AsyncLogger", function() {
         // Then
         logger.on(AlminLogger.Events.output, function() {
             assert(consoleMock.groupCollapsed.called);
-            const expectOutput = `Dispatch:`;
+            const expectOutput = `dispatch:`;
             const isContain = consoleMock.log.calls.some(call => {
                 return call.arg && call.arg.indexOf(expectOutput) !== -1;
             });

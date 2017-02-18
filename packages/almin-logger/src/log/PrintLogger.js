@@ -15,7 +15,9 @@ export default class PrintLogger {
      */
     printLogGroup(logGroup) {
         const childrenLogGroup = logGroup.children.filter(logItem => logItem instanceof LogGroup);
-        const includesUseCaseName = childrenLogGroup.map(logGroup => logGroup.useCaseName).join(", ");
+        const includesUseCaseName = childrenLogGroup
+        .filter(logGroup => logGroup !== undefined)
+        .map(logGroup => logGroup.useCaseName).join(", ");
         const groupTitleSuffix = childrenLogGroup.length > 0 ? `(includes "${includesUseCaseName}")` : "";
         const groupTitle = `\u{1F516} ${logGroup.title}${groupTitleSuffix}`;
         this.logger.groupCollapsed(groupTitle);
@@ -26,8 +28,10 @@ export default class PrintLogger {
                 this._outputChunk(logItem);
             }
         });
-        const takenTime = logGroup.children[logGroup.children.length - 1].timeStamp - logGroup.children[0].timeStamp;
-        this.logger.log(`Taken time: ${takenTime}ms`);
+        if (logGroup.children.length > 1) {
+            const takenTime = logGroup.children[logGroup.children.length - 1].timeStamp - logGroup.children[0].timeStamp;
+            this.logger.log(`Taken time: ${takenTime}ms`);
+        }
         this.logger.groupEnd(groupTitle);
     }
 

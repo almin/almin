@@ -25,6 +25,11 @@ export default class CounterComponent extends React.Component {
         const decrement = () => {
             context.useCase(new DecrementalCounterUseCase()).execute();
         };
+
+        const parallel = () => {
+            context.useCase(new IncrementalCounterUseCase()).execute();
+            context.useCase(new DecrementalCounterUseCase()).execute();
+        };
         const both = () => {
             context.useCase(new UpDownCounterUseCase()).execute();
         };
@@ -39,6 +44,7 @@ export default class CounterComponent extends React.Component {
                 <button onClick={increment}>Counter ++</button>
                 <button onClick={decrement}>Counter --</button>
                 <button onClick={both}>Counter +-</button>
+                <button onClick={parallel}>Counter +- in parallel</button>
                 <button onClick={manuallLogging}>Manuall Logging</button>
                 <p>
                     Count: {counterState.count}
