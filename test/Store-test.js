@@ -9,6 +9,18 @@ import UseCase from "../lib/UseCase";
 import ErrorPayload from "../lib/payload/ErrorPayload";
 
 describe("Store", function() {
+    describe("#name", () => {
+        context("when define displayName", () => {
+            it("#name is same with displayName", () => {
+                class MyStore extends Store {
+                }
+                const expectedName = "Expected Store";
+                MyStore.displayName = expectedName;
+                const store = new MyStore();
+                assert.equal(store.name, expectedName);
+            });
+        });
+    });
     describe("#onDispatch", function() {
         it("should called when dispatched", function(done) {
             const store = new Store();
