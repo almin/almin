@@ -4,7 +4,7 @@
 // polyfill Object.assign
 import ObjectAssign from "./object-assign";
 import * as assert from "assert";
-import LRU from "./lru-map-like";
+import LRU from "lru-map-like";
 
 import Dispatcher from "./../Dispatcher";
 import Store from "./../Store";
