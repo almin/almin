@@ -25,13 +25,17 @@
   "scripts": {
     "start:docs": "gitbook serve",
     "build:docs": "gitbook build",
-    "build": "NODE_ENV=production babel src --out-dir lib --source-maps",
+    "build": "npm-run-all -p build:tsc build:cp_obj -s build:down_transform",
+    "build:cp_obj": "cpx 'src/**/*.{js, jsx}' __obj/ --preserve",
+    "build:tsc": "tsc --project .",
+    "build:down_transform": "NODE_ENV=production babel __obj --out-dir lib --source-maps",
     "watch": "babel src --out-dir lib --watch --source-maps",
     "prepublish": "npm run --if-present build",
     "lint:docs": "textlint -f pretty-error docs/",
     "test:example": "nf start --procfile test/Procfile",
     "test:perf": "cd perf/node-memory-leak-testing && npm install && npm test",
-    "test:js": "mocha",
+    "test:js": "run-s build test:mocha",
+    "test:mocha": "env NODE_ENV=development mocha",
     "test:saucelabs": "zuul -- test/*-test.js",
     "test:browser": "zuul --local 8080 --ui mocha-bdd -- test/*-test.js",
     "test": "run-s --print-label test:js lint:docs test:example && run-s test:perf",
@@ -46,6 +50,7 @@
   ],
   "devDependencies": {
     "@alrra/travis-scripts": "^3.0.1",
+    "@types/node": "^7.0.5",
     "add-text-to-markdown": "^1.0.2",
     "babel-cli": "^6.7.5",
     "babel-preset-es2015-ie": "^6.6.2",
@@ -53,6 +58,7 @@
     "babel-preset-power-assert": "^1.0.0",
     "babel-register": "^6.7.2",
     "babelify": "^7.3.0",
+    "cpx": "^1.5.0",
     "documentation": "^4.0.0-beta10",
     "documentation-markdown-api-theme": "^1.0.2",
     "documentation-wrapper": "^1.2.3",
@@ -69,6 +75,7 @@
     "textlint-rule-alex": "^1.0.1",
     "textlint-rule-common-misspellings": "^1.0.1",
     "textlint-rule-no-dead-link": "^3.0.1",
+    "typescript": "^2.1.6",
     "zuul": "^3.10.1"
   },
   "dependencies": {

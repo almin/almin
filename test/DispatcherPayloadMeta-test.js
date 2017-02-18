@@ -1,9 +1,9 @@
 // MIT © 2017 azu
 "use strict";
 const assert = require("assert");
-import Context from "../src/Context";
-import Dispatcher from "../src/Dispatcher";
-import Store from "../src/Store";
+import Context from "../lib/Context";
+import Dispatcher from "../lib/Dispatcher";
+import Store from "../lib/Store";
 import NoDispatchUseCase from "./use-case/NoDispatchUseCase";
 import DispatchUseCase from "./use-case/DispatchUseCase";
 import ErrorUseCase from "./use-case/ErrorUseCase";

@@ -1,6 +1,6 @@
 // LICENSE : MIT
 "use strict";
-import Store from "../../src/Store";
+import Store from "../../lib/Store";
 export default function createEchoStore({
     name,
     echo

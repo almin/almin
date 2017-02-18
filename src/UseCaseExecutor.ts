@@ -1,6 +1,6 @@
 // LICENSE : MIT
 "use strict";
-const assert = require("assert");
+import * as assert from "assert";
 import Dispatcher from "./Dispatcher";
 import UseCase from "./UseCase";
 import DispatcherPayloadMeta from "./DispatcherPayloadMeta";
@@ -9,47 +9,57 @@ import DispatcherPayloadMeta from "./DispatcherPayloadMeta";
 import CompletedPayload from "./payload/CompletedPayload";
 import DidExecutedPayload from "./payload/DidExecutedPayload";
 import WillExecutedPayload from "./payload/WillExecutedPayload";
+
+export interface UseCaseExecutorArgs {
+    useCase: UseCase;
+    parent: UseCase | null;
+    dispatcher: Dispatcher | UseCase;
+}
+
 /**
  * UseCaseExecutor is a helper class for executing UseCase.
- * @public
  */
 export default class UseCaseExecutor {
+
     /**
-     * @param {UseCase} useCase
-     * @param {UseCase|null} parent parent is parent of `useCase`
-     * @param {Dispatcher|UseCase} dispatcher
+     *  executable useCase
+     */
+    useCase: UseCase;
+
+    /**
+     * parent useCase
+     */
+    parentUseCase: UseCase | null;
+
+    private disptcher: Dispatcher;
+
+    /**
+     * callable release handlers that are called in release()
+     */
+    private _releaseHandlers: Array<() => void>;
+
+    /**
+     * @param   useCase
+     * @param   parent
+     *      parent is parent of `useCase`
+     * @param   dispatcher
      * @public
      */
     constructor({
         useCase,
         parent,
         dispatcher
-    }) {
+    }: UseCaseExecutorArgs) {
         // execute and finish =>
         const useCaseName = useCase.name;
         if (process.env.NODE_ENV !== "production") {
-            assert(typeof useCaseName === "string", "UseCase instance should have constructor.name " + useCase);
-            assert(typeof useCase.execute === "function", `UseCase instance should have #execute function: ${useCaseName}`);
+            assert.ok(typeof useCaseName === "string", "UseCase instance should have constructor.name " + useCase);
+            assert.ok(typeof useCase.execute === "function", `UseCase instance should have #execute function: ${useCaseName}`);
         }
-        /**
-         * @type {UseCase} executable useCase
-         */
-        this.useCase = useCase;
 
-        /**
-         * @type {UseCase|null} parent useCase
-         */
+        this.useCase = useCase;
         this.parentUseCase = parent;
-        /**
-         * @type {Dispatcher}
-         * @private
-         */
         this.disptcher = dispatcher;
-        /**
-         * callable release handlers that are called in release()
-         * @type {Function[]}
-         * @private
-         */
         this._releaseHandlers = [];
         // delegate userCase#onDispatch to central dispatcher
         const unListenHandler = this.useCase.pipe(this.disptcher);
@@ -57,10 +67,9 @@ export default class UseCaseExecutor {
     }
 
     /**
-     * @param {*[]} [args] arguments of the UseCase
-     * @private
+     * @param   [args] arguments of the UseCase
      */
-    _willExecute(args) {
+    private _willExecute(args?: any[]): void {
         const payload = new WillExecutedPayload({
             args
         });
@@ -75,10 +84,9 @@ export default class UseCaseExecutor {
 
     /**
      * dispatch did execute each UseCase
-     * @param {*} [value] result value of the useCase executed
-     * @private
+     * @param   [value] result value of the useCase executed
      */
-    _didExecute(value) {
+    private _didExecute(value?: any): void {
         const payload = new DidExecutedPayload({
             value
         });
@@ -93,10 +101,9 @@ export default class UseCaseExecutor {
 
     /**
      * dispatch complete each UseCase
-     * @param {*} [value] unwrapped result value of the useCase executed
-     * @private
+     * @param   [value] unwrapped result value of the useCase executed
      */
-    _complete(value) {
+    private _complete(value?: any): void {
         const payload = new CompletedPayload({
             value
         });
@@ -111,13 +118,12 @@ export default class UseCaseExecutor {
 
     /**
      * called the {@link handler} with useCase when the useCase will do.
-     * @param {function(payload: WillExecutedPayload, meta: DispatcherPayloadMeta)} handler
-     * @public
+     * @param   handler
      */
-    onWillExecuteEachUseCase(handler) {
+    onWillExecuteEachUseCase(handler: (payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         const releaseHandler = this.disptcher.onDispatch(function onWillExecute(payload, meta) {
             if (payload.type === WillExecutedPayload.Type) {
-                handler(payload, meta);
+                handler(payload as WillExecutedPayload, meta); // TODO: this should be guarded by type guarde function
             }
         });
         this._releaseHandlers.push(releaseHandler);
@@ -126,13 +132,12 @@ export default class UseCaseExecutor {
 
     /**
      * called the `handler` with useCase when the useCase is executed.
-     * @param {function(payload: DidExecutedPayload, meta: DispatcherPayloadMeta)} handler
-     * @public
+     * @param   handler
      */
-    onDidExecuteEachUseCase(handler) {
+    onDidExecuteEachUseCase(handler: (payload: DidExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         const releaseHandler = this.disptcher.onDispatch(function onDidExecuted(payload, meta) {
             if (payload.type === DidExecutedPayload.Type) {
-                handler(payload, meta);
+                handler(payload as DidExecutedPayload, meta); // TODO: this should be guarded by type guarde function
             }
         });
         this._releaseHandlers.push(releaseHandler);
@@ -141,14 +146,13 @@ export default class UseCaseExecutor {
 
     /**
      * called the `handler` with useCase when the useCase is completed.
-     * @param {function(payload: CompletedPayload, meta: DispatcherPayloadMeta)} handler
-     * @returns {Function}
-     * @public
+     * @param   handler
+     * @returns
      */
-    onCompleteExecuteEachUseCase(handler) {
+    onCompleteExecuteEachUseCase(handler: (payload: CompletedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         const releaseHandler = this.disptcher.onDispatch(function onCompleted(payload, meta) {
             if (payload.type === CompletedPayload.Type) {
-                handler(payload, meta);
+                handler(payload as CompletedPayload, meta); // TODO: this should be guarded by type guarde function
             }
         });
         this._releaseHandlers.push(releaseHandler);
@@ -159,15 +163,14 @@ export default class UseCaseExecutor {
      * execute UseCase instance.
      * UseCase is a executable object. it means that has `execute` method.
      * @param args
-     * @public
      */
-    execute(...args) {
+    execute<R>(...args: Array<any>): Promise<void> {
         this._willExecute(args);
-        const result = this.useCase.execute(...args);
+        const result: R = this.useCase.execute<R>(...args);
         // Sync call didExecute
         this._didExecute(result);
         // When UseCase#execute is completed, dispatch "complete".
-        return Promise.resolve(result).then((result) => {
+        return Promise.resolve(result).then((result: R) => {
             this._complete(result);
             this.release();
         }).catch(error => {
@@ -181,9 +184,8 @@ export default class UseCaseExecutor {
     /**
      * release all events handler.
      * You can call this when no more call event handler
-     * @public
      */
-    release() {
+    release(): void {
         this._releaseHandlers.forEach(releaseHandler => releaseHandler());
         this._releaseHandlers.length = 0;
     }

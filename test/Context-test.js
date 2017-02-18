@@ -1,16 +1,16 @@
 // LICENSE : MIT
 "use strict";
 const assert = require("power-assert");
-import Context from "../src/Context";
-import Dispatcher from "../src/Dispatcher";
-import Store from "../src/Store";
-import UseCase from "../src/UseCase";
-import UseCaseExecutor from "../src/UseCaseExecutor";
-import StoreGroup from "../src/UILayer/StoreGroup";
+import Context from "../lib/Context";
+import Dispatcher from "../lib/Dispatcher";
+import Store from "../lib/Store";
+import UseCase from "../lib/UseCase";
+import UseCaseExecutor from "../lib/UseCaseExecutor";
+import StoreGroup from "../lib/UILayer/StoreGroup";
 import createEchoStore from "./helper/EchoStore";
 // payload
 
-import {Payload, WillExecutedPayload, DidExecutedPayload, CompletedPayload, ErrorPayload} from "../src/index";
+import {Payload, WillExecutedPayload, DidExecutedPayload, CompletedPayload, ErrorPayload} from "../lib/index";
 class TestUseCase extends UseCase {
     execute() {
 

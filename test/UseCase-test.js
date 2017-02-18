@@ -1,12 +1,14 @@
 // LICENSE : MIT
 "use strict";
 const assert = require("power-assert");
-import UseCase from "../src/UseCase";
-import Dispatcher from "../src/Dispatcher";
-import Store from "../src/Store";
-import Context from "../src/Context";
-import {WillExecutedPayload, DidExecutedPayload, CompletedPayload} from "../src/index";
-import UseCaseContext from "../src/UseCaseContext";
+
+import UseCase from "../lib/UseCase";
+import Dispatcher from "../lib/Dispatcher";
+import Store from "../lib/Store";
+import Context from "../lib/Context";
+import {WillExecutedPayload, DidExecutedPayload, CompletedPayload} from "../lib/index";
+import UseCaseContext from "../lib/UseCaseContext";
+
 describe("UseCase", function() {
     describe("id", () => {
         it("should have unique id in instance", () => {

@@ -1,8 +1,9 @@
 // LICENSE : MIT
 "use strict";
 
+import UseCase from "./UseCase";
 import UseCaseExecutor from "./UseCaseExecutor";
-import Dispatcher from "./Dispatcher";
+
 const assert = require("assert");
 /**
  * UseCase internally use UseCaseContext insteadof Context.
@@ -11,11 +12,14 @@ const assert = require("assert");
  * @public
  */
 export default class UseCaseContext {
+
+    dispatcher: UseCase;;
+
     /**
-     * @param {Dispatcher|UseCase} dispatcher dispatcher is Dispatcher or parent UseCase.
+     * @param   [dispatcher]    dispatcher is Dispatcher or parent UseCase.
      * @public
      */
-    constructor(dispatcher) {
+    constructor(dispatcher: UseCase) {
         this.dispatcher = dispatcher;
     }
 
@@ -25,7 +29,7 @@ export default class UseCaseContext {
      * @returns {UseCaseExecutor}
      * @public
      */
-    useCase(useCase) {
+    useCase(useCase: UseCase): UseCaseExecutor {
         if (process.env.NODE_ENV !== "production") {
             assert(useCase !== this.dispatcher, `the useCase(${useCase}) should not equal this useCase(${this.dispatcher})`);
         }

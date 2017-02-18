@@ -1,11 +1,13 @@
 // LICENSE : MIT
 "use strict";
 const assert = require("power-assert");
-import Context from "../src/Context";
-import Dispatcher from "../src/Dispatcher";
-import Store from "../src/Store";
-import UseCase from "../src/UseCase";
-import ErrorPayload from "../src/payload/ErrorPayload";
+
+import Context from "../lib/Context";
+import Dispatcher from "../lib/Dispatcher";
+import Store from "../lib/Store";
+import UseCase from "../lib/UseCase";
+import ErrorPayload from "../lib/payload/ErrorPayload";
+
 describe("Store", function() {
     describe("#onDispatch", function() {
         it("should called when dispatched", function(done) {
