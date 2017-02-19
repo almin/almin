@@ -1,27 +1,13 @@
-// LICENSE : MIT
+// MIT © 2016-present azu
 "use strict";
-import Dispatcher from "./Dispatcher";
-import Store from "./Store";
-import StoreGroup from "./UILayer/StoreGroup";
-import QueuedStoreGroup from "./UILayer/QueuedStoreGroup";
-import UseCase from "./UseCase";
-import Context from "./Context";
-// System payloads
-import CompletedPayload from "./payload/CompletedPayload";
-import DidExecutedPayload from "./payload/DidExecutedPayload";
-import Payload from "./payload/Payload";
-import ErrorPayload from "./payload/ErrorPayload";
-import WillExecutedPayload from "./payload/WillExecutedPayload";
-// re-export
-module.exports.Dispatcher = Dispatcher;
-module.exports.Store = Store;
-module.exports.StoreGroup = StoreGroup;
-module.exports.QueuedStoreGroup = QueuedStoreGroup;
-module.exports.UseCase = UseCase;
-module.exports.Context = Context;
-// System payloads
-module.exports.Payload = Payload;
-module.exports.CompletedPayload = CompletedPayload;
-module.exports.DidExecutedPayload = DidExecutedPayload;
-module.exports.ErrorPayload = ErrorPayload;
-module.exports.WillExecutedPayload = WillExecutedPayload;
+export {default as Dispatcher} from "./Dispatcher";
+export {default as Store} from "./Store";
+export {default as StoreGroup} from "./UILayer/StoreGroup";
+export {default as QueuedStoreGroup} from "./UILayer/QueuedStoreGroup";
+export {default as UseCase} from "./UseCase";
+export {default as Context} from "./Context";
+export {default as CompletedPayload} from "./payload/CompletedPayload";
+export {default as DidExecutedPayload} from "./payload/DidExecutedPayload";
+export {default as Payload} from "./payload/Payload";
+export {default as ErrorPayload} from "./payload/ErrorPayload";
+export {default as WillExecutedPayload} from "./payload/WillExecutedPayload";
