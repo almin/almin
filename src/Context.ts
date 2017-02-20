@@ -8,6 +8,7 @@ import { DispatchedPayload } from "./Dispatcher";
 import DispatcherPayloadMeta from "./DispatcherPayloadMeta";
 import UseCase from "./UseCase";
 import Store from "./Store";
+import { StoreLike } from "./StoreLike";
 import UseCaseExecutor  from "./UseCaseExecutor";
 import StoreGroupValidator from "./UILayer/StoreGroupValidator";
 // payloads
@@ -20,7 +21,7 @@ import WillExecutedPayload, { isWillExecutedPayload } from "./payload/WillExecut
  */
 export default class Context {
     private _dispatcher: Dispatcher;
-    private _storeGroup: QueuedStoreGroup | StoreGroup | Store;
+    private _storeGroup: StoreLike & Dispatcher;
     private _releaseHandlers: Array<() => void>;
 
     /**
@@ -53,7 +54,7 @@ export default class Context {
      * @public
      */
     getState<T>(): T {
-        return (this._storeGroup as any).getState(); // TODO: remove casting `any`
+        return this._storeGroup.getState<T>();
     }
 
     /**
@@ -63,7 +64,7 @@ export default class Context {
      * @public
      */
     onChange(onChangeHandler: (hangingStores: Array<Store>) => void) {
-        return (this._storeGroup as any).onChange(onChangeHandler); // TODO: remove casting `any`
+        return this._storeGroup.onChange(onChangeHandler);
     }
 
     /**
@@ -172,8 +173,9 @@ export default class Context {
      * @public
      */
     release() {
-        if (typeof this._storeGroup === "function") {
-            (this._storeGroup as any).release(); // TODO: remove casting to any
+        const storeGroup = this._storeGroup;
+        if (!!storeGroup && typeof storeGroup.release === "function") {
+            storeGroup.release();
         }
         this._releaseHandlers.forEach(releaseHandler => releaseHandler());
         this._releaseHandlers.length = 0;

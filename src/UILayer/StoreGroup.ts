@@ -9,6 +9,7 @@ import LRU from "./lru-map-like";
 import Dispatcher from "./../Dispatcher";
 import Store from "./../Store";
 import StoreGroupValidator from "./StoreGroupValidator";
+import { StoreLike } from './../StoreLike';
 import raq from "./raq";
 
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
@@ -20,7 +21,7 @@ const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
  * If you want to know all change events, and directly use `store.onChange()`.
  * @public
  */
-export default class StoreGroup extends Dispatcher {
+export default class StoreGroup extends Dispatcher implements StoreLike {
 
     private _releaseHandlers: Array<Function>;
     private _currentChangingStores: Array<Store>;
