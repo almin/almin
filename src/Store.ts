@@ -3,7 +3,7 @@
 import Dispatcher from "./Dispatcher";
 import DispatcherPayloadMeta from "./DispatcherPayloadMeta";
 import Payload from "./payload/Payload";
-import ErrorPayload from "./payload/ErrorPayload";
+import { isErrorPayload } from "./payload/ErrorPayload";
 import { StoreLike } from './StoreLike';
 
 const STATE_CHANGE_EVENT = "STATE_CHANGE_EVENT";
@@ -97,7 +97,7 @@ abstract class Store extends Dispatcher implements StoreLike {
     onError(handler: (payload: Payload, meta: DispatcherPayloadMeta) => void): () => void {
         console.warn("Store#onError is deprecated. Please use Store#onDispatch.");
         return this.onDispatch((payload, meta) => {
-            if (payload.type === ErrorPayload.Type) {
+            if (isErrorPayload(payload)) {
                 handler(payload, meta);
             }
         });

@@ -2,17 +2,16 @@
 "use strict";
 import Payload from "./Payload";
 
+/**
+ *  XXX: This is exported for an unit testing.
+ *  DO NOT USE THIS in your application.
+ */
 export const TYPE = "ALMIN__ErrorPayload__";
 
 /**
  * This payload is executed
  */
 export default class ErrorPayload extends Payload {
-
-    static get Type(): typeof TYPE {
-        return TYPE;
-    }
-
     /**
      * the `error` in the UseCase
      */

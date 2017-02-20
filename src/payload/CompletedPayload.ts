@@ -2,14 +2,13 @@
 "use strict";
 import Payload from "./Payload";
 
+/**
+ *  XXX: This is exported for an unit testing.
+ *  DO NOT USE THIS in your application.
+ */
 export const TYPE = "ALMIN__COMPLETED_EACH_USECASE__";
 
 export default class CompletedPayload extends Payload {
-
-    static get Type(): typeof TYPE {
-        return TYPE;
-    }
-
     /**
      * the value is returned by the useCase
      * Difference of DidExecutedPayload, the value always is resolved value.
