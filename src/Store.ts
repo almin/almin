@@ -4,6 +4,8 @@ import Dispatcher from "./Dispatcher";
 import DispatcherPayloadMeta from "./DispatcherPayloadMeta";
 import Payload from "./payload/Payload";
 import ErrorPayload from "./payload/ErrorPayload";
+import { StoreLike } from './StoreLike';
+
 const STATE_CHANGE_EVENT = "STATE_CHANGE_EVENT";
 /**
  * A UseCase `dispatch(payload)` and subscribers of the dispatcher are received the payload.
@@ -34,7 +36,7 @@ export let defaultStoreName = "<Anonymous-Store>";
  * Store class
  * @public
  */
-abstract class Store extends Dispatcher {
+abstract class Store extends Dispatcher implements StoreLike {
     /**
      * Debuggable name
      */
@@ -74,7 +76,7 @@ abstract class Store extends Dispatcher {
      *
      * FIXME: mark this as `abstract` property.
      */
-    getState<T>(_prevState: T): T {
+    getState<T>(_prevState?: T): T {
         throw new Error(this.name + " should be implemented Store#getState(): Object");
     }
 
@@ -108,7 +110,7 @@ abstract class Store extends Dispatcher {
      * @returns {Function} call the function and release handler
      * @public
      */
-    onChange(cb: Function): () => void {
+    onChange(cb: (hangingStores: Array<StoreLike>) => void): () => void {
         this.on(STATE_CHANGE_EVENT, cb);
         return this.removeListener.bind(this, STATE_CHANGE_EVENT, cb);
     }
@@ -118,7 +120,7 @@ abstract class Store extends Dispatcher {
      * @public
      */
     emitChange(): void {
-        this.emit(STATE_CHANGE_EVENT);
+        this.emit(STATE_CHANGE_EVENT, [this]);
     }
 }
 

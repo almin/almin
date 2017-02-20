@@ -10,6 +10,7 @@ import Dispatcher from "./../Dispatcher";
 import { DispatchedPayload } from "./../Dispatcher";
 import DispatcherPayloadMeta from "./../DispatcherPayloadMeta";
 import Store from "./../Store";
+import { StoreLike } from './../StoreLike';
 import StoreGroupValidator from "./StoreGroupValidator";
 import { isDidExecutedPayload } from "../payload/DidExecutedPayload";
 import { isErrorPayload } from "../payload/ErrorPayload";
@@ -64,7 +65,7 @@ export interface QueuedStoreGroupOption {
  *
  * @public
  */
-export default class QueuedStoreGroup extends Dispatcher {
+export default class QueuedStoreGroup extends Dispatcher implements StoreLike {
 
     private _releaseHandlers: Array<Function>;
     private _currentChangingStores: Array<Store>;
