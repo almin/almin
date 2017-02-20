@@ -4,7 +4,7 @@ import Dispatcher from "./Dispatcher";
 import {DispatchedPayload} from "./Dispatcher";
 import UseCaseContext from "./UseCaseContext";
 import DispatcherPayloadMeta from "./DispatcherPayloadMeta";
-import ErrorPayload from "./payload/ErrorPayload";
+import ErrorPayload, { isErrorPayload } from "./payload/ErrorPayload";
 /**
  * UseCase incremental count is for Unique ID.
  */
@@ -116,8 +116,8 @@ abstract class UseCase extends Dispatcher {
      */
     onError(errorHandler: (error: Error) => void): (this: Dispatcher) => void {
         return this.onDispatch(payload => {
-            if (payload.type === ErrorPayload.Type) {
-                errorHandler((payload as ErrorPayload).error); // TODO: this should be guarded by type guarde function
+            if (isErrorPayload(payload)) {
+                errorHandler((payload).error);
             }
         });
     }

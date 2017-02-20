@@ -18,7 +18,11 @@ export default class DidExecutedPayload extends Payload {
     value: any | undefined;
 
     constructor({ value }: { value?: any; }) {
-        super({ type: DidExecutedPayload.Type });
+        super({ type: TYPE });
         this.value = value;
     }
+}
+
+export function isDidExecutedPayload(v: Payload): v is DidExecutedPayload {
+    return v.type === TYPE;
 }

@@ -23,3 +23,7 @@ export default class ErrorPayload extends Payload {
         this.error = error;
     }
 }
+
+export function isErrorPayload(v: Payload): v is ErrorPayload {
+    return v.type === TYPE;
+}
