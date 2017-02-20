@@ -16,7 +16,8 @@ export default class UseCaseContext {
     dispatcher: UseCase;
 
     /**
-     * @param   [dispatcher]    dispatcher is Dispatcher or parent UseCase.
+     * @param   dispatcher
+     *  The parent UseCase.
      * @public
      */
     constructor(dispatcher: UseCase) {
