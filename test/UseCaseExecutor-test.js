@@ -1,9 +1,9 @@
 // LICENSE : MIT
 "use strict";
 const assert = require("power-assert");
-import UseCaseExecutor from "../lib/UseCaseExecutor";
-import UseCase from "../lib/UseCase";
-import Dispatcher from "../lib/Dispatcher";
+import { UseCaseExecutor } from "../lib/UseCaseExecutor";
+import { UseCase } from "../lib/UseCase";
+import { Dispatcher } from "../lib/Dispatcher";
 describe("UseCaseExecutor", function() {
     context("when UseCase is successful completion", function() {
         it("dispatch will -> did", function() {

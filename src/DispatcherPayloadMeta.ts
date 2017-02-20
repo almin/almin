@@ -1,8 +1,8 @@
 // LICENSE : MIT
 "use strict";
 
-import Dispatcher from "./Dispatcher";
-import UseCase from "./UseCase";
+import { Dispatcher } from "./Dispatcher";
+import { UseCase } from "./UseCase";
 
 export interface DispatcherPayloadMetaArgs {
     useCase?: UseCase;
@@ -23,7 +23,7 @@ export interface DispatcherPayloadMetaArgs {
  *    console.log(meta);
  * });
  */
-export default class DispatcherPayloadMeta {
+export class DispatcherPayloadMeta {
 
     /**
      * A reference to the useCase/dispatcher to which the payload was originally dispatched.

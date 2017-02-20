@@ -1,8 +1,8 @@
 // LICENSE : MIT
 "use strict";
-import Dispatcher from "./Dispatcher";
-import DispatcherPayloadMeta from "./DispatcherPayloadMeta";
-import Payload from "./payload/Payload";
+import { Dispatcher } from "./Dispatcher";
+import { DispatcherPayloadMeta } from "./DispatcherPayloadMeta";
+import { Payload } from "./payload/Payload";
 import { isErrorPayload } from "./payload/ErrorPayload";
 import { StoreLike } from './StoreLike';
 
@@ -36,7 +36,7 @@ export let defaultStoreName = "<Anonymous-Store>";
  * Store class
  * @public
  */
-abstract class Store extends Dispatcher implements StoreLike {
+export abstract class Store extends Dispatcher implements StoreLike {
     /**
      * Debuggable name
      */
@@ -123,5 +123,3 @@ abstract class Store extends Dispatcher implements StoreLike {
         this.emit(STATE_CHANGE_EVENT, [this]);
     }
 }
-
-export default Store;

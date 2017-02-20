@@ -2,7 +2,7 @@
 "use strict";
 const assert = require("assert");
 
-import Dispatcher from "../lib/Dispatcher";
+import{ Dispatcher } from "../lib/Dispatcher";
 
 describe("Dispatcher", function() {
     describe("#onDispatch", function() {

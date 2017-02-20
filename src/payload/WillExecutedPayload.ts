@@ -1,6 +1,6 @@
 // LICENSE : MIT
 "use strict";
-import Payload from "./Payload";
+import { Payload } from "./Payload";
 
 /**
  *  XXX: This is exported for an unit testing.
@@ -8,7 +8,7 @@ import Payload from "./Payload";
  */
 export const TYPE = "ALMIN__WILL_EXECUTED_EACH_USECASE__";
 
-export default class WillExecutedPayload extends Payload {
+export class WillExecutedPayload extends Payload {
     /**
      * a array for argument of the useCase
      */

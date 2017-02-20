@@ -1,6 +1,6 @@
 // LICENSE : MIT
 "use strict";
-import Payload from "./Payload";
+import { Payload } from "./Payload";
 
 /**
  *  XXX: This is exported for an unit testing.
@@ -8,7 +8,7 @@ import Payload from "./Payload";
  */
 export const TYPE = "ALMIN__COMPLETED_EACH_USECASE__";
 
-export default class CompletedPayload extends Payload {
+export class CompletedPayload extends Payload {
     /**
      * the value is returned by the useCase
      * Difference of DidExecutedPayload, the value always is resolved value.

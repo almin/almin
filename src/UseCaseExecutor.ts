@@ -1,14 +1,14 @@
 // LICENSE : MIT
 "use strict";
 import * as assert from "assert";
-import Dispatcher from "./Dispatcher";
-import UseCase from "./UseCase";
-import DispatcherPayloadMeta from "./DispatcherPayloadMeta";
+import { Dispatcher } from "./Dispatcher";
+import { UseCase } from "./UseCase";
+import { DispatcherPayloadMeta } from "./DispatcherPayloadMeta";
 
 // payloads
-import CompletedPayload, { isCompletedPayload } from "./payload/CompletedPayload";
-import DidExecutedPayload, { isDidExecutedPayload } from "./payload/DidExecutedPayload";
-import WillExecutedPayload, { isWillExecutedPayload } from "./payload/WillExecutedPayload";
+import { CompletedPayload, isCompletedPayload } from "./payload/CompletedPayload";
+import { DidExecutedPayload, isDidExecutedPayload } from "./payload/DidExecutedPayload";
+import { WillExecutedPayload, isWillExecutedPayload } from "./payload/WillExecutedPayload";
 
 export interface UseCaseExecutorArgs {
     useCase: UseCase;
@@ -19,7 +19,7 @@ export interface UseCaseExecutorArgs {
 /**
  * UseCaseExecutor is a helper class for executing UseCase.
  */
-export default class UseCaseExecutor {
+export class UseCaseExecutor {
 
     /**
      *  executable useCase

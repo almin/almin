@@ -1,9 +1,9 @@
 // LICENSE : MIT
 "use strict";
 const assert = require("power-assert");
-import Store from "../lib/Store";
-import StoreGroup from "../lib/UILayer/StoreGroup";
-import StoreGroupValidator from "../lib/UILayer/StoreGroupValidator";
+import { Store } from "../lib/Store";
+import { StoreGroup } from "../lib/UILayer/StoreGroup";
+import { StoreGroupValidator } from "../lib/UILayer/StoreGroupValidator";
 import createEchoStore from "./helper/EchoStore";
 describe("StoreGroupValidator", function() {
     describe("validateInstance", function() {

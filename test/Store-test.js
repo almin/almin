@@ -2,11 +2,11 @@
 "use strict";
 const assert = require("power-assert");
 
-import Context from "../lib/Context";
-import Dispatcher from "../lib/Dispatcher";
-import Store from "../lib/Store";
-import UseCase from "../lib/UseCase";
-import ErrorPayload from "../lib/payload/ErrorPayload";
+import { Context } from "../lib/Context";
+import { Dispatcher } from "../lib/Dispatcher";
+import { Store } from "../lib/Store";
+import { UseCase } from "../lib/UseCase";
+import { ErrorPayload } from "../lib/payload/ErrorPayload";
 
 describe("Store", function() {
     describe("#name", () => {
