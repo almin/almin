@@ -1,7 +1,7 @@
 // MIT © 2017 azu
 "use strict";
 import { UseCase } from "../../lib/UseCase";
-export default class DispatchUseCase extends UseCase {
+export class DispatchUseCase extends UseCase {
     /**
      * @param {Payload} payload
      */

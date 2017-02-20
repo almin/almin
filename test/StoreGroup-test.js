@@ -3,7 +3,7 @@
 const assert = require("power-assert");
 import { Store } from "../lib/Store";
 import { StoreGroup } from "../lib/UILayer/StoreGroup";
-import createEchoStore from "./helper/EchoStore";
+import { createEchoStore } from "./helper/EchoStore";
 
 describe("StoreGroup", function() {
     describe("#onChange", function() {

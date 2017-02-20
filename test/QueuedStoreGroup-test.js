@@ -3,7 +3,7 @@
 const assert = require("power-assert");
 import { Store } from "../lib/Store";
 import { QueuedStoreGroup } from "../lib/UILayer/QueuedStoreGroup";
-import createEchoStore from "./helper/EchoStore";
+import { createEchoStore } from "./helper/EchoStore";
 import { UseCase } from "../lib/UseCase";
 import { Context } from "../lib/Context";
 import { Dispatcher } from "../lib/Dispatcher";

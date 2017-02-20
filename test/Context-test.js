@@ -7,7 +7,7 @@ import { Store } from "../lib/Store";
 import { UseCase } from "../lib/UseCase";
 import { UseCaseExecutor } from "../lib/UseCaseExecutor";
 import { StoreGroup } from "../lib/UILayer/StoreGroup";
-import createEchoStore from "./helper/EchoStore";
+import { createEchoStore } from "./helper/EchoStore";
 // payload
 
 import { Payload, WillExecutedPayload, DidExecutedPayload, CompletedPayload, ErrorPayload } from "../lib/index";
