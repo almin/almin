@@ -20,3 +20,7 @@ export default class WillExecutedPayload extends Payload {
         this.args = args;
     }
 }
+
+export function isWillExecutedPayload(v: Payload): v is WillExecutedPayload {
+    return v.type === TYPE;
+}

@@ -22,3 +22,7 @@ export default class DidExecutedPayload extends Payload {
         this.value = value;
     }
 }
+
+export function isDidExecutedPayload(v: Payload): v is DidExecutedPayload {
+    return v.type === TYPE;
+}

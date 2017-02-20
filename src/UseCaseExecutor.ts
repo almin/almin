@@ -6,9 +6,9 @@ import UseCase from "./UseCase";
 import DispatcherPayloadMeta from "./DispatcherPayloadMeta";
 
 // payloads
-import CompletedPayload from "./payload/CompletedPayload";
-import DidExecutedPayload from "./payload/DidExecutedPayload";
-import WillExecutedPayload from "./payload/WillExecutedPayload";
+import CompletedPayload, { isCompletedPayload } from "./payload/CompletedPayload";
+import DidExecutedPayload, { isDidExecutedPayload } from "./payload/DidExecutedPayload";
+import WillExecutedPayload, { isWillExecutedPayload } from "./payload/WillExecutedPayload";
 
 export interface UseCaseExecutorArgs {
     useCase: UseCase;
@@ -122,8 +122,8 @@ export default class UseCaseExecutor {
      */
     onWillExecuteEachUseCase(handler: (payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         const releaseHandler = this.disptcher.onDispatch(function onWillExecute(payload, meta) {
-            if (payload.type === WillExecutedPayload.Type) {
-                handler(payload as WillExecutedPayload, meta); // TODO: this should be guarded by type guarde function
+            if (isWillExecutedPayload(payload)) {
+                handler(payload, meta);
             }
         });
         this._releaseHandlers.push(releaseHandler);
@@ -136,8 +136,8 @@ export default class UseCaseExecutor {
      */
     onDidExecuteEachUseCase(handler: (payload: DidExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         const releaseHandler = this.disptcher.onDispatch(function onDidExecuted(payload, meta) {
-            if (payload.type === DidExecutedPayload.Type) {
-                handler(payload as DidExecutedPayload, meta); // TODO: this should be guarded by type guarde function
+            if (isDidExecutedPayload(payload)) {
+                handler(payload, meta);
             }
         });
         this._releaseHandlers.push(releaseHandler);
@@ -151,8 +151,8 @@ export default class UseCaseExecutor {
      */
     onCompleteExecuteEachUseCase(handler: (payload: CompletedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         const releaseHandler = this.disptcher.onDispatch(function onCompleted(payload, meta) {
-            if (payload.type === CompletedPayload.Type) {
-                handler(payload as CompletedPayload, meta); // TODO: this should be guarded by type guarde function
+            if (isCompletedPayload(payload)) {
+                handler(payload, meta);
             }
         });
         this._releaseHandlers.push(releaseHandler);

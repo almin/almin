@@ -11,10 +11,10 @@ import Store from "./Store";
 import UseCaseExecutor  from "./UseCaseExecutor";
 import StoreGroupValidator from "./UILayer/StoreGroupValidator";
 // payloads
-import CompletedPayload from "./payload/CompletedPayload";
-import DidExecutedPayload from "./payload/DidExecutedPayload";
-import ErrorPayload from "./payload/ErrorPayload";
-import WillExecutedPayload from "./payload/WillExecutedPayload";
+import CompletedPayload, { isCompletedPayload } from "./payload/CompletedPayload";
+import { isDidExecutedPayload } from "./payload/DidExecutedPayload";
+import ErrorPayload, { isErrorPayload } from "./payload/ErrorPayload";
+import WillExecutedPayload, { isWillExecutedPayload } from "./payload/WillExecutedPayload";
 /**
  * @public
  */
@@ -90,8 +90,8 @@ export default class Context {
      */
     onWillExecuteEachUseCase(handler: (payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         const releaseHandler = this._dispatcher.onDispatch((payload, meta) => {
-            if (payload.type === WillExecutedPayload.Type) {
-                handler(payload as WillExecutedPayload, meta); // TODO: this should be guarded by type guarde function
+            if (isWillExecutedPayload(payload)) {
+                handler(payload, meta);
             }
         });
         this._releaseHandlers.push(releaseHandler);
@@ -126,7 +126,7 @@ export default class Context {
      */
     onDidExecuteEachUseCase(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         const releaseHandler = this._dispatcher.onDispatch((payload, meta) => {
-            if (payload.type === DidExecutedPayload.Type) {
+            if (isDidExecutedPayload(payload)) {
                 handler(payload, meta);
             }
         });
@@ -141,8 +141,8 @@ export default class Context {
      */
     onCompleteEachUseCase(handler: (payload: CompletedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         const releaseHandler = this._dispatcher.onDispatch((payload, meta) => {
-            if (payload.type === CompletedPayload.Type) {
-                handler(payload as CompletedPayload, meta); // TODO: this should be guarded by type guarde function
+            if (isCompletedPayload(payload)) {
+                handler(payload, meta);
             }
         });
         this._releaseHandlers.push(releaseHandler);
@@ -158,8 +158,8 @@ export default class Context {
      */
     onErrorDispatch(handler: (payload: ErrorPayload, meta: DispatcherPayloadMeta) => void): () => void {
         const releaseHandler = this._dispatcher.onDispatch((payload, meta) => {
-            if (payload.type === ErrorPayload.Type) {
-                handler(payload as ErrorPayload, meta); // TODO: this should be guarded by type guarde function
+            if (isErrorPayload(payload)) {
+                handler(payload, meta);
             }
         });
         this._releaseHandlers.push(releaseHandler);

@@ -11,9 +11,9 @@ import { DispatchedPayload } from "./../Dispatcher";
 import DispatcherPayloadMeta from "./../DispatcherPayloadMeta";
 import Store from "./../Store";
 import StoreGroupValidator from "./StoreGroupValidator";
-import DidExecutedPayload from "../payload/DidExecutedPayload";
-import ErrorPayload from "../payload/ErrorPayload";
-import CompletedPayload from "../payload/CompletedPayload";
+import { isDidExecutedPayload } from "../payload/DidExecutedPayload";
+import { isErrorPayload } from "../payload/ErrorPayload";
+import { isCompletedPayload } from "../payload/CompletedPayload";
 
 /**
  * QueuedStoreGroup options
@@ -118,11 +118,11 @@ export default class QueuedStoreGroup extends Dispatcher {
                 if (this.hasChangingStore) {
                     this.emitChange();
                 }
-            } else if (payload.type === ErrorPayload.Type) {
+            } else if (isErrorPayload(payload)) {
                 if (this.hasChangingStore) {
                     this.emitChange();
                 }
-            } else if (payload.type === DidExecutedPayload.Type) {
+            } else if (isDidExecutedPayload(payload)) {
                 const parent = meta.parentUseCase;
                 // when {asap: false}, emitChange when root useCase is executed
                 if (!asap && parent) {
@@ -131,7 +131,7 @@ export default class QueuedStoreGroup extends Dispatcher {
                 if (this.hasChangingStore) {
                     this.emitChange();
                 }
-            } else if (payload.type === CompletedPayload.Type) {
+            } else if (isCompletedPayload(payload)) {
                 const parent = meta.parentUseCase;
                 // when {asap: false}, emitChange when root useCase is executed
                 if (!asap && parent) {

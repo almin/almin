@@ -24,3 +24,7 @@ export default class CompletedPayload extends Payload {
         this.value = value;
     }
 }
+
+export function isCompletedPayload(v: Payload): v is CompletedPayload {
+    return v.type === TYPE;
+}
