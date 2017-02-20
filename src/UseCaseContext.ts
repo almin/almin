@@ -18,7 +18,6 @@ export default class UseCaseContext {
     /**
      * @param   dispatcher
      *  The parent UseCase.
-     * @public
      */
     constructor(dispatcher: UseCase) {
         this.dispatcher = dispatcher;
@@ -26,9 +25,7 @@ export default class UseCaseContext {
 
     /**
      * Create UseCaseExecutor for `useCase`.
-     * @param {UseCase} useCase
-     * @returns {UseCaseExecutor}
-     * @public
+     * @param   useCase
      */
     useCase(useCase: UseCase): UseCaseExecutor {
         if (process.env.NODE_ENV !== "production") {
