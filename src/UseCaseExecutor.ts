@@ -31,7 +31,7 @@ export default class UseCaseExecutor {
      */
     parentUseCase: UseCase | null;
 
-    private disptcher: Dispatcher;
+    private _dispatcher: Dispatcher;
 
     /**
      * callable release handlers that are called in release()
@@ -59,10 +59,10 @@ export default class UseCaseExecutor {
 
         this.useCase = useCase;
         this.parentUseCase = parent;
-        this.disptcher = dispatcher;
+        this._dispatcher = dispatcher;
         this._releaseHandlers = [];
         // delegate userCase#onDispatch to central dispatcher
-        const unListenHandler = this.useCase.pipe(this.disptcher);
+        const unListenHandler = this.useCase.pipe(this._dispatcher);
         this._releaseHandlers.push(unListenHandler);
     }
 
@@ -75,11 +75,11 @@ export default class UseCaseExecutor {
         });
         const meta = new DispatcherPayloadMeta({
             useCase: this.useCase,
-            dispatcher: this.disptcher,
+            dispatcher: this._dispatcher,
             parentUseCase: this.parentUseCase,
             isTrusted: true
         });
-        this.disptcher.dispatch(payload, meta);
+        this._dispatcher.dispatch(payload, meta);
     }
 
     /**
@@ -92,11 +92,11 @@ export default class UseCaseExecutor {
         });
         const meta = new DispatcherPayloadMeta({
             useCase: this.useCase,
-            dispatcher: this.disptcher,
+            dispatcher: this._dispatcher,
             parentUseCase: this.parentUseCase,
             isTrusted: true
         });
-        this.disptcher.dispatch(payload, meta);
+        this._dispatcher.dispatch(payload, meta);
     }
 
     /**
@@ -109,11 +109,11 @@ export default class UseCaseExecutor {
         });
         const meta = new DispatcherPayloadMeta({
             useCase: this.useCase,
-            dispatcher: this.disptcher,
+            dispatcher: this._dispatcher,
             parentUseCase: this.parentUseCase,
             isTrusted: true
         });
-        this.disptcher.dispatch(payload, meta);
+        this._dispatcher.dispatch(payload, meta);
     }
 
     /**
@@ -121,7 +121,7 @@ export default class UseCaseExecutor {
      * @param   handler
      */
     onWillExecuteEachUseCase(handler: (payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void {
-        const releaseHandler = this.disptcher.onDispatch(function onWillExecute(payload, meta) {
+        const releaseHandler = this._dispatcher.onDispatch(function onWillExecute(payload, meta) {
             if (isWillExecutedPayload(payload)) {
                 handler(payload, meta);
             }
@@ -135,7 +135,7 @@ export default class UseCaseExecutor {
      * @param   handler
      */
     onDidExecuteEachUseCase(handler: (payload: DidExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void {
-        const releaseHandler = this.disptcher.onDispatch(function onDidExecuted(payload, meta) {
+        const releaseHandler = this._dispatcher.onDispatch(function onDidExecuted(payload, meta) {
             if (isDidExecutedPayload(payload)) {
                 handler(payload, meta);
             }
@@ -150,7 +150,7 @@ export default class UseCaseExecutor {
      * @returns
      */
     onCompleteExecuteEachUseCase(handler: (payload: CompletedPayload, meta: DispatcherPayloadMeta) => void): () => void {
-        const releaseHandler = this.disptcher.onDispatch(function onCompleted(payload, meta) {
+        const releaseHandler = this._dispatcher.onDispatch(function onCompleted(payload, meta) {
             if (isCompletedPayload(payload)) {
                 handler(payload, meta);
             }
