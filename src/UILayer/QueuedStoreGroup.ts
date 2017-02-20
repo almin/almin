@@ -3,7 +3,7 @@
 // polyfill Object.assign
 import * as assert from "assert";
 import ObjectAssign from "./object-assign";
-import LRU from "./lru-map-like";
+import LRU from "lru-map-like";
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
 
 import Dispatcher from "./../Dispatcher";
