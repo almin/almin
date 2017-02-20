@@ -13,7 +13,7 @@ const assert = require("assert");
  */
 export default class UseCaseContext {
 
-    dispatcher: UseCase;;
+    dispatcher: UseCase;
 
     /**
      * @param   [dispatcher]    dispatcher is Dispatcher or parent UseCase.
