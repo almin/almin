@@ -32,10 +32,12 @@ export class TodoListRepository extends EventEmitter {
     /**
      * @returns {TodoList|undefined}
      */
-    lastUsed(): ?TodoList {
+    lastUsed(): TodoList {
         const todoList: TodoList = this._database.get(`${TodoList.name}.lastUsed`);
         if (todoList != null) {
-          return this._get(todoList.id);
+            return this._get(todoList.id);
+        } else {
+            return new TodoList();
         }
     }
 
