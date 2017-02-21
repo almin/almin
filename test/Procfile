@@ -1,6 +1,0 @@
-# Example Testing in parallel
-counter: cd $(git rev-parse --show-toplevel)/example/counter && npm it
-shopping-cart: cd $(git rev-parse --show-toplevel)/example/shopping-cart && npm it
-todomvc: cd $(git rev-parse --show-toplevel)/example/todomvc && npm it
-todomvc-flow: cd $(git rev-parse --show-toplevel)/example/todomvc-flow && npm it
-svg-feeling: cd $(git rev-parse --show-toplevel)/example/svg-feeling && npm it
