@@ -79,7 +79,7 @@ In the figure, We called
 
 ### Domain model
 
-[Domain model](https://en.wikipedia.org/wiki/Domain_model "Domain model")is a object/class that has both behavior and data.
+[Domain model](https://en.wikipedia.org/wiki/Domain_model "Domain model") is a object/class that has both behavior and data.
 In other word, domain model has property(data) and method(behavior).
 
 ## Let's create domain model!
