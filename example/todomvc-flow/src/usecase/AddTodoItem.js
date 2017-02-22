@@ -1,6 +1,7 @@
 // @flow
 "use strict";
 import {UseCase} from "almin";
+import TodoList from "../domain/TodoList/TodoList"
 import todoListRepository, {TodoListRepository} from "../infra/TodoListRepository"
 import TodoItem from "../domain/TodoList/TodoItem";
 export class AddTodoItemFactory {
@@ -24,7 +25,7 @@ export class AddTodoItemUseCase extends UseCase {
 
     execute(title: string): void {
         // Get todoList from repository
-        const todoList = this.todoListRepository.lastUsed();
+        const todoList: $NonMaybeType<TodoList> = this.todoListRepository.lastUsed();
         // Create TodoItem
         const todoItem: TodoItem = new TodoItem({title});
         // Add TodoItem
