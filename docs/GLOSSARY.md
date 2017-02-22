@@ -47,7 +47,7 @@ Dispatcher is a EventEmitter-like class.
 
 It use `dispatch(payload)`/`onDispatch((payload) => {})` instead of `on("key", ...args)`/`emit("key", ...args)`
 
-- `onDispatch(payload): Function`
+- `onDispatch(payload, meta): Function`
     - listen dispatch event and return un-listen function.
 - `dispatch(payload): void`
     - dispatch event with `payload` object.
