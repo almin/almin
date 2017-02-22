@@ -79,7 +79,7 @@ In the figure, We called
 
 ### Domain model
 
-[Domain model](https://en.wikipedia.org/wiki/Domain_model "Domain model")is a object/class that has both behavior and data.
+[Domain model](https://en.wikipedia.org/wiki/Domain_model "Domain model") is a object/class that has both behavior and data.
 In other word, domain model has property(data) and method(behavior).
 
 ## Let's create domain model!
@@ -167,7 +167,7 @@ Repository is simple class that has these feature:
 - When update memory database, emit "Change" event to subscriber
     - Repository is a just EventEmitter
 
-![almin-architecture-simple-repository.png](img/almin-architecture-simple-repository.png)
+![almin-architecture-repository.png](img/almin-architecture-repository.png)
 
 We want to store `TodoList` instance to the repository.
 As a result, We have created `TodoListRepository`.
@@ -183,7 +183,7 @@ Of course, We can resolve that dependencies issue by DIP([Dependency inversion p
 
 ### DIP
 
-([Dependency inversion principle](https://en.wikipedia.org/wiki/Dependency_inversion_principle "Dependency inversion principle")) is well-known layers pattern.
+[Dependency inversion principle](https://en.wikipedia.org/wiki/Dependency_inversion_principle "Dependency inversion principle") is well-known layers pattern.
 
 ![DIP](img/almin-architecture-dip.png)
 
