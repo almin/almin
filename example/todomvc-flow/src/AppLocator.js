@@ -1,4 +1,3 @@
-// LICENSE : MIT
 // @flow
 "use strict";
 
@@ -25,7 +24,7 @@ export class AppContextLocator {
     /**
      * @param {Context} newContext
      */
-    set context(newContext): void {
+    set context(newContext: Context): void {
         this._context = newContext;
     }
 }
