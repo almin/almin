@@ -13,7 +13,7 @@ import WillExecutedPayload, { isWillExecutedPayload } from "./payload/WillExecut
 export interface UseCaseExecutorArgs {
     useCase: UseCase;
     parent: UseCase | null;
-    dispatcher: Dispatcher | UseCase;
+    dispatcher: Dispatcher;
 }
 
 /**

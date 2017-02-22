@@ -365,11 +365,11 @@ UseCase internally use UseCaseContext insteadof Context.
 It has limitation as against to Context.
 Because, UseCaseContext is for UseCase.
 
-### `constructor(dispatcher: (Dispatcher | UseCase))`
+### `constructor(dispatcher: (UseCase))`
 
 **Parameters**
 
--   `dispatcher`: **(Dispatcher | UseCase)** - dispatcher is Dispatcher or parent UseCase.
+-   `dispatcher`: **(UseCase)** - dispatcher is the parent UseCase.
 
 ### `useCase(useCase: UseCase): UseCaseExecutor`
 
