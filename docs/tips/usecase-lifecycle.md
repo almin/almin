@@ -6,7 +6,7 @@
 |--------------------------|----------------------------------------|
 | onWillExecuteEachUseCase | Each UseCase will Execute              |
 | onDispatch @1            | UseCase call `this.dispatch(payload)`  |
-| onError @1               | UseCase call `this.throw(new Error())` |
+| onError @1               | UseCase call `this.throwError(new Error())` |
 | onDidExecuteEachUseCase  | Each UseCase did executed.             |
 | onCompleteEachUseCase    | Each UseCase is completed.             |
 
@@ -48,6 +48,11 @@ export default class AsyncUseCase extends UseCase {
     }
     // 3. call onDidExecuteEachUseCase
 }
+// listen on*
+context.onWillExecuteEachUseCase((payload, meta) => {});
+context.onDispatch((payload, meta) => {});
+context.onDidExecuteEachUseCase((payload, meta) => {});
+context.onCompleteEachUseCase((payload, meta) => {});
 ```
 
 Always `onCompleteEachUseCase` is called after the `onDidExecuteEachUseCase`.
