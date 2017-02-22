@@ -183,7 +183,7 @@ Of course, We can resolve that dependencies issue by DIP([Dependency inversion p
 
 ### DIP
 
-([Dependency inversion principle](https://en.wikipedia.org/wiki/Dependency_inversion_principle "Dependency inversion principle")) is well-known layers pattern.
+[Dependency inversion principle](https://en.wikipedia.org/wiki/Dependency_inversion_principle "Dependency inversion principle") is well-known layers pattern.
 
 ![DIP](img/almin-architecture-dip.png)
 
