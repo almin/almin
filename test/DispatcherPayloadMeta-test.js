@@ -1,13 +1,13 @@
 // MIT © 2017 azu
 "use strict";
 const assert = require("assert");
-import Context from "../lib/Context";
-import Dispatcher from "../lib/Dispatcher";
-import Store from "../lib/Store";
-import NoDispatchUseCase from "./use-case/NoDispatchUseCase";
-import DispatchUseCase from "./use-case/DispatchUseCase";
-import ErrorUseCase from "./use-case/ErrorUseCase";
-import {ParentUseCase, ChildUseCase} from "./use-case/NestingUseCase";
+import { Context } from "../lib/Context";
+import { Dispatcher } from "../lib/Dispatcher";
+import { Store } from "../lib/Store";
+import { NoDispatchUseCase } from "./use-case/NoDispatchUseCase";
+import { DispatchUseCase } from "./use-case/DispatchUseCase";
+import { ErrorUseCase } from "./use-case/ErrorUseCase";
+import { ParentUseCase, ChildUseCase } from "./use-case/NestingUseCase";
 describe("DispatcherPayloadMeta", () => {
     context("onWillExecuteEachUseCase", () => {
         it("meta has {useCase, dispatcher, timeStamp}", () => {

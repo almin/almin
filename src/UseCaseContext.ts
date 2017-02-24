@@ -1,8 +1,8 @@
 // LICENSE : MIT
 "use strict";
 
-import UseCase from "./UseCase";
-import UseCaseExecutor from "./UseCaseExecutor";
+import { UseCase } from "./UseCase";
+import { UseCaseExecutor } from "./UseCaseExecutor";
 
 const assert = require("assert");
 /**
@@ -11,7 +11,7 @@ const assert = require("assert");
  * Because, UseCaseContext is for UseCase.
  * @public
  */
-export default class UseCaseContext {
+export class UseCaseContext {
 
     dispatcher: UseCase;
 

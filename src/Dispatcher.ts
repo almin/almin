@@ -3,13 +3,13 @@
 
 import * as assert from "assert";
 import { EventEmitter } from "events";
-import DispatcherPayloadMeta from "./DispatcherPayloadMeta";
+import { DispatcherPayloadMeta } from "./DispatcherPayloadMeta";
 
-import Payload from "./payload/Payload";
-import ErrorPayload from "./payload/ErrorPayload";
-import CompletedPayload from "./payload/CompletedPayload";
-import DidExecutedPayload from "./payload/DidExecutedPayload";
-import WillExecutedPayload from "./payload/WillExecutedPayload";
+import { Payload } from "./payload/Payload";
+import { ErrorPayload } from "./payload/ErrorPayload";
+import { CompletedPayload } from "./payload/CompletedPayload";
+import { DidExecutedPayload } from "./payload/DidExecutedPayload";
+import { WillExecutedPayload } from "./payload/WillExecutedPayload";
 
 export const ON_DISPATCH = "__ON_DISPATCH__";
 
@@ -35,7 +35,7 @@ export type DispatchedPayload = Payload | ErrorPayload | CompletedPayload | DidE
  * A. It is for optimization and limitation.
  * If apply emit style, we cast ...args for passing other dispatcher at every time.
  */
-export default class Dispatcher extends EventEmitter {
+export class Dispatcher extends EventEmitter {
     /**
      * if {@link v} is instance of Dispatcher, return true
      */

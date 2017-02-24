@@ -1,25 +1,25 @@
 // LICENSE : MIT
 "use strict";
 import * as assert from "assert";
-import StoreGroup from "./UILayer/StoreGroup";
-import QueuedStoreGroup from "./UILayer/QueuedStoreGroup";
-import Dispatcher from "./Dispatcher";
+import { StoreGroup } from "./UILayer/StoreGroup";
+import { QueuedStoreGroup } from "./UILayer/QueuedStoreGroup";
+import { Dispatcher } from "./Dispatcher";
 import { DispatchedPayload } from "./Dispatcher";
-import DispatcherPayloadMeta from "./DispatcherPayloadMeta";
-import UseCase from "./UseCase";
-import Store from "./Store";
+import { DispatcherPayloadMeta } from "./DispatcherPayloadMeta";
+import { UseCase } from "./UseCase";
+import { Store } from "./Store";
 import { StoreLike } from "./StoreLike";
-import UseCaseExecutor  from "./UseCaseExecutor";
-import StoreGroupValidator from "./UILayer/StoreGroupValidator";
+import { UseCaseExecutor } from "./UseCaseExecutor";
+import { StoreGroupValidator } from "./UILayer/StoreGroupValidator";
 // payloads
-import CompletedPayload, { isCompletedPayload } from "./payload/CompletedPayload";
+import { CompletedPayload, isCompletedPayload } from "./payload/CompletedPayload";
 import { isDidExecutedPayload } from "./payload/DidExecutedPayload";
-import ErrorPayload, { isErrorPayload } from "./payload/ErrorPayload";
-import WillExecutedPayload, { isWillExecutedPayload } from "./payload/WillExecutedPayload";
+import { ErrorPayload, isErrorPayload } from "./payload/ErrorPayload";
+import { WillExecutedPayload, isWillExecutedPayload } from "./payload/WillExecutedPayload";
 /**
  * @public
  */
-export default class Context {
+export class Context {
     private _dispatcher: Dispatcher;
     private _storeGroup: StoreLike & Dispatcher;
     private _releaseHandlers: Array<() => void>;

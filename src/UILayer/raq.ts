@@ -1,6 +1,10 @@
 // LICENSE : MIT
 "use strict";
-const nextTick = (function() {
+
+/**
+ * nextTick function
+ */
+export const raq = (function() {
     // Browser
     if (typeof requestAnimationFrame === "function") {
         return requestAnimationFrame;
@@ -14,9 +18,3 @@ const nextTick = (function() {
     }
     throw new Error("No Available requestFrameAnimation or process.nextTick")
 }());
-
-/**
- * nextTick function
- * @type {function(Function)}
- */
-export default nextTick;

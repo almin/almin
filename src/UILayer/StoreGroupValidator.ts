@@ -1,9 +1,9 @@
 // LICENSE : MIT
 "use strict";
 const assert = require("assert");
-import Store from "../Store";
-import StoreGroup from "./StoreGroup";
-import Dispatcher from "../Dispatcher";
+import { Store } from "../Store";
+import { StoreGroup } from "./StoreGroup";
+import { Dispatcher } from "../Dispatcher";
 /*
  StoreGroup
 
@@ -12,7 +12,7 @@ import Dispatcher from "../Dispatcher";
  - may have `#release(): void`
 
  */
-export default class StoreGroupValidator {
+export class StoreGroupValidator {
     /**
      * validate stores in StoreGroup
      * @param {Store[]} stores

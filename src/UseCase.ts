@@ -1,10 +1,10 @@
 // LICENSE : MIT
 "use strict";
-import Dispatcher from "./Dispatcher";
-import {DispatchedPayload} from "./Dispatcher";
-import UseCaseContext from "./UseCaseContext";
-import DispatcherPayloadMeta from "./DispatcherPayloadMeta";
-import ErrorPayload, { isErrorPayload } from "./payload/ErrorPayload";
+import { Dispatcher } from "./Dispatcher";
+import { DispatchedPayload } from "./Dispatcher";
+import { UseCaseContext } from "./UseCaseContext";
+import { DispatcherPayloadMeta } from "./DispatcherPayloadMeta";
+import { ErrorPayload, isErrorPayload } from "./payload/ErrorPayload";
 /**
  * UseCase incremental count is for Unique ID.
  */
@@ -30,7 +30,7 @@ export let defaultUseCaseName = "<Anonymous-UseCase>";
     }
  }
  */
-abstract class UseCase extends Dispatcher {
+export abstract class UseCase extends Dispatcher {
 
     /**
      * Debuggable name if it needed
@@ -139,5 +139,3 @@ abstract class UseCase extends Dispatcher {
         this.dispatch(payload, meta);
     }
 }
-
-export default UseCase;

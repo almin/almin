@@ -1,6 +1,6 @@
 // LICENSE : MIT
 "use strict";
-import Payload from "./Payload";
+import { Payload } from "./Payload";
 
 /**
  *  XXX: This is exported for an unit testing.
@@ -11,7 +11,7 @@ export const TYPE = "ALMIN__ErrorPayload__";
 /**
  * This payload is executed
  */
-export default class ErrorPayload extends Payload {
+export class ErrorPayload extends Payload {
     /**
      * the `error` in the UseCase
      */

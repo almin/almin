@@ -2,14 +2,14 @@
 "use strict";
 const assert = require("power-assert");
 
-import UseCase from "../lib/UseCase";
-import Dispatcher from "../lib/Dispatcher";
-import Store from "../lib/Store";
-import Context from "../lib/Context";
+import { UseCase } from "../lib/UseCase";
+import { Dispatcher } from "../lib/Dispatcher";
+import { Store } from "../lib/Store";
+import { Context } from "../lib/Context";
 import { TYPE as CompletedPayloadType } from '../lib/payload/CompletedPayload';
 import { TYPE as DidExecutedPayloadType } from '../lib/payload/DidExecutedPayload';
 import { TYPE as WillExecutedPayloadType } from '../lib/payload/WillExecutedPayload';
-import UseCaseContext from "../lib/UseCaseContext";
+import { UseCaseContext } from "../lib/UseCaseContext";
 
 describe("UseCase", function() {
     describe("id", () => {

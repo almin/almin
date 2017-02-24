@@ -1,7 +1,7 @@
 // MIT © 2017 azu
 "use strict";
 const assert = require("assert");
-import {Context} from "../lib/index";
+import { Context } from "../lib/index";
 describe("index", () => {
     it("should export as named import", () => {
         assert.ok(Context !== undefined);
