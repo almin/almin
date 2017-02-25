@@ -88,3 +88,5 @@ crashlytics-build.properties
 
 # Build cache.
 /__obj/
+/.eslintcache
+/.textlintcache
