@@ -11,7 +11,7 @@ const appContext = new Context({
     dispatcher,
     store
 });
-import Counter from './Counter';
+import Counter from "./Counter";
 export default class App extends React.Component {
     constructor(...args) {
         super(...args);
@@ -23,7 +23,7 @@ export default class App extends React.Component {
         const onChangeHandler = () => {
             return requestAnimationFrame(() => {
                 this.setState(appContext.getState());
-            })
+            });
         };
         appContext.onChange(onChangeHandler);
     }
@@ -41,6 +41,6 @@ export default class App extends React.Component {
         */
         const counterState = this.state.counterState;
         return <Counter counterState={counterState}
-                        appContext={appContext}/>
+                        appContext={appContext}/>;
     }
 }

@@ -2,7 +2,7 @@
 "use strict";
 import Product from "../../src/domain/Product/Product";
 const productCatalogData = require("./products.json");
-import {ProductRepository} from "../../src/infra/ProductRepository"
+import {ProductRepository} from "../../src/infra/ProductRepository";
 export default class InitializedProductRepository {
     /**
      * @returns {{products: Array, productRepository: ProductRepository}}

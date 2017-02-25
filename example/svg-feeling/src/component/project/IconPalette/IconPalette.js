@@ -18,7 +18,7 @@ export default class IconPalette extends React.Component {
             <SVGIcon name="hearts" style={fillColor}/>
             <SVGIcon name="play" style={fillColor}/>
             <span className="IconPalette-hexCode">{color.hexCode}</span>
-        </div>
+        </div>;
     }
 }
 IconPalette.propTypes = {

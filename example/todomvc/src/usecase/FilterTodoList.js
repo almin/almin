@@ -10,7 +10,7 @@ export class FilterTodoListUseCase extends UseCase {
     execute(filterType) {
         this.dispatch({
             type: FilterTodoListUseCase.name,
-            filterType: filterType
+            filterType
         });
     }
 }

@@ -14,7 +14,7 @@ export default class TodoStore extends Store {
     getState() {
         return {
             todoState: this.state
-        }
+        };
     }
 
     /**

@@ -1,5 +1,5 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from "react";
+import ReactDOM from "react-dom";
 import App from "./components/App";
 import AppLocator from "./AppLocator";
 import AlminLogger from "almin-logger";
@@ -25,6 +25,6 @@ ReactDOM.render(
     React.createElement(App, {
         appContext
     }),
-    document.getElementById('flux-app')
+    document.getElementById("flux-app")
 );
 

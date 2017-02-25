@@ -1,8 +1,8 @@
 // LICENSE : MIT
 "use strict";
 const assert = require("assert");
-import IncrementalCounterUseCase from "../src/usecase/IncrementalCounterUseCase"
-import {CounterStore} from "../src/store/CounterStore"
+import IncrementalCounterUseCase from "../src/usecase/IncrementalCounterUseCase";
+import {CounterStore} from "../src/store/CounterStore";
 describe("CounterStore", function () {
     describe("onCountUp", function () {
         it("should new state was count up", function (done) {
@@ -18,7 +18,7 @@ describe("CounterStore", function () {
                 done();
             });
             // when
-            useCase.execute()
+            useCase.execute();
         });
     });
 });

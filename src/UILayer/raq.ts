@@ -16,5 +16,5 @@ export const raq = (function() {
             setTimeout(handler, 0);
         };
     }
-    throw new Error("No Available requestFrameAnimation or process.nextTick")
+    throw new Error("No Available requestFrameAnimation or process.nextTick");
 }());

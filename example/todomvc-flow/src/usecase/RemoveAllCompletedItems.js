@@ -1,7 +1,7 @@
 // @flow
 "use strict";
 import {UseCase} from "almin";
-import todoListRepository, {TodoListRepository} from "../infra/TodoListRepository"
+import todoListRepository, {TodoListRepository} from "../infra/TodoListRepository";
 export class RemoveTodoItemFactory {
     static create(): RemoveTodoItemUseCase {
         return new RemoveTodoItemUseCase({
@@ -12,6 +12,7 @@ export class RemoveTodoItemFactory {
 
 export class RemoveTodoItemUseCase extends UseCase {
     todoListRepository: TodoListRepository;
+
     /**
      * @param {TodoListRepository} todoListRepository
      */
@@ -23,7 +24,7 @@ export class RemoveTodoItemUseCase extends UseCase {
     execute(): void {
         const todoList = this.todoListRepository.lastUsed();
         if (todoList == null) {
-          return;
+            return;
         }
         todoList.removeAllCompletedItems();
         this.todoListRepository.save(todoList);

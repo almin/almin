@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-const React = require('react');
+const React = require("react");
 import ProductItem from "../domain/value/ProductItem";
 const ProductItemComponent = React.createClass({
     propTypes: {
@@ -8,8 +8,8 @@ const ProductItemComponent = React.createClass({
         onAddToCartClicked: React.PropTypes.func.isRequired
     },
 
-    render: function () {
-        var product = this.props.product;
+    render () {
+        const product = this.props.product;
 
         return (
             <div className="uk-panel uk-panel-box uk-margin-bottom">
@@ -17,8 +17,8 @@ const ProductItemComponent = React.createClass({
                 <h4 className="uk-h4">{product.title} - &euro;{product.price}</h4>
                 <button className="uk-button uk-button-small uk-button-primary"
                         onClick={this.props.onAddToCartClicked}
-                        disabled={product.inventory > 0 ? '' : 'disabled'}>
-                    {product.inventory > 0 ? 'Add to cart' : 'Sold Out'}
+                        disabled={product.inventory > 0 ? "" : "disabled"}>
+                    {product.inventory > 0 ? "Add to cart" : "Sold Out"}
                 </button>
             </div>
         );

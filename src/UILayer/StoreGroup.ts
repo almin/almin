@@ -9,7 +9,7 @@ import LRU from "lru-map-like";
 import { Dispatcher } from "./../Dispatcher";
 import { Store } from "./../Store";
 import { StoreGroupValidator } from "./StoreGroupValidator";
-import { StoreLike } from './../StoreLike';
+import { StoreLike } from "./../StoreLike";
 import { raq } from "./raq";
 
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";

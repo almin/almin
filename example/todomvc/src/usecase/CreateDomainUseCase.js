@@ -1,7 +1,7 @@
 "use strict";
 import {UseCase} from "almin";
 import TodoList from "../domain/TodoList/TodoList";
-import todoListRepository, {TodoListRepository} from "../infra/TodoListRepository"
+import todoListRepository, {TodoListRepository} from "../infra/TodoListRepository";
 
 export class CreateDomainUseCaseFactory {
     static create() {

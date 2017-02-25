@@ -15,7 +15,7 @@ module.exports = {
     "postcss-easy-import": {
         root: "./src/",
         glob: true,
-        onImport: function (sources) {
+        onImport (sources) {
             global.watchCSS(sources, this.from);
         }
     },

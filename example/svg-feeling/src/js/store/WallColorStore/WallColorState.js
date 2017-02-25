@@ -11,10 +11,10 @@ export default class WallColorState {
 
     reduce(payload) {
         switch (payload.type) {
-            case ChangeWallColorUseCase.name:
-                return new WallColorState({wallColor: payload.color});
-            default:
-                return this;
+        case ChangeWallColorUseCase.name:
+            return new WallColorState({wallColor: payload.color});
+        default:
+            return this;
         }
     }
 }

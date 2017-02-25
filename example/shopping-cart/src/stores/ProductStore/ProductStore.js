@@ -1,4 +1,4 @@
-import {Store} from 'almin';
+import {Store} from "almin";
 import ProductState from "./ProductState";
 export default class ProductStore extends Store {
     /**

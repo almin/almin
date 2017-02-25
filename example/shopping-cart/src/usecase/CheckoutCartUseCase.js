@@ -6,7 +6,7 @@ import AppLocator from "../AppLocator";
 export default class CheckoutCartUseCase extends UseCase {
     static create() {
         const customer = AppLocator.customer;
-        return new this({customer, cartRepository})
+        return new this({customer, cartRepository});
     }
 
     /**

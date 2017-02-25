@@ -1,9 +1,9 @@
-import React from 'react';
-import ProductItem from './ProductItem';
-import ProductsList from './ProductsList';
-import AddItemToCartUseCase from "../usecase/AddItemToCartUseCase"
+import React from "react";
+import ProductItem from "./ProductItem";
+import ProductsList from "./ProductsList";
+import AddItemToCartUseCase from "../usecase/AddItemToCartUseCase";
 import AppLocator from "../AppLocator";
-let ProductItemContainer = React.createClass({
+const ProductItemContainer = React.createClass({
     onAddToCartClicked() {
         const useCase = AddItemToCartUseCase.create();
         AppLocator.context.useCase(useCase).execute(this.props.product.id);
@@ -20,10 +20,10 @@ let ProductItemContainer = React.createClass({
 
 });
 
-let ProductsListContainer = React.createClass({
+const ProductsListContainer = React.createClass({
     render() {
         const products = this.props.products;
-        let nodes = products.map(product => {
+        const nodes = products.map(product => {
             return (
                 <ProductItemContainer
                     key={product.id}

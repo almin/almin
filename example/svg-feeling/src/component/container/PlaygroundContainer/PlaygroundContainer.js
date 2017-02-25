@@ -19,7 +19,7 @@ export default class PlaygroundContainer extends React.Component {
         return <div className="PlaygroundContainer">
             <IconPalette color={currentColor}/>
             <button onClick={changeNextColor}>Change Color</button>
-        </div>
+        </div>;
     }
 }
 PlaygroundContainer.propTypes = {

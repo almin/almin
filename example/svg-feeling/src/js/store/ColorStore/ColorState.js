@@ -17,8 +17,8 @@ export default class ColorState {
 
     reduce(payload) {
         switch (payload.type) {
-            default:
-                return this;
+        default:
+            return this;
         }
     }
 }

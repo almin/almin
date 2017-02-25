@@ -1,8 +1,8 @@
-import React from 'react';
-import Cart from './Cart';
+import React from "react";
+import Cart from "./Cart";
 import AppLocator from "../AppLocator";
 import CheckoutCartUseCase from "../usecase/CheckoutCartUseCase";
-let CartContainer = React.createClass({
+const CartContainer = React.createClass({
     onCheckoutClicked() {
         const {CartState} = this.props;
         if (!CartState.hasItemAtLeastOne) {

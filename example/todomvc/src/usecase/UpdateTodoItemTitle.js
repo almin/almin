@@ -1,5 +1,5 @@
 "use strict";
-import todoListRepository, {TodoListRepository} from "../infra/TodoListRepository"
+import todoListRepository, {TodoListRepository} from "../infra/TodoListRepository";
 export class UpdateTodoItemTitleFactory {
     static create() {
         return new UpdateTodoItemTitleUseCase({
@@ -19,9 +19,9 @@ export class UpdateTodoItemTitleUseCase {
     execute({id, title}) {
         const todoList = this.todoListRepository.lastUsed();
         if (!todoList.hasItem(id)) {
-            return Promise.reject(new Error("Not found item:" + id));
+            return Promise.reject(new Error(`Not found item:${id}`));
         }
-        todoList.updateItem({id: id, title});
+        todoList.updateItem({id, title});
         this.todoListRepository.save(todoList);
     }
 }
