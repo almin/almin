@@ -35,7 +35,7 @@
     "babel-preset-power-assert": "^1.0.0",
     "babel-preset-react": "^6.5.0",
     "babel-register": "^6.7.2",
-    "flow-bin": "^0.37.4",
+    "flow-bin": "^0.40.0",
     "json-loader": "^0.5.4",
     "mkdirp": "^0.5.1",
     "mocha": "^3.0.2",

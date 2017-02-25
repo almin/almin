@@ -51,7 +51,7 @@ export default class MapLike {
      * @param {string} key
      * @returns {*}
      */
-    get(key: ?string): void {
+    get(key: ?string): ?mixed {
         return this._store[key];
     }
 

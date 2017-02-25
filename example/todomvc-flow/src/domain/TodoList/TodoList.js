@@ -1,8 +1,13 @@
+// @flow
 "use strict";
 const uuid = require('uuid');
 const assert = require("assert");
+import type {TodoItemObjectT} from "./TodoItem";
 import TodoItem from "./TodoItem";
 export default class TodoList {
+    id: string;
+    _items: Array<TodoItem>;
+
     constructor() {
         this.id = uuid.v1();
         /**
@@ -15,7 +20,7 @@ export default class TodoList {
     /**
      * @returns {TodoItem[]}
      */
-    getAllTodoItems() {
+    getAllTodoItems(): Array<TodoItem> {
         return this._items;
     }
 
@@ -23,7 +28,7 @@ export default class TodoList {
      * @param id
      * @returns {boolean}
      */
-    hasItem(id) {
+    hasItem(id: string): boolean {
         return this._items.some(item => {
             return item.id === id;
         });
@@ -33,7 +38,7 @@ export default class TodoList {
      * @param id
      * @returns {TodoItem|undefined}
      */
-    getItem(id) {
+    getItem(id: string): ?TodoItem {
         assert(id, "need id");
         const items = this._items.filter(item => {
             return item.id === id;
@@ -48,21 +53,22 @@ export default class TodoList {
      * @param {Object} updated
      * @returns {TodoItem}
      */
-    updateItem(updated) {
+    updateItem(updated: $Shape<TodoItemObjectT>): ?TodoItem {
         assert(updated.id !== undefined, "should have {id}");
         const item = this.getItem(updated.id);
-        const newItem = item.updateItem(updated);
-        const index = this._items.indexOf(item);
-        assert(index !== -1, "item should contained list");
-        this._items[index] = newItem;
-        return item;
+        if (item != null) {
+          const newItem = item.updateItem(updated);
+          const index = this._items.indexOf(item);
+          this._items[index] = newItem;
+          return item;
+        }
     }
 
     /**
      * @param {TodoItem} todoItem
      * @return {TodoItem}
      */
-    addItem(todoItem) {
+    addItem<T: TodoItem>(todoItem: T): T {
         this._items.push(todoItem);
         return todoItem;
     }
@@ -81,11 +87,13 @@ export default class TodoList {
      * @param {string} id
      * @returns {TodoItem|undefined}
      */
-    toggleComplete(id) {
+    toggleComplete(id: string): ?TodoItem {
         const item = this.getItem(id);
-        item.completed = !item.completed;
-        this.updateItem(item);
-        return item;
+        if (item != null) {
+          item.completed = !item.completed;
+          this.updateItem((item:TodoItemObjectT));
+          return item;
+        }
     }
 
     /**
@@ -93,11 +101,13 @@ export default class TodoList {
      * @param {string} id
      * @returns {TodoItem|undefined}
      */
-    removeItem(id) {
+    removeItem(id: string): ?TodoItem {
         const item = this.getItem(id);
-        const index = this._items.indexOf(item);
-        this._items.splice(index, 1);
-        return item;
+        if (item != null) {
+          const index = this._items.indexOf(item);
+          this._items.splice(index, 1);
+          return item;
+        }
     }
 
     /**
