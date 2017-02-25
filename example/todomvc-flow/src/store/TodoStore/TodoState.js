@@ -2,8 +2,8 @@
 "use strict";
 import type {DispatcherPayload} from 'almin';
 import {FilterTodoListUseCase} from "../../usecase/FilterTodoList";
-import typeof TodoItem from '../../domain/TodoList/TodoItem';
-import typeof TodoList from '../../domain/TodoList/TodoList';
+import TodoItem from '../../domain/TodoList/TodoItem';
+import TodoList from '../../domain/TodoList/TodoList';
 export const FilterTypes = {
     ALL_TODOS: "ALL_TODOS",
     ACTIVE_TODOS: "ACTIVE_TODOS",

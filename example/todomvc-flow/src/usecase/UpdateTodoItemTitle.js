@@ -25,7 +25,7 @@ export class UpdateTodoItemTitleUseCase {
         if (!todoList.hasItem(id)) {
             return Promise.reject(new Error("Not found item:" + id));
         }
-        todoList.updateItem({id: id, title});
+        todoList.updateItem({id, title});
         this.todoListRepository.save(todoList);
     }
 }

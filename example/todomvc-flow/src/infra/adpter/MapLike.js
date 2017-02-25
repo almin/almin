@@ -5,10 +5,10 @@ const assert = require("assert");
  ES6 Map like object.
  This is not iterable.
  */
-export default class MapLike {
-    _store: Object;
+export default class MapLike<K, V> {
+    _store: {[key: K]: V};
 
-    constructor(entries: Array<Object> = []) {
+    constructor(entries: Array<[K, V]> = []) {
         this._store = Object.create(null);
         entries.forEach(entry => {
             assert(Array.isArray(entry), "new MapLike([ [key, value] ])");
@@ -27,8 +27,8 @@ export default class MapLike {
      * get keys
      * @returns {Array}
      */
-    keys(): Array<mixed> {
-        return Object.keys(this._store);
+    keys(): Array<K> {
+        return (Object.keys(this._store): Array<any>);
     }
 
     /**
@@ -51,7 +51,7 @@ export default class MapLike {
      * @param {string} key
      * @returns {*}
      */
-    get(key: ?string): void {
+    get(key: K): ?V {
         return this._store[key];
     }
 
@@ -61,7 +61,7 @@ export default class MapLike {
      * @param key
      * @returns {boolean}
      */
-    has(key: string): boolean {
+    has(key: K): boolean {
         return this.get(key) != null;
     }
 
@@ -72,7 +72,7 @@ export default class MapLike {
      * @param {*} value
      * @return {MapLike}
      */
-    set(key: string, value: mixed): MapLike {
+    set(key: K, value: V): this {
         this._store[key] = value;
         return this;
     }
@@ -81,15 +81,15 @@ export default class MapLike {
      * delete value for key
      * @param {string} key
      */
-    delete(key: string): void {
-        this._store[key] = null;
+    delete(key: K): void {
+        delete this._store[key];
     }
 
     /**
      * clear defined key,value
      * @returns {MapLike}
      */
-    clear(): MapLike {
+    clear(): this {
         this._store = Object.create(null);
         return this;
     }

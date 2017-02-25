@@ -11,6 +11,7 @@ export class RemoveTodoItemFactory {
 }
 
 export class RemoveTodoItemUseCase extends UseCase {
+    todoListRepository: TodoListRepository;
     /**
      * @param {TodoListRepository} todoListRepository
      */
@@ -21,6 +22,9 @@ export class RemoveTodoItemUseCase extends UseCase {
 
     execute(itemId: string): void {
         const todoList = this.todoListRepository.lastUsed();
+        if (todoList == null) {
+          return;
+        }
         if (!todoList.hasItem(itemId)) {
             return this.throwError(new Error("Not found item:" + itemId));
         }
