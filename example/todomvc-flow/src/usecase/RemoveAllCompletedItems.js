@@ -11,6 +11,7 @@ export class RemoveTodoItemFactory {
 }
 
 export class RemoveTodoItemUseCase extends UseCase {
+    todoListRepository: TodoListRepository;
     /**
      * @param {TodoListRepository} todoListRepository
      */
@@ -21,7 +22,9 @@ export class RemoveTodoItemUseCase extends UseCase {
 
     execute(): void {
         const todoList = this.todoListRepository.lastUsed();
-        todoList.removeAllCompletedItems();
-        this.todoListRepository.save(todoList);
+        if (todoList != null) {
+          todoList.removeAllCompletedItems();
+          this.todoListRepository.save(todoList);
+        }
     }
 }

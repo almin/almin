@@ -7,9 +7,9 @@ import MemoryDB from "./adpter/MemoryDB";
 
 // Collection repository
 export class TodoListRepository extends EventEmitter {
-    _database: MemoryDB;
+    _database: MemoryDB<string, TodoList>;
 
-    constructor(database: MemoryDB = new MemoryDB()) {
+    constructor(database: MemoryDB<string, TodoList> = new MemoryDB()) {
         super();
         /**
          * @type {MemoryDB}
@@ -23,7 +23,7 @@ export class TodoListRepository extends EventEmitter {
      */
     _get(id: string): ?TodoList {
         // Domain.<id>
-        return (this._database.get(`${TodoList.name}.${id}`): any);
+        return this._database.get(`${TodoList.name}.${id}`);
     }
 
     find(todoList: TodoList): ?TodoList {

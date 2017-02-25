@@ -11,6 +11,7 @@ export class ToggleAllTodoItemFactory {
 }
 
 export class ToggleAllTodoItemUseCase extends UseCase {
+    todoListRepository: TodoListRepository;
     /**
      * @param {TodoListRepository} todoListRepository
      */
@@ -21,7 +22,9 @@ export class ToggleAllTodoItemUseCase extends UseCase {
 
     execute(): void {
         const todoList = this.todoListRepository.lastUsed();
-        todoList.toggleCompleteAll();
-        this.todoListRepository.save(todoList)
+        if (todoList != null) {
+          todoList.toggleCompleteAll();
+          this.todoListRepository.save(todoList)
+        }
     }
 }
