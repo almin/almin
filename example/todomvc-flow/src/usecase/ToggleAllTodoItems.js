@@ -22,9 +22,10 @@ export class ToggleAllTodoItemUseCase extends UseCase {
 
     execute(): void {
         const todoList = this.todoListRepository.lastUsed();
-        if (todoList != null) {
-          todoList.toggleCompleteAll();
-          this.todoListRepository.save(todoList)
+        if (todoList == null) {
+          return;
         }
+        todoList.toggleCompleteAll();
+        this.todoListRepository.save(todoList);
     }
 }
