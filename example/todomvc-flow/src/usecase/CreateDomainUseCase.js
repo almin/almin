@@ -23,7 +23,7 @@ export class CreateDomainUseCase extends UseCase {
 
     execute(): void {
         // initialize TodoList domain
-        const todoList: TodoList = new TodoList();
+        const todoList = new TodoList();
         this.todoListRepository.save(todoList);
     }
 }

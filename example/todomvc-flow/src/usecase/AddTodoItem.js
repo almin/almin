@@ -25,9 +25,12 @@ export class AddTodoItemUseCase extends UseCase {
 
     execute(title: string): void {
         // Get todoList from repository
-        const todoList: $NonMaybeType<TodoList> = this.todoListRepository.lastUsed();
+        const todoList = this.todoListRepository.lastUsed();
+        if (todoList == null) {
+          return;
+        }
         // Create TodoItem
-        const todoItem: TodoItem = new TodoItem({title});
+        const todoItem = new TodoItem({title});
         // Add TodoItem
         todoList.addItem(todoItem);
         // Save todoList to  repository
