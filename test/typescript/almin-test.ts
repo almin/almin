@@ -94,14 +94,13 @@ class ChildUseCase extends UseCase {
 }
 class ParentUseCase extends UseCase {
     execute(value: string) {
-        // TODO: improve `execute` signature
+        // TODO: improve `execute` signature - https://github.com/almin/almin/issues/107
         return this.context.useCase(new ChildUseCase()).execute(value);
     }
 }
 const parentUseCase = new ParentUseCase();
 // UseCase - execute
 context.useCase(parentUseCase).execute("value").then(() => {
-    // TODO: Can improve without StoreState?
     const state = context.getState<StoreState>();
     console.log(state.A.a);
     console.log(state.B.b);
