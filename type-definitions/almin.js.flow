@@ -106,5 +106,6 @@ export {
     WillExecutedPayload,
     DidExecutedPayload,
     CompletedPayload,
-    ErrorPayload
+    ErrorPayload,
+    DispatcherPayloadMeta
 }
