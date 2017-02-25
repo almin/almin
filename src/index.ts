@@ -11,3 +11,4 @@ export { DidExecutedPayload } from "./payload/DidExecutedPayload";
 export { Payload } from "./payload/Payload";
 export { ErrorPayload } from "./payload/ErrorPayload";
 export { WillExecutedPayload } from "./payload/WillExecutedPayload";
+export { DispatcherPayloadMeta } from "./DispatcherPayloadMeta";
