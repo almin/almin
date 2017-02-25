@@ -40,7 +40,7 @@
 
     "include": [
         "src/**/*",
-        "test/**/*.ts"
+        "test/**/*"
     ],
 
     "exclude": [
