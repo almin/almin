@@ -4,24 +4,24 @@
  * @flow
  */
 
-type DispatcherPayload = Object;
-declare class Payload {
+export type DispatcherPayload = Object;
+declare export class Payload {
     type: mixed;
 }
-declare class CompletedPayload extends Payload {
+declare export class CompletedPayload extends Payload {
     value: ?mixed;
 }
-declare class DidExecutedPayload extends Payload {
+declare export class DidExecutedPayload extends Payload {
     value: ?mixed;
 }
-declare class ErrorPayload extends Payload {
+declare export class ErrorPayload extends Payload {
     error: Error | mixed;
 }
-declare class WillExecutedPayload extends Payload {
+declare export class WillExecutedPayload extends Payload {
     args: Array<mixed>;
 }
 // Internal class
-declare class DispatcherPayloadMeta {
+declare export class DispatcherPayloadMeta {
     useCase: ?UseCase;
     dispatcher: ?Dispatcher | UseCase;
     parentUseCase: ?UseCase;
@@ -29,21 +29,21 @@ declare class DispatcherPayloadMeta {
     isTrusted: boolean;
 }
 
-declare class QueuedStoreGroup extends Dispatcher {
+declare export class QueuedStoreGroup extends Dispatcher {
     getState(): Object;
     emitChange(): void;
     onChange(handler: (stores: Array<Store>) => mixed): Function;
     release(): void;
 }
 
-declare class StoreGroup extends Dispatcher {
+declare export class StoreGroup extends Dispatcher {
     getState(): Object;
     emitChange(): void;
     onChange(handler: (stores: Array<Store>) => mixed): Function;
     release(): void;
 }
 
-declare class Context {
+declare export class Context {
     getState(): mixed;
     onChange(onChangeHandler: (changingStores: Array<Store>) => mixed): Function;
     useCase(useCase: UseCase): UseCaseExecutor;
@@ -56,7 +56,7 @@ declare class Context {
 }
 
 
-declare class Dispatcher extends events$EventEmitter {
+declare export class Dispatcher extends events$EventEmitter {
     static isDispatcher(maybeDispatcher: mixed): boolean;
 
     onDispatch(payloadHandler: (payload: DispatcherPayload) => mixed): Function;
@@ -64,7 +64,7 @@ declare class Dispatcher extends events$EventEmitter {
     pipe(toDispatcher: Dispatcher): Function;
 }
 
-declare class Store extends Dispatcher {
+declare export class Store extends Dispatcher {
     static isStore(maybeStore: mixed): boolean;
 
     getState(prevState: Object): Object;
@@ -72,7 +72,7 @@ declare class Store extends Dispatcher {
     emitChange(): void;
 }
 
-declare class UseCase extends Dispatcher {
+declare export class UseCase extends Dispatcher {
     static isUseCase(maybeUseCase: mixed): boolean;
 
     id: string;
@@ -82,30 +82,14 @@ declare class UseCase extends Dispatcher {
     throwError(error: Error): void;
 }
 
-declare class UseCaseContext {
+declare export class UseCaseContext {
     useCase(useCase: UseCase): UseCaseExecutor;
 }
 
-declare class UseCaseExecutor {
+declare export class UseCaseExecutor {
     onWillExecuteEachUseCase(handler: (payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => mixed): void;
     onDidExecuteEachUseCase(handler: (payload: DidExecutedPayload, meta: DispatcherPayloadMeta) => mixed): void;
     onCompleteExecuteEachUseCase(handler: (payload: CompletedPayload, meta: DispatcherPayloadMeta) => mixed): Function;
-    execute(args: Array<mixed>): void;
+    execute(args?: Array<mixed>): Promise<void>;
     release(): void;
-}
-
-export {
-    Dispatcher,
-    Store,
-    StoreGroup,
-    QueuedStoreGroup,
-    UseCaseContext,
-    UseCase,
-    Context,
-    Payload
-    WillExecutedPayload,
-    DidExecutedPayload,
-    CompletedPayload,
-    ErrorPayload,
-    DispatcherPayloadMeta
 }

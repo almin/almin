@@ -10,8 +10,7 @@
   "license": "MIT",
   "files": [
     "src/",
-    "lib/",
-    "type-definitions/"
+    "lib/"
   ],
   "bugs": {
     "url": "https://github.com/almin/almin/issues"
@@ -33,6 +32,7 @@
     "build:src:tsc": "tsc --project .",
     "build:lib": "npm-run-all -p build:lib:*",
     "build:lib:cp_lib": "cpx '__obj/src/**/*.d.ts' lib/ --preserve",
+    "build:lib:cp_type_def": "cpx type-definitions/**/*.js.flow lib/ --preserve",
     "build:lib:down_transform": "cross-env NODE_ENV=production babel __obj/src --out-dir lib/ --source-maps",
     "lint": "npm-run-all -p lint:*",
     "lint:fix": "npm-run-all -p lint:*:fix",
