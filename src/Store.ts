@@ -1,7 +1,7 @@
 // LICENSE : MIT
 "use strict";
 import { Dispatcher } from "./Dispatcher";
-import { DispatcherPayloadMeta } from "./DispatcherPayloadMeta";
+import { DispatcherPayloadMetaImpl } from "./DispatcherPayloadMeta";
 import { Payload } from "./payload/Payload";
 import { isErrorPayload } from "./payload/ErrorPayload";
 import { StoreLike } from './StoreLike';
@@ -82,7 +82,7 @@ export abstract class Store extends Dispatcher implements StoreLike {
 
     /**
      * invoke `handler` when UseCase throw error events.
-     * @param {function(payload: Payload, meta: DispatcherPayloadMeta)} handler
+     * @param {function(payload: Payload, meta: DispatcherPayloadMetaImpl)} handler
      * @returns {Function} call the function and release handler
      * @public
      * @example
@@ -94,7 +94,7 @@ export abstract class Store extends Dispatcher implements StoreLike {
      * }):
      * @deprecated
      */
-    onError(handler: (payload: Payload, meta: DispatcherPayloadMeta) => void): () => void {
+    onError(handler: (payload: Payload, meta: DispatcherPayloadMetaImpl) => void): () => void {
         console.warn("Store#onError is deprecated. Please use Store#onDispatch.");
         return this.onDispatch((payload, meta) => {
             if (isErrorPayload(payload)) {

@@ -8,7 +8,7 @@ const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
 
 import { Dispatcher } from "./../Dispatcher";
 import { DispatchedPayload } from "./../Dispatcher";
-import { DispatcherPayloadMeta } from "./../DispatcherPayloadMeta";
+import { DispatcherPayloadMetaImpl } from "./../DispatcherPayloadMeta";
 import { Store } from "./../Store";
 import { StoreLike } from './../StoreLike';
 import { StoreGroupValidator } from "./StoreGroupValidator";
@@ -112,7 +112,7 @@ export class QueuedStoreGroup extends Dispatcher implements StoreLike {
         this._stateCache = new LRU<Store, any>(100);
         // `this` can catch the events of dispatchers
         // Because context delegate dispatched events to **this**
-        const tryToEmitChange = (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => {
+        const tryToEmitChange = (payload: DispatchedPayload, meta: DispatcherPayloadMetaImpl) => {
             // check stores, if payload's type is not system event.
             // It means that `onDispatch` is called when dispatching user event.
             if (!meta.isTrusted) {
