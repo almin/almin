@@ -7,9 +7,9 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-const React = require('react');
+const React = require("react");
 const ReactPropTypes = React.PropTypes;
-const classNames = require('classnames');
+const classNames = require("classnames");
 import AppLocator from "../AppLocator";
 import {UpdateTodoItemTitleFactory} from "../usecase/UpdateTodoItemTitle";
 import {ToggleTodoItemFactory} from "../usecase/ToggleTodoItem";
@@ -22,7 +22,7 @@ const TodoItem = React.createClass({
         todo: ReactPropTypes.object.isRequired
     },
 
-    getInitialState: function () {
+    getInitialState () {
         return {
             isEditing: false,
             completed: false
@@ -33,12 +33,12 @@ const TodoItem = React.createClass({
         const todo = nextPros.todo;
         this.setState({
             completed: todo.completed
-        })
+        });
     },
     /**
      * @return {object}
      */
-    render: function () {
+    render () {
         const todo = this.props.todo;
         let input;
         if (this.state.isEditing) {
@@ -56,8 +56,8 @@ const TodoItem = React.createClass({
         // This differentiation between classification and state becomes important
         // in the naming of view actions toggleComplete() vs. destroyCompleted().
         const listClassName = classNames({
-            'completed': todo.completed,
-            'editing': this.state.isEditing
+            "completed": todo.completed,
+            "editing": this.state.isEditing
         });
         return (
             <li className={listClassName}
@@ -79,11 +79,11 @@ const TodoItem = React.createClass({
         );
     },
 
-    _onToggleComplete: function (event) {
+    _onToggleComplete (event) {
         AppLocator.context.useCase(ToggleTodoItemFactory.create()).execute(this.props.todo.id);
     },
 
-    _onDoubleClick: function () {
+    _onDoubleClick () {
         this.setState({isEditing: true});
     },
 
@@ -93,7 +93,7 @@ const TodoItem = React.createClass({
      * in different ways.
      * @param  {string} title
      */
-    _onSave: function (title) {
+    _onSave (title) {
         AppLocator.context.useCase(UpdateTodoItemTitleFactory.create()).execute({
             id: this.props.todo.id,
             title
@@ -101,7 +101,7 @@ const TodoItem = React.createClass({
         this.setState({isEditing: false});
     },
 
-    _onDestroyClick: function () {
+    _onDestroyClick () {
         AppLocator.context.useCase(RemoveTodoItemFactory.create()).execute(this.props.todo.id);
     }
 

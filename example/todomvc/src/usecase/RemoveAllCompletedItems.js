@@ -1,6 +1,6 @@
 "use strict";
 import {UseCase} from "almin";
-import todoListRepository, {TodoListRepository} from "../infra/TodoListRepository"
+import todoListRepository, {TodoListRepository} from "../infra/TodoListRepository";
 export class RemoveTodoItemFactory {
     static create() {
         return new RemoveTodoItemUseCase({

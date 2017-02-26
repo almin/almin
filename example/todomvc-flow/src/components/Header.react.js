@@ -7,7 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-const React = require('react');
+const React = require("react");
 import AppLocator from "../AppLocator";
 import {AddTodoItemFactory} from "../usecase/AddTodoItem";
 import TodoTextInput from "./TodoTextInput.react";
@@ -17,7 +17,7 @@ const Header = React.createClass({
     /**
      * @return {object}
      */
-    render: function () {
+    render() {
         return (
             <header id="header">
                 <h1>todos</h1>
@@ -36,7 +36,7 @@ const Header = React.createClass({
      * in different ways.
      * @param {string} text
      */
-    _onSave: function (text) {
+    _onSave(text) {
         if (text.trim()) {
             AppLocator.context.useCase(AddTodoItemFactory.create()).execute(text);
         }

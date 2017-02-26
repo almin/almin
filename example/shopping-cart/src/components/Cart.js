@@ -1,8 +1,8 @@
-'use strict';
+"use strict";
 
-const React = require('react');
+const React = require("react");
 const ProductHeader = React.createClass({
-    render: function () {
+    render () {
         return <div>{this.props.children}</div>;
     }
 });
@@ -19,7 +19,7 @@ const Cart = React.createClass({
         onCheckoutClicked: React.PropTypes.func.isRequired
     },
 
-    render: function () {
+    render () {
         const products = this.props.products;
 
         const hasProducts = products.length > 0;
@@ -36,7 +36,7 @@ const Cart = React.createClass({
                 <div className="uk-margin-small-bottom">Total: &euro;{this.props.total}</div>
                 <button className="uk-button uk-button-large uk-button-success uk-align-right"
                         onClick={this.props.onCheckoutClicked}
-                        disabled={hasProducts ? '' : 'disabled'}>
+                        disabled={hasProducts ? "" : "disabled"}>
                     Checkout
                 </button>
             </div>

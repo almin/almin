@@ -1,6 +1,6 @@
 "use strict";
 import {UseCase} from "almin";
-import todoListRepository, {TodoListRepository} from "../infra/TodoListRepository"
+import todoListRepository, {TodoListRepository} from "../infra/TodoListRepository";
 import TodoItem from "../domain/TodoList/TodoItem";
 export class AddTodoItemFactory {
     static create() {

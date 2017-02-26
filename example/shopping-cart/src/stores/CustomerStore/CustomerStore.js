@@ -1,4 +1,4 @@
-import {Store} from 'almin';
+import {Store} from "almin";
 import CustomerState from "./CustomerState";
 import AppLocator from "../../AppLocator";
 export default class CustomerStore extends Store {

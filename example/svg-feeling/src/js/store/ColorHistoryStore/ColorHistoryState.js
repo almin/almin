@@ -6,6 +6,6 @@ export default class ColorHistoryState {
      * @param {ColorHistory} history
      */
     constructor(history) {
-        this.history = history
+        this.history = history;
     }
 }

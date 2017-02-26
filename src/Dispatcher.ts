@@ -105,7 +105,7 @@ export class Dispatcher extends EventEmitter {
         type DelegatePayloadFn = {
             (payload: DispatchedPayload, meta: DispatcherPayloadMetaImpl): void;
             displayName: string;
-        }
+        };
         const delegatePayload = function delegatePayload(payload: DispatchedPayload, meta: DispatcherPayloadMetaImpl) {
             (delegatePayload as DelegatePayloadFn).displayName = displayName;
             toDispatcher.dispatch(payload, meta);

@@ -1,7 +1,7 @@
 // @flow
 "use strict";
 
-import type {Context} from 'almin';
+import type {Context} from "almin";
 
 export class AppContextLocator {
     _context: ?Context;

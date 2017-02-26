@@ -1,13 +1,13 @@
-'use strict';
+"use strict";
 
-var React = require('react');
+const React = require("react");
 
-var ProductsList = React.createClass({
+const ProductsList = React.createClass({
     propTypes: {
         title: React.PropTypes.string.isRequired
     },
 
-    render: function () {
+    render () {
         return (
             <div className="shop-wrap">
                 <h2 className="uk-h2">{this.props.title}</h2>

@@ -7,7 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-const React = require('react');
+const React = require("react");
 const ReactPropTypes = React.PropTypes;
 import AppLocator from "../AppLocator";
 import {ToggleAllTodoItemFactory} from "../usecase/ToggleAllTodoItems";
@@ -23,7 +23,7 @@ const MainSection = React.createClass({
     /**
      * @return {object}
      */
-    render: function () {
+    render() {
         // This section should be hidden by default
         // and shown when there are todos.
         if (this.props.allTodos.length < 1) {
@@ -40,7 +40,7 @@ const MainSection = React.createClass({
                     id="toggle-all"
                     type="checkbox"
                     onChange={this._onToggleCompleteAll}
-                    checked={this.props.areAllComplete ? 'checked' : ''}
+                    checked={this.props.areAllComplete ? "checked" : ""}
                 />
                 <label htmlFor="toggle-all">Mark all as complete</label>
                 <ul id="todo-list">{todos}</ul>
@@ -51,7 +51,7 @@ const MainSection = React.createClass({
     /**
      * Event handler to mark all TODOs as complete
      */
-    _onToggleCompleteAll: function () {
+    _onToggleCompleteAll() {
         AppLocator.context.useCase(ToggleAllTodoItemFactory.create()).execute();
     }
 

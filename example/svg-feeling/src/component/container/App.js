@@ -18,7 +18,7 @@ export default class App extends React.Component {
         const onChangeHandler = () => {
             return requestAnimationFrame(() => {
                 this.setState(context.getState());
-            })
+            });
         };
         context.onChange(onChangeHandler);
     }

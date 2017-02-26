@@ -39,6 +39,6 @@ export default class ProductCatalog {
             price: this.price,
             inventory: this.inventory,
             image: this.image
-        })
+        });
     }
 }

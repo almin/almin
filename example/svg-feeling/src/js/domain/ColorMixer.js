@@ -31,6 +31,7 @@ export default class ColorMixer {
      * @returns {Color}
      */
     nextColor() {
+        // eslint-disable-next-line
         while (true) {
             const hexCode = randomColor();
             const color = new Color({hexCode});
@@ -62,7 +63,7 @@ export default class ColorMixer {
         const xTen = (x / width) * 255;
         const yTen = (y / height) * 255;
         const rgba = `rgba(${parseInt(xTen, 10)}, ${parseInt(yTen, 10)}, ${parseInt(xTen, 10)}, ${alpha})`;
-        return new RGBAColor({rgba: rgba})
+        return new RGBAColor({rgba});
     }
 
     setWallColor(color) {

@@ -18,8 +18,8 @@ const appContext = new Context({
     dispatcher,
     store: appStoreGroup
 });
-if (process.env.NODE_ENV === `development`) {
-    window.Perf = require('react-addons-perf');
+if (process.env.NODE_ENV === "development") {
+    window.Perf = require("react-addons-perf");
     // start logger
     const logger = new AlminLogger();
     logger.startLogging(appContext);

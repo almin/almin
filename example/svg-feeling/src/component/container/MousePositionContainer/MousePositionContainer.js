@@ -7,7 +7,7 @@ export default class MousePositionContainer extends React.Component {
     constructor() {
         super();
         this.unListenHandler = () => {
-        }
+        };
     }
 
     componentDidMount() {
@@ -21,7 +21,7 @@ export default class MousePositionContainer extends React.Component {
         window.addEventListener("mousemove", onMouseMoveHandler);
         this.unListenHandler = () => {
             window.removeEventListener("mousemove", onMouseMoveHandler);
-        }
+        };
     }
 
     componentWillUnmount() {

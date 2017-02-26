@@ -21,7 +21,7 @@ describe("ColorMixer-test", function () {
                 const colorMixer = new ColorMixer();
                 const color = colorMixer.createColorFromPosition({x: 0, y: 0, width: 1200, height: 1200});
                 assert(color instanceof RGBAColor);
-                assert.equal(color.rgba, 'rgba(0, 0, 0, 0)');
+                assert.equal(color.rgba, "rgba(0, 0, 0, 0)");
             });
         });
         context("when { x:255, y:1000}", function () {

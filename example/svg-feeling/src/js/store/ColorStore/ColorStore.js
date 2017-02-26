@@ -10,7 +10,7 @@ import {Store} from "almin";
     
  */
 import Color from "../../domain/value/Color";
-import ColorState from "./ColorState"
+import ColorState from "./ColorState";
 export default class ColorStore extends Store {
     /**
      * @param {ColorMixerRepository} colorMixerRepository
@@ -31,6 +31,6 @@ export default class ColorStore extends Store {
     getState() {
         return {
             ColorState: this.state
-        }
+        };
     }
 }

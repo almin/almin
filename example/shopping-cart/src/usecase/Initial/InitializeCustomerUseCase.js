@@ -16,7 +16,7 @@ customerRepository.onChange(domain => {
 });
 export default class InitializeCustomerUseCase extends UseCase {
     static create() {
-        return new this({customerRepository, cartRepository})
+        return new this({customerRepository, cartRepository});
     }
 
     /**

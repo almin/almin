@@ -6,7 +6,7 @@ import ColorHistory from "../../../js/domain/ColorHistory";
 export function ColorHistoryListItem({color}) {
     return <li className="ColorHistoryListItem">
         {color.hexCode}
-    </li>
+    </li>;
 }
 export default class ColorHistoryList extends React.Component {
     render() {
@@ -15,11 +15,11 @@ export default class ColorHistoryList extends React.Component {
          */
         const history = this.props.ColorHistoryState.history;
         const items = history.getAllColorList().map((color, index) => {
-            return <ColorHistoryListItem key={index} color={color}/>
+            return <ColorHistoryListItem key={index} color={color}/>;
         });
         return <div className="ColorHistoryList">
             {items}
-        </div>
+        </div>;
     }
 }
 

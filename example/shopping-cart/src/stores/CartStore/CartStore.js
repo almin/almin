@@ -19,6 +19,6 @@ export default class CartStore extends Store {
     getState() {
         return {
             CartState: this.state
-        }
+        };
     }
 }

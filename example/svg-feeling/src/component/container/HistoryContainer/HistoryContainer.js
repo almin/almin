@@ -11,6 +11,6 @@ export default class HistoryContainer extends React.Component {
     render() {
         return <div className="HistoryContainer">
             <ColorHistoryList {...this.props}/>
-        </div>
+        </div>;
     }
-};
+}

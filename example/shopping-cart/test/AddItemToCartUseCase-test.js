@@ -50,7 +50,7 @@ describe("AddItemToCartUseCase", function () {
                 done();
             });
             // When
-            useCase.execute(itemID)
+            useCase.execute(itemID);
         });
         it("should add item to the cart of user", function (done) {
             // Given
@@ -74,7 +74,7 @@ describe("AddItemToCartUseCase", function () {
                 done();
             });
             // When
-            useCase.execute(itemID)
+            useCase.execute(itemID);
         });
     });
 });

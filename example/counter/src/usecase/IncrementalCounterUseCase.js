@@ -1,7 +1,7 @@
 // LICENSE : MIT
 "use strict";
 "use strict";
-import {UseCase} from "almin"
+import {UseCase} from "almin";
 export default class IncrementalCounterUseCase extends UseCase {
     // IncrementalCounterUseCase dispatch event ----> Store
     // UseCase should implement #execute method

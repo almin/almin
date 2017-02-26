@@ -26,7 +26,7 @@ describe("UpdateTodoItem", function () {
             const todoItem = storedTodoList.getItem(existTodoItem.id);
             assert(todoItem);
             assert.equal(todoItem.title, titleOfUPDATING);
-            done()
+            done();
         });
         // When
         useCase.execute({id: existTodoItem.id, title: titleOfUPDATING});

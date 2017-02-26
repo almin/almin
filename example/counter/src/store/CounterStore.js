@@ -16,12 +16,12 @@ export class CounterStore extends Store {
                 this.state = newState;
                 this.emitChange();
             }
-        })
+        });
     }
 
     getState() {
         return {
             counterState: this.state
-        }
+        };
     }
 }

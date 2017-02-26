@@ -13,12 +13,12 @@ export default class CounterState {
     reduce(payload) {
         switch (payload.type) {
             // Increment Counter
-            case IncrementalCounterUseCase.name:
-                return new CounterState({
-                    count: this.count + 1
-                });
-            default:
-                return this;
+        case IncrementalCounterUseCase.name:
+            return new CounterState({
+                count: this.count + 1
+            });
+        default:
+            return this;
         }
     }
 }

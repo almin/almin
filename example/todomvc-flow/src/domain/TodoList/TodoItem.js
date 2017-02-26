@@ -1,7 +1,7 @@
 // @flow
 "use strict";
 
-const uuid = require('uuid');
+const uuid = require("uuid");
 export type TodoItemObjectT = {
     id: string;
     title: string;
@@ -13,13 +13,13 @@ export default class TodoItem {
     completed: boolean;
 
     constructor({
-      id,
-      title,
-      completed
+        id,
+        title,
+        completed
     }: {
-      id?: string;
-      title: string;
-      completed?: boolean;
+        id?: string;
+        title: string;
+        completed?: boolean;
     }) {
         this.id = id || uuid.v4();
         this.title = title;

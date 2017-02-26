@@ -2,7 +2,7 @@
 import React from "react";
 import classNames from "classnames";
 import suitClassNames from "suitcss-classnames";
-import GridCell from "./GridCell"
+import GridCell from "./GridCell";
 /**
  Usage
 

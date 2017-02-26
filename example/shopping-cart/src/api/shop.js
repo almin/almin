@@ -1,13 +1,13 @@
 /**
  * Mocking client-server processing
  */
-'use strict';
+"use strict";
 
-var Shop = exports;
+const Shop = exports;
 
-var _products = require('./products.json');
+const _products = require("./products.json");
 
-var TIMEOUT = 100;
+const TIMEOUT = 100;
 
 Shop.getProducts = function (cb, timeout) {
     timeout = timeout || TIMEOUT;

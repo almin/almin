@@ -1,6 +1,6 @@
-import React from 'react';
-import CartContainer from './CartContainer';
-import ProductsContainer from './ProductsContainer';
+import React from "react";
+import CartContainer from "./CartContainer";
+import ProductsContainer from "./ProductsContainer";
 import AppLocator from "../AppLocator";
 // UseCase
 import InitializeCustomerUseCase from "../usecase/Initial/InitializeCustomerUseCase";

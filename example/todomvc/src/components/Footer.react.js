@@ -7,7 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-const React = require('react');
+const React = require("react");
 const ReactPropTypes = React.PropTypes;
 const classNames = require("classnames");
 import AppLocator from "../AppLocator";
@@ -22,7 +22,7 @@ const Footer = React.createClass({
     /**
      * @return {object}
      */
-    render: function () {
+    render () {
         const allTodos = this.props.allTodos;
         const filterType = this.props.filterType;
         const total = allTodos.length;
@@ -35,8 +35,8 @@ const Footer = React.createClass({
         }, 0);
 
         const itemsLeft = total - completed;
-        let itemsLeftPhrase = itemsLeft === 1 ? ' item ' : ' items ';
-        itemsLeftPhrase += 'left';
+        let itemsLeftPhrase = itemsLeft === 1 ? " item " : " items ";
+        itemsLeftPhrase += "left";
 
         // Undefined and thus not rendered if no completed items are left.
         let clearCompletedButton;
@@ -53,7 +53,7 @@ const Footer = React.createClass({
             return event => {
                 event.preventDefault();
                 AppLocator.context.useCase(FilterTodoListFactory.create()).execute(type);
-            }
+            };
         };
         return (
             <footer id="footer">
@@ -72,7 +72,7 @@ const Footer = React.createClass({
                             All
                         </a>
                     </li>
-                    {' '}
+                    {" "}
                     <li>
                         <a
                             href="#/active"
@@ -81,7 +81,7 @@ const Footer = React.createClass({
                             Active
                         </a>
                     </li>
-                    {' '}
+                    {" "}
                     <li>
                         <a
                             href="#/completed"
@@ -99,7 +99,7 @@ const Footer = React.createClass({
     /**
      * Event handler to delete all completed TODOs
      */
-    _onClearCompletedClick: function () {
+    _onClearCompletedClick () {
         AppLocator.context.useCase(RemoveTodoItemFactory.create()).execute();
     }
 

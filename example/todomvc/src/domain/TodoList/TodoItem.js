@@ -1,5 +1,5 @@
 "use strict";
-const uuid = require('uuid');
+const uuid = require("uuid");
 export default class TodoItem {
     constructor({
         id,

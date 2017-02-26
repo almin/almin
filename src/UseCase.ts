@@ -17,7 +17,7 @@ const createNewID = (): string => {
     return String(_UseCaseCount);
 };
 
-export let defaultUseCaseName = "<Anonymous-UseCase>";
+export const defaultUseCaseName = "<Anonymous-UseCase>";
 
 /**
  * UseCase class is inherited Dispatcher.
@@ -46,7 +46,7 @@ export abstract class UseCase extends Dispatcher {
         } else if (typeof v === "object" && typeof v.execute === "function") {
             return true;
         }
-        return false
+        return false;
     }
 
 
@@ -134,7 +134,7 @@ export abstract class UseCase extends Dispatcher {
             isTrusted: true
         });
         const payload = new ErrorPayload({
-            error: error
+            error
         });
         this.dispatch(payload, meta);
     }

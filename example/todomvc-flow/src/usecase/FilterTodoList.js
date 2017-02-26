@@ -11,7 +11,7 @@ export class FilterTodoListUseCase extends UseCase {
     execute(filterType: mixed): void {
         this.dispatch({
             type: FilterTodoListUseCase.name,
-            filterType: filterType
+            filterType
         });
     }
 }

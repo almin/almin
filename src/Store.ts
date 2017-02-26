@@ -4,7 +4,7 @@ import { Dispatcher } from "./Dispatcher";
 import { DispatcherPayloadMetaImpl } from "./DispatcherPayloadMeta";
 import { Payload } from "./payload/Payload";
 import { isErrorPayload } from "./payload/ErrorPayload";
-import { StoreLike } from './StoreLike';
+import { StoreLike } from "./StoreLike";
 
 const STATE_CHANGE_EVENT = "STATE_CHANGE_EVENT";
 /**
@@ -31,7 +31,7 @@ const STATE_CHANGE_EVENT = "STATE_CHANGE_EVENT";
  * @type {string}
  * @private
  */
-export let defaultStoreName = "<Anonymous-Store>";
+export const defaultStoreName = "<Anonymous-Store>";
 /**
  * Store class
  * @public
@@ -54,7 +54,7 @@ export abstract class Store extends Dispatcher implements StoreLike {
         } else if (typeof v === "object" && typeof v.getState === "function" && v.onChange === "function") {
             return true;
         }
-        return false
+        return false;
     }
 
     name: string;
@@ -77,7 +77,7 @@ export abstract class Store extends Dispatcher implements StoreLike {
      * FIXME: mark this as `abstract` property.
      */
     getState<T>(_prevState?: T): T {
-        throw new Error(this.name + " should be implemented Store#getState(): Object");
+        throw new Error(`${this.name} should be implemented Store#getState(): Object`);
     }
 
     /**
