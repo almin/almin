@@ -18,6 +18,9 @@ export class AppContextLocator {
      * @returns {Context}
      */
     get context(): Context {
+        if (this._context == null) {
+            throw new Error("Context is not set");
+        }
         return this._context;
     }
 
