@@ -5,6 +5,21 @@
  */
 
 type DispatcherPayload = Object;
+declare class Payload {
+    type: mixed;
+}
+declare class CompletedPayload extends Payload {
+    value: ?mixed;
+}
+declare class DidExecutedPayload extends Payload {
+    value: ?mixed;
+}
+declare class ErrorPayload extends Payload {
+    error: Error | mixed;
+}
+declare class WillExecutedPayload extends Payload {
+    args: Array<mixed>;
+}
 // Internal class
 declare class DispatcherPayloadMeta {
     useCase: ?UseCase;
@@ -32,11 +47,11 @@ declare class Context {
     getState(): mixed;
     onChange(onChangeHandler: (changingStores: Array<Store>) => mixed): Function;
     useCase(useCase: UseCase): UseCaseExecutor;
-    onWillExecuteEachUseCase(handler: (payload: DispatcherPayload, meta: DispatcherPayloadMeta) => mixed): Function;
-    onDispatch(handler: (payload: DispatcherPayload, meta: DispatcherPayloadMeta) => mixed): Function;
-    onDidExecuteEachUseCase(handler: (payload: DispatcherPayload, meta: DispatcherPayloadMeta) => mixed): Function;
-    onCompleteExecuteEachUseCase(handler: (payload: DispatcherPayload, meta: DispatcherPayloadMeta) => mixed): Function;
-    onErrorDispatch(handler: (payload: DispatcherPayload, meta: DispatcherPayloadMeta) => mixed): Function;
+    onWillExecuteEachUseCase(handler: (payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => mixed): Function;
+    onDispatch(handler: (payload: DispatcherPayload|Payload, meta: DispatcherPayloadMeta) => mixed): Function;
+    onDidExecuteEachUseCase(handler: (payload: DidExecutedPayload, meta: DispatcherPayloadMeta) => mixed): Function;
+    onCompleteExecuteEachUseCase(handler: (payload: CompletedPayload, meta: DispatcherPayloadMeta) => mixed): Function;
+    onErrorDispatch(handler: (payload: ErrorPayload, meta: DispatcherPayloadMeta) => mixed): Function;
     release(): void;
 }
 
@@ -45,7 +60,7 @@ declare class Dispatcher extends events$EventEmitter {
     static isDispatcher(maybeDispatcher: mixed): boolean;
 
     onDispatch(payloadHandler: (payload: DispatcherPayload) => mixed): Function;
-    dispatch(payload: DispatcherPayload): void;
+    dispatch(payload: DispatcherPayload|Payload): void;
     pipe(toDispatcher: Dispatcher): Function;
 }
 
@@ -53,7 +68,7 @@ declare class Store extends Dispatcher {
     static isStore(maybeStore: mixed): boolean;
 
     getState(prevState: Object): Object;
-    onChange(callback: Function): Function;
+    onChange(stores: Array<Store>): Function;
     emitChange(): void;
 }
 
@@ -72,9 +87,9 @@ declare class UseCaseContext {
 }
 
 declare class UseCaseExecutor {
-    onWillExecuteEachUseCase(handler: (payload: DispatcherPayload, meta: DispatcherPayloadMeta) => mixed): void;
-    onDidExecuteEachUseCase(handler: (payload: DispatcherPayload, meta: DispatcherPayloadMeta) => mixed): void;
-    onCompleteExecuteEachUseCase(handler: (payload: DispatcherPayload, meta: DispatcherPayloadMeta) => mixed): Function;
+    onWillExecuteEachUseCase(handler: (payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => mixed): void;
+    onDidExecuteEachUseCase(handler: (payload: DidExecutedPayload, meta: DispatcherPayloadMeta) => mixed): void;
+    onCompleteExecuteEachUseCase(handler: (payload: CompletedPayload, meta: DispatcherPayloadMeta) => mixed): Function;
     execute(args: Array<mixed>): void;
     release(): void;
 }
@@ -87,4 +102,10 @@ export {
     UseCaseContext,
     UseCase,
     Context,
+    Payload
+    WillExecutedPayload,
+    DidExecutedPayload,
+    CompletedPayload,
+    ErrorPayload,
+    DispatcherPayloadMeta
 }
