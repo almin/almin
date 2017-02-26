@@ -3,7 +3,7 @@
 import * as assert from "assert";
 import { Dispatcher } from "./Dispatcher";
 import { UseCase } from "./UseCase";
-import { DispatcherPayloadMetaImpl } from "./DispatcherPayloadMeta";
+import { DispatcherPayloadMeta, DispatcherPayloadMetaImpl } from "./DispatcherPayloadMeta";
 
 // payloads
 import { CompletedPayload, isCompletedPayload } from "./payload/CompletedPayload";
@@ -120,7 +120,7 @@ export class UseCaseExecutor {
      * called the {@link handler} with useCase when the useCase will do.
      * @param   handler
      */
-    onWillExecuteEachUseCase(handler: (payload: WillExecutedPayload, meta: DispatcherPayloadMetaImpl) => void): () => void {
+    onWillExecuteEachUseCase(handler: (payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         const releaseHandler = this._dispatcher.onDispatch(function onWillExecute(payload, meta) {
             if (isWillExecutedPayload(payload)) {
                 handler(payload, meta);
@@ -134,7 +134,7 @@ export class UseCaseExecutor {
      * called the `handler` with useCase when the useCase is executed.
      * @param   handler
      */
-    onDidExecuteEachUseCase(handler: (payload: DidExecutedPayload, meta: DispatcherPayloadMetaImpl) => void): () => void {
+    onDidExecuteEachUseCase(handler: (payload: DidExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         const releaseHandler = this._dispatcher.onDispatch(function onDidExecuted(payload, meta) {
             if (isDidExecutedPayload(payload)) {
                 handler(payload, meta);
@@ -149,7 +149,7 @@ export class UseCaseExecutor {
      * @param   handler
      * @returns
      */
-    onCompleteExecuteEachUseCase(handler: (payload: CompletedPayload, meta: DispatcherPayloadMetaImpl) => void): () => void {
+    onCompleteExecuteEachUseCase(handler: (payload: CompletedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         const releaseHandler = this._dispatcher.onDispatch(function onCompleted(payload, meta) {
             if (isCompletedPayload(payload)) {
                 handler(payload, meta);
