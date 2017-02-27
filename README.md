@@ -20,13 +20,14 @@ I think that the people skip to Flux/Redux from MV* pattern.
 
 Almin.js aim to fill the HOLE between MV* and Flux/Redux.
 
-## Feature
+## Features
 
 Almin provide some pattern, is not framework.
 
 - Testable
 - Scalable
 - Responsibility Layers patten - well-known as DDD(Domain-Driven Design)/CQRS
+- Support [TypeScript](https://www.typescriptlang.org/ "TypeScript") and [Flow](https://flowtype.org/ "FlowType")
 
 Almin is a implementation of Read/Write Stack Architecture that is well-known as Flux/CQRS.
 
