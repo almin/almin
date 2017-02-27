@@ -5,7 +5,7 @@ import { StoreGroup } from "./UILayer/StoreGroup";
 import { QueuedStoreGroup } from "./UILayer/QueuedStoreGroup";
 import { Dispatcher } from "./Dispatcher";
 import { DispatchedPayload } from "./Dispatcher";
-import { DispatcherPayloadMetaImpl } from "./DispatcherPayloadMeta";
+import { DispatcherPayloadMeta } from "./DispatcherPayloadMeta";
 import { UseCase } from "./UseCase";
 import { Store } from "./Store";
 import { StoreLike } from "./StoreLike";
@@ -89,7 +89,7 @@ export class Context {
      * @param {function(payload: WillExecutedPayload, meta: DispatcherPayloadMetaImpl)} handler
      * @public
      */
-    onWillExecuteEachUseCase(handler: (payload: WillExecutedPayload, meta: DispatcherPayloadMetaImpl) => void): () => void {
+    onWillExecuteEachUseCase(handler: (payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         const releaseHandler = this._dispatcher.onDispatch((payload, meta) => {
             if (isWillExecutedPayload(payload)) {
                 handler(payload, meta);
@@ -108,7 +108,7 @@ export class Context {
      * @returns {Function}
      * @public
      */
-    onDispatch(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMetaImpl) => void): () => void {
+    onDispatch(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         const releaseHandler = this._dispatcher.onDispatch((payload, meta) => {
             // call handler, if payload's type is not built-in event.
             // It means that `onDispatch` is called when dispatching user event.
@@ -125,7 +125,7 @@ export class Context {
      * @param {function(payload: DidExecutedPayload, meta: DispatcherPayloadMetaImpl)} handler
      * @public
      */
-    onDidExecuteEachUseCase(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMetaImpl) => void): () => void {
+    onDidExecuteEachUseCase(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         const releaseHandler = this._dispatcher.onDispatch((payload, meta) => {
             if (isDidExecutedPayload(payload)) {
                 handler(payload, meta);
@@ -140,7 +140,7 @@ export class Context {
      * @param {function(payload: CompletedPayload, meta: DispatcherPayloadMetaImpl)} handler
      * @public
      */
-    onCompleteEachUseCase(handler: (payload: CompletedPayload, meta: DispatcherPayloadMetaImpl) => void): () => void {
+    onCompleteEachUseCase(handler: (payload: CompletedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         const releaseHandler = this._dispatcher.onDispatch((payload, meta) => {
             if (isCompletedPayload(payload)) {
                 handler(payload, meta);
@@ -157,7 +157,7 @@ export class Context {
      * @returns {function(this:Dispatcher)}
      * @public
      */
-    onErrorDispatch(handler: (payload: ErrorPayload, meta: DispatcherPayloadMetaImpl) => void): () => void {
+    onErrorDispatch(handler: (payload: ErrorPayload, meta: DispatcherPayloadMeta) => void): () => void {
         const releaseHandler = this._dispatcher.onDispatch((payload, meta) => {
             if (isErrorPayload(payload)) {
                 handler(payload, meta);

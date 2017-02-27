@@ -1,7 +1,7 @@
 // LICENSE : MIT
 "use strict";
 import { Dispatcher } from "./Dispatcher";
-import { DispatcherPayloadMetaImpl } from "./DispatcherPayloadMeta";
+import { DispatcherPayloadMeta } from "./DispatcherPayloadMeta";
 import { Payload } from "./payload/Payload";
 import { isErrorPayload } from "./payload/ErrorPayload";
 import { StoreLike } from "./StoreLike";
@@ -94,7 +94,7 @@ export abstract class Store extends Dispatcher implements StoreLike {
      * }):
      * @deprecated
      */
-    onError(handler: (payload: Payload, meta: DispatcherPayloadMetaImpl) => void): () => void {
+    onError(handler: (payload: Payload, meta: DispatcherPayloadMeta) => void): () => void {
         console.warn("Store#onError is deprecated. Please use Store#onDispatch.");
         return this.onDispatch((payload, meta) => {
             if (isErrorPayload(payload)) {

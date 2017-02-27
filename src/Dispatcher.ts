@@ -3,7 +3,7 @@
 
 import * as assert from "assert";
 import { EventEmitter } from "events";
-import { DispatcherPayloadMetaImpl } from "./DispatcherPayloadMeta";
+import { DispatcherPayloadMeta, DispatcherPayloadMetaImpl } from "./DispatcherPayloadMeta";
 
 import { Payload } from "./payload/Payload";
 import { ErrorPayload } from "./payload/ErrorPayload";
@@ -60,7 +60,7 @@ export class Dispatcher extends EventEmitter {
      * @param   handler
      * @returns call the function and release handler
      */
-    onDispatch(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMetaImpl) => void): () => void {
+    onDispatch(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         this.on(ON_DISPATCH, handler);
         return this.removeListener.bind(this, ON_DISPATCH, handler);
     }
@@ -71,7 +71,7 @@ export class Dispatcher extends EventEmitter {
      * @param payload
      * @param [meta]    meta is internal arguments
      */
-    dispatch(payload: DispatchedPayload, meta?: DispatcherPayloadMetaImpl): void {
+    dispatch(payload: DispatchedPayload, meta?: DispatcherPayloadMeta): void {
         if (process.env.NODE_ENV !== "production") {
             assert.ok(payload !== undefined && payload !== null, "payload should not null or undefined");
             assert.ok(typeof payload.type !== "undefined", "payload's `type` should be required");
@@ -103,10 +103,10 @@ export class Dispatcher extends EventEmitter {
         const displayName = `delegate-payload:${fromName}-to-${toName}`;
 
         type DelegatePayloadFn = {
-            (payload: DispatchedPayload, meta: DispatcherPayloadMetaImpl): void;
+            (payload: DispatchedPayload, meta: DispatcherPayloadMeta): void;
             displayName: string;
         };
-        const delegatePayload = function delegatePayload(payload: DispatchedPayload, meta: DispatcherPayloadMetaImpl) {
+        const delegatePayload = function delegatePayload(payload: DispatchedPayload, meta: DispatcherPayloadMeta) {
             (delegatePayload as DelegatePayloadFn).displayName = displayName;
             toDispatcher.dispatch(payload, meta);
         };
