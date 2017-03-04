@@ -1,0 +1,16 @@
+{
+  "framework": "mocha",
+  "serve_files": [
+    "./build/test-bundle.js"
+  ],
+  "before_tests": "webpack -p --config webpack.config.js",
+  "launch_in_dev": [
+    "PhantomJS",
+    "Chrome"
+  ],
+  "launch_in_ci": [
+    "PhantomJS",
+    "Firefox",
+    "Chrome"
+  ]
+}

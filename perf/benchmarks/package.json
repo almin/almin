@@ -1,0 +1,32 @@
+{
+  "private": true,
+  "name": "benchmarks",
+  "version": "1.0.0",
+  "description": "compare almin versions",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "almin": "file:../../",
+    "almin-0.9": "file:pacakges/almin-0.9"
+  },
+  "devDependencies": {
+    "babel-loader": "^6.3.2",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-es2015": "^6.22.0",
+    "benchmark": "^2.1.3",
+    "lodash": "^4.17.4",
+    "mocha": "^3.2.0",
+    "testem": "^1.15.0",
+    "webpack": "^2.2.1"
+  },
+  "scripts": {
+    "build": "webpack",
+    "bench": "node index.js",
+    "test": "mocha",
+    "test:browser": "testem ci"
+  },
+  "author": "azu",
+  "license": "MIT"
+}
