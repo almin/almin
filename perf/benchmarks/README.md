@@ -8,13 +8,24 @@ Install with [npm](https://www.npmjs.com/):
 
     npm install benchmarks
 
-## Usage
+## Benchmark
 
 Run benchmark in Node.js
 
+    $ npm run bench
+    
+    0.9 x 509 ops/sec ±27.29% (27 runs sampled)
+    current x 625 ops/sec ±27.88% (28 runs sampled)
+
+## Tests
+
+Current version should be fastest.
+
+Run test in Node.js
+
     npm test
 
-Run benchmark in browser
+Run test in browser
 
     npm run test:browser
 

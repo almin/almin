@@ -23,6 +23,7 @@
   },
   "scripts": {
     "build": "webpack",
+    "bench": "node index.js",
     "test": "mocha",
     "test:browser": "testem ci"
   },
