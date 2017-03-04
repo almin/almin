@@ -49,6 +49,14 @@ module.exports = function(Almin, done) {
         dispatcher,
         store: storeGroup
     });
+    const log = () => {
+        // nope
+    }
+    context.onDispatch(log);
+    context.onWillExecuteEachUseCase(log);
+    context.onDidExecuteEachUseCase(log);
+    context.onCompleteEachUseCase(log);
+    context.onErrorDispatch(log);
     context.useCase(new ParentUseCase()).execute().then(() => {
         const state = storeGroup.getState();
         updateView(state);

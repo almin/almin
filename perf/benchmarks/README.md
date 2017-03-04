@@ -2,6 +2,26 @@
 
 Compare ops/sec between current and old version.
 
+## Points of benchmark
+
+- UseCase
+    - execute
+    - dispatch
+    - context
+    - Nesting UseCase
+- Store/StoreGroup
+    - onChange
+    - getState
+    - emitChange
+- Context
+    - useCase
+    - onChange
+    - onDispatch
+    - onWillExecuteEachUseCase
+    - onDidExecuteEachUseCase
+    - onCompleteEachUseCase
+    - onErrorDispatch
+
 ## Install
 
 Install with [npm](https://www.npmjs.com/):
