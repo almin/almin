@@ -45,6 +45,7 @@
     "test": "run-s test:js lint test:example test:perf",
     "test:js": "run-s build test:mocha",
     "test:perf": "cd perf/node-memory-leak-testing && npm it",
+    "test:benchmark": "cd perf/benchmarks && npm it",
     "test:mocha": "cross-env NODE_ENV=development mocha",
     "test:saucelabs": "zuul -- test/*-test.js",
     "test:browser": "zuul --local 8080 --ui mocha-bdd -- test/*-test.js",
