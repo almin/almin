@@ -17,10 +17,10 @@
   "license": "MIT",
   "dependencies": {
     "almin": "file:../../",
-    "almin-logger": "^3.0.0",
+    "almin-logger": "^4.0.0",
     "react": "^15.0.1",
     "react-dom": "^15.0.1",
-    "uuid": "^2.0.2"
+    "uuid": "^3.0.1"
   },
   "devDependencies": {
     "babel-cli": "^6.7.5",

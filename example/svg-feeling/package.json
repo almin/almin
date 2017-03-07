@@ -61,8 +61,8 @@
     "webpack": "^2.0.0"
   },
   "dependencies": {
-    "almin": "^0.9.1",
-    "almin-logger": "^3.0.0",
+    "almin": "file:../../",
+    "almin-logger": "^4.0.0",
     "babel-runtime": "^6.6.1",
     "classnames": "^2.2.3",
     "hex-and-rgba": "^1.0.0",
