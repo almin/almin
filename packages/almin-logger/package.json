@@ -36,7 +36,7 @@
     "log"
   ],
   "devDependencies": {
-    "almin": "^0.10.0-1",
+    "almin": "^0.10.0",
     "babel-cli": "^6.7.7",
     "babel-loader": "^6.2.10",
     "babel-plugin-add-module-exports": "^0.2.1",
@@ -52,7 +52,7 @@
     "zuul": "^3.10.1"
   },
   "peerDependencies": {
-    "almin": ">= 0.10.0 || 0.10.0-0 || 0.10.0-1"
+    "almin": ">= 0.10.0"
   },
   "dependencies": {
     "map-like": "^1.0.3"
