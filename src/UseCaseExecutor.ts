@@ -200,5 +200,20 @@ export class UseCaseExecutor {
     release(): void {
         this._releaseHandlers.forEach(releaseHandler => releaseHandler());
         this._releaseHandlers.length = 0;
+        if (process.env.NODE_ENV !== "production") {
+            this._addWarningNoMoreDispatch();
+        }
+    }
+
+    /**
+     * When child is completed after parent did completed, display warning warning message
+     * @private
+     */
+    private _addWarningNoMoreDispatch() {
+        this._useCase.onDispatch((payload, meta) => {
+            console.warn(`This UseCase(${this._useCase.name}) is already released.
+https://almin.js.org/docs/warnings/usecase-is-already-released.html
+`, payload, meta);
+        });
     }
 }
