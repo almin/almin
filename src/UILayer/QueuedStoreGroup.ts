@@ -1,8 +1,8 @@
 // LICENSE : MIT
 "use strict";
-// polyfill Object.assign
+
 import * as assert from "assert";
-import ObjectAssign from "./object-assign";
+import ObjectAssign from "object-assign";
 import LRU from "lru-map-like";
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
 

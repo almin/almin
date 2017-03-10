@@ -68,6 +68,7 @@
   "devDependencies": {
     "@alrra/travis-scripts": "^3.0.1",
     "@types/node": "^7.0.5",
+    "@types/object-assign": "^4.0.30",
     "add-text-to-markdown": "^1.0.2",
     "babel-cli": "^6.7.5",
     "babel-eslint": "^7.1.1",
