@@ -28,7 +28,6 @@
     "build:docs": "gitbook build",
     "build": "npm-run-all -s clean build:src build:lib",
     "build:src": "npm-run-all -p build:src:*",
-    "build:src:cp_obj": "cpx 'src/**/*.{js, jsx}' __obj/src --preserve",
     "build:src:tsc": "tsc --project .",
     "build:lib": "npm-run-all -p build:lib:*",
     "build:lib:cp_lib": "cpx '__obj/src/**/*.d.ts' lib/ --preserve",
