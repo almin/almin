@@ -282,4 +282,93 @@ describe("Context", function() {
             useCaseExecutor.execute();
         });
     });
+    describe("#run", function() {
+        context("when pass UseCase instance", function() {
+            it("should throw AssertionError", function() {
+                const dispatcher = new Dispatcher();
+                const appContext = new Context({
+                    dispatcher,
+                    store: createEchoStore({echo: {"1": 1}})
+                });
+                assert.throws(function() {
+                    appContext.run(TestUseCase);
+                }, Error);
+                const useCase = new TestUseCase();
+                assert.throws(function() {
+                    appContext.run(useCase);
+                }, Error);
+            });
+        });
+        it("should run Stateless function", function() {
+            const dispatcher = new Dispatcher();
+            const appContext = new Context({
+                dispatcher,
+                store: createEchoStore({echo: {"1": 1}})
+            });
+            const callStack = [];
+            appContext.onDispatch((payload, meta) => {
+                callStack.push(payload);
+            });
+            const useCase = (value) => {
+                return ({dispatcher}) => {
+                    dispatcher.dispatch({
+                        type: "Example",
+                        value
+                    });
+                };
+            };
+            return appContext.run(useCase("value")).then(() => {
+                assert.deepEqual(callStack, [
+                    {
+                        type: "Example",
+                        value: "value"
+                    }
+                ]);
+            });
+        });
+        it("should run Stateless function and lifecycle hook is called ", function() {
+            const dispatcher = new Dispatcher();
+            const appContext = new Context({
+                dispatcher,
+                store: createEchoStore({echo: {"1": 1}})
+            });
+            const callStack = [];
+            appContext.onDispatch((payload, meta) => {
+                callStack.push(payload);
+            });
+            appContext.onWillExecuteEachUseCase((payload, meta) => {
+                callStack.push(payload);
+            });
+            appContext.onDidExecuteEachUseCase((payload, meta) => {
+                callStack.push(payload);
+            });
+            appContext.onCompleteEachUseCase((payload, meta) => {
+                callStack.push(payload);
+            });
+            const useCase = (value) => {
+                return ({dispatcher}) => {
+                    dispatcher.dispatch({
+                        type: "Example",
+                        value
+                    });
+                };
+            };
+            return appContext.run(useCase("value")).then(() => {
+                const expectedCallStackOfAUseCase = [
+                    WillExecutedPayload,
+                    Object/* {
+                        type: "Example",
+                        value: "value"
+                    }*/,
+                    DidExecutedPayload,
+                    CompletedPayload
+                ];
+                assert.equal(callStack.length, expectedCallStackOfAUseCase.length);
+                expectedCallStackOfAUseCase.forEach((payload, index) => {
+                    const ExpectedPayloadConstructor = expectedCallStackOfAUseCase[index];
+                    assert(callStack[index] instanceof ExpectedPayloadConstructor);
+                });
+            });
+        });
+    });
 });
