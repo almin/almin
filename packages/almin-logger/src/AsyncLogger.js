@@ -118,7 +118,7 @@ export default class AsyncLogger extends EventEmitter {
                         `\u{1F4BE} Store:${store.name}`,
                         store.getState()
                     ]);
-                    if (workingUseCaseNames.length >= 1) {
+                    if (workingUseCaseNames.length >= 2) {
                         this.addLog(`\u{2139}\u{FE0F} Currently executing UseCases: ${workingUseCaseNames.join(", ")}`);
                     }
                 });
