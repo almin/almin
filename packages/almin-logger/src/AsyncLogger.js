@@ -109,30 +109,34 @@ export default class AsyncLogger extends EventEmitter {
             const workingUseCaseNames = useCases.map(useCase => {
                 return useCase.name;
             });
-            // if Store#emitChange is called by async, parallel logging UseCase and Store
-            // It support Almin's StoreGroup implementation.
-            if (workingUseCaseNames.length === 0) {
+            // if Store#emitChange is called by async, workingUseCaseNames.length is 0.
+            const existWorkingUseCase = workingUseCaseNames.length !== 0;
+            if (existWorkingUseCase) {
+                // It support Almin's QueuedStoreGroup implementation
+                stores.forEach(store => {
+                    this.addLog([
+                        `\u{1F4BE} Store:${store.name}`,
+                        store.getState()
+                    ]);
+                    if (workingUseCaseNames.length >= 1) {
+                        this.addLog(`\u{2139}\u{FE0F} Currently executing UseCases: ${workingUseCaseNames.join(", ")}`);
+                    }
+                });
+            } else {
+                // It support Almin's StoreGroup implementation.
+                // StoreGroup emit change after UseCase is completed
                 const storeLogGroup = new LogGroup({
                     title: `Store is changed`
                 });
                 const timeStamp = Date.now();
                 stores.forEach(store => {
                     storeLogGroup.addChunk(new LogChunk({
-                        log: [`\u{1F4BE} Store:${store.name} is changed`, store.getState()],
+                        log: [`\u{1F4BE} Store:${store.name}`, store.getState()],
                         timeStamp
                     }))
                 });
                 this.printLogger.printLogGroup(storeLogGroup);
-                return;
             }
-            // It support Almin's QueuedStoreGroup implementation.
-            stores.forEach(store => {
-                this.addLog([
-                    `\u{1F4BE} Store:${store.name} is changed`,
-                    store.getState(),
-                    `Currently executing UseCase: ${workingUseCaseNames.join(", ")}`
-                ]);
-            });
         };
         /**
          * @param {ErrorPayload} payload
@@ -154,7 +158,7 @@ export default class AsyncLogger extends EventEmitter {
             }));
         };
         /**
-         * @type {DidExecutedPayload}
+         * @param {DidExecutedPayload} payload
          * @param {DispatcherPayloadMeta} meta
          */
         const onDidExecuteEachUseCase = (payload, meta) => {

@@ -1,18 +1,22 @@
 // LICENSE : MIT
 "use strict";
 import React from "react";
-import {Context, Dispatcher, StoreGroup} from "almin";
+import { Context, Dispatcher, StoreGroup, QueuedStoreGroup } from "almin";
 import AlminLogger from "../../../src/AlminLogger"
 import Counter from './Counter';
-import {CounterStore} from "../store/CounterStore";
+import { CounterStore } from "../store/CounterStore";
 // a single dispatcher
 const dispatcher = new Dispatcher();
 // a single store
-const store = new StoreGroup([new CounterStore()]);
+const store = location.hash === "#queue"
+    ? new QueuedStoreGroup([new CounterStore()])
+    : new StoreGroup([new CounterStore()]);
+
 const appContext = new Context({
     dispatcher,
     store
 });
+// setup logging
 const logger = new AlminLogger();
 logger.startLogging(appContext);
 window.alminLogger = logger;

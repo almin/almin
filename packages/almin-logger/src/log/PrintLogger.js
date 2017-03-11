@@ -19,7 +19,10 @@ export default class PrintLogger {
         .filter(logGroup => logGroup !== undefined)
         .map(logGroup => logGroup.useCaseName).join(", ");
         const groupTitleSuffix = childrenLogGroup.length > 0 ? `(includes "${includesUseCaseName}")` : "";
-        const groupTitle = `\u{1F516} ${logGroup.title}${groupTitleSuffix}`;
+        const isIncludedErrorChunk = this._includeErrorChunk(logGroup);
+        // x or flag
+        const groupMark = isIncludedErrorChunk ? `\u{274C}` : "\u{1F516}";
+        const groupTitle = `${groupMark} ${logGroup.title}${groupTitleSuffix}`;
         this.logger.groupCollapsed(groupTitle);
         logGroup.children.forEach(logItem => {
             if (logItem instanceof LogGroup) {
@@ -35,27 +38,57 @@ export default class PrintLogger {
         this.logger.groupEnd(groupTitle);
     }
 
+
     /**
      * @param {LogChunk} chunk
      * @private
      */
     _outputChunk(chunk) {
-        if (Array.isArray(chunk.log)) {
-            this.logger.log(...chunk.log);
-        } else {
-            this._outputToConsole(chunk.log);
-        }
+        const logs = Array.isArray(chunk.log) ? chunk.log : [chunk.log];
+        this._outputToConsole(logs);
     }
 
     /**
-     * @param {string|log
+     * output logs
+     * @param {*[]} logs
      * @private
      */
-    _outputToConsole(log) {
-        if (log instanceof Error) {
-            this.logger.error(log);
+    _outputToConsole(logs) {
+        if (this._includeErrorChunkLogs(logs)) {
+            this.logger.error(...logs);
         } else {
-            this.logger.log(log);
+            this.logger.log(...logs);
         }
+    }
+
+
+    /**
+     * Is include Error chunk
+     * @param {LogGroup} logGroup
+     * @returns {boolean}
+     * @private
+     */
+    _includeErrorChunk(logGroup) {
+        return logGroup.children.some(chunk => {
+            if (chunk instanceof LogGroup) {
+                return this._includeErrorChunk(chunk)
+            } else {
+                return this._includeErrorChunkLogs(chunk.log);
+            }
+        });
+    }
+
+    /**
+     * Is log Error instance
+     * @param {*|*[]} logs
+     * @private
+     */
+    _includeErrorChunkLogs(logs) {
+        if (!Array.isArray(logs)) {
+            return logs instanceof Error;
+        }
+        return logs.some(log => {
+            return log instanceof Error;
+        });
     }
 }
