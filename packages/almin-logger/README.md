@@ -4,7 +4,7 @@ Logger class for [Almin.js](https://github.com/azu/almin "Almin.js")
 
 [![Sauce Test Status](https://saucelabs.com/browser-matrix/almin-logger.svg)](https://saucelabs.com/u/almin-logger)
 
-![logger](https://monosnap.com/file/OuOnrag1xXpoA39j5P75fuN4GSOEEL.png)
+![logger](https://monosnap.com/file/AqRVq3UAah8riczytsgXHxGb50fwz2.png)
 
 
 ## Feature
@@ -102,6 +102,10 @@ almin-logger depended on `Function.name` or `Function.displayName`.
 
 You can resolve this issue by using [babel-plugin-class-display-name](https://www.npmjs.com/package/babel-plugin-class-display-name "babel-plugin-class-display-name").
 This plugin set `displayName` to each UseCase class.
+
+## Alternative
+
+- [almin/almin-devtools: Integrate almin into redux-devtools](https://github.com/almin/almin-devtools "almin/almin-devtools: Integrate almin into redux-devtools")
 
 ## Tests
 
