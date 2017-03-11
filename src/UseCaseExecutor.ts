@@ -9,9 +9,10 @@ import { DispatcherPayloadMeta, DispatcherPayloadMetaImpl } from "./DispatcherPa
 import { CompletedPayload, isCompletedPayload } from "./payload/CompletedPayload";
 import { DidExecutedPayload, isDidExecutedPayload } from "./payload/DidExecutedPayload";
 import { WillExecutedPayload, isWillExecutedPayload } from "./payload/WillExecutedPayload";
+import { UseCaseLike } from "./UseCaseLike";
 
 export interface UseCaseExecutorArgs {
-    useCase: UseCase;
+    useCase: UseCaseLike;
     parent: UseCase | null;
     dispatcher: Dispatcher;
 }
@@ -24,7 +25,7 @@ export class UseCaseExecutor {
     /**
      *  executable useCase
      */
-    useCase: UseCase;
+    useCase: UseCaseLike;
 
     /**
      * parent useCase
@@ -50,9 +51,9 @@ export class UseCaseExecutor {
         parent,
         dispatcher
     }: UseCaseExecutorArgs) {
-        // execute and finish =>
-        const useCaseName = useCase.name;
         if (process.env.NODE_ENV !== "production") {
+            // execute and finish =>
+            const useCaseName = useCase.name;
             assert.ok(typeof useCaseName === "string", `UseCase instance should have constructor.name ${useCase}`);
             assert.ok(typeof useCase.execute === "function", `UseCase instance should have #execute function: ${useCaseName}`);
         }
@@ -162,6 +163,7 @@ export class UseCaseExecutor {
     /**
      * execute UseCase instance.
      * UseCase is a executable object. it means that has `execute` method.
+     * Notes: UseCaseExecutor doesn't return resolved value by design
      * @param args
      */
     execute<R>(...args: Array<any>): Promise<void> {

@@ -16,6 +16,9 @@ import { CompletedPayload, isCompletedPayload } from "./payload/CompletedPayload
 import { isDidExecutedPayload } from "./payload/DidExecutedPayload";
 import { ErrorPayload, isErrorPayload } from "./payload/ErrorPayload";
 import { WillExecutedPayload, isWillExecutedPayload } from "./payload/WillExecutedPayload";
+import { StatelessUseCaseContext } from "./StatelessUseCaseContext";
+import { StatelessUseCase } from "./StatelessUseCase";
+
 /**
  * @public
  */
@@ -29,7 +32,7 @@ export class Context {
      * @param {QueuedStoreGroup|StoreGroup|Store} store store is either Store or StoreGroup
      * @public
      */
-    constructor({ dispatcher, store }: { dispatcher: Dispatcher; store: QueuedStoreGroup | StoreGroup | Store;}) {
+    constructor({dispatcher, store}: {dispatcher: Dispatcher; store: QueuedStoreGroup | StoreGroup | Store;}) {
         StoreGroupValidator.validateInstance(store);
         // central dispatcher
         this._dispatcher = dispatcher;
@@ -68,6 +71,7 @@ export class Context {
     }
 
     /**
+     * create wrapper of UseCase class
      * @param {UseCase} useCase
      * @returns {UseCaseExecutor}
      * @public
@@ -82,6 +86,32 @@ export class Context {
             parent: null,
             dispatcher: this._dispatcher
         });
+    }
+
+    /**
+     * run stateless UseCase function and return Promise
+     * @param executor
+     * @returns {Promise<void>}
+     * @public
+     * @example
+     *
+     * const useCase = (value) => {
+     *      return ({ dispatcher }) => {
+     *          // do something
+     *      }
+     * };
+     * context.run(useCase("value")).then(() => {})
+     */
+    run(executor: ((context: StatelessUseCaseContext) => any)): Promise<void> {
+        assert.ok(UseCase.isUseCase(executor) === false, `You should pass executor function insteadof UseCase: ${executor}.`);
+        const useCase = new StatelessUseCase(executor, this._dispatcher);
+        const useCaseExecutor = new UseCaseExecutor({
+            useCase,
+            parent: null,
+            dispatcher: this._dispatcher
+        });
+        // Limitation: Stateless UseCase can't observe willExecute
+        return useCaseExecutor.execute("<null | StatelessUseCase>");
     }
 
     /**

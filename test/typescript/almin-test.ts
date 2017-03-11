@@ -9,7 +9,8 @@ import {
     DidExecutedPayload,
     CompletedPayload,
     ErrorPayload,
-    DispatcherPayloadMeta
+    DispatcherPayloadMeta,
+    StatelessUseCaseContext
 } from "../../src/index";
 // Dispatcher
 const dispatcher = new Dispatcher();
@@ -82,7 +83,6 @@ context.onErrorDispatch((payload: ErrorPayload, meta: DispatcherPayloadMeta) => 
 context.onDispatch((payload: Payload, meta: DispatcherPayloadMeta) => {
     console.log(payload.type, meta);
 });
-
 // UseCase
 class ChildUseCase extends UseCase {
     execute(value: string) {
@@ -99,7 +99,21 @@ class ParentUseCase extends UseCase {
     }
 }
 const parentUseCase = new ParentUseCase();
-// UseCase - execute
+// Stateless UseCase
+const statelessUseCase = (value: string) => {
+    return (context: StatelessUseCaseContext) => {
+        context.dispatcher.dispatch({
+            type: value
+        });
+    }
+};
+// run - stateless execute
+context.run(statelessUseCase("value")).then(() => {
+    const state = context.getState<StoreState>();
+    console.log(state.A.a);
+    console.log(state.B.b);
+});
+// execute: usecase
 context.useCase(parentUseCase).execute("value").then(() => {
     const state = context.getState<StoreState>();
     console.log(state.A.a);
