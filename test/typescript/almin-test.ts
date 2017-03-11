@@ -10,7 +10,7 @@ import {
     CompletedPayload,
     ErrorPayload,
     DispatcherPayloadMeta,
-    FunctionalUseCaseContext
+    StatelessUseCaseContext
 } from "../../src/index";
 // Dispatcher
 const dispatcher = new Dispatcher();
@@ -99,16 +99,16 @@ class ParentUseCase extends UseCase {
     }
 }
 const parentUseCase = new ParentUseCase();
-// functional UseCase
-const functionalUseCase = (context: FunctionalUseCaseContext) => {
-    return (value: string) => {
+// Stateless UseCase
+const statelessUseCase = (value: string) => {
+    return (context: StatelessUseCaseContext) => {
         context.dispatcher.dispatch({
             type: value
         });
     }
 };
 // run - stateless execute
-context.useCase(functionalUseCase).execute("value").then(() => {
+context.run(statelessUseCase("value")).then(() => {
     const state = context.getState<StoreState>();
     console.log(state.A.a);
     console.log(state.B.b);

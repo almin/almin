@@ -6,7 +6,7 @@ export { StoreGroup } from "./UILayer/StoreGroup";
 export { QueuedStoreGroup } from "./UILayer/QueuedStoreGroup";
 export { UseCase } from "./UseCase";
 export { Context } from "./Context";
-export { FunctionalUseCaseContext } from "./FunctionalUseCaseContext";
+export { StatelessUseCaseContext } from "./StatelessUseCaseContext";
 export { CompletedPayload } from "./payload/CompletedPayload";
 export { DidExecutedPayload } from "./payload/DidExecutedPayload";
 export { Payload } from "./payload/Payload";

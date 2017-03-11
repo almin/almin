@@ -16,8 +16,8 @@ import { CompletedPayload, isCompletedPayload } from "./payload/CompletedPayload
 import { isDidExecutedPayload } from "./payload/DidExecutedPayload";
 import { ErrorPayload, isErrorPayload } from "./payload/ErrorPayload";
 import { WillExecutedPayload, isWillExecutedPayload } from "./payload/WillExecutedPayload";
-import { FunctionalUseCaseContext } from "./FunctionalUseCaseContext";
-import { FunctionalUseCase } from "./FunctionalUseCase";
+import { StatelessUseCaseContext } from "./StatelessUseCaseContext";
+import { StatelessUseCase } from "./StatelessUseCase";
 
 /**
  * @public
@@ -70,7 +70,6 @@ export class Context {
         return this._storeGroup.onChange(onChangeHandler);
     }
 
-    useCase(useCase: (context: FunctionalUseCaseContext) => Function): UseCaseExecutor;
     /**
      * create wrapper of UseCase class
      * @param {UseCase} useCase
@@ -80,30 +79,39 @@ export class Context {
      *
      * context.useCase(UseCaseFactory.create()).execute(args);
      */
-    useCase(useCase: UseCase): UseCaseExecutor;
-    useCase(useCase: any): UseCaseExecutor {
-        // instance of UseCase
-        if (UseCase.isUseCase(useCase)) {
-            return new UseCaseExecutor({
-                useCase,
-                parent: null,
-                dispatcher: this._dispatcher
-            });
-        } else if (typeof useCase === "function") {
-            // When pass UseCase constructor itself, throw assertion error
-            assert.ok(Object.getPrototypeOf && Object.getPrototypeOf(useCase) !== UseCase,
-                `Context#useCase argument should be instance of UseCase.
-The argument is UseCase constructor itself: ${useCase}`
-            );
-            // function to be FunctionalUseCase
-            const functionalUseCase = new FunctionalUseCase(useCase, this._dispatcher);
-            return new UseCaseExecutor({
-                useCase: functionalUseCase,
-                parent: null,
-                dispatcher: this._dispatcher
-            });
-        }
-        throw new Error(`Context#useCase argument should be UseCase: ${useCase}`);
+    useCase(useCase: UseCase): UseCaseExecutor {
+        assert.ok(UseCase.isUseCase(useCase), `It should be instance of UseCase: ${useCase}`);
+        return new UseCaseExecutor({
+            useCase,
+            parent: null,
+            dispatcher: this._dispatcher
+        });
+    }
+
+    /**
+     * run stateless UseCase function and return Promise
+     * @param executor
+     * @returns {Promise<void>}
+     * @public
+     * @example
+     *
+     * const useCase = (value) => {
+     *      return ({ dispatcher }) => {
+     *          // do something
+     *      }
+     * };
+     * context.run(useCase("value")).then(() => {})
+     */
+    run(executor: ((context: StatelessUseCaseContext) => any)): Promise<void> {
+        assert.ok(UseCase.isUseCase(executor) === false, `You should pass executor function insteadof UseCase: ${executor}.`);
+        const useCase = new StatelessUseCase(executor, this._dispatcher);
+        const useCaseExecutor = new UseCaseExecutor({
+            useCase,
+            parent: null,
+            dispatcher: this._dispatcher
+        });
+        // Limitation: Stateless UseCase can't observe willExecute
+        return useCaseExecutor.execute("<null | StatelessUseCase>");
     }
 
     /**
