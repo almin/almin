@@ -32,7 +32,7 @@ We start implementing the UseCase.
 
 > 1. Press button and count up!
 
-Create `IncrementalCounterUseCase` class
+Start to create `IncrementalCounterUseCase` class.
 
 ```js
 "use strict";
@@ -89,7 +89,7 @@ In flux:
 
 ## **UseCase** dispatch -> Store
  
-Return `IncrementalCounterUseCase` and add "dispatch increment event"
+Return to `IncrementalCounterUseCase` and add "dispatch increment event"
 
 [include, IncrementalCounterUseCase.js](../../../example/counter/src/usecase/IncrementalCounterUseCase.js)
 
@@ -116,9 +116,9 @@ So, `IncrementalCounterUseCase` dispatch "IncrementalCounterUseCase" payload.
 
 ## UseCase -> **Store** received
 
-Previously, we created `CounterStore` that can received "IncrementalCounterUseCase" payload.
+Next, We want to add the feature that can received "IncrementalCounterUseCase" payload to `CounterStore`.
 
-A class inherited `Store` has `this.onDispatch(function(payload){ });` method.
+A class inherited `Store` has `this.onDispatch(function(payload){});` method.
 
 ```js
 import {Store} from "almin";
