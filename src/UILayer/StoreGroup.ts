@@ -1,8 +1,7 @@
 // LICENSE : MIT
 "use strict";
 
-// polyfill Object.assign
-import ObjectAssign from "./object-assign";
+import ObjectAssign from "object-assign";
 import * as assert from "assert";
 import LRU from "lru-map-like";
 

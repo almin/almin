@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "allowJs": false, // use as a static type checker
-        "allowSyntheticDefaultImports": false,
+        "allowSyntheticDefaultImports": true,
         "allowUnreachableCode": false,
         "allowUnusedLabels": false,
         // ES Modules are always parsed as in strict mode.
@@ -34,7 +34,8 @@
         "suppressImplicitAnyIndexErrors": false,
         "target": "esnext",
         "types": [
-            "node"
+            "node",
+            "object-assign"
         ]
     },
 
