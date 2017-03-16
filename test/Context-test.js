@@ -295,7 +295,7 @@ describe("Context", function() {
                 }, Error, /Context#useCase argument should be instance of UseCase./);
             });
         });
-        it("should execute function UseCase", function() {
+        it("should execute functional UseCase", function() {
             const dispatcher = new Dispatcher();
             const appContext = new Context({
                 dispatcher,
