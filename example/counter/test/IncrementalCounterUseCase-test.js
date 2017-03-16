@@ -8,7 +8,7 @@ describe("ActionCreator", function() {
             const useCase = new IncrementalCounterUseCase();
             useCase.onDispatch(payload => {
                 assert.deepEqual(payload, {
-                    type: IncrementalCounterUseCase.name
+                    type: "increment"
                 });
                 done();
             });
