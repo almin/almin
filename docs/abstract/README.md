@@ -50,6 +50,36 @@ const useCase = new AwesomeUseCase();
 useCase.execute();
 ```
 
+### Functional UseCase
+
+It is functional version of UseCase.
+
+```js
+class AwesomeUseCase extends UseCase {
+   execute(...args){ }
+}
+
+context.useCase(new AwesomeUseCase()).execute([1, 2, 3]);
+```
+
+==
+
+```js
+const awesomeUseCase = ({dispatcher}) => {
+   return (...args) => { }
+};
+
+context.useCase(awesomeUseCase).execute([1, 2, 3]);
+```
+
+The functional use-case is useful when the use-case do only `dispatch` like following.
+
+```js
+const dispatchUseCase = ({dispatcher}) => {
+   return () => dispatcher.dispatch({ type: "fire" });
+}
+```
+
 ## Context
 
 Almin has `Context` class for logging and communicating with **Store**.

@@ -303,9 +303,9 @@ The user implement own user-case that is inherited UseCase class
 ```javascript
 import {UseCase} from "almin";
 class AwesomeUseCase extends UseCase {
-execute(){
-// implementation own use-case
-}
+    execute(){
+        // implementation own use-case
+    }
 }
 ```
 
