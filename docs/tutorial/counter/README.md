@@ -112,11 +112,11 @@ is a minimal payload object.
 }
 ```
 
-So, `IncrementalCounterUseCase` dispatch "IncrementalCounterUseCase" payload.
+So, `IncrementalCounterUseCase` dispatch "increment" payload.
 
 ## UseCase -> **Store** received
 
-Next, We want to add the feature that can received "IncrementalCounterUseCase" payload to `CounterStore`.
+Next, We want to add the feature that can received "increment" payload to `CounterStore`.
 
 A class inherited `Store` has `this.onDispatch(function(payload){});` method.
 
@@ -130,7 +130,7 @@ export class CounterStore extends Store {
             console.log(payload);
             /*
             {
-                type: "IncrementalCounterUseCase"
+                type: "increment"
             }
             */
         });

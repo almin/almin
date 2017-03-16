@@ -2,7 +2,7 @@
 "use strict";
 import React from "react";
 import IncrementalCounterUseCase from "../usecase/IncrementalCounterUseCase";
-import {Context} from "almin";
+import { Context } from "almin";
 import CounterState from "../store/CounterState";
 export default class CounterComponent extends React.Component {
     constructor(props) {

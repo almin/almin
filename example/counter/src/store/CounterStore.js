@@ -1,6 +1,6 @@
 // LICENSE : MIT
 "use strict";
-import {Store} from "almin";
+import { Store } from "almin";
 import CounterState from "./CounterState";
 export class CounterStore extends Store {
     constructor() {

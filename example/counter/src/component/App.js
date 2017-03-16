@@ -1,8 +1,8 @@
 // LICENSE : MIT
 "use strict";
 import React from "react";
-import {Context, Dispatcher} from "almin";
-import {CounterStore} from "../store/CounterStore";
+import { Context, Dispatcher } from "almin";
+import { CounterStore } from "../store/CounterStore";
 // a single dispatcher
 const dispatcher = new Dispatcher();
 // a single store
