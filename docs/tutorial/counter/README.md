@@ -26,6 +26,10 @@ open http://localhost:8080/
 
 End.
 
+### :memo: Notes: Recommendation
+
+1 UseCase = 1 file
+
 ## UseCase
 
 We start implementing the UseCase.
@@ -146,9 +150,7 @@ export class CounterStore extends Store {
 
 All that is updating `CounterStore`'s state!
 
-Wait! :raised_hand:
-
-We can separate the `state` and `CounterStore`.
+But, We can separate the `state` and `CounterStore` as files.
 It means that we can create `CounterState`.
 
 **Store**
