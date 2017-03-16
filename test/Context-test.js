@@ -70,7 +70,7 @@ describe("Context", function() {
             const expectedMergedObject = {
                 "1": 1
             };
-            const store = createEchoStore({echo: {"1": 1}});
+            const store = createEchoStore({ echo: { "1": 1 } });
             const appContext = new Context({
                 dispatcher,
                 store
@@ -82,7 +82,7 @@ describe("Context", function() {
     describe("#onChange", function() {
         it("should called when change some State", function(done) {
             const dispatcher = new Dispatcher();
-            const testStore = createEchoStore({echo: {"1": 1}});
+            const testStore = createEchoStore({ echo: { "1": 1 } });
             const storeGroup = new StoreGroup([testStore]);
             const appContext = new Context({
                 dispatcher,
@@ -97,8 +97,8 @@ describe("Context", function() {
         });
         it("should thin change events are happened at same time", function(done) {
             const dispatcher = new Dispatcher();
-            const aStore = createEchoStore({name: "AStore", echo: {"1": 1}});
-            const bStore = createEchoStore({name: "BStore", echo: {"1": 1}});
+            const aStore = createEchoStore({ name: "AStore", echo: { "1": 1 } });
+            const bStore = createEchoStore({ name: "BStore", echo: { "1": 1 } });
             const storeGroup = new StoreGroup([aStore, bStore]);
             const appContext = new Context({
                 dispatcher,
@@ -275,49 +275,45 @@ describe("Context", function() {
             const dispatcher = new Dispatcher();
             const appContext = new Context({
                 dispatcher,
-                store: createEchoStore({echo: {"1": 1}})
+                store: createEchoStore({ echo: { "1": 1 } })
             });
             const useCaseExecutor = appContext.useCase(new ThrowUseCase());
             assert(useCaseExecutor instanceof UseCaseExecutor);
             useCaseExecutor.execute();
         });
     });
-    describe("#run", function() {
-        context("when pass UseCase instance", function() {
+    describe("#execute", function() {
+        context("when pass UseCase constructor", function() {
             it("should throw AssertionError", function() {
                 const dispatcher = new Dispatcher();
                 const appContext = new Context({
                     dispatcher,
-                    store: createEchoStore({echo: {"1": 1}})
+                    store: createEchoStore({ echo: { "1": 1 } })
                 });
                 assert.throws(function() {
-                    appContext.run(TestUseCase);
-                }, Error);
-                const useCase = new TestUseCase();
-                assert.throws(function() {
-                    appContext.run(useCase);
-                }, Error);
+                    appContext.useCase(TestUseCase);
+                }, Error, /Context#useCase argument should be instance of UseCase./);
             });
         });
-        it("should run Stateless function", function() {
+        it("should execute function UseCase", function() {
             const dispatcher = new Dispatcher();
             const appContext = new Context({
                 dispatcher,
-                store: createEchoStore({echo: {"1": 1}})
+                store: createEchoStore({ echo: { "1": 1 } })
             });
             const callStack = [];
             appContext.onDispatch((payload, meta) => {
                 callStack.push(payload);
             });
-            const useCase = (value) => {
-                return ({dispatcher}) => {
+            const useCase = ({ dispatcher }) => {
+                return (value) => {
                     dispatcher.dispatch({
                         type: "Example",
                         value
                     });
                 };
             };
-            return appContext.run(useCase("value")).then(() => {
+            return appContext.useCase(useCase).execute("value").then(() => {
                 assert.deepEqual(callStack, [
                     {
                         type: "Example",
@@ -326,11 +322,11 @@ describe("Context", function() {
                 ]);
             });
         });
-        it("should run Stateless function and lifecycle hook is called ", function() {
+        it("should execute functional UseCase and lifecycle hook is called ", function() {
             const dispatcher = new Dispatcher();
             const appContext = new Context({
                 dispatcher,
-                store: createEchoStore({echo: {"1": 1}})
+                store: createEchoStore({ echo: { "1": 1 } })
             });
             const callStack = [];
             appContext.onDispatch((payload, meta) => {
@@ -345,15 +341,15 @@ describe("Context", function() {
             appContext.onCompleteEachUseCase((payload, meta) => {
                 callStack.push(payload);
             });
-            const useCase = (value) => {
-                return ({dispatcher}) => {
+            const useCase = ({ dispatcher }) => {
+                return (value) => {
                     dispatcher.dispatch({
                         type: "Example",
                         value
                     });
                 };
             };
-            return appContext.run(useCase("value")).then(() => {
+            return appContext.useCase(useCase).execute("value").then(() => {
                 const expectedCallStackOfAUseCase = [
                     WillExecutedPayload,
                     Object/* {
