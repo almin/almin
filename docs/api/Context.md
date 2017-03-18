@@ -96,7 +96,7 @@ console.log(state);
     onChange(onChangeHandler: (hangingStores: Array<Store>) => void): void;
 ```
 
-If anyone store that is passed to constructor is changed, then call `onChangeHandler`
+If anyone store that is passed to constructor is changed, then call `onChangeHandler`.
 `onChangeHandler` arguments is an array of `Store` instances.
 
 ### Example
@@ -122,12 +122,13 @@ context.onChangeHandler(changingStores => {
 
 `Context#useCase` can accept two type of UseCase.
 
-- **Functional UseCase**
 - Instance of UseCase class
+- **Functional UseCase**
 
 ### Example
 
 ```js
+// UseCase class pattern
 class AwesomeUseCase extends UseCase {
    execute(...args){ }
 }
@@ -138,6 +139,7 @@ context.useCase(new AwesomeUseCase()).execute([1, 2, 3]);
 OR
 
 ```js
+// Functional UseCase pattern
 const awesomeUseCase = ({dispatcher}) => {
    return (...args) => { }
 };
