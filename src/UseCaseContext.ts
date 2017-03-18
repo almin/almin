@@ -3,6 +3,7 @@
 
 import { UseCase } from "./UseCase";
 import { UseCaseExecutor } from "./UseCaseExecutor";
+import { Dispatcher } from "./Dispatcher";
 
 const assert = require("assert");
 /**
@@ -13,13 +14,13 @@ const assert = require("assert");
  */
 export class UseCaseContext {
 
-    dispatcher: UseCase;
+    dispatcher: UseCase | Dispatcher;
 
     /**
      * @param   dispatcher
      *  The parent UseCase.
      */
-    constructor(dispatcher: UseCase) {
+    constructor(dispatcher: UseCase | Dispatcher) {
         this.dispatcher = dispatcher;
     }
 
@@ -33,7 +34,7 @@ export class UseCaseContext {
         }
         return new UseCaseExecutor({
             useCase,
-            parent: this.dispatcher,
+            parent: UseCase.isUseCase(this.dispatcher) ? this.dispatcher : null,
             dispatcher: this.dispatcher
         });
     }

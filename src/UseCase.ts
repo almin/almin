@@ -5,17 +5,8 @@ import { DispatchedPayload } from "./Dispatcher";
 import { UseCaseContext } from "./UseCaseContext";
 import { DispatcherPayloadMeta, DispatcherPayloadMetaImpl } from "./DispatcherPayloadMeta";
 import { ErrorPayload, isErrorPayload } from "./payload/ErrorPayload";
-/**
- * UseCase incremental count is for Unique ID.
- */
-let _UseCaseCount: number = 0;
-/**
- * create new id
- */
-const createNewID = (): string => {
-    _UseCaseCount++;
-    return String(_UseCaseCount);
-};
+import { UseCaseLike } from "./UseCaseLike";
+import { generateNewId } from "./UseCaseIdGenerator";
 
 export const defaultUseCaseName = "<Anonymous-UseCase>";
 
@@ -30,7 +21,7 @@ export const defaultUseCaseName = "<Anonymous-UseCase>";
     }
  }
  */
-export abstract class UseCase extends Dispatcher {
+export abstract class UseCase extends Dispatcher implements UseCaseLike {
 
     /**
      * Debuggable name if it needed
@@ -63,7 +54,7 @@ export abstract class UseCase extends Dispatcher {
     constructor() {
         super();
 
-        this.id = createNewID();
+        this.id = generateNewId();
         const own = this.constructor as typeof UseCase;
         this.name = own.displayName || own.name || defaultUseCaseName;
     }
