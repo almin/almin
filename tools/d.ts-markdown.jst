@@ -14,6 +14,17 @@ function shouldIgnoreSection(section) {
    if (/<reference type/.test(section.docsText)) { return true; }
    return false;
 }
+// Multiple line or Single Header
+function renderAPIHeader(section) {
+   const header = section.codeText.split("\n").map(line => line.trim()).join("\n").trim();
+   if(header.split("\n").length > 1){
+     return "## Interface of"
+      + "```typescript\n"
+      + header + "\n"
+      + "```";
+   }
+   return "## " + header;
+}
 %>
 
 ```typescript
@@ -22,7 +33,7 @@ function shouldIgnoreSection(section) {
 
 ----
 <% sections.filter(section => !shouldIgnoreSection(section)).forEach(section => { %>
-## `<%= section.codeText.replace(/}$/m, "").trim() %>`
+<%= renderAPIHeader(section) %>
 
 <%= section.docsText %>
 

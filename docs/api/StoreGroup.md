@@ -16,7 +16,7 @@ export declare class StoreGroup extends Dispatcher implements StoreLike {
 
 ----
 
-## `export declare class StoreGroup extends Dispatcher implements StoreLike {`
+## export declare class StoreGroup extends Dispatcher implements StoreLike {
 
 
 StoreGroup is a collection of Store.
@@ -33,7 +33,7 @@ If you want to know all change events, and directly use `store.onChange()`.
 
 ----
 
-## `constructor(stores: Array<Store>);`
+## constructor(stores: Array<Store>);
 
 
 Initialize `StoreGroup` with `Store` instances
@@ -49,14 +49,14 @@ const storeGroup = new StoreGroup([aStore, bStore]);
 
 ----
 
-## `readonly store: Array<Store>;`
+## readonly store: Array<Store>;
 
 
 A collection of stores in the StoreGroup.
 
 ----
 
-## `getState<T>(): T;`
+## getState<T>(): T;
 
 
 Return the state object that merge each stores's state
@@ -77,7 +77,7 @@ console.log(state); // { aState: aState, bState: aState }
 
 ----
 
-## `emitChange(): void;`
+## emitChange(): void;
 
 
 Emit change Event to subscribers.
@@ -85,7 +85,7 @@ It is same with `Store#emitChange()`
 
 ----
 
-## `onChange(handler: (stores: Array<Store>) => void): () => void;`
+## onChange(handler: (stores: Array<Store>) => void): () => void;
 
 
 subscribe changes of the store group.
@@ -93,7 +93,10 @@ It is same with `Store#onChage()`
 
 ----
 
-## `release(): void;`
+## Interface of```typescript
+release(): void;
+}
+```
 
 
 Release all events handler on StoreGroup.

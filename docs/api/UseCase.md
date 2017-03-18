@@ -20,7 +20,7 @@ export declare abstract class UseCase extends Dispatcher implements UseCaseLike 
 
 ----
 
-## `export declare abstract class UseCase extends Dispatcher implements UseCaseLike {`
+## export declare abstract class UseCase extends Dispatcher implements UseCaseLike {
 
 
 A `UseCase` class is inherited Dispatcher.
@@ -41,42 +41,42 @@ class AwesomeUseCase extends UseCase {
 
 ----
 
-## `static displayName?: string;`
+## static displayName?: string;
 
 
 Debuggable name if it needed
 
 ----
 
-## `static isUseCase(v: any): v is UseCase;`
+## static isUseCase(v: any): v is UseCase;
 
 
 Return true if the `v` is a UseCase-like.
 
 ----
 
-## `id: string;`
+## id: string;
 
 
 Unique id in each UseCase instances.
 
 ----
 
-## `name: string;`
+## name: string;
 
 
 The name of the UseCase.
 
 ----
 
-## `constructor();`
+## constructor();
 
 
 Constructor not have arguments.
 
 ----
 
-## `readonly context: UseCaseContext;`
+## readonly context: UseCaseContext;
 
 
 Get `context` of UseCase.
@@ -108,7 +108,7 @@ export class ChildUseCase extends UseCase {
 
 ----
 
-## `execute<R>(..._: Array<any>): R;`
+## execute<R>(..._: Array<any>): R;
 
 
 `UseCase#execute()` method should be overwrite by subclass.
@@ -127,7 +127,7 @@ class AwesomeUseCase extends UseCase {
 
 ----
 
-## `dispatch(payload: DispatchedPayload, meta?: DispatcherPayloadMeta): void;`
+## dispatch(payload: DispatchedPayload, meta?: DispatcherPayloadMeta): void;
 
 
 Dispatch `payload` object.
@@ -136,14 +136,17 @@ Dispatch `payload` object.
 
 ----
 
-## `onError(errorHandler: (error: Error) => void): (this: Dispatcher) => void;`
+## onError(errorHandler: (error: Error) => void): (this: Dispatcher) => void;
 
 
 `errorHandler` is called with error when error is thrown.
 
 ----
 
-## `throwError(error?: Error | any): void;`
+## Interface of```typescript
+throwError(error?: Error | any): void;
+}
+```
 
 
 Throw error payload.
