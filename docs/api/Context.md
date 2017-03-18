@@ -26,7 +26,7 @@ export declare class Context {
 
 ----
 
-### export declare class Context {
+### `export declare class Context {`
 
 
 Context class provide observing and communicating with **Store** and **UseCase**.
@@ -70,7 +70,7 @@ const context = new Context({
 
 ----
 
-### getState<T>(): T;
+### `getState<T>(): T;`
 
 
 Return state value of StoreGroup or Store.
@@ -88,7 +88,7 @@ console.log(state);
 
 ----
 
-### onChange(onChangeHandler: (changingStores: Array<Store>) => void): void;
+### `onChange(onChangeHandler: (changingStores: Array<Store>) => void): void;`
 
 
 If anyone store that is passed to constructor is changed, then call `onChange`.
@@ -140,7 +140,7 @@ context.useCase(awesomeUseCase).execute([1, 2, 3]);
 
 ----
 
-### onWillExecuteEachUseCase(handler: (payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void;
+### `onWillExecuteEachUseCase(handler: (payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void;`
 
 
 Register `handler` function to Context.
@@ -148,7 +148,7 @@ Register `handler` function to Context.
 
 ----
 
-### onDispatch(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => void): () => void;
+### `onDispatch(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => void): () => void;`
 
 
 Register `handler` function to Context.
@@ -172,14 +172,14 @@ context.useCase(dispatchUseCase).execute();
 
 ----
 
-### onDidExecuteEachUseCase(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => void): () => void;
+### `onDidExecuteEachUseCase(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => void): () => void;`
 
 
 `handler` is called when each useCases are executed.
 
 ----
 
-### onCompleteEachUseCase(handler: (payload: CompletedPayload, meta: DispatcherPayloadMeta) => void): () => void;
+### `onCompleteEachUseCase(handler: (payload: CompletedPayload, meta: DispatcherPayloadMeta) => void): () => void;`
 
 
 `handler` is called when each useCases are completed.
@@ -187,7 +187,7 @@ This `handler` is always called asynchronously.
 
 ----
 
-### onErrorDispatch(handler: (payload: ErrorPayload, meta: DispatcherPayloadMeta) => void): () => void;
+### `onErrorDispatch(handler: (payload: ErrorPayload, meta: DispatcherPayloadMeta) => void): () => void;`
 
 
 `handler` is called when some UseCase throw Error.
@@ -200,7 +200,7 @@ Throwing Error is following case:
 
 ----
 
-### release(): void;
+### `release(): void;`
 
 
 Release all events handler in Context.

@@ -19,7 +19,7 @@ export declare abstract class Store extends Dispatcher implements StoreLike {
 
 ----
 
-### export declare abstract class Store extends Dispatcher implements StoreLike {
+### `export declare abstract class Store extends Dispatcher implements StoreLike {`
 
 
 Store hold the state of your application.
@@ -71,35 +71,35 @@ class YourStore extends Store {
 
 ----
 
-### static displayName?: string;
+### `static displayName?: string;`
 
 
 Set debuggable name if needed.
 
 ----
 
-### static isStore(v: any): v is Store;
+### `static isStore(v: any): v is Store;`
 
 
 Return true if the `v` is store like.
 
 ----
 
-### name: string;
+### `name: string;`
 
 
 The name of Store
 
 ----
 
-### constructor();
+### `constructor();`
 
 
 Constructor not have arguments.
 
 ----
 
-### getState<T>(_prevState?: T): T;
+### `getState<T>(_prevState?: T): T;`
 
 
 You should be overwrite by Store subclass.
@@ -109,7 +109,7 @@ FIXME: mark this as `abstract` property.
 
 ----
 
-### onChange(cb: (changingStores: Array<StoreLike>) => void): () => void;
+### `onChange(cb: (changingStores: Array<StoreLike>) => void): () => void;`
 
 
 Subscribe change event of the store.
@@ -127,7 +127,7 @@ store.emitChange();
 
 ----
 
-### emitChange(): void;
+### `emitChange(): void;`
 
 
 Emit "change" event to subscribers.
