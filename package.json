@@ -26,7 +26,7 @@
     "clean": "rimraf lib/ __obj",
     "start:docs": "gitbook serve",
     "build:docs": "gitbook build",
-    "build:docs:ts-api": "bash ./tools/update-api-reference.sh",
+    "build:docs:api": "bash ./tools/update-api-reference.sh",
     "build": "npm-run-all -s clean build:src build:lib",
     "build:src": "npm-run-all -p build:src:*",
     "build:src:tsc": "tsc --project .",

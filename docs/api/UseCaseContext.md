@@ -1,4 +1,6 @@
 # UseCaseContext
+<!-- THIS DOCUMENT IS AUTOMATICALLY GENERATED FROM src/*.ts -->
+<!-- Please edit src/*.ts and `npm run build:docs:api` -->
 
 
 
@@ -14,7 +16,7 @@
 export declare class UseCaseContext {
 ```
 
-Maybe, `UseCaseContext` is a invisible from Public API.
+Maybe, `UseCaseContext` is invisible from Public API.
 
 `UseCase#context` return UseCaseContext insteadof Context.
 It has limitation as against to Context.

@@ -1,4 +1,6 @@
 # Dispatcher
+<!-- THIS DOCUMENT IS AUTOMATICALLY GENERATED FROM src/*.d.ts -->
+<!-- Please edit src/*.ts and `npm run build:docs:api` -->
 
 
 

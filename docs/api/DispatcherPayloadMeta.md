@@ -1,4 +1,6 @@
 # DispatcherPayloadMeta
+<!-- THIS DOCUMENT IS AUTOMATICALLY GENERATED FROM src/*.ts -->
+<!-- Please edit src/*.ts and `npm run build:docs:api` -->
 
 
 

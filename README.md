@@ -158,6 +158,12 @@ Running Tests in [Sauce Labs](https://saucelabs.com/ "Sauce Labs: Selenium Testi
 
 ## Building Docs
 
+API Reference generated from source codes.
+
+    npm run build:docs:api
+
+Preview documents by GitBook.
+
     npm run build:docs
     # preview
     npm run start:docs
