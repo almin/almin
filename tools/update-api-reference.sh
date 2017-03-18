@@ -14,3 +14,4 @@ npm run build
 # update
 addDoc "${srcDir}/Context.d.ts"
 addDoc "${srcDir}/Dispatcher.d.ts"
+addDoc "${srcDir}/DispatcherPayloadMeta.d.ts"
