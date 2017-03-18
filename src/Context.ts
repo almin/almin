@@ -113,12 +113,13 @@ export class Context {
     /**
      * `Context#useCase` can accept two type of UseCase.
      *
-     * - **Functional UseCase**
      * - Instance of UseCase class
+     * - **Functional UseCase**
      *
      * ### Example
      *
      * ```js
+     * // UseCase class pattern
      * class AwesomeUseCase extends UseCase {
      *    execute(...args){ }
      * }
@@ -129,6 +130,7 @@ export class Context {
      * OR
      *
      * ```js
+     * // Functional UseCase pattern
      * const awesomeUseCase = ({dispatcher}) => {
      *    return (...args) => { }
      * };
