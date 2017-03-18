@@ -1,31 +1,19 @@
 # Dispatcher
-<!-- THIS DOCUMENT IS AUTOMATICALLY GENERATED FROM src/*.d.ts -->
+<!-- THIS DOCUMENT IS AUTOMATICALLY GENERATED FROM src/*.ts -->
 <!-- Please edit src/*.ts and `npm run build:docs:api` -->
 
 
+```typescript
+export declare class Dispatcher extends EventEmitter {
+    static isDispatcher(v: any): v is Dispatcher;
+    constructor();
+    onDispatch(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => void): () => void;
+    dispatch(payload: DispatchedPayload, meta?: DispatcherPayloadMeta): void;
+    pipe(toDispatcher: Dispatcher): () => void;
+}
+```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+----
 
 ## Interface
 ```typescript
@@ -72,14 +60,6 @@ So, Almin use `payload` object instead of it without casting.
 
 ----
 
-
-
-
-
-
-
-
-
 ## Interface
 ```typescript
     static isDispatcher(v: any): v is Dispatcher;
@@ -89,14 +69,6 @@ if `v` is instance of Dispatcher, return true
 
 ----
 
-
-
-
-
-
-
-
-
 ## Interface
 ```typescript
     constructor();
@@ -105,14 +77,6 @@ if `v` is instance of Dispatcher, return true
 constructor not have arguments.
 
 ----
-
-
-
-
-
-
-
-
 
 ## Interface
 ```typescript
@@ -131,14 +95,6 @@ unsubscribe(); // release handler
 
 ----
 
-
-
-
-
-
-
-
-
 ## Interface
 ```typescript
     dispatch(payload: DispatchedPayload, meta?: DispatcherPayloadMeta): void;
@@ -147,14 +103,6 @@ unsubscribe(); // release handler
 Dispatch `payload` to subscribers.
 
 ----
-
-
-
-
-
-
-
-
 
 ## Interface
 ```typescript
@@ -176,5 +124,4 @@ a.dispatch({ type : "a" });
 ```
 
 ----
-
 

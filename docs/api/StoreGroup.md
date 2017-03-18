@@ -3,13 +3,18 @@
 <!-- Please edit src/*.ts and `npm run build:docs:api` -->
 
 
+```typescript
+export declare class StoreGroup extends Dispatcher implements StoreLike {
+    constructor(stores: Array<Store>);
+    readonly store: Array<Store>;
+    getState<T>(): T;
+    emitChange(): void;
+    onChange(handler: (stores: Array<Store>) => void): () => void;
+    release(): void;
+}
+```
 
-
-
-
-
-
-
+----
 
 ## Interface
 ```typescript
@@ -30,18 +35,6 @@ If you want to know all change events, and directly use `store.onChange()`.
 
 ----
 
-
-
-
-
-
-
-
-
-
-
-
-
 ## Interface
 ```typescript
     constructor(stores: Array<Store>);
@@ -60,14 +53,6 @@ const storeGroup = new StoreGroup([aStore, bStore]);
 
 ----
 
-
-
-
-
-
-
-
-
 ## Interface
 ```typescript
     readonly store: Array<Store>;
@@ -76,14 +61,6 @@ const storeGroup = new StoreGroup([aStore, bStore]);
 A collection of stores in the StoreGroup.
 
 ----
-
-
-
-
-
-
-
-
 
 ## Interface
 ```typescript
@@ -108,26 +85,6 @@ console.log(state); // { aState: aState, bState: aState }
 
 ----
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## Interface
 ```typescript
     emitChange(): void;
@@ -137,14 +94,6 @@ Emit change Event to subscribers.
 It is same with `Store#emitChange()`
 
 ----
-
-
-
-
-
-
-
-
 
 ## Interface
 ```typescript
@@ -156,14 +105,6 @@ It is same with `Store#onChage()`
 
 ----
 
-
-
-
-
-
-
-
-
 ## Interface
 ```typescript
     release(): void;
@@ -174,5 +115,4 @@ Release all events handler on StoreGroup.
 You can call this when no more needed the StoreGroup.
 
 ----
-
 

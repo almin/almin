@@ -3,13 +3,13 @@
 <!-- Please edit src/*.ts and `npm run build:docs:api` -->
 
 
+```typescript
+export declare class UseCaseContext {
+    useCase(useCase: UseCase): UseCaseExecutor;
+}
+```
 
-
-
-
-
-
-
+----
 
 ## Interface
 ```typescript
@@ -31,25 +31,6 @@ class ParentUseCase extends UseCase {
 ```
 
 ----
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ## Interface
 ```typescript
@@ -85,5 +66,4 @@ export class ChildUseCase extends UseCase {
 ```
 
 ----
-
 

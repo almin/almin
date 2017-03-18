@@ -1,15 +1,28 @@
 # Context
-<!-- THIS DOCUMENT IS AUTOMATICALLY GENERATED FROM src/*.d.ts -->
+<!-- THIS DOCUMENT IS AUTOMATICALLY GENERATED FROM src/*.ts -->
 <!-- Please edit src/*.ts and `npm run build:docs:api` -->
 
 
+```typescript
+export declare class Context {
+    constructor({dispatcher, store}: {
+        dispatcher: Dispatcher;
+        store: QueuedStoreGroup | StoreGroup | Store;
+    });
+    getState<T>(): T;
+    onChange(onChangeHandler: (changingStores: Array<Store>) => void): void;
+    useCase(useCase: (context: FunctionalUseCaseContext) => Function): UseCaseExecutor;
+    useCase(useCase: UseCase): UseCaseExecutor;
+    onWillExecuteEachUseCase(handler: (payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void;
+    onDispatch(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => void): () => void;
+    onDidExecuteEachUseCase(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => void): () => void;
+    onCompleteEachUseCase(handler: (payload: CompletedPayload, meta: DispatcherPayloadMeta) => void): () => void;
+    onErrorDispatch(handler: (payload: ErrorPayload, meta: DispatcherPayloadMeta) => void): () => void;
+    release(): void;
+}
+```
 
-
-
-
-
-
-
+----
 
 ## Interface
 ```typescript
@@ -19,18 +32,6 @@ export declare class Context {
 Context class provide observing and communicating with **Store** and **UseCase**.
 
 ----
-
-
-
-
-
-
-
-
-
-
-
-
 
 ## Interface
 ```typescript
@@ -68,14 +69,6 @@ const context = new Context({
 
 ----
 
-
-
-
-
-
-
-
-
 ## Interface
 ```typescript
     getState<T>(): T;
@@ -96,14 +89,6 @@ console.log(state);
 
 ----
 
-
-
-
-
-
-
-
-
 ## Interface
 ```typescript
     onChange(onChangeHandler: (changingStores: Array<Store>) => void): void;
@@ -121,14 +106,6 @@ context.onChange(changingStores => {
 ```
 
 ----
-
-
-
-
-
-
-
-
 
 ## Interface
 ```typescript
@@ -165,14 +142,6 @@ context.useCase(awesomeUseCase).execute([1, 2, 3]);
 
 ----
 
-
-
-
-
-
-
-
-
 ## Interface
 ```typescript
     onWillExecuteEachUseCase(handler: (payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void;
@@ -182,14 +151,6 @@ Register `handler` function to Context.
 `handler` is called when each useCases will execute.
 
 ----
-
-
-
-
-
-
-
-
 
 ## Interface
 ```typescript
@@ -217,14 +178,6 @@ context.useCase(dispatchUseCase).execute();
 
 ----
 
-
-
-
-
-
-
-
-
 ## Interface
 ```typescript
     onDidExecuteEachUseCase(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => void): () => void;
@@ -233,14 +186,6 @@ context.useCase(dispatchUseCase).execute();
 `handler` is called when each useCases are executed.
 
 ----
-
-
-
-
-
-
-
-
 
 ## Interface
 ```typescript
@@ -251,14 +196,6 @@ context.useCase(dispatchUseCase).execute();
 This `handler` is always called asynchronously.
 
 ----
-
-
-
-
-
-
-
-
 
 ## Interface
 ```typescript
@@ -275,14 +212,6 @@ Throwing Error is following case:
 
 ----
 
-
-
-
-
-
-
-
-
 ## Interface
 ```typescript
     release(): void;
@@ -293,5 +222,4 @@ Release all events handler in Context.
 You can call this when no more call event handler
 
 ----
-
 

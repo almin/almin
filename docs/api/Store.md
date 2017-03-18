@@ -3,18 +3,19 @@
 <!-- Please edit src/*.ts and `npm run build:docs:api` -->
 
 
+```typescript
+export declare abstract class Store extends Dispatcher implements StoreLike {
+    static displayName?: string;
+    static isStore(v: any): v is Store;
+    name: string;
+    constructor();
+    getState<T>(_prevState?: T): T;
+    onChange(cb: (changingStores: Array<StoreLike>) => void): () => void;
+    emitChange(): void;
+}
+```
 
-
-
-
-
-
-
-
-
-
-
-
+----
 
 ## Interface
 ```typescript
@@ -70,14 +71,6 @@ class YourStore extends Store {
 
 ----
 
-
-
-
-
-
-
-
-
 ## Interface
 ```typescript
     static displayName?: string;
@@ -86,14 +79,6 @@ class YourStore extends Store {
 Set debuggable name if needed.
 
 ----
-
-
-
-
-
-
-
-
 
 ## Interface
 ```typescript
@@ -104,14 +89,6 @@ Return true if the `v` is store like.
 
 ----
 
-
-
-
-
-
-
-
-
 ## Interface
 ```typescript
     name: string;
@@ -121,14 +98,6 @@ The name of Store
 
 ----
 
-
-
-
-
-
-
-
-
 ## Interface
 ```typescript
     constructor();
@@ -137,14 +106,6 @@ The name of Store
 Constructor not have arguments.
 
 ----
-
-
-
-
-
-
-
-
 
 ## Interface
 ```typescript
@@ -157,14 +118,6 @@ Next, return state object of your store.
 FIXME: mark this as `abstract` property.
 
 ----
-
-
-
-
-
-
-
-
 
 ## Interface
 ```typescript
@@ -186,14 +139,6 @@ store.emitChange();
 
 ----
 
-
-
-
-
-
-
-
-
 ## Interface
 ```typescript
     emitChange(): void;
@@ -204,5 +149,4 @@ Emit "change" event to subscribers.
 If you want to notify changing ot tha store, call `Store#emitChange()`.
 
 ----
-
 

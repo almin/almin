@@ -3,13 +3,22 @@
 <!-- Please edit src/*.ts and `npm run build:docs:api` -->
 
 
+```typescript
+export declare abstract class UseCase extends Dispatcher implements UseCaseLike {
+    static displayName?: string;
+    static isUseCase(v: any): v is UseCase;
+    id: string;
+    name: string;
+    constructor();
+    readonly context: UseCaseContext;
+    execute<R>(..._: Array<any>): R;
+    dispatch(payload: DispatchedPayload, meta?: DispatcherPayloadMeta): void;
+    onError(errorHandler: (error: Error) => void): (this: Dispatcher) => void;
+    throwError(error?: Error | any): void;
+}
+```
 
-
-
-
-
-
-
+----
 
 ## Interface
 ```typescript
@@ -34,14 +43,6 @@ class AwesomeUseCase extends UseCase {
 
 ----
 
-
-
-
-
-
-
-
-
 ## Interface
 ```typescript
     static displayName?: string;
@@ -50,14 +51,6 @@ class AwesomeUseCase extends UseCase {
 Debuggable name if it needed
 
 ----
-
-
-
-
-
-
-
-
 
 ## Interface
 ```typescript
@@ -68,14 +61,6 @@ Return true if the `v` is a UseCase-like.
 
 ----
 
-
-
-
-
-
-
-
-
 ## Interface
 ```typescript
     id: string;
@@ -84,14 +69,6 @@ Return true if the `v` is a UseCase-like.
 Unique id in each UseCase instances.
 
 ----
-
-
-
-
-
-
-
-
 
 ## Interface
 ```typescript
@@ -102,14 +79,6 @@ The name of the UseCase.
 
 ----
 
-
-
-
-
-
-
-
-
 ## Interface
 ```typescript
     constructor();
@@ -118,14 +87,6 @@ The name of the UseCase.
 Constructor not have arguments.
 
 ----
-
-
-
-
-
-
-
-
 
 ## Interface
 ```typescript
@@ -137,6 +98,7 @@ You can execute sub UseCase using UseCaseContext object.
 
 See following for more details.
 
+- [UseCaseContext](https://almin.js.org/docs/api/UseCaseContext.html)
 - [Nesting UseCase](https://almin.js.org/docs/tips/nesting-usecase.html)
 
 ### Example
@@ -160,14 +122,6 @@ export class ChildUseCase extends UseCase {
 
 ----
 
-
-
-
-
-
-
-
-
 ## Interface
 ```typescript
     execute<R>(..._: Array<any>): R;
@@ -189,14 +143,6 @@ class AwesomeUseCase extends UseCase {
 
 ----
 
-
-
-
-
-
-
-
-
 ## Interface
 ```typescript
     dispatch(payload: DispatchedPayload, meta?: DispatcherPayloadMeta): void;
@@ -208,14 +154,6 @@ Dispatch `payload` object.
 
 ----
 
-
-
-
-
-
-
-
-
 ## Interface
 ```typescript
     onError(errorHandler: (error: Error) => void): (this: Dispatcher) => void;
@@ -224,14 +162,6 @@ Dispatch `payload` object.
 `errorHandler` is called with error when error is thrown.
 
 ----
-
-
-
-
-
-
-
-
 
 ## Interface
 ```typescript
@@ -245,5 +175,4 @@ You can use it instead of `throw new Error()`
 This error event is caught by dispatcher.
 
 ----
-
 
