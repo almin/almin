@@ -73,7 +73,10 @@ export abstract class UseCase extends Dispatcher implements UseCaseLike {
      * Get `context` of UseCase.
      * You can execute sub UseCase using UseCaseContext object.
      *
-     * See [Nesting UseCase](https://almin.js.org/docs/tips/nesting-usecase.html) for more details.
+     * See following for more details.
+     *
+     * - [UseCaseContext](https://almin.js.org/docs/api/UseCaseContext.html)
+     * - [Nesting UseCase](https://almin.js.org/docs/tips/nesting-usecase.html)
      *
      * ### Example
      *
@@ -120,7 +123,7 @@ export abstract class UseCase extends Dispatcher implements UseCaseLike {
     /**
      * Dispatch `payload` object.
      *
-     * `Store` or `Context` can receive the `payload` object.
+     * `Store` or `Context` can receive the `payload` object.n
      */
     dispatch(payload: DispatchedPayload, meta?: DispatcherPayloadMeta) {
         // system dispatch has meta
