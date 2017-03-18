@@ -66,8 +66,8 @@
     "aluminium"
   ],
   "devDependencies": {
-    "@GerHobbelt/docco": "git+https://github.com/gerhobbelt/docco.git",
     "@alrra/travis-scripts": "^3.0.1",
+    "@azu/docco": "^0.7.2",
     "@types/node": "^7.0.5",
     "@types/object-assign": "^4.0.30",
     "babel-cli": "^6.7.5",
