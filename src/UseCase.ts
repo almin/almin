@@ -11,15 +11,21 @@ import { generateNewId } from "./UseCaseIdGenerator";
 export const defaultUseCaseName = "<Anonymous-UseCase>";
 
 /**
- * UseCase class is inherited Dispatcher.
+ * A `UseCase` class is inherited Dispatcher.
  * The user implement own user-case that is inherited UseCase class
- * @example
- import {UseCase} from "almin";
- class AwesomeUseCase extends UseCase {
-    execute(){
-        // implementation own use-case
-    }
- }
+ *
+ * It similar to ActionCreator on Flux.
+ *
+ * ### Example
+ *
+ * ```js
+ * import {UseCase} from "almin";
+ * class AwesomeUseCase extends UseCase {
+ *    execute(){
+ *       // implementation own use-case
+ *   }
+ * }
+ * ```
  */
 export abstract class UseCase extends Dispatcher implements UseCaseLike {
 
@@ -29,7 +35,7 @@ export abstract class UseCase extends Dispatcher implements UseCaseLike {
     static displayName?: string;
 
     /**
-     * return true if the `v` is a UseCase.
+     * Return true if the `v` is a UseCase-like.
      */
     static isUseCase(v: any): v is UseCase {
         if (v instanceof UseCase) {
@@ -42,15 +48,18 @@ export abstract class UseCase extends Dispatcher implements UseCaseLike {
 
 
     /**
-     * unique id in each UseCase instances.
+     * Unique id in each UseCase instances.
      */
     id: string;
 
     /**
-     * The default is UseCase name
+     * The name of the UseCase.
      */
     name: string;
 
+    /**
+     * Constructor not have arguments.
+     */
     constructor() {
         super();
 
@@ -61,15 +70,49 @@ export abstract class UseCase extends Dispatcher implements UseCaseLike {
 
 
     /**
-     * getter to get context of UseCase
-     * @returns the UseCaseContext has `execute()` method
+     * Get `context` of UseCase.
+     * You can execute sub UseCase using UseCaseContext object.
+     *
+     * See following for more details.
+     *
+     * - [UseCaseContext](https://almin.js.org/docs/api/UseCaseContext.html)
+     * - [Nesting UseCase](https://almin.js.org/docs/tips/nesting-usecase.html)
+     *
+     * ### Example
+     *
+     * ```js
+     * // Parent -> ChildUseCase
+     * export class ParentUseCase extends UseCase {
+     *     execute() {
+     *         // execute child use-case using UseCaseContext object.
+     *         return this.context.useCase(new ChildUseCase()).execute();
+     *     }
+     * }
+     * export class ChildUseCase extends UseCase {
+     *     execute() {
+     *         this.dispatch({
+     *             type: "ChildUseCase"
+     *         });
+     *     }
+     * }
+     * ```
      */
     get context(): UseCaseContext {
         return new UseCaseContext(this);
     }
 
     /**
-     * `execute()` method should be overwrite by subclass.
+     * `UseCase#execute()` method should be overwrite by subclass.
+     *
+     * ### Example
+     *
+     * ```js
+     * class AwesomeUseCase extends UseCase {
+     *    execute(){
+     *       // implementation own use-case
+     *   }
+     * }
+     * ```
      *
      *  FIXME: mark this as `abstract` property.
      */
@@ -78,11 +121,9 @@ export abstract class UseCase extends Dispatcher implements UseCaseLike {
     }
 
     /**
-     * dispatch action object.
-     * StoreGroups receive this action and reduce state.
-     * @param   payload
-     * @param   [meta] meta is internal arguments
-     * @override
+     * Dispatch `payload` object.
+     *
+     * `Store` or `Context` can receive the `payload` object.n
      */
     dispatch(payload: DispatchedPayload, meta?: DispatcherPayloadMeta) {
         // system dispatch has meta
@@ -103,7 +144,7 @@ export abstract class UseCase extends Dispatcher implements UseCaseLike {
     }
 
     /**
-     * called the `errorHandler` with error when error is occurred.
+     * `errorHandler` is called with error when error is thrown.
      */
     onError(errorHandler: (error: Error) => void): (this: Dispatcher) => void {
         return this.onDispatch(payload => {
@@ -114,9 +155,10 @@ export abstract class UseCase extends Dispatcher implements UseCaseLike {
     }
 
     /**
-     * throw error event
-     * you can use it instead of `throw new Error()`
-     * this error event is caught by dispatcher.
+     * Throw error payload.
+     *
+     * You can use it instead of `throw new Error()`
+     * This error event is caught by dispatcher.
      */
     throwError(error?: Error | any): void {
         const meta = new DispatcherPayloadMetaImpl({

@@ -82,7 +82,7 @@ const dispatchUseCase = ({dispatcher}) => {
 
 ## Context
 
-Almin has `Context` class for logging and communicating with **Store**.
+Almin has `Context` class for observing and communicating with **Store** and **UseCase**.
 
 ```js
 import {Context} from "almin";

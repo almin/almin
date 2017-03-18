@@ -1,0 +1,20 @@
+# <%= title.replace(".d.ts", "") %>
+<!-- THIS DOCUMENT IS AUTOMATICALLY GENERATED FROM src/*.ts -->
+<!-- Please edit src/*.ts and `npm run build:docs:api` -->
+<% for (var i = 0, l = sections.length; i < l; i++) { %>
+<% var section = sections[i]; %>
+<% if (!(/^\s*$/).test(section.docsText)) { %>
+<% if (!(/^\s*$/).test(section.codeText)) { %>
+<% if (!(/private /).test(section.codeText)) { %>
+<% if (!(/private/).test(section.docsText)) { %>
+<% if (!(/\*\*internal\*\*/).test(section.docsText)) { %>
+<% if (!(/<reference type/).test(section.docsText)) { %>
+## Interface
+```typescript
+<%= section.codeText.replace(/}$/m, "").replace(/\n\s+$/m, "").replace(/^\s+\n/m, "") %>
+```
+<%= section.docsText %>
+
+----
+<% } %>
+<% } %><% } %><% } %><% } %><% } %><% } %>
