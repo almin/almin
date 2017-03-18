@@ -11,10 +11,8 @@ export declare class UseCaseContext {
 
 ----
 
-## Interface
-```typescript
-export declare class UseCaseContext {
-```
+## `export declare class UseCaseContext {`
+
 
 Maybe, `UseCaseContext` is invisible from Public API.
 
@@ -32,11 +30,8 @@ class ParentUseCase extends UseCase {
 
 ----
 
-## Interface
-```typescript
-    useCase(useCase: UseCase): UseCaseExecutor;
+## `useCase(useCase: UseCase): UseCaseExecutor;`
 
-```
 
 Create UseCaseExecutor for `useCase`.
 

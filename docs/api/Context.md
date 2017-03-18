@@ -24,22 +24,18 @@ export declare class Context {
 
 ----
 
-## Interface
-```typescript
-export declare class Context {
-```
+## `export declare class Context {`
+
 
 Context class provide observing and communicating with **Store** and **UseCase**.
 
 ----
 
-## Interface
-```typescript
-    constructor({dispatcher, store}: {
+## `constructor({dispatcher, store}: {
         dispatcher: Dispatcher;
         store: QueuedStoreGroup | StoreGroup | Store;
-    });
-```
+    });`
+
 
 `dispatcher` is an instance of `Dispatcher`.
 `store` is an instance of StoreLike implementation
@@ -69,10 +65,8 @@ const context = new Context({
 
 ----
 
-## Interface
-```typescript
-    getState<T>(): T;
-```
+## `getState<T>(): T;`
+
 
 Return state value of StoreGroup or Store.
 
@@ -89,10 +83,8 @@ console.log(state);
 
 ----
 
-## Interface
-```typescript
-    onChange(onChangeHandler: (changingStores: Array<Store>) => void): void;
-```
+## `onChange(onChangeHandler: (changingStores: Array<Store>) => void): void;`
+
 
 If anyone store that is passed to constructor is changed, then call `onChange`.
 `onChange` arguments is an array of `Store` instances.
@@ -107,11 +99,9 @@ context.onChange(changingStores => {
 
 ----
 
-## Interface
-```typescript
-    useCase(useCase: (context: FunctionalUseCaseContext) => Function): UseCaseExecutor;
-    useCase(useCase: UseCase): UseCaseExecutor;
-```
+## `useCase(useCase: (context: FunctionalUseCaseContext) => Function): UseCaseExecutor;
+    useCase(useCase: UseCase): UseCaseExecutor;`
+
 
 `Context#useCase` can accept two type of UseCase.
 
@@ -142,20 +132,16 @@ context.useCase(awesomeUseCase).execute([1, 2, 3]);
 
 ----
 
-## Interface
-```typescript
-    onWillExecuteEachUseCase(handler: (payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void;
-```
+## `onWillExecuteEachUseCase(handler: (payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void;`
+
 
 Register `handler` function to Context.
 `handler` is called when each useCases will execute.
 
 ----
 
-## Interface
-```typescript
-    onDispatch(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => void): () => void;
-```
+## `onDispatch(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => void): () => void;`
+
 
 Register `handler` function to Context.
 `handler` is called the `handler` with user-defined payload object when the UseCase dispatch with payload.
@@ -178,29 +164,23 @@ context.useCase(dispatchUseCase).execute();
 
 ----
 
-## Interface
-```typescript
-    onDidExecuteEachUseCase(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => void): () => void;
-```
+## `onDidExecuteEachUseCase(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => void): () => void;`
+
 
 `handler` is called when each useCases are executed.
 
 ----
 
-## Interface
-```typescript
-    onCompleteEachUseCase(handler: (payload: CompletedPayload, meta: DispatcherPayloadMeta) => void): () => void;
-```
+## `onCompleteEachUseCase(handler: (payload: CompletedPayload, meta: DispatcherPayloadMeta) => void): () => void;`
+
 
 `handler` is called when each useCases are completed.
 This `handler` is always called asynchronously.
 
 ----
 
-## Interface
-```typescript
-    onErrorDispatch(handler: (payload: ErrorPayload, meta: DispatcherPayloadMeta) => void): () => void;
-```
+## `onErrorDispatch(handler: (payload: ErrorPayload, meta: DispatcherPayloadMeta) => void): () => void;`
+
 
 `handler` is called when some UseCase throw Error.
 
@@ -212,11 +192,8 @@ Throwing Error is following case:
 
 ----
 
-## Interface
-```typescript
-    release(): void;
+## `release(): void;`
 
-```
 
 Release all events handler in Context.
 You can call this when no more call event handler

@@ -17,10 +17,8 @@ export declare abstract class Store extends Dispatcher implements StoreLike {
 
 ----
 
-## Interface
-```typescript
-export declare abstract class Store extends Dispatcher implements StoreLike {
-```
+## `export declare abstract class Store extends Dispatcher implements StoreLike {`
+
 
 Store hold the state of your application.
 
@@ -71,46 +69,36 @@ class YourStore extends Store {
 
 ----
 
-## Interface
-```typescript
-    static displayName?: string;
-```
+## `static displayName?: string;`
+
 
 Set debuggable name if needed.
 
 ----
 
-## Interface
-```typescript
-    static isStore(v: any): v is Store;
-```
+## `static isStore(v: any): v is Store;`
+
 
 Return true if the `v` is store like.
 
 ----
 
-## Interface
-```typescript
-    name: string;
-```
+## `name: string;`
+
 
 The name of Store
 
 ----
 
-## Interface
-```typescript
-    constructor();
-```
+## `constructor();`
+
 
 Constructor not have arguments.
 
 ----
 
-## Interface
-```typescript
-    getState<T>(_prevState?: T): T;
-```
+## `getState<T>(_prevState?: T): T;`
+
 
 You should be overwrite by Store subclass.
 Next, return state object of your store.
@@ -119,10 +107,8 @@ FIXME: mark this as `abstract` property.
 
 ----
 
-## Interface
-```typescript
-    onChange(cb: (changingStores: Array<StoreLike>) => void): () => void;
-```
+## `onChange(cb: (changingStores: Array<StoreLike>) => void): () => void;`
+
 
 Subscribe change event of the store.
 When `Store#emitChange()` is called, then call subscribers.
@@ -139,11 +125,8 @@ store.emitChange();
 
 ----
 
-## Interface
-```typescript
-    emitChange(): void;
+## `emitChange(): void;`
 
-```
 
 Emit "change" event to subscribers.
 If you want to notify changing ot tha store, call `Store#emitChange()`.

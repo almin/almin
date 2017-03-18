@@ -20,10 +20,8 @@ export declare abstract class UseCase extends Dispatcher implements UseCaseLike 
 
 ----
 
-## Interface
-```typescript
-export declare abstract class UseCase extends Dispatcher implements UseCaseLike {
-```
+## `export declare abstract class UseCase extends Dispatcher implements UseCaseLike {`
+
 
 A `UseCase` class is inherited Dispatcher.
 The user implement own user-case that is inherited UseCase class
@@ -43,55 +41,43 @@ class AwesomeUseCase extends UseCase {
 
 ----
 
-## Interface
-```typescript
-    static displayName?: string;
-```
+## `static displayName?: string;`
+
 
 Debuggable name if it needed
 
 ----
 
-## Interface
-```typescript
-    static isUseCase(v: any): v is UseCase;
-```
+## `static isUseCase(v: any): v is UseCase;`
+
 
 Return true if the `v` is a UseCase-like.
 
 ----
 
-## Interface
-```typescript
-    id: string;
-```
+## `id: string;`
+
 
 Unique id in each UseCase instances.
 
 ----
 
-## Interface
-```typescript
-    name: string;
-```
+## `name: string;`
+
 
 The name of the UseCase.
 
 ----
 
-## Interface
-```typescript
-    constructor();
-```
+## `constructor();`
+
 
 Constructor not have arguments.
 
 ----
 
-## Interface
-```typescript
-    readonly context: UseCaseContext;
-```
+## `readonly context: UseCaseContext;`
+
 
 Get `context` of UseCase.
 You can execute sub UseCase using UseCaseContext object.
@@ -122,10 +108,8 @@ export class ChildUseCase extends UseCase {
 
 ----
 
-## Interface
-```typescript
-    execute<R>(..._: Array<any>): R;
-```
+## `execute<R>(..._: Array<any>): R;`
+
 
 `UseCase#execute()` method should be overwrite by subclass.
 
@@ -143,10 +127,8 @@ class AwesomeUseCase extends UseCase {
 
 ----
 
-## Interface
-```typescript
-    dispatch(payload: DispatchedPayload, meta?: DispatcherPayloadMeta): void;
-```
+## `dispatch(payload: DispatchedPayload, meta?: DispatcherPayloadMeta): void;`
+
 
 Dispatch `payload` object.
 
@@ -154,20 +136,15 @@ Dispatch `payload` object.
 
 ----
 
-## Interface
-```typescript
-    onError(errorHandler: (error: Error) => void): (this: Dispatcher) => void;
-```
+## `onError(errorHandler: (error: Error) => void): (this: Dispatcher) => void;`
+
 
 `errorHandler` is called with error when error is thrown.
 
 ----
 
-## Interface
-```typescript
-    throwError(error?: Error | any): void;
+## `throwError(error?: Error | any): void;`
 
-```
 
 Throw error payload.
 

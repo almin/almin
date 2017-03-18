@@ -22,10 +22,8 @@ function shouldIgnoreSection(section) {
 
 ----
 <% sections.filter(section => !shouldIgnoreSection(section)).forEach(section => { %>
-## Interface
-```typescript
-<%= section.codeText.replace(/}$/m, "").replace(/\n\s+$/m, "").replace(/^\s+\n/m, "") %>
-```
+## `<%= section.codeText.replace(/}$/m, "").trim() %>`
+
 <%= section.docsText %>
 
 ----
