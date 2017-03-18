@@ -20,17 +20,42 @@ import { FunctionalUseCaseContext } from "./FunctionalUseCaseContext";
 import { FunctionalUseCase } from "./FunctionalUseCase";
 
 /**
- * @public
+ * Context class provide observing and communicating with **Store** and **UseCase**.
  */
 export class Context {
+    /**
+     * @private
+     */
     private _dispatcher: Dispatcher;
     private _storeGroup: StoreLike & Dispatcher;
     private _releaseHandlers: Array<() => void>;
 
     /**
-     * @param {Dispatcher} dispatcher
-     * @param {QueuedStoreGroup|StoreGroup|Store} store store is either Store or StoreGroup
-     * @public
+     * `dispatcher` is an instance of `Dispatcher`.
+     * `store` is an instance of StoreLike implementation
+     *
+     * ### Example
+     *
+     * It is minimal initialization.
+     *
+     * ```js
+     * const context = new Context({
+     *   dispatcher: new Dispatcher(),
+     *   store: new Store()
+     * });
+     * ```
+     *
+     * In real case, you can pass `StoreGroup` instead of `Store`.
+     *
+     * ```js
+     * const storeGroup = new StoreGroup([
+     *   new AStore(), new BStore(), new CStore()
+     * ]);
+     * const context = new Context({
+     *   dispatcher: new Dispatcher(),
+     *   store: new Store()
+     * });
+     * ```
      */
     constructor({dispatcher, store}: {dispatcher: Dispatcher; store: QueuedStoreGroup | StoreGroup | Store;}) {
         StoreGroupValidator.validateInstance(store);
@@ -52,34 +77,66 @@ export class Context {
     }
 
     /**
-     * return state value of StoreGroup.
-     * @returns {*} states object of stores
-     * @public
+     * Return state value of StoreGroup or Store.
+     *
+     * ### Example
+     *
+     * If you pass `StoreGroup` to `store` of Constructor,
+     * `Context#getState()` return the state object that merge each stores's state.
+     *
+     * ```js
+     * const state = context.getState();
+     * console.log(state);
+     * // { aState, bState }
+     * ```
      */
     getState<T>(): T {
         return this._storeGroup.getState<T>();
     }
 
     /**
-     * if anyone store is changed, then call onChangeHandler
-     * @param {function(changingStores: Store[])} onChangeHandler
-     * @return {Function} release handler function.
-     * @public
+     * If anyone store that is passed to constructor is changed, then call `onChangeHandler`
+     * `onChangeHandler` arguments is an array of `Store` instances.
+     *
+     * ### Example
+     *
+     * ```js
+     * context.onChangeHandler(changingStores => {
+     *   console.log(changingStores); // Array<Store>
+     * });
+     * ```
      */
     onChange(onChangeHandler: (hangingStores: Array<Store>) => void) {
         return this._storeGroup.onChange(onChangeHandler);
     }
 
-    useCase(useCase: (context: FunctionalUseCaseContext) => Function): UseCaseExecutor;
     /**
-     * create wrapper of UseCase class
-     * @param {UseCase} useCase
-     * @returns {UseCaseExecutor}
-     * @public
-     * @example
+     * `Context#useCase` can accept two type of UseCase.
      *
-     * context.useCase(UseCaseFactory.create()).execute(args);
+     * - **Functional UseCase**
+     * - Instance of UseCase class
+     *
+     * ### Example
+     *
+     * ```js
+     * class AwesomeUseCase extends UseCase {
+     *    execute(...args){ }
+     * }
+     *
+     * context.useCase(new AwesomeUseCase()).execute([1, 2, 3]);
+     * ```
+     *
+     * OR
+     *
+     * ```js
+     * const awesomeUseCase = ({dispatcher}) => {
+     *    return (...args) => { }
+     * };
+     *
+     * context.useCase(awesomeUseCase).execute([1, 2, 3]);
+     * ```
      */
+    useCase(useCase: (context: FunctionalUseCaseContext) => Function): UseCaseExecutor;
     useCase(useCase: UseCase): UseCaseExecutor;
     useCase(useCase: any): UseCaseExecutor {
         // instance of UseCase
@@ -107,9 +164,8 @@ The argument is UseCase constructor itself: ${useCase}`
     }
 
     /**
-     * called the {@link handler} with useCase when the useCase will do.
-     * @param {function(payload: WillExecutedPayload, meta: DispatcherPayloadMetaImpl)} handler
-     * @public
+     * Register `handler` function to Context.
+     * `handler` is called when each useCases will execute.
      */
     onWillExecuteEachUseCase(handler: (payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         const releaseHandler = this._dispatcher.onDispatch((payload, meta) => {
@@ -122,13 +178,24 @@ The argument is UseCase constructor itself: ${useCase}`
     }
 
     /**
-     * called the `handler` with user-defined payload object when a UseCase dispatch with payload.
+     * Register `handler` function to Context.
+     * `handler` is called the `handler` with user-defined payload object when the UseCase dispatch with payload.
      * This `onDispatch` is not called at built-in event. It is filtered by Context.
      * If you want to *All* dispatched event and use listen directly your `dispatcher` object.
      * In other word, listen the dispatcher of `new Context({dispatcher})`.
-     * @param {function(payload: DispatchedPayload, meta: DispatcherPayloadMetaImpl)} handler
-     * @returns {Function}
-     * @public
+     *
+     * ### Example
+     *
+     * ```js
+     * const dispatchUseCase = ({dispatcher}) => {
+     *   return () => dispatcher.dispatch({ type: "fired-payload" });
+     * };
+     * context.onDispatch((payload, meta) => {
+     *   console.log(payload); // { type: "fired-payload" }
+     * });
+     *
+     * context.useCase(dispatchUseCase).execute();
+     * ```
      */
     onDispatch(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         const releaseHandler = this._dispatcher.onDispatch((payload, meta) => {
@@ -143,9 +210,7 @@ The argument is UseCase constructor itself: ${useCase}`
     }
 
     /**
-     * called the `handler` with useCase when the useCase is executed..
-     * @param {function(payload: DidExecutedPayload, meta: DispatcherPayloadMetaImpl)} handler
-     * @public
+     * `handler` is called when each useCases are executed.
      */
     onDidExecuteEachUseCase(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         const releaseHandler = this._dispatcher.onDispatch((payload, meta) => {
@@ -158,9 +223,8 @@ The argument is UseCase constructor itself: ${useCase}`
     }
 
     /**
-     * called the `handler` with useCase when the useCase is completed.
-     * @param {function(payload: CompletedPayload, meta: DispatcherPayloadMetaImpl)} handler
-     * @public
+     * `handler` is called when each useCases are completed.
+     * This `handler` is always called asynchronously.
      */
     onCompleteEachUseCase(handler: (payload: CompletedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         const releaseHandler = this._dispatcher.onDispatch((payload, meta) => {
@@ -172,12 +236,14 @@ The argument is UseCase constructor itself: ${useCase}`
         return releaseHandler;
     }
 
-
     /**
-     * called the `errorHandler` with error when error is occurred.
-     * @param {function(payload: ErrorPayload, meta: DispatcherPayloadMetaImpl)} handler
-     * @returns {function(this:Dispatcher)}
-     * @public
+     * `handler` is called when some UseCase throw Error.
+     *
+     * Throwing Error is following case:
+     *
+     * - Throw exception in a UseCase
+     * - Return rejected promise in a UseCase
+     * - Call `UseCase#throwError(error)`
      */
     onErrorDispatch(handler: (payload: ErrorPayload, meta: DispatcherPayloadMeta) => void): () => void {
         const releaseHandler = this._dispatcher.onDispatch((payload, meta) => {
@@ -190,9 +256,8 @@ The argument is UseCase constructor itself: ${useCase}`
     }
 
     /**
-     * release all events handler.
+     * Release all events handler in Context.
      * You can call this when no more call event handler
-     * @public
      */
     release() {
         const storeGroup = this._storeGroup;

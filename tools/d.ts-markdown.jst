@@ -1,4 +1,4 @@
-# <%= title %>
+# <%= title.replace(".d.ts", "") %>
 <% for (var i = 0, l = sections.length; i < l; i++) { %>
 <% var section = sections[i]; %>
 <% if (!(/^\s*$/).test(section.docsText)) { %>
