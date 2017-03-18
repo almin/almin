@@ -106,7 +106,7 @@ export class Context {
      * });
      * ```
      */
-    onChange(onChangeHandler: (hangingStores: Array<Store>) => void) {
+    onChange(onChangeHandler: (changingStores: Array<Store>) => void) {
         return this._storeGroup.onChange(onChangeHandler);
     }
 

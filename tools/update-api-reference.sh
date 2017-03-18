@@ -15,3 +15,4 @@ npm run build
 addDoc "${srcDir}/Context.d.ts"
 addDoc "${srcDir}/Dispatcher.d.ts"
 addDoc "${srcDir}/DispatcherPayloadMeta.d.ts"
+addDoc "${srcDir}/Store.d.ts"

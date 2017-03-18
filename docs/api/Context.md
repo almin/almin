@@ -96,7 +96,7 @@ console.log(state);
 
 ## Interface
 ```typescript
-    onChange(onChangeHandler: (hangingStores: Array<Store>) => void): void;
+    onChange(onChangeHandler: (changingStores: Array<Store>) => void): void;
 ```
 
 If anyone store that is passed to constructor is changed, then call `onChangeHandler`.

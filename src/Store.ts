@@ -1,31 +1,9 @@
 // LICENSE : MIT
 "use strict";
 import { Dispatcher } from "./Dispatcher";
-import { DispatcherPayloadMeta } from "./DispatcherPayloadMeta";
-import { Payload } from "./payload/Payload";
-import { isErrorPayload } from "./payload/ErrorPayload";
 import { StoreLike } from "./StoreLike";
 
 const STATE_CHANGE_EVENT = "STATE_CHANGE_EVENT";
-/**
- * A UseCase `dispatch(payload)` and subscribers of the dispatcher are received the payload.
- *
- * @example
- *
- * abcUseCase
- *  .dispatch({
- *      type: "ABC",
- *      value: "value"
- *  })
- *
- * abcStore
- *  .onDispatch(({ type, value }) => {
- *      console.log(type);  // "ABC"
- *      console.log(value); // 42
- *  });
- *
- * @public
- */
 
 /**
  * @type {string}
@@ -33,20 +11,61 @@ const STATE_CHANGE_EVENT = "STATE_CHANGE_EVENT";
  */
 export const defaultStoreName = "<Anonymous-Store>";
 /**
- * Store class
- * @public
+ * Store hold the state of your application.
+ *
+ * Typically, `Store` has a parts of the whole state tree of your application.
+ * `StoreGroup` is the the whole state tree.
+ *
+ * It means that `StoreGroup` is a collection of `Store` instances.
+ *
+ * A UseCase `dispatch(payload)` and `Store` can receive it.
+ *
+ * ### Abstraction Code
+ *
+ * This is imagination code. (It will not work.)
+ *
+ * ```js
+ * abcUseCase
+ *  .dispatch({
+ *      type: "ABC",
+ *      value: "value"
+ *  });
+ *
+ * abcStore
+ *  .onDispatch(({ type, value }) => {
+ *      console.log(type);  // "ABC"
+ *      console.log(value); // 42
+ *  });
+ * ```
+ *
+ * ### Example
+ *
+ * To implement store, you have to inherit `Store` class.
+ *
+ * ```js
+ * class YourStore extends Store {
+ *    constructor(){
+ *       super();
+ *       this.state = {
+ *          foo : "bar"
+ *       };
+ *    }
+ *    getState(){
+ *      return {
+ *          yourStore: this.state
+ *      };
+ *    }
+ * }
+ * ```
  */
 export abstract class Store extends Dispatcher implements StoreLike {
     /**
-     * Debuggable name
+     * Set debuggable name if needed.
      */
     static displayName?: string;
 
     /**
-     * return true if the `v` is store.
-     * @param {*} v
-     * @returns {boolean}
-     * @public
+     * Return true if the `v` is store like.
      */
     static isStore(v: any): v is Store {
         if (v instanceof Store) {
@@ -57,8 +76,14 @@ export abstract class Store extends Dispatcher implements StoreLike {
         return false;
     }
 
+    /**
+     * The name of Store
+     */
     name: string;
 
+    /**
+     * Constructor not have arguments.
+     */
     constructor() {
         super();
         const own = this.constructor as typeof Store;
@@ -69,10 +94,8 @@ export abstract class Store extends Dispatcher implements StoreLike {
     }
 
     /**
-     * should be overwrite. return state object
-     * @param {Object} prevState
-     * @return {Object} nextState
-     * @public
+     * You should be overwrite by Store subclass.
+     * Next, return state object of your store.
      *
      * FIXME: mark this as `abstract` property.
      */
@@ -81,43 +104,27 @@ export abstract class Store extends Dispatcher implements StoreLike {
     }
 
     /**
-     * invoke `handler` when UseCase throw error events.
-     * @param {function(payload: Payload, meta: DispatcherPayloadMetaImpl)} handler
-     * @returns {Function} call the function and release handler
-     * @public
-     * @example
-     * store.onError((payload, meta) => {
-     *  const useCase = meta.useCase;
-     *  if(useCase instanceof AUseCase){
-     *      console.log(payload.error);
-     *  }
-     * }):
-     * @deprecated
+     * Subscribe change event of the store.
+     * When `Store#emitChange()` is called, then call subscribers.
+     *
+     * ### Example
+     *
+     * ```js
+     * store.onChange((changingStores) => {
+     *    console.log(changingStores); // [store]
+     * });
+     *
+     * store.emitChange();
+     * ```
      */
-    onError(handler: (payload: Payload, meta: DispatcherPayloadMeta) => void): () => void {
-        console.warn("Store#onError is deprecated. Please use Store#onDispatch.");
-        return this.onDispatch((payload, meta) => {
-            if (isErrorPayload(payload)) {
-                handler(payload, meta);
-            }
-        });
-    }
-
-    /**
-     * subscribe change event of the state(own).
-     * if emit change event, then call registered event handler function
-     * @param {Function} cb
-     * @returns {Function} call the function and release handler
-     * @public
-     */
-    onChange(cb: (hangingStores: Array<StoreLike>) => void): () => void {
+    onChange(cb: (changingStores: Array<StoreLike>) => void): () => void {
         this.on(STATE_CHANGE_EVENT, cb);
         return this.removeListener.bind(this, STATE_CHANGE_EVENT, cb);
     }
 
     /**
-     * emit "change" event to subscribers
-     * @public
+     * Emit "change" event to subscribers.
+     * If you want to notify changing ot tha store, call `Store#emitChange()`.
      */
     emitChange(): void {
         this.emit(STATE_CHANGE_EVENT, [this]);

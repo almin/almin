@@ -85,14 +85,14 @@ export class Dispatcher extends EventEmitter {
     }
 
     /**
-     * Add `handler`(listener) to Dispatcher and return unlisten function
+     * Add `handler`(subscriber) to Dispatcher and return unsubscribe function
      *
      * ### Example
      *
      * ```js
      * const dispatcher = new Dispatcher();
-     * const unlisten = dispatcher.onDispatch((payload, meta) => {});
-     * unlisten(); // release handler
+     * const unsubscribe = dispatcher.onDispatch((payload, meta) => {});
+     * unsubscribe(); // release handler
      * ```
      */
     onDispatch(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => void): () => void {
@@ -101,7 +101,7 @@ export class Dispatcher extends EventEmitter {
     }
 
     /**
-     * Dispatch `payload` to listeners.
+     * Dispatch `payload` to subscribers.
      */
     dispatch(payload: DispatchedPayload, meta?: DispatcherPayloadMeta): void {
         if (process.env.NODE_ENV !== "production") {

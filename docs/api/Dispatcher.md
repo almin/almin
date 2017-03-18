@@ -105,14 +105,14 @@ constructor not have arguments.
     onDispatch(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => void): () => void;
 ```
 
-Add `handler`(listener) to Dispatcher and return unlisten function
+Add `handler`(subscriber) to Dispatcher and return unsubscribe function
 
 ### Example
 
 ```js
 const dispatcher = new Dispatcher();
-const unlisten = dispatcher.onDispatch((payload, meta) => {});
-unlisten(); // release handler
+const unsubscribe = dispatcher.onDispatch((payload, meta) => {});
+unsubscribe(); // release handler
 ```
 
 ----
@@ -128,7 +128,7 @@ unlisten(); // release handler
     dispatch(payload: DispatchedPayload, meta?: DispatcherPayloadMeta): void;
 ```
 
-Dispatch `payload` to listeners.
+Dispatch `payload` to subscribers.
 
 ----
 
