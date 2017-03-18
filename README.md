@@ -158,7 +158,7 @@ Running Tests in [Sauce Labs](https://saucelabs.com/ "Sauce Labs: Selenium Testi
 
 ## Building Docs
 
-API Reference generated from source codes.
+API Reference is generated from source codes.
 
     npm run build:docs:api
 
