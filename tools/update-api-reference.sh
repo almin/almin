@@ -13,3 +13,4 @@ function addDoc(){
 npm run build
 # update
 addDoc "${srcDir}/Context.d.ts"
+addDoc "${srcDir}/Dispatcher.d.ts"

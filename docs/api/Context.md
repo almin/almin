@@ -6,6 +6,7 @@
 
 
 
+
 ## Interface
 ```typescript
 export declare class Context {
@@ -66,6 +67,7 @@ const context = new Context({
 
 
 
+
 ## Interface
 ```typescript
     getState<T>(): T;
@@ -91,6 +93,7 @@ console.log(state);
 
 
 
+
 ## Interface
 ```typescript
     onChange(onChangeHandler: (hangingStores: Array<Store>) => void): void;
@@ -108,6 +111,7 @@ context.onChangeHandler(changingStores => {
 ```
 
 ----
+
 
 
 
@@ -154,6 +158,7 @@ context.useCase(awesomeUseCase).execute([1, 2, 3]);
 
 
 
+
 ## Interface
 ```typescript
     onWillExecuteEachUseCase(handler: (payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void;
@@ -163,6 +168,7 @@ Register `handler` function to Context.
 `handler` is called when each useCases will execute.
 
 ----
+
 
 
 
@@ -200,6 +206,7 @@ context.useCase(dispatchUseCase).execute();
 
 
 
+
 ## Interface
 ```typescript
     onDidExecuteEachUseCase(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => void): () => void;
@@ -208,6 +215,7 @@ context.useCase(dispatchUseCase).execute();
 `handler` is called when each useCases are executed.
 
 ----
+
 
 
 
@@ -223,6 +231,7 @@ context.useCase(dispatchUseCase).execute();
 This `handler` is always called asynchronously.
 
 ----
+
 
 
 
@@ -249,10 +258,11 @@ Throwing Error is following case:
 
 
 
+
 ## Interface
 ```typescript
     release(): void;
-}
+
 ```
 
 Release all events handler in Context.

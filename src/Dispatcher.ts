@@ -1,6 +1,5 @@
 // LICENSE : MIT
 "use strict";
-
 import * as assert from "assert";
 import { EventEmitter } from "events";
 import { DispatcherPayloadMeta, DispatcherPayloadMetaImpl } from "./DispatcherPayloadMeta";
@@ -10,34 +9,61 @@ import { ErrorPayload } from "./payload/ErrorPayload";
 import { CompletedPayload } from "./payload/CompletedPayload";
 import { DidExecutedPayload } from "./payload/DidExecutedPayload";
 import { WillExecutedPayload } from "./payload/WillExecutedPayload";
-
+/**
+ * @private
+ */
 export const ON_DISPATCH = "__ON_DISPATCH__";
 
 /**
- *  Actual payload object types
+ * Payload object types.
+ *
+ * Almin has some built-in Payload class like `ErrorPayload`.
+ * @private
  */
 export type DispatchedPayload = Payload | ErrorPayload | CompletedPayload | DidExecutedPayload | WillExecutedPayload;
 
 /**
  * Dispatcher is the **central** event bus system.
  *
- * also have these method.
+ * `Dispatcher` class  have these method.
  *
- * - `onDispatch(function(payload){  });`
+ * - `onDispatch(function(payload){ });`
  * - `dispatch(payload);`
  *
- * Almost event pass the (on)dispatch.
+ * It is similar with EventEmitter of Node.js
+ * But, Dispatcher use `payload` object as arguments.
+ *
+ * ## Payload
+ *
+ * `payload` object must have `type` property.
+ * Following object is a minimal `payload` object.
+ *
+ * ```json
+ * {
+ *     "type": "type"
+ * }
+ * ```
+ *
+ * Also, You can put any property to payload object.
+ *
+ * ```json
+ * {
+ *     "type": "show",
+ *     "value": "value"
+ * }
+ * ```
  *
  * ### FAQ
  *
- * Q. Why use `Payload` object instead emit(key, ...args).
+ * Q. Why Almin use `payload` object instead `emit(key, ...args)`?
  *
  * A. It is for optimization and limitation.
- * If apply emit style, we cast ...args for passing other dispatcher at every time.
+ * If apply emit style, we should cast `...args` for passing other dispatcher at every time.
+ * So, Almin use `payload` object instead of it without casting.
  */
 export class Dispatcher extends EventEmitter {
     /**
-     * if {@link v} is instance of Dispatcher, return true
+     * if `v` is instance of Dispatcher, return true
      */
     static isDispatcher(v: any): v is Dispatcher {
         if (v instanceof Dispatcher) {
@@ -48,6 +74,9 @@ export class Dispatcher extends EventEmitter {
         return false;
     }
 
+    /**
+     * constructor not have arguments.
+     **/
     constructor() {
         super();
         // suppress: memory leak warning of EventEmitter
@@ -56,9 +85,15 @@ export class Dispatcher extends EventEmitter {
     }
 
     /**
-     * add onAction handler and return unbind function
-     * @param   handler
-     * @returns call the function and release handler
+     * Add `handler`(listener) to Dispatcher and return unlisten function
+     *
+     * ### Example
+     *
+     * ```js
+     * const dispatcher = new Dispatcher();
+     * const unlisten = dispatcher.onDispatch((payload, meta) => {});
+     * unlisten(); // release handler
+     * ```
      */
     onDispatch(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         this.on(ON_DISPATCH, handler);
@@ -66,10 +101,7 @@ export class Dispatcher extends EventEmitter {
     }
 
     /**
-     * dispatch action object.
-     * StoreGroups receive this action and reduce state.
-     * @param payload
-     * @param [meta]    meta is internal arguments
+     * Dispatch `payload` to listeners.
      */
     dispatch(payload: DispatchedPayload, meta?: DispatcherPayloadMeta): void {
         if (process.env.NODE_ENV !== "production") {
@@ -93,9 +125,18 @@ export class Dispatcher extends EventEmitter {
     }
 
     /**
-     * delegate payload object to other dispatcher.
-     * @param   toDispatcher
-     * @returns call the function and release handler
+     * Delegate payload object to other dispatcher.
+     *
+     * ### Example
+     *
+     * ```js
+     * const a = new Dispatcher();
+     * const b = new Dispatcher();
+     * // Delegate `a` to `b`
+     * a.pipe(b);
+     * // dispatch and `b` can receive it.
+     * a.dispatch({ type : "a" });
+     * ```
      */
     pipe(toDispatcher: Dispatcher): () => void {
         const fromName = this.constructor.name;

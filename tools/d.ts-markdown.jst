@@ -4,12 +4,13 @@
 <% if (!(/^\s*$/).test(section.docsText)) { %>
 <% if (!(/^\s*$/).test(section.codeText)) { %>
 <% if (!(/private/).test(section.docsText)) { %>
+<% if (!(/<reference type/).test(section.docsText)) { %>
 ## Interface
 ```typescript
-<%= section.codeText %>
+<%= section.codeText.replace(/}$/m, "").replace(/\n\s+$/m, "").replace(/^\s+\n/m, "") %>
 ```
 <%= section.docsText %>
 
 ----
 <% } %>
-<% } %><% } %><% } %>
+<% } %><% } %><% } %><% } %>
