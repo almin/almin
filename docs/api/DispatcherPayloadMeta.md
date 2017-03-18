@@ -3,6 +3,8 @@
 <!-- Please edit src/*.ts and `npm run build:docs:api` -->
 
 
+## Interface
+
 ```typescript
 export interface DispatcherPayloadMeta {
     readonly useCase: UseCaseLike | null;
@@ -15,7 +17,7 @@ export interface DispatcherPayloadMeta {
 
 ----
 
-## export interface DispatcherPayloadMeta {
+### export interface DispatcherPayloadMeta {
 
 
 `DispatcherPayloadMeta` is a meta object for `payload`.
@@ -36,14 +38,14 @@ dispatcher.onDispatch((payload, meta) => {
 
 ----
 
-## readonly useCase: UseCaseLike | null;
+### readonly useCase: UseCaseLike | null;
 
 
 A reference to the useCase/dispatcher to which the payload was originally dispatched.
 
 ----
 
-## readonly dispatcher: UseCase | Dispatcher | null;
+### readonly dispatcher: UseCase | Dispatcher | null;
 
 
 A dispatcher of the payload
@@ -65,7 +67,7 @@ class Example extends UseCase {
 
 ----
 
-## readonly parentUseCase: UseCase | Dispatcher | null;
+### readonly parentUseCase: UseCase | Dispatcher | null;
 
 
 A parent useCase of the `this.useCase`,
@@ -73,14 +75,14 @@ When useCase is nesting, parentUseCase is a UseCase.
 
 ----
 
-## readonly timeStamp: number;
+### readonly timeStamp: number;
 
 
 A timeStamp is created time of the meta.
 
 ----
 
-## Interface of```typescript
+### Interface of```typescript
 readonly isTrusted: boolean;
 }
 ```

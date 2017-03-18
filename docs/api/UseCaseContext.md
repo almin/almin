@@ -3,6 +3,8 @@
 <!-- Please edit src/*.ts and `npm run build:docs:api` -->
 
 
+## Interface
+
 ```typescript
 export declare class UseCaseContext {
     useCase(useCase: UseCase): UseCaseExecutor;
@@ -11,7 +13,7 @@ export declare class UseCaseContext {
 
 ----
 
-## export declare class UseCaseContext {
+### export declare class UseCaseContext {
 
 
 Maybe, `UseCaseContext` is invisible from Public API.
@@ -30,7 +32,7 @@ class ParentUseCase extends UseCase {
 
 ----
 
-## Interface of```typescript
+### Interface of```typescript
 useCase(useCase: UseCase): UseCaseExecutor;
 }
 ```

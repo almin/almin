@@ -18,14 +18,16 @@ function shouldIgnoreSection(section) {
 function renderAPIHeader(section) {
    const header = section.codeText.split("\n").map(line => line.trim()).join("\n").trim();
    if(header.split("\n").length > 1){
-     return "## Interface of"
+     return "### Interface of"
       + "```typescript\n"
       + header + "\n"
       + "```";
    }
-   return "## " + header;
+   return "### " + header;
 }
 %>
+
+## Interface
 
 ```typescript
 <%= sections.filter(section => !shouldIgnoreSection(section)).map(section => section.codeText).join("\n").trim() %>

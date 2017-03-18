@@ -3,6 +3,8 @@
 <!-- Please edit src/*.ts and `npm run build:docs:api` -->
 
 
+## Interface
+
 ```typescript
 export declare class Dispatcher extends EventEmitter {
     static isDispatcher(v: any): v is Dispatcher;
@@ -15,7 +17,7 @@ export declare class Dispatcher extends EventEmitter {
 
 ----
 
-## export declare class Dispatcher extends EventEmitter {
+### export declare class Dispatcher extends EventEmitter {
 
 
 Dispatcher is the **central** event bus system.
@@ -58,21 +60,21 @@ So, Almin use `payload` object instead of it without casting.
 
 ----
 
-## static isDispatcher(v: any): v is Dispatcher;
+### static isDispatcher(v: any): v is Dispatcher;
 
 
 if `v` is instance of Dispatcher, return true
 
 ----
 
-## constructor();
+### constructor();
 
 
 constructor not have arguments.
 
 ----
 
-## onDispatch(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => void): () => void;
+### onDispatch(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => void): () => void;
 
 
 Add `handler`(subscriber) to Dispatcher and return unsubscribe function
@@ -87,14 +89,14 @@ unsubscribe(); // release handler
 
 ----
 
-## dispatch(payload: DispatchedPayload, meta?: DispatcherPayloadMeta): void;
+### dispatch(payload: DispatchedPayload, meta?: DispatcherPayloadMeta): void;
 
 
 Dispatch `payload` to subscribers.
 
 ----
 
-## Interface of```typescript
+### Interface of```typescript
 pipe(toDispatcher: Dispatcher): () => void;
 }
 ```
