@@ -162,7 +162,7 @@ It is same with `Store#onChage()`
 ```
 
 Release all events handler on StoreGroup.
-You can call this when no more call event handler
+You can call this when no more needed the StoreGroup.
 
 ----
 
