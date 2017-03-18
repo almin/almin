@@ -95,7 +95,7 @@ export class Context {
     }
 
     /**
-     * If anyone store that is passed to constructor is changed, then call `onChangeHandler`
+     * If anyone store that is passed to constructor is changed, then call `onChangeHandler`.
      * `onChangeHandler` arguments is an array of `Store` instances.
      *
      * ### Example
