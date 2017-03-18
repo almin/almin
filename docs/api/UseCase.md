@@ -145,10 +145,7 @@ Dispatch `payload` object.
 
 ----
 
-### Interface of```typescript
-throwError(error?: Error | any): void;
-}
-```
+### throwError(error?: Error | any): void;
 
 
 Throw error payload.

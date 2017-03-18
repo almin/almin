@@ -32,10 +32,7 @@ class ParentUseCase extends UseCase {
 
 ----
 
-### Interface of```typescript
-useCase(useCase: UseCase): UseCaseExecutor;
-}
-```
+### useCase(useCase: UseCase): UseCaseExecutor;
 
 
 Create UseCaseExecutor for `useCase`.

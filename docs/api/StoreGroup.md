@@ -95,10 +95,7 @@ It is same with `Store#onChage()`
 
 ----
 
-### Interface of```typescript
-release(): void;
-}
-```
+### release(): void;
 
 
 Release all events handler on StoreGroup.

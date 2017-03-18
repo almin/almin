@@ -96,10 +96,7 @@ Dispatch `payload` to subscribers.
 
 ----
 
-### Interface of```typescript
-pipe(toDispatcher: Dispatcher): () => void;
-}
-```
+### pipe(toDispatcher: Dispatcher): () => void;
 
 
 Delegate payload object to other dispatcher.

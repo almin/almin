@@ -33,10 +33,11 @@ Context class provide observing and communicating with **Store** and **UseCase**
 
 ----
 
-### Interface of```typescript
+### Interface of 
+```typescript
 constructor({dispatcher, store}: {
-dispatcher: Dispatcher;
-store: QueuedStoreGroup | StoreGroup | Store;
+    dispatcher: Dispatcher;
+    store: QueuedStoreGroup | StoreGroup | Store;
 });
 ```
 
@@ -103,7 +104,8 @@ context.onChange(changingStores => {
 
 ----
 
-### Interface of```typescript
+### Interface of 
+```typescript
 useCase(useCase: (context: FunctionalUseCaseContext) => Function): UseCaseExecutor;
 useCase(useCase: UseCase): UseCaseExecutor;
 ```
@@ -198,10 +200,7 @@ Throwing Error is following case:
 
 ----
 
-### Interface of```typescript
-release(): void;
-}
-```
+### release(): void;
 
 
 Release all events handler in Context.

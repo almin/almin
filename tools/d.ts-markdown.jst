@@ -14,9 +14,22 @@ function shouldIgnoreSection(section) {
    if (/<reference type/.test(section.docsText)) { return true; }
    return false;
 }
+function stripIndent(str) {
+   const match = str.match(/^[ \t]*(?=\S)/gm);
+
+   if (!match) {
+       return str;
+   }
+
+   const indent = Math.min(...match.map(x => x.length));
+   const re = new RegExp(`^[ \\t]{${indent}}`, 'gm');
+
+   return indent > 0 ? str.replace(re, "") : str;
+};
 // Multiple line or Single Header
 function renderAPIHeader(section) {
-   const header = section.codeText.split("\n").map(line => line.trim()).join("\n").trim();
+   // remove } block
+   const header = stripIndent(section.codeText.replace(/}$/m, "")).trim();
    if(header.split("\n").length > 1){
      return "### Interface of \n"
       + "```typescript\n"

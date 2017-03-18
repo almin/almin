@@ -127,10 +127,7 @@ store.emitChange();
 
 ----
 
-### Interface of```typescript
-emitChange(): void;
-}
-```
+### emitChange(): void;
 
 
 Emit "change" event to subscribers.
