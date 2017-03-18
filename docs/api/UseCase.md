@@ -137,7 +137,6 @@ You can execute sub UseCase using UseCaseContext object.
 
 See following for more details.
 
-- [UseCaseContext](https://almin.js.org/docs/api/UseCaseContext.html)
 - [Nesting UseCase](https://almin.js.org/docs/tips/nesting-usecase.html)
 
 ### Example
