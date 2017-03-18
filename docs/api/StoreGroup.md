@@ -8,6 +8,7 @@
 
 
 
+
 ## Interface
 ```typescript
 export declare class StoreGroup extends Dispatcher implements StoreLike {
@@ -26,6 +27,7 @@ It means that StoreGroup thin out change events of stores.
 If you want to know all change events, and directly use `store.onChange()`.
 
 ----
+
 
 
 
@@ -63,6 +65,7 @@ const storeGroup = new StoreGroup([aStore, bStore]);
 
 
 
+
 ## Interface
 ```typescript
     readonly store: Array<Store>;
@@ -71,6 +74,7 @@ const storeGroup = new StoreGroup([aStore, bStore]);
 A collection of stores in the StoreGroup.
 
 ----
+
 
 
 
@@ -121,6 +125,7 @@ console.log(state); // { aState: aState, bState: aState }
 
 
 
+
 ## Interface
 ```typescript
     emitChange(): void;
@@ -138,6 +143,7 @@ It is same with `Store#emitChange()`
 
 
 
+
 ## Interface
 ```typescript
     onChange(handler: (stores: Array<Store>) => void): () => void;
@@ -147,6 +153,7 @@ subscribe changes of the store group.
 It is same with `Store#onChage()`
 
 ----
+
 
 
 

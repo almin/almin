@@ -8,6 +8,7 @@
 
 
 
+
 ## Interface
 ```typescript
 export declare class UseCaseContext {
@@ -28,6 +29,8 @@ class ParentUseCase extends UseCase {
 ```
 
 ----
+
+
 
 
 

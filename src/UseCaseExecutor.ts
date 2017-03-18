@@ -18,20 +18,28 @@ export interface UseCaseExecutorArgs {
 }
 
 /**
- * UseCaseExecutor is a helper class for executing UseCase.
+ * `UseCaseExecutor` is a helper class for executing UseCase.
+ *
+ * You can not create the instance of UseCaseExecutor directory.
+ * You can get the instance by `Context#useCase(useCase)`,
+ *
+ * @private
  */
 export class UseCaseExecutor {
 
     /**
-     *  executable useCase
+     * A executable useCase
      */
-    useCase: UseCaseLike;
+    private _useCase: UseCaseLike;
 
     /**
-     * parent useCase
+     * A parent useCase
      */
-    parentUseCase: UseCase | null;
+    private _parentUseCase: UseCase | null;
 
+    /**
+     * A dispatcher instance
+     */
     private _dispatcher: Dispatcher;
 
     /**
@@ -45,6 +53,8 @@ export class UseCaseExecutor {
      *      parent is parent of `useCase`
      * @param   dispatcher
      * @public
+     *
+     * **internal** documentation
      */
     constructor({
         useCase,
@@ -58,12 +68,12 @@ export class UseCaseExecutor {
             assert.ok(typeof useCase.execute === "function", `UseCase instance should have #execute function: ${useCaseName}`);
         }
 
-        this.useCase = useCase;
-        this.parentUseCase = parent;
+        this._useCase = useCase;
+        this._parentUseCase = parent;
         this._dispatcher = dispatcher;
         this._releaseHandlers = [];
         // delegate userCase#onDispatch to central dispatcher
-        const unListenHandler = this.useCase.pipe(this._dispatcher);
+        const unListenHandler = this._useCase.pipe(this._dispatcher);
         this._releaseHandlers.push(unListenHandler);
     }
 
@@ -75,9 +85,9 @@ export class UseCaseExecutor {
             args
         });
         const meta = new DispatcherPayloadMetaImpl({
-            useCase: this.useCase,
+            useCase: this._useCase,
             dispatcher: this._dispatcher,
-            parentUseCase: this.parentUseCase,
+            parentUseCase: this._parentUseCase,
             isTrusted: true
         });
         this._dispatcher.dispatch(payload, meta);
@@ -92,9 +102,9 @@ export class UseCaseExecutor {
             value
         });
         const meta = new DispatcherPayloadMetaImpl({
-            useCase: this.useCase,
+            useCase: this._useCase,
             dispatcher: this._dispatcher,
-            parentUseCase: this.parentUseCase,
+            parentUseCase: this._parentUseCase,
             isTrusted: true
         });
         this._dispatcher.dispatch(payload, meta);
@@ -109,9 +119,9 @@ export class UseCaseExecutor {
             value
         });
         const meta = new DispatcherPayloadMetaImpl({
-            useCase: this.useCase,
+            useCase: this._useCase,
             dispatcher: this._dispatcher,
-            parentUseCase: this.parentUseCase,
+            parentUseCase: this._parentUseCase,
             isTrusted: true
         });
         this._dispatcher.dispatch(payload, meta);
@@ -168,7 +178,7 @@ export class UseCaseExecutor {
      */
     execute<R>(...args: Array<any>): Promise<void> {
         this._willExecute(args);
-        const result: R = this.useCase.execute<R>(...args);
+        const result: R = this._useCase.execute<R>(...args);
         // Sync call didExecute
         this._didExecute(result);
         // When UseCase#execute is completed, dispatch "complete".
@@ -176,7 +186,7 @@ export class UseCaseExecutor {
             this._complete(result);
             this.release();
         }).catch(error => {
-            this.useCase.throwError(error);
+            this._useCase.throwError(error);
             this._complete();
             this.release();
             return Promise.reject(error);

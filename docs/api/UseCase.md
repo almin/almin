@@ -8,6 +8,7 @@
 
 
 
+
 ## Interface
 ```typescript
 export declare abstract class UseCase extends Dispatcher implements UseCaseLike {
@@ -38,6 +39,7 @@ class AwesomeUseCase extends UseCase {
 
 
 
+
 ## Interface
 ```typescript
     static displayName?: string;
@@ -46,6 +48,7 @@ class AwesomeUseCase extends UseCase {
 Debuggable name if it needed
 
 ----
+
 
 
 
@@ -70,6 +73,7 @@ Return true if the `v` is a UseCase-like.
 
 
 
+
 ## Interface
 ```typescript
     id: string;
@@ -78,6 +82,7 @@ Return true if the `v` is a UseCase-like.
 Unique id in each UseCase instances.
 
 ----
+
 
 
 
@@ -102,6 +107,7 @@ The name of the UseCase.
 
 
 
+
 ## Interface
 ```typescript
     constructor();
@@ -110,6 +116,7 @@ The name of the UseCase.
 Constructor not have arguments.
 
 ----
+
 
 
 
@@ -159,6 +166,7 @@ export class ChildUseCase extends UseCase {
 
 
 
+
 ## Interface
 ```typescript
     execute<R>(..._: Array<any>): R;
@@ -187,6 +195,7 @@ class AwesomeUseCase extends UseCase {
 
 
 
+
 ## Interface
 ```typescript
     dispatch(payload: DispatchedPayload, meta?: DispatcherPayloadMeta): void;
@@ -205,6 +214,7 @@ Dispatch `payload` object.
 
 
 
+
 ## Interface
 ```typescript
     onError(errorHandler: (error: Error) => void): (this: Dispatcher) => void;
@@ -213,6 +223,7 @@ Dispatch `payload` object.
 `errorHandler` is called with error when error is thrown.
 
 ----
+
 
 
 

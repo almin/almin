@@ -13,6 +13,7 @@
 
 
 
+
 ## Interface
 ```typescript
 export interface DispatcherPayloadMeta {
@@ -43,6 +44,7 @@ dispatcher.onDispatch((payload, meta) => {
 
 
 
+
 ## Interface
 ```typescript
     readonly useCase: UseCaseLike | null;
@@ -51,6 +53,7 @@ dispatcher.onDispatch((payload, meta) => {
 A reference to the useCase/dispatcher to which the payload was originally dispatched.
 
 ----
+
 
 
 
@@ -90,6 +93,7 @@ class Example extends UseCase {
 
 
 
+
 ## Interface
 ```typescript
     readonly parentUseCase: UseCase | Dispatcher | null;
@@ -107,6 +111,7 @@ When useCase is nesting, parentUseCase is a UseCase.
 
 
 
+
 ## Interface
 ```typescript
     readonly timeStamp: number;
@@ -115,6 +120,7 @@ When useCase is nesting, parentUseCase is a UseCase.
 A timeStamp is created time of the meta.
 
 ----
+
 
 
 

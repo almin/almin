@@ -8,6 +8,7 @@
 
 
 
+
 ## Interface
 ```typescript
 export declare class Context {
@@ -16,6 +17,7 @@ export declare class Context {
 Context class provide observing and communicating with **Store** and **UseCase**.
 
 ----
+
 
 
 
@@ -71,6 +73,7 @@ const context = new Context({
 
 
 
+
 ## Interface
 ```typescript
     getState<T>(): T;
@@ -98,6 +101,7 @@ console.log(state);
 
 
 
+
 ## Interface
 ```typescript
     onChange(onChangeHandler: (changingStores: Array<Store>) => void): void;
@@ -115,6 +119,7 @@ context.onChange(changingStores => {
 ```
 
 ----
+
 
 
 
@@ -165,6 +170,7 @@ context.useCase(awesomeUseCase).execute([1, 2, 3]);
 
 
 
+
 ## Interface
 ```typescript
     onWillExecuteEachUseCase(handler: (payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void;
@@ -174,6 +180,7 @@ Register `handler` function to Context.
 `handler` is called when each useCases will execute.
 
 ----
+
 
 
 
@@ -215,6 +222,7 @@ context.useCase(dispatchUseCase).execute();
 
 
 
+
 ## Interface
 ```typescript
     onDidExecuteEachUseCase(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => void): () => void;
@@ -223,6 +231,7 @@ context.useCase(dispatchUseCase).execute();
 `handler` is called when each useCases are executed.
 
 ----
+
 
 
 
@@ -248,6 +257,7 @@ This `handler` is always called asynchronously.
 
 
 
+
 ## Interface
 ```typescript
     onErrorDispatch(handler: (payload: ErrorPayload, meta: DispatcherPayloadMeta) => void): () => void;
@@ -262,6 +272,7 @@ Throwing Error is following case:
 - Call `UseCase#throwError(error)`
 
 ----
+
 
 
 

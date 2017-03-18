@@ -7,7 +7,7 @@ import { Dispatcher } from "./Dispatcher";
 
 const assert = require("assert");
 /**
- * Maybe, `UseCaseContext` is a invisible from Public API.
+ * Maybe, `UseCaseContext` is invisible from Public API.
  *
  * `UseCase#context` return UseCaseContext insteadof Context.
  * It has limitation as against to Context.
@@ -32,7 +32,8 @@ export class UseCaseContext {
      * `dispatcher` is often parent `UseCase`.
      * The user can not create this instance directly.
      * The user can access this via `UseCase#context`
-     * @private
+     *
+     * **internal**
      */
     constructor(dispatcher: UseCase | Dispatcher) {
         this._dispatcher = dispatcher;

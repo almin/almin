@@ -12,7 +12,7 @@
 
 @1 A single UseCase can call multiple.
 
-See [API Reference](../api/README.md) for details of events.
+See [API Reference](https://almin.js.org/docs/) for details of events.
 
 ## What the difference between `onDidExecuteEachUseCase` and `onCompleteEachUseCase`?
 
