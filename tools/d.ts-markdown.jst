@@ -3,6 +3,7 @@
 <% var section = sections[i]; %>
 <% if (!(/^\s*$/).test(section.docsText)) { %>
 <% if (!(/^\s*$/).test(section.codeText)) { %>
+<% if (!(/private /).test(section.codeText)) { %>
 <% if (!(/private/).test(section.docsText)) { %>
 <% if (!(/<reference type/).test(section.docsText)) { %>
 ## Interface
@@ -13,4 +14,4 @@
 
 ----
 <% } %>
-<% } %><% } %><% } %><% } %>
+<% } %><% } %><% } %><% } %><% } %>

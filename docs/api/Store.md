@@ -11,6 +11,8 @@
 
 
 
+
+
 ## Interface
 ```typescript
 export declare abstract class Store extends Dispatcher implements StoreLike {
@@ -71,6 +73,7 @@ class YourStore extends Store {
 
 
 
+
 ## Interface
 ```typescript
     static displayName?: string;
@@ -79,6 +82,7 @@ class YourStore extends Store {
 Set debuggable name if needed.
 
 ----
+
 
 
 
@@ -101,6 +105,7 @@ Return true if the `v` is store like.
 
 
 
+
 ## Interface
 ```typescript
     name: string;
@@ -109,6 +114,7 @@ Return true if the `v` is store like.
 The name of Store
 
 ----
+
 
 
 
@@ -131,6 +137,7 @@ Constructor not have arguments.
 
 
 
+
 ## Interface
 ```typescript
     getState<T>(_prevState?: T): T;
@@ -142,6 +149,7 @@ Next, return state object of your store.
 FIXME: mark this as `abstract` property.
 
 ----
+
 
 
 
@@ -168,6 +176,7 @@ store.emitChange();
 ```
 
 ----
+
 
 
 

@@ -19,6 +19,10 @@
 
 
 
+
+
+
+
 ## Interface
 ```typescript
 export declare class Dispatcher extends EventEmitter {
@@ -70,6 +74,7 @@ So, Almin use `payload` object instead of it without casting.
 
 
 
+
 ## Interface
 ```typescript
     static isDispatcher(v: any): v is Dispatcher;
@@ -85,6 +90,7 @@ if `v` is instance of Dispatcher, return true
 
 
 
+
 ## Interface
 ```typescript
     constructor();
@@ -93,6 +99,7 @@ if `v` is instance of Dispatcher, return true
 constructor not have arguments.
 
 ----
+
 
 
 
@@ -123,6 +130,7 @@ unsubscribe(); // release handler
 
 
 
+
 ## Interface
 ```typescript
     dispatch(payload: DispatchedPayload, meta?: DispatcherPayloadMeta): void;
@@ -131,6 +139,7 @@ unsubscribe(); // release handler
 Dispatch `payload` to subscribers.
 
 ----
+
 
 
 

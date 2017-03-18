@@ -5,42 +5,55 @@ import ObjectAssign from "object-assign";
 import * as assert from "assert";
 import LRU from "lru-map-like";
 
-import { Dispatcher } from "./../Dispatcher";
-import { Store } from "./../Store";
+import { Dispatcher } from "../Dispatcher";
+import { Store } from "../Store";
 import { StoreGroupValidator } from "./StoreGroupValidator";
-import { StoreLike } from "./../StoreLike";
+import { StoreLike } from "../StoreLike";
 import { raq } from "./raq";
 
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
 
 /**
- * StoreGroup is a **UI** parts of Store.
+ * StoreGroup is a collection of Store.
+ *
+ * ## Purposes of StoreGroup
+ *
+ * - Throttling change events of Store for UI updating.
+ * - A central manager of stores.
+ *
  * StoreGroup has event queue system.
  * It means that StoreGroup thin out change events of stores.
+ *
  * If you want to know all change events, and directly use `store.onChange()`.
- * @public
  */
 export class StoreGroup extends Dispatcher implements StoreLike {
-
+    /**
+     * @private definitions
+     */
     private _releaseHandlers: Array<Function>;
     private _currentChangingStores: Array<Store>;
     private _previousChangingStores: Array<Store>;
-
-    stores: Array<Store>;
     private _stateCache: LRU<Store, any>;
     private _isAnyOneStoreChanged: boolean;
+    private _stores: Array<Store>;
 
     /**
-     * Create StoreGroup
-     * @param {Store[]} stores stores are instance of `Store` class
-     * @public
+     * Initialize `StoreGroup` with `Store` instances
+     *
+     * ### Example
+     *
+     * ```js
+     * const aStore = new AStore();
+     * const bStore = new BStore();
+     * // StoreGroup is a group of aStore and bStore.
+     * const storeGroup = new StoreGroup([aStore, bStore]);
+     * ```
      */
     constructor(stores: Array<Store>) {
         super();
         StoreGroupValidator.validateStores(stores);
         /**
          * callable release handlers
-         * @type {Function[]}
          * @private
          */
         this._releaseHandlers = [];
@@ -56,9 +69,9 @@ export class StoreGroup extends Dispatcher implements StoreLike {
         /**
          * @type {Store[]}
          */
-        this.stores = stores;
+        this._stores = stores;
         // listen onChange of each store.
-        this.stores.forEach(store => this._registerStore(store));
+        this._stores.forEach(store => this._registerStore(store));
 
         /**
          * LRU Cache for Store and State
@@ -69,12 +82,31 @@ export class StoreGroup extends Dispatcher implements StoreLike {
     }
 
     /**
-     * return the state object that merge each stores's state
-     * @returns {Object} merged state object
-     * @public
+     * A collection of stores in the StoreGroup.
+     */
+    get store(): Array<Store> {
+        return this._stores;
+    }
+
+    /**
+     * Return the state object that merge each stores's state
+     *
+     * Related: `Context#onChange` use `StoreGroup#getState()`
+     *
+     * ### Example
+     *
+     * ```js
+     * const storeGroup = new StoreGroup([aStore, bStore]);
+     * console.log(aStore.getState()); // { aState: aState }
+     * console.log(bStore.getState()); // { bState: bState }
+     * // StoreGroup#getState merge these states.
+     * const state = storeGroup.getState();
+     * console.log(state); // { aState: aState, bState: aState }
+     *
+     * ```
      */
     getState<T>(): T {
-        const stateMap = this.stores.map(store => {
+        const stateMap = this._stores.map(store => {
             /* Why record nextState to `_storeValueMap`.
              It is for Use Store's getState(prevState) implementation.
 
@@ -177,8 +209,8 @@ StoreGroup#getState()["StateName"]// state
     }
 
     /**
-     * emit Change Event
-     * @public
+     * Emit change Event to subscribers.
+     * It is same with `Store#emitChange()`
      */
     emitChange(): void {
         this._previousChangingStores = this._currentChangingStores.slice();
@@ -188,10 +220,8 @@ StoreGroup#getState()["StateName"]// state
     }
 
     /**
-     * listen changes of the store group.
-     * @param {function(stores: Store[])} handler the callback arguments is array of changed store.
-     * @returns {Function} call the function and release handler
-     * @public
+     * subscribe changes of the store group.
+     * It is same with `Store#onChage()`
      */
     onChange(handler: (stores: Array<Store>) => void): () => void {
         this.on(CHANGE_STORE_GROUP, handler);
@@ -201,9 +231,8 @@ StoreGroup#getState()["StateName"]// state
     }
 
     /**
-     * release all events handler.
-     * You can call this when no more call event handler
-     * @public
+     * Release all events handler on StoreGroup.
+     * You can call this when no more needed the StoreGroup.
      */
     release(): void {
         this._releaseHandlers.forEach(releaseHandler => releaseHandler());

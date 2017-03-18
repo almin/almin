@@ -95,13 +95,13 @@ export class Context {
     }
 
     /**
-     * If anyone store that is passed to constructor is changed, then call `onChangeHandler`.
-     * `onChangeHandler` arguments is an array of `Store` instances.
+     * If anyone store that is passed to constructor is changed, then call `onChange`.
+     * `onChange` arguments is an array of `Store` instances.
      *
      * ### Example
      *
      * ```js
-     * context.onChangeHandler(changingStores => {
+     * context.onChange(changingStores => {
      *   console.log(changingStores); // Array<Store>
      * });
      * ```
