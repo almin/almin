@@ -13,7 +13,7 @@
     "start": "webpack-dev-server --hot --content-base public/ --open",
     "prepublish": "npm run --if-present build",
     "test": "mocha",
-    "ci": "npm rm almin && npm i --ignore-scripts && npm test && webpack"
+    "ci": "rimraf node_modules && npm i --ignore-scripts && npm test && webpack"
   },
   "author": "azu",
   "license": "MIT",

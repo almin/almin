@@ -31,7 +31,7 @@
     "watch": "npm-run-all clean --parallel watch:*",
     "prepublish": "npm run --if-present build",
     "test": "mocha",
-    "ci": "npm rm almin && npm i --ignore-scripts && npm test && webpack"
+    "ci": "rimraf node_modules && npm i --ignore-scripts && npm test && webpack"
   },
   "keywords": [
     "svg"
