@@ -12,7 +12,8 @@
     "watch": "webpack -d -w",
     "start": "webpack-dev-server --hot --content-base public/ --open",
     "prepublish": "npm run --if-present build",
-    "test": "mocha"
+    "test": "mocha",
+    "ci": "rimraf node_modules && npm i --ignore-scripts && npm test && webpack"
   },
   "author": "azu",
   "license": "MIT",
