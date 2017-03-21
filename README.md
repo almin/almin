@@ -10,11 +10,11 @@ Write code thinking :)
 
 ## Why?
 
-Now, We can implement web application with Flux or Redux etc...
+Now, We can implement web applications with Flux or Redux etc...
 
-But, I often hear the story that is "Control flow of Flux/Redux is cool, but where to implement domain logic."
+But, I often hear a story that "Control flow of Flux/Redux is cool, but where to implement domain logic."
 
-I think that the people skip to Flux/Redux from MV* pattern.
+I think that people skip to Flux/Redux from MV* pattern.
 
 > MV* --> ( HOLE ) --> Flux/Redux(CQRS+EventSourcing)
 
@@ -22,14 +22,14 @@ Almin.js aim to fill the HOLE between MV* and Flux/Redux.
 
 ## Features
 
-Almin provide some pattern, is not framework.
+Almin provides some patterns, is not a framework.
 
 - Testable
 - Scalable
 - Responsibility Layers patten - well-known as DDD(Domain-Driven Design)/CQRS
 - Support [TypeScript](https://www.typescriptlang.org/ "TypeScript") and [Flow](https://flowtype.org/ "FlowType")
 
-Almin is a implementation of Read/Write Stack Architecture that is well-known as Flux/CQRS.
+Almin is an implementation of Read/Write Stack Architecture that is well-known as Flux/CQRS.
 
 - [Almin.js | JavaScriptアーキテクチャ](http://azu.github.io/slide/2016/child_process_sushi/almin-javascript-architecture.html "Almin.js | JavaScriptアーキテクチャ") (Japanese)
 - Patterns For Large-Scale JavaScript Application Architecture (Japanese)
@@ -54,15 +54,15 @@ You'll also need a Promise polyfill for [older browsers](http://caniuse.com/#fea
 
 ## What is Almin?
 
-Almin provide Flux/CQRS patterns for JavaScript application.
+Almin provides Flux/CQRS patterns for JavaScript applications.
 
-It aim to create scalable app.
+It aims to create a scalable app.
 
 ![Overview of almin-architecture](./docs/resources/almin-architecture.png)
 
 The above figure is overview of Almin architecture that is similar to CQRS([Command Query Responsibility Segregation](http://martinfowler.com/bliki/CQRS.html "Command Query Responsibility Segregation")).
 
-But, Almin is not framework, provide only these components
+But, Almin is not a framework, provides only these components
 
 - Dispatcher
 - Context
@@ -92,9 +92,9 @@ Almin is also a flux implementation library. :thumbsup:
 :memo: `State`, `Domain` and `Repository` is optional on Almin,
 because the best for these components is vary based on application.
 
-Almin has not perfect solution for an application, but we can write code thinking.
+Almin has not a perfect solution for an application, but we can write code thinking.
 
-We are going to learn two architecture(Flux/CQRS) using Almin :)
+We are going to learn two architectures(Flux/CQRS) using Almin :)
 
 ## Table of Contents
 
@@ -115,7 +115,7 @@ Truly [Table of Contents](./SUMMARY.md) is here :arrow_left:
 
 - [example/counter](https://github.com/almin/almin/tree/master/example/counter)
     - Simple Counter example
-    - It use only state
+    - It uses only state
 - [example/todomvc](https://github.com/almin/almin/tree/master/example/todomvc)
     - TodoMVC implementation
     - DDD/CQRS
