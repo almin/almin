@@ -13,7 +13,8 @@
     "watch": "NODE_ENV=development webpack -d -w",
     "prepublish": "npm run --if-present build",
     "test": "mocha && npm run flow_check",
-    "flow_check": "flow check"
+    "flow_check": "flow check",
+    "ci": "npm rm almin && npm i --ignore-scripts && npm test && webpack"
   },
   "author": "azu",
   "license": "MIT",

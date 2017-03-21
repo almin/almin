@@ -30,7 +30,8 @@
     "watch:css": "chokidar --initial 'src/**/*.css' -c 'postcss --config postcss.config.js'",
     "watch": "npm-run-all clean --parallel watch:*",
     "prepublish": "npm run --if-present build",
-    "test": "mocha"
+    "test": "mocha",
+    "ci": "npm rm almin && npm i --ignore-scripts && npm test && webpack"
   },
   "keywords": [
     "svg"
