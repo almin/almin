@@ -49,7 +49,7 @@
     "test:mocha": "cross-env NODE_ENV=development mocha",
     "test:saucelabs": "zuul -- test/*-test.js",
     "test:browser": "zuul --local 8080 --ui mocha-bdd -- test/*-test.js",
-    "test:example": "npm-run-all --print-label --race -p test:example:*",
+    "test:example": "npm-run-all --print-label test:example:*",
     "test:example:counter": "cd ./example/counter && npm it",
     "test:example:shopping-cart": "cd ./example/shopping-cart && npm it",
     "test:example:todomvc": "cd ./example/todomvc && npm it",
