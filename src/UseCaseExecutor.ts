@@ -4,12 +4,24 @@ import * as assert from "assert";
 import { Dispatcher } from "./Dispatcher";
 import { UseCase } from "./UseCase";
 import { DispatcherPayloadMeta, DispatcherPayloadMetaImpl } from "./DispatcherPayloadMeta";
-
+import { UseCaseInstanceMap } from "./UseCaseInstanceMap";
 // payloads
 import { CompletedPayload, isCompletedPayload } from "./payload/CompletedPayload";
 import { DidExecutedPayload, isDidExecutedPayload } from "./payload/DidExecutedPayload";
 import { WillExecutedPayload, isWillExecutedPayload } from "./payload/WillExecutedPayload";
 import { UseCaseLike } from "./UseCaseLike";
+import { Payload } from "./payload/Payload";
+
+/**
+ * When child is completed after parent did completed, display warning warning message
+ * @private
+ */
+const warningUseCaseIsAlreadyReleased = (parentUseCase: UseCaseLike, useCase: UseCaseLike, payload: Payload, meta: DispatcherPayloadMeta) => {
+    console.warn(`${useCase.name}'s parent UseCase(${parentUseCase.name}) is already released.
+This UseCase(${useCase.name}) will not work correctly.
+https://almin.js.org/docs/warnings/usecase-is-already-released.html
+`, payload, meta);
+};
 
 export interface UseCaseExecutorArgs {
     useCase: UseCaseLike;
@@ -81,6 +93,9 @@ export class UseCaseExecutor {
      * @param   [args] arguments of the UseCase
      */
     private _willExecute(args?: any[]): void {
+        // Add instance to manager
+        // It should be removed when it will be completed.
+        UseCaseInstanceMap.set(this._useCase, this);
         const payload = new WillExecutedPayload({
             args
         });
@@ -91,6 +106,12 @@ export class UseCaseExecutor {
             isTrusted: true
         });
         this._dispatcher.dispatch(payload, meta);
+        // Warning: parentUseCase is already released
+        if (process.env.NODE_ENV !== "production") {
+            if (this._parentUseCase && !UseCaseInstanceMap.has(this._parentUseCase)) {
+                warningUseCaseIsAlreadyReleased(this._parentUseCase, this._useCase, payload, meta);
+            }
+        }
     }
 
     /**
@@ -125,6 +146,15 @@ export class UseCaseExecutor {
             isTrusted: true
         });
         this._dispatcher.dispatch(payload, meta);
+        // Warning: parentUseCase is already released
+        if (process.env.NODE_ENV !== "production") {
+            if (this._parentUseCase && !UseCaseInstanceMap.has(this._parentUseCase)) {
+                warningUseCaseIsAlreadyReleased(this._parentUseCase, this._useCase, payload, meta);
+            }
+        }
+        // Delete the reference from instance manager
+        // It prevent leaking of instance.
+        UseCaseInstanceMap.delete(this._useCase);
     }
 
     /**
@@ -200,20 +230,5 @@ export class UseCaseExecutor {
     release(): void {
         this._releaseHandlers.forEach(releaseHandler => releaseHandler());
         this._releaseHandlers.length = 0;
-        if (process.env.NODE_ENV !== "production") {
-            this._addWarningNoMoreDispatch();
-        }
-    }
-
-    /**
-     * When child is completed after parent did completed, display warning warning message
-     * @private
-     */
-    private _addWarningNoMoreDispatch() {
-        this._useCase.onDispatch((payload, meta) => {
-            console.warn(`This UseCase(${this._useCase.name}) is already released.
-https://almin.js.org/docs/warnings/usecase-is-already-released.html
-`, payload, meta);
-        });
     }
 }
