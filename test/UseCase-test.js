@@ -1,7 +1,7 @@
 // LICENSE : MIT
 "use strict";
 const assert = require("power-assert");
-
+const sinon = require("sinon");
 import { UseCase } from "../lib/UseCase";
 import { Dispatcher } from "../lib/Dispatcher";
 import { Store } from "../lib/Store";
@@ -43,6 +43,24 @@ describe("UseCase", function() {
             });
         });
     });
+    describe("#throwError", function() {
+        it("should dispatch thought onDispatch event", function(done) {
+            class TestUseCase extends UseCase {
+                execute() {
+                    this.throwError(new Error("error"));
+                }
+            }
+            const testUseCase = new TestUseCase();
+            // then
+            testUseCase.onDispatch(({type, error}) => {
+                assert(error instanceof Error);
+                done();
+            });
+            // when
+            testUseCase.execute();
+        });
+    });
+    // scenario
     context("when execute B UseCase in A UseCase", function() {
         it("should execute A:will -> B:will -> B:did -> A:did", function() {
             class BUseCase extends UseCase {
@@ -125,21 +143,109 @@ describe("UseCase", function() {
             }
         });
     });
-    describe("#throwError", function() {
-        it("should dispatch thought onDispatch event", function(done) {
-            class TestUseCase extends UseCase {
+    context("UseCase is nesting", function() {
+        /*
+            P: Parent UseCase
+            C: Child UseCase
+
+                           C fin.       P fin.
+            |---------------|------------|
+            P    |          |
+                 C----------
+
+         */
+        context("when child did completed before parent is completed", function() {
+            const childPayload = {
+                type: "ChildUseCase"
+            };
+            class ChildUseCase extends UseCase {
                 execute() {
-                    this.throwError(new Error("error"));
+                    this.dispatch(childPayload);
                 }
             }
-            const testUseCase = new TestUseCase();
-            // then
-            testUseCase.onDispatch(({type, error}) => {
-                assert(error instanceof Error);
-                done();
+            class ParentUseCase extends UseCase {
+                execute() {
+                    return this.context.useCase(new ChildUseCase()).execute();
+                }
+            }
+            it("should delegate dispatch to parent -> dispatcher", function() {
+                const dispatcher = new Dispatcher();
+                const context = new Context({
+                    dispatcher,
+                    store: new Store()
+                });
+                const dispatchedPayloads = [];
+                dispatcher.onDispatch(payload => {
+                    dispatchedPayloads.push(payload);
+                });
+                return context.useCase(new ParentUseCase()).execute().then(() => {
+                    // childPayload should be delegated to dispatcher(root)
+                    assert(dispatchedPayloads.indexOf(childPayload) !== -1);
+                });
             });
-            // when
-            testUseCase.execute();
+        });
+        /*
+            P: Parent UseCase
+            C: Child UseCase
+
+                            P fin.   C fin.
+            |---------------|          |
+            P    |                     |
+                 C---------------------|
+                                  |
+                              C call dispatch()
+
+         */
+        context("when child is completed after parent did completed", function() {
+            let consoleWarnStub = null;
+            beforeEach(() => {
+                consoleWarnStub = sinon.stub(console, "warn");
+            });
+            afterEach(() => {
+                consoleWarnStub.restore();
+            });
+            it("should not delegate dispatch to parent -> dispatcher and show warning", function(done) {
+                const childPayload = {
+                    type: "ChildUseCase"
+                };
+                const dispatchedPayloads = [];
+                const finishCallBack = () => {
+                    // childPayload should not be delegated to dispatcher(root)
+                    assert(dispatchedPayloads.indexOf(childPayload) === -1);
+                    // insteadof of it, should be display warning messages
+                    assert(consoleWarnStub.called);
+                    const warningMessage = consoleWarnStub.getCalls()[0].args[0];
+                    assert(/UseCase.*?is already released/.test(warningMessage), warningMessage);
+                    done();
+                };
+                class ChildUseCase extends UseCase {
+                    execute() {
+                        this.dispatch(childPayload);
+                        finishCallBack();
+                    }
+                }
+                class ParentUseCase extends UseCase {
+                    execute() {
+                        // ChildUseCase is independent from Parent
+                        // But, ChildUseCase is executed from Parent
+                        // This is programming error
+                        setTimeout(() => {
+                            this.context.useCase(new ChildUseCase()).execute();
+                        }, 16);
+                        return Promise.resolve();
+                    }
+                }
+
+                const dispatcher = new Dispatcher();
+                const context = new Context({
+                    dispatcher,
+                    store: new Store()
+                });
+                dispatcher.onDispatch(payload => {
+                    dispatchedPayloads.push(payload);
+                });
+                context.useCase(new ParentUseCase()).execute();
+            });
         });
     });
 });

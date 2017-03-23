@@ -159,7 +159,6 @@ describe("QueuedStoreGroup", function() {
                         assert.equal(onChangeCounter, 2);
                     });
                 });
-
             });
             context("{ asap: false }", function() {
                 it("should be called only once", function() {
@@ -389,7 +388,7 @@ describe("QueuedStoreGroup", function() {
                 class ChangeTheStoreUseCase extends UseCase {
                     execute() {
                         store.emitChange();
-                        this.context.useCase(asyncUseCase).execute(); // 2
+                        return this.context.useCase(asyncUseCase).execute(); // 2
                     } // 1
                 }
                 const context = new Context({
