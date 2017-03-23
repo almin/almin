@@ -204,7 +204,7 @@ describe("UseCase", function() {
             afterEach(() => {
                 consoleWarnStub.restore();
             });
-            it("should delegate dispatch to parent -> dispatcher", function(done) {
+            it("should not delegate dispatch to parent -> dispatcher and show warning", function(done) {
                 const childPayload = {
                     type: "ChildUseCase"
                 };
