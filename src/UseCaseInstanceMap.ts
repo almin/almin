@@ -1,4 +1,6 @@
-const MapLike = require("map-like");
+import MapLike from "map-like";
+import { UseCaseLike } from "./UseCaseLike";
+import { UseCaseExecutor } from "./UseCaseExecutor";
 /*
 
 ## UseCase instance lifecycle
@@ -31,4 +33,4 @@ See also https://almin.js.org/docs/warnings/usecase-is-already-released.html
  * TODO: add d.ts to MapLike
  * @type {Map}
  */
-export const UseCaseInstanceMap = new MapLike();
+export const UseCaseInstanceMap = new MapLike<UseCaseLike, UseCaseExecutor>();
