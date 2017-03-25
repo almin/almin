@@ -3,8 +3,6 @@
 
 import { UseCase } from "./UseCase";
 import { UseCaseExecutor } from "./UseCaseExecutor";
-import { Dispatcher } from "./Dispatcher";
-
 const assert = require("assert");
 /**
  * Maybe, `UseCaseContext` is invisible from Public API.
@@ -26,7 +24,7 @@ export class UseCaseContext {
      * The dispatcher for This Context
      * @private
      */
-    _dispatcher: UseCase | Dispatcher;
+    private _dispatcher: UseCase;
 
     /**
      * `dispatcher` is often parent `UseCase`.
@@ -35,7 +33,7 @@ export class UseCaseContext {
      *
      * **internal**
      */
-    constructor(dispatcher: UseCase | Dispatcher) {
+    constructor(dispatcher: UseCase) {
         this._dispatcher = dispatcher;
     }
 
