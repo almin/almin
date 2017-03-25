@@ -7,7 +7,7 @@
         // ES Modules are always parsed as in strict mode.
         // Basically, we use modules, so we don't have to enable this option.
         "alwaysStrict": false,
-        "diagnostics": true,
+        "diagnostics": false,
         "declaration": true,
         "forceConsistentCasingInFileNames": true,
         "jsx": "preserve", // Transform jsx syntax in babels phase
@@ -29,7 +29,7 @@
         "pretty": true,
         "preserveConstEnums": true,
         "removeComments": false,
-        "sourceMap": true,
+        "sourceMap": false,
         "strictNullChecks": true,
         "suppressImplicitAnyIndexErrors": false,
         "target": "esnext",
