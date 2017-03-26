@@ -23,7 +23,7 @@
         "noImplicitReturns": true,
         "noImplicitThis": true,
         "noImplicitUseStrict": false,
-        "noUnusedLocals": false,
+        "noUnusedLocals": true,
         "noUnusedParameters": true,
         "outDir": "./__obj/",
         "pretty": true,

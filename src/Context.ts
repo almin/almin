@@ -143,6 +143,7 @@ export class Context {
     useCase(useCase: any): UseCaseExecutor<any> {
         // instance of UseCase
         if (UseCase.isUseCase(useCase)) {
+            // TODO: generics + type guard is not working?
             return new UseCaseExecutor<typeof useCase>({
                 useCase,
                 parent: null,
