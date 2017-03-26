@@ -99,22 +99,16 @@ class ParentUseCase extends UseCase {
     }
 }
 const parentUseCase = new ParentUseCase();
-// functional UseCase
-const functionalUseCase = (context: FunctionalUseCaseContext) => {
-    return (value: string) => {
-        context.dispatcher.dispatch({
-            type: value
-        });
-    }
-};
-// run - stateless execute
-context.useCase(functionalUseCase).execute("value").then(() => {
+// execute: usecase
+context.useCase(parentUseCase).execute(1).then(() => {
     const state = context.getState<StoreState>();
     console.log(state.A.a);
     console.log(state.B.b);
+}).catch((error: Error) => {
+    console.error(error);
 });
-// execute: usecase
-context.useCase(parentUseCase).execute("value").then(() => {
+
+context.useCase(parentUseCase).execute("test").then(() => {
     const state = context.getState<StoreState>();
     console.log(state.A.a);
     console.log(state.B.b);

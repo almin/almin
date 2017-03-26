@@ -138,12 +138,12 @@ export class Context {
      * context.useCase(awesomeUseCase).execute([1, 2, 3]);
      * ```
      */
-    useCase(useCase: (context: FunctionalUseCaseContext) => Function): UseCaseExecutor;
-    useCase(useCase: UseCase): UseCaseExecutor;
-    useCase(useCase: any): UseCaseExecutor {
+    useCase(useCase: (context: FunctionalUseCaseContext) => Function): UseCaseExecutor<any>;
+    useCase<T extends UseCase>(useCase: T): UseCaseExecutor<T>;
+    useCase(useCase: any): UseCaseExecutor<any> {
         // instance of UseCase
         if (UseCase.isUseCase(useCase)) {
-            return new UseCaseExecutor({
+            return new UseCaseExecutor<typeof useCase>({
                 useCase,
                 parent: null,
                 dispatcher: this._dispatcher

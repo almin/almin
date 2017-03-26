@@ -3,7 +3,7 @@
 import { Dispatcher } from "./Dispatcher";
 export interface UseCaseLike extends Dispatcher {
     name: string;
-    execute<R>(...args: Array<any>): R;
+    execute(...args: Array<any>): any;
     throwError(error: Error): void;
 }
 

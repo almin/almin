@@ -12,6 +12,9 @@ import { WillExecutedPayload, isWillExecutedPayload } from "./payload/WillExecut
 import { UseCaseLike } from "./UseCaseLike";
 import { Payload } from "./payload/Payload";
 
+export interface UseCaseExecutorUseCase extends UseCaseLike {
+    execute(...args: Array<any>): Promise<void>;
+}
 /**
  * When child is completed after parent did completed, display warning warning message
  * @private
@@ -28,7 +31,6 @@ export interface UseCaseExecutorArgs {
     parent: UseCase | null;
     dispatcher: Dispatcher;
 }
-
 /**
  * `UseCaseExecutor` is a helper class for executing UseCase.
  *
@@ -37,7 +39,7 @@ export interface UseCaseExecutorArgs {
  *
  * @private
  */
-export class UseCaseExecutor {
+export class UseCaseExecutor<T extends UseCaseExecutorUseCase> {
 
     /**
      * A executable useCase
@@ -87,6 +89,66 @@ export class UseCaseExecutor {
         // delegate userCase#onDispatch to central dispatcher
         const unListenHandler = this._useCase.pipe(this._dispatcher);
         this._releaseHandlers.push(unListenHandler);
+    }
+
+    /**
+     * called the {@link handler} with useCase when the useCase will do.
+     * @param   handler
+     */
+    onWillExecuteEachUseCase(handler: (payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void {
+        const releaseHandler = this._dispatcher.onDispatch(function onWillExecute(payload, meta) {
+            if (isWillExecutedPayload(payload)) {
+                handler(payload, meta);
+            }
+        });
+        this._releaseHandlers.push(releaseHandler);
+        return releaseHandler;
+    }
+
+    /**
+     * called the `handler` with useCase when the useCase is executed.
+     * @param   handler
+     */
+    onDidExecuteEachUseCase(handler: (payload: DidExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void {
+        const releaseHandler = this._dispatcher.onDispatch(function onDidExecuted(payload, meta) {
+            if (isDidExecutedPayload(payload)) {
+                handler(payload, meta);
+            }
+        });
+        this._releaseHandlers.push(releaseHandler);
+        return releaseHandler;
+    }
+
+    /**
+     * called the `handler` with useCase when the useCase is completed.
+     * @param   handler
+     * @returns
+     */
+    onCompleteExecuteEachUseCase(handler: (payload: CompletedPayload, meta: DispatcherPayloadMeta) => void): () => void {
+        const releaseHandler = this._dispatcher.onDispatch(function onCompleted(payload, meta) {
+            if (isCompletedPayload(payload)) {
+                handler(payload, meta);
+            }
+        });
+        this._releaseHandlers.push(releaseHandler);
+        return releaseHandler;
+    }
+
+    /**
+     * execute UseCase instance.
+     * UseCase is a executable object. it means that has `execute` method.
+     * Notes: UseCaseExecutor doesn't return resolved value by design
+     * @param args
+     */
+    execute: T["execute"];
+
+    /**
+     * release all events handler.
+     * You can call this when no more call event handler
+     */
+    release(): void {
+        this._releaseHandlers.forEach(releaseHandler => releaseHandler());
+        this._releaseHandlers.length = 0;
     }
 
     /**
@@ -156,79 +218,21 @@ export class UseCaseExecutor {
         // It prevent leaking of instance.
         UseCaseInstanceMap.delete(this._useCase);
     }
-
-    /**
-     * called the {@link handler} with useCase when the useCase will do.
-     * @param   handler
-     */
-    onWillExecuteEachUseCase(handler: (payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void {
-        const releaseHandler = this._dispatcher.onDispatch(function onWillExecute(payload, meta) {
-            if (isWillExecutedPayload(payload)) {
-                handler(payload, meta);
-            }
-        });
-        this._releaseHandlers.push(releaseHandler);
-        return releaseHandler;
-    }
-
-    /**
-     * called the `handler` with useCase when the useCase is executed.
-     * @param   handler
-     */
-    onDidExecuteEachUseCase(handler: (payload: DidExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void {
-        const releaseHandler = this._dispatcher.onDispatch(function onDidExecuted(payload, meta) {
-            if (isDidExecutedPayload(payload)) {
-                handler(payload, meta);
-            }
-        });
-        this._releaseHandlers.push(releaseHandler);
-        return releaseHandler;
-    }
-
-    /**
-     * called the `handler` with useCase when the useCase is completed.
-     * @param   handler
-     * @returns
-     */
-    onCompleteExecuteEachUseCase(handler: (payload: CompletedPayload, meta: DispatcherPayloadMeta) => void): () => void {
-        const releaseHandler = this._dispatcher.onDispatch(function onCompleted(payload, meta) {
-            if (isCompletedPayload(payload)) {
-                handler(payload, meta);
-            }
-        });
-        this._releaseHandlers.push(releaseHandler);
-        return releaseHandler;
-    }
-
-    /**
-     * execute UseCase instance.
-     * UseCase is a executable object. it means that has `execute` method.
-     * Notes: UseCaseExecutor doesn't return resolved value by design
-     * @param args
-     */
-    execute<R>(...args: Array<any>): Promise<void> {
-        this._willExecute(args);
-        const result: R = this._useCase.execute<R>(...args);
-        // Sync call didExecute
-        this._didExecute(result);
-        // When UseCase#execute is completed, dispatch "complete".
-        return Promise.resolve(result).then((result: R) => {
-            this._complete(result);
-            this.release();
-        }).catch(error => {
-            this._useCase.throwError(error);
-            this._complete();
-            this.release();
-            return Promise.reject(error);
-        });
-    }
-
-    /**
-     * release all events handler.
-     * You can call this when no more call event handler
-     */
-    release(): void {
-        this._releaseHandlers.forEach(releaseHandler => releaseHandler());
-        this._releaseHandlers.length = 0;
-    }
 }
+// Hack
+UseCaseExecutor.prototype.execute = function (this: any, ...args: Array<any>): Promise<void> {
+    this._willExecute(args);
+    const result = this._useCase.execute(...args);
+    // Sync call didExecute
+    this._didExecute(result);
+    // When UseCase#execute is completed, dispatch "complete".
+    return Promise.resolve(result).then((result) => {
+        this._complete(result);
+        this.release();
+    }).catch(error => {
+        this._useCase.throwError(error);
+        this._complete();
+        this.release();
+        return Promise.reject(error);
+    });
+};
