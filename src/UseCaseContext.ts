@@ -2,7 +2,7 @@
 "use strict";
 
 import { UseCase } from "./UseCase";
-import { UseCaseExecutor } from "./UseCaseExecutor";
+import { UseCaseExecutor, UseCaseExecutorImpl } from "./UseCaseExecutor";
 const assert = require("assert");
 /**
  * Maybe, `UseCaseContext` is invisible from Public API.
@@ -65,11 +65,15 @@ export class UseCaseContext {
      * }
      * ```
      */
-    useCase(useCase: UseCase): UseCaseExecutor<typeof useCase> {
+    useCase<T extends UseCase>(useCase: T): UseCaseExecutor<T>;
+    useCase(useCase: any): UseCaseExecutor<any> {
         if (process.env.NODE_ENV !== "production") {
             assert(useCase !== this._dispatcher, `the useCase(${useCase}) should not equal this useCase(${this._dispatcher})`);
         }
-        return new UseCaseExecutor({
+        if (!UseCase.isUseCase(useCase)) {
+            throw new Error("this.context.useCase support only UseCase class")
+        }
+        return new UseCaseExecutorImpl<typeof useCase>({
             useCase,
             parent: UseCase.isUseCase(this._dispatcher) ? this._dispatcher : null,
             dispatcher: this._dispatcher

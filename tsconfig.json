@@ -46,6 +46,7 @@
 
     "exclude": [
         ".git",
-        "node_modules"
+        "node_modules",
+        "test/**/*-compile-error-test.ts"
     ]
 }

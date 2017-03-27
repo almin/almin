@@ -9,7 +9,7 @@ import { DispatcherPayloadMeta } from "./DispatcherPayloadMeta";
 import { UseCase } from "./UseCase";
 import { Store } from "./Store";
 import { StoreLike } from "./StoreLike";
-import { UseCaseExecutor } from "./UseCaseExecutor";
+import { UseCaseExecutor, UseCaseExecutorImpl } from "./UseCaseExecutor";
 import { StoreGroupValidator } from "./UILayer/StoreGroupValidator";
 // payloads
 import { CompletedPayload, isCompletedPayload } from "./payload/CompletedPayload";
@@ -144,20 +144,22 @@ export class Context {
         // instance of UseCase
         if (UseCase.isUseCase(useCase)) {
             // TODO: generics + type guard is not working?
-            return new UseCaseExecutor<typeof useCase>({
+            return new UseCaseExecutorImpl<typeof useCase>({
                 useCase,
                 parent: null,
                 dispatcher: this._dispatcher
             });
         } else if (typeof useCase === "function") {
-            // When pass UseCase constructor itself, throw assertion error
-            assert.ok(Object.getPrototypeOf && Object.getPrototypeOf(useCase) !== UseCase,
-                `Context#useCase argument should be instance of UseCase.
+            if (process.env.NODE_ENV !== "production") {
+                // When pass UseCase constructor itself, throw assertion error
+                assert.ok(Object.getPrototypeOf && Object.getPrototypeOf(useCase) !== UseCase,
+                    `Context#useCase argument should be instance of UseCase.
 The argument is UseCase constructor itself: ${useCase}`
-            );
+                );
+            }
             // function to be FunctionalUseCase
             const functionalUseCase = new FunctionalUseCase(useCase, this._dispatcher);
-            return new UseCaseExecutor({
+            return new UseCaseExecutorImpl({
                 useCase: functionalUseCase,
                 parent: null,
                 dispatcher: this._dispatcher

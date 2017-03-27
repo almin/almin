@@ -39,12 +39,40 @@ export interface UseCaseExecutorArgs {
  *
  * @private
  */
-export class UseCaseExecutor<T extends UseCaseExecutorUseCase> {
+export interface UseCaseExecutor<T extends UseCaseExecutorUseCase> {
+
+    /**
+     * called the {@link handler} with useCase when the useCase will do.
+     * @param   handler
+     */
+    onWillExecuteEachUseCase(handler: (payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void;
+    /**
+     * called the `handler` with useCase when the useCase is executed.
+     * @param   handler
+     */
+    onDidExecuteEachUseCase(handler: (payload: DidExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void;
+    /**
+     * called the `handler` with useCase when the useCase is completed.
+     * @param   handler
+     * @returns
+     */
+    onCompleteExecuteEachUseCase(handler: (payload: CompletedPayload, meta: DispatcherPayloadMeta) => void): () => void;
+    /**
+     * execute UseCase instance.
+     * UseCase is a executable object. it means that has `execute` method.
+     * Notes: UseCaseExecutor doesn't return resolved value by design.
+     * It means that always resolved with void.
+     * @param args
+     */
+    execute: T["execute"];
+}
+
+export class UseCaseExecutorImpl<T extends UseCaseExecutorUseCase> implements UseCaseExecutor<T> {
 
     /**
      * A executable useCase
      */
-    useCase: UseCaseLike;
+    private _useCase: UseCaseLike;
 
     /**
      * A parent useCase
@@ -82,12 +110,12 @@ export class UseCaseExecutor<T extends UseCaseExecutorUseCase> {
             assert.ok(typeof useCase.execute === "function", `UseCase instance should have #execute function: ${useCaseName}`);
         }
 
-        this.useCase = useCase;
+        this._useCase = useCase;
         this._parentUseCase = parent;
         this._dispatcher = dispatcher;
         this._releaseHandlers = [];
         // delegate userCase#onDispatch to central dispatcher
-        const unListenHandler = this.useCase.pipe(this._dispatcher);
+        const unListenHandler = this._useCase.pipe(this._dispatcher);
         this._releaseHandlers.push(unListenHandler);
     }
 
@@ -135,13 +163,30 @@ export class UseCaseExecutor<T extends UseCaseExecutorUseCase> {
     }
 
     /**
-     * execute UseCase instance.
-     * UseCase is a executable object. it means that has `execute` method.
-     * Notes: UseCaseExecutor doesn't return resolved value by design.
-     * It means that always resolved with void.
+     * The interface is <T extends UseCaseExecutorUseCase>["execute"].
+     * This hack aim to align the arguments of
+     *  `UseCaseExecutor#execute(arguments): Promise<void>`
+     * with
+     *  `UseCase#execute(arguments): any`
+     * https://github.com/almin/almin/pull/133
      * @param args
      */
-    execute: T["execute"];
+    execute(...args: Array<any>): Promise<void> {
+        this._willExecute(args);
+        const result = this._useCase.execute(...args);
+        // Sync call didExecute
+        this._didExecute(result);
+        // When UseCase#execute is completed, dispatch "complete".
+        return Promise.resolve(result).then((result) => {
+            this._complete(result);
+            this.release();
+        }).catch(error => {
+            this._useCase.throwError(error);
+            this._complete();
+            this.release();
+            return Promise.reject(error);
+        });
+    };
 
     /**
      * release all events handler.
@@ -159,12 +204,12 @@ export class UseCaseExecutor<T extends UseCaseExecutorUseCase> {
     _willExecute(args?: any[]): void {
         // Add instance to manager
         // It should be removed when it will be completed.
-        UseCaseInstanceMap.set(this.useCase, this);
+        UseCaseInstanceMap.set(this._useCase, this);
         const payload = new WillExecutedPayload({
             args
         });
         const meta = new DispatcherPayloadMetaImpl({
-            useCase: this.useCase,
+            useCase: this._useCase,
             dispatcher: this._dispatcher,
             parentUseCase: this._parentUseCase,
             isTrusted: true
@@ -173,7 +218,7 @@ export class UseCaseExecutor<T extends UseCaseExecutorUseCase> {
         // Warning: parentUseCase is already released
         if (process.env.NODE_ENV !== "production") {
             if (this._parentUseCase && !UseCaseInstanceMap.has(this._parentUseCase)) {
-                warningUseCaseIsAlreadyReleased(this._parentUseCase, this.useCase, payload, meta);
+                warningUseCaseIsAlreadyReleased(this._parentUseCase, this._useCase, payload, meta);
             }
         }
     }
@@ -188,7 +233,7 @@ export class UseCaseExecutor<T extends UseCaseExecutorUseCase> {
             value
         });
         const meta = new DispatcherPayloadMetaImpl({
-            useCase: this.useCase,
+            useCase: this._useCase,
             dispatcher: this._dispatcher,
             parentUseCase: this._parentUseCase,
             isTrusted: true
@@ -199,14 +244,13 @@ export class UseCaseExecutor<T extends UseCaseExecutorUseCase> {
     /**
      * dispatch complete each UseCase
      * @param   [value] unwrapped result value of the useCase executed
-     * @private for dynamic
      */
-    _complete(value?: any): void {
+    private _complete(value?: any): void {
         const payload = new CompletedPayload({
             value
         });
         const meta = new DispatcherPayloadMetaImpl({
-            useCase: this.useCase,
+            useCase: this._useCase,
             dispatcher: this._dispatcher,
             parentUseCase: this._parentUseCase,
             isTrusted: true
@@ -215,32 +259,11 @@ export class UseCaseExecutor<T extends UseCaseExecutorUseCase> {
         // Warning: parentUseCase is already released
         if (process.env.NODE_ENV !== "production") {
             if (this._parentUseCase && !UseCaseInstanceMap.has(this._parentUseCase)) {
-                warningUseCaseIsAlreadyReleased(this._parentUseCase, this.useCase, payload, meta);
+                warningUseCaseIsAlreadyReleased(this._parentUseCase, this._useCase, payload, meta);
             }
         }
         // Delete the reference from instance manager
         // It prevent leaking of instance.
-        UseCaseInstanceMap.delete(this.useCase);
+        UseCaseInstanceMap.delete(this._useCase);
     }
 }
-// Dynamic implementation hack
-// Interface is <T extends UseCaseExecutorUseCase>["execute"].
-// This hack aim to align the arguments typing with `UseCase#execute(arguments)`
-// https://github.com/almin/almin/pull/133
-// https://github.com/Microsoft/TypeScript/issues/3743
-UseCaseExecutor.prototype.execute = function (this: UseCaseExecutor<any>, ...args: Array<any>): Promise<void> {
-    this._willExecute(args);
-    const result = this.useCase.execute(...args);
-    // Sync call didExecute
-    this._didExecute(result);
-    // When UseCase#execute is completed, dispatch "complete".
-    return Promise.resolve(result).then((result) => {
-        this._complete(result);
-        this.release();
-    }).catch(error => {
-        this.useCase.throwError(error);
-        this._complete();
-        this.release();
-        return Promise.reject(error);
-    });
-};

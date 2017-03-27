@@ -10,7 +10,6 @@ import {
     CompletedPayload,
     ErrorPayload,
     DispatcherPayloadMeta,
-    FunctionalUseCaseContext
 } from "../../src/index";
 // Dispatcher
 const dispatcher = new Dispatcher();
@@ -85,7 +84,7 @@ context.onDispatch((payload: Payload, meta: DispatcherPayloadMeta) => {
 });
 // UseCase
 class ChildUseCase extends UseCase {
-    execute(value: string):void {
+    execute(value: string) {
         this.dispatch({
             type: "ChildUseCase",
             value
@@ -95,26 +94,12 @@ class ChildUseCase extends UseCase {
 class ParentUseCase extends UseCase {
     execute(value: string) {
         // TODO: improve `execute` signature - https://github.com/almin/almin/issues/107
-        return this.context.useCase(new ChildUseCase()).execute(1);
+        return this.context.useCase(new ChildUseCase()).execute(value);
     }
 }
 const parentUseCase = new ParentUseCase();
-// functional UseCase
-const functionalUseCase = (context: FunctionalUseCaseContext) => {
-    return (value: string) => {
-        context.dispatcher.dispatch({
-            type: value
-        });
-    }
-};
-// run - stateless execute
-context.useCase(functionalUseCase).execute("value").then(() => {
-    const state = context.getState<StoreState>();
-    console.log(state.A.a);
-    console.log(state.B.b);
-});
 // execute: usecase
-context.useCase(parentUseCase).execute("tes").then(() => {
+context.useCase(parentUseCase).execute("").then(() => {
     const state = context.getState<StoreState>();
     console.log(state.A.a);
     console.log(state.B.b);
