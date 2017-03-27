@@ -9,7 +9,7 @@ import { DispatcherPayloadMeta } from "./DispatcherPayloadMeta";
 import { UseCase } from "./UseCase";
 import { Store } from "./Store";
 import { StoreLike } from "./StoreLike";
-import { UseCaseExecutor } from "./UseCaseExecutor";
+import { UseCaseExecutor, UseCaseExecutorImpl } from "./UseCaseExecutor";
 import { StoreGroupValidator } from "./UILayer/StoreGroupValidator";
 // payloads
 import { CompletedPayload, isCompletedPayload } from "./payload/CompletedPayload";
@@ -138,25 +138,28 @@ export class Context {
      * context.useCase(awesomeUseCase).execute([1, 2, 3]);
      * ```
      */
-    useCase(useCase: (context: FunctionalUseCaseContext) => Function): UseCaseExecutor;
-    useCase(useCase: UseCase): UseCaseExecutor;
-    useCase(useCase: any): UseCaseExecutor {
+    useCase(useCase: (context: FunctionalUseCaseContext) => Function): UseCaseExecutor<any>;
+    useCase<T extends UseCase>(useCase: T): UseCaseExecutor<T>;
+    useCase(useCase: any): UseCaseExecutor<any> {
         // instance of UseCase
         if (UseCase.isUseCase(useCase)) {
-            return new UseCaseExecutor({
+            // TODO: generics + type guard is not working?
+            return new UseCaseExecutorImpl<typeof useCase>({
                 useCase,
                 parent: null,
                 dispatcher: this._dispatcher
             });
         } else if (typeof useCase === "function") {
-            // When pass UseCase constructor itself, throw assertion error
-            assert.ok(Object.getPrototypeOf && Object.getPrototypeOf(useCase) !== UseCase,
-                `Context#useCase argument should be instance of UseCase.
+            if (process.env.NODE_ENV !== "production") {
+                // When pass UseCase constructor itself, throw assertion error
+                assert.ok(Object.getPrototypeOf && Object.getPrototypeOf(useCase) !== UseCase,
+                    `Context#useCase argument should be instance of UseCase.
 The argument is UseCase constructor itself: ${useCase}`
-            );
+                );
+            }
             // function to be FunctionalUseCase
             const functionalUseCase = new FunctionalUseCase(useCase, this._dispatcher);
-            return new UseCaseExecutor({
+            return new UseCaseExecutorImpl({
                 useCase: functionalUseCase,
                 parent: null,
                 dispatcher: this._dispatcher

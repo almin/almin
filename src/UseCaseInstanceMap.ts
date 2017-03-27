@@ -33,4 +33,4 @@ See also https://almin.js.org/docs/warnings/usecase-is-already-released.html
  * TODO: add d.ts to MapLike
  * @type {Map}
  */
-export const UseCaseInstanceMap = new MapLike<UseCaseLike, UseCaseExecutor>();
+export const UseCaseInstanceMap = new MapLike<UseCaseLike, UseCaseExecutor<any>>();

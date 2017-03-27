@@ -12,6 +12,9 @@ import { WillExecutedPayload, isWillExecutedPayload } from "./payload/WillExecut
 import { UseCaseLike } from "./UseCaseLike";
 import { Payload } from "./payload/Payload";
 
+export interface UseCaseExecutorUseCase extends UseCaseLike {
+    execute(..._: Array<any>): Promise<void>;
+}
 /**
  * When child is completed after parent did completed, display warning warning message
  * @private
@@ -28,7 +31,6 @@ export interface UseCaseExecutorArgs {
     parent: UseCase | null;
     dispatcher: Dispatcher;
 }
-
 /**
  * `UseCaseExecutor` is a helper class for executing UseCase.
  *
@@ -37,7 +39,35 @@ export interface UseCaseExecutorArgs {
  *
  * @private
  */
-export class UseCaseExecutor {
+export interface UseCaseExecutor<T extends UseCaseExecutorUseCase> {
+
+    /**
+     * called the {@link handler} with useCase when the useCase will do.
+     * @param   handler
+     */
+    onWillExecuteEachUseCase(handler: (payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void;
+    /**
+     * called the `handler` with useCase when the useCase is executed.
+     * @param   handler
+     */
+    onDidExecuteEachUseCase(handler: (payload: DidExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void;
+    /**
+     * called the `handler` with useCase when the useCase is completed.
+     * @param   handler
+     * @returns
+     */
+    onCompleteExecuteEachUseCase(handler: (payload: CompletedPayload, meta: DispatcherPayloadMeta) => void): () => void;
+    /**
+     * execute UseCase instance.
+     * UseCase is a executable object. it means that has `execute` method.
+     * Notes: UseCaseExecutor doesn't return resolved value by design.
+     * It means that always resolved with void.
+     * @param args
+     */
+    execute: T["execute"];
+}
+
+export class UseCaseExecutorImpl<T extends UseCaseExecutorUseCase> implements UseCaseExecutor<T> {
 
     /**
      * A executable useCase
@@ -90,74 +120,6 @@ export class UseCaseExecutor {
     }
 
     /**
-     * @param   [args] arguments of the UseCase
-     */
-    private _willExecute(args?: any[]): void {
-        // Add instance to manager
-        // It should be removed when it will be completed.
-        UseCaseInstanceMap.set(this._useCase, this);
-        const payload = new WillExecutedPayload({
-            args
-        });
-        const meta = new DispatcherPayloadMetaImpl({
-            useCase: this._useCase,
-            dispatcher: this._dispatcher,
-            parentUseCase: this._parentUseCase,
-            isTrusted: true
-        });
-        this._dispatcher.dispatch(payload, meta);
-        // Warning: parentUseCase is already released
-        if (process.env.NODE_ENV !== "production") {
-            if (this._parentUseCase && !UseCaseInstanceMap.has(this._parentUseCase)) {
-                warningUseCaseIsAlreadyReleased(this._parentUseCase, this._useCase, payload, meta);
-            }
-        }
-    }
-
-    /**
-     * dispatch did execute each UseCase
-     * @param   [value] result value of the useCase executed
-     */
-    private _didExecute(value?: any): void {
-        const payload = new DidExecutedPayload({
-            value
-        });
-        const meta = new DispatcherPayloadMetaImpl({
-            useCase: this._useCase,
-            dispatcher: this._dispatcher,
-            parentUseCase: this._parentUseCase,
-            isTrusted: true
-        });
-        this._dispatcher.dispatch(payload, meta);
-    }
-
-    /**
-     * dispatch complete each UseCase
-     * @param   [value] unwrapped result value of the useCase executed
-     */
-    private _complete(value?: any): void {
-        const payload = new CompletedPayload({
-            value
-        });
-        const meta = new DispatcherPayloadMetaImpl({
-            useCase: this._useCase,
-            dispatcher: this._dispatcher,
-            parentUseCase: this._parentUseCase,
-            isTrusted: true
-        });
-        this._dispatcher.dispatch(payload, meta);
-        // Warning: parentUseCase is already released
-        if (process.env.NODE_ENV !== "production") {
-            if (this._parentUseCase && !UseCaseInstanceMap.has(this._parentUseCase)) {
-                warningUseCaseIsAlreadyReleased(this._parentUseCase, this._useCase, payload, meta);
-            }
-        }
-        // Delete the reference from instance manager
-        // It prevent leaking of instance.
-        UseCaseInstanceMap.delete(this._useCase);
-    }
-
-    /**
      * called the {@link handler} with useCase when the useCase will do.
      * @param   handler
      */
@@ -201,18 +163,21 @@ export class UseCaseExecutor {
     }
 
     /**
-     * execute UseCase instance.
-     * UseCase is a executable object. it means that has `execute` method.
-     * Notes: UseCaseExecutor doesn't return resolved value by design
+     * The interface is <T extends UseCaseExecutorUseCase>["execute"].
+     * This hack aim to align the arguments of
+     *  `UseCaseExecutor#execute(arguments): Promise<void>`
+     * with
+     *  `UseCase#execute(arguments): any`
+     * https://github.com/almin/almin/pull/133
      * @param args
      */
-    execute<R>(...args: Array<any>): Promise<void> {
+    execute(...args: Array<any>): Promise<void> {
         this._willExecute(args);
-        const result: R = this._useCase.execute<R>(...args);
+        const result = this._useCase.execute(...args);
         // Sync call didExecute
         this._didExecute(result);
         // When UseCase#execute is completed, dispatch "complete".
-        return Promise.resolve(result).then((result: R) => {
+        return Promise.resolve(result).then((result: any) => {
             this._complete(result);
             this.release();
         }).catch(error => {
@@ -221,7 +186,7 @@ export class UseCaseExecutor {
             this.release();
             return Promise.reject(error);
         });
-    }
+    };
 
     /**
      * release all events handler.
@@ -230,5 +195,75 @@ export class UseCaseExecutor {
     release(): void {
         this._releaseHandlers.forEach(releaseHandler => releaseHandler());
         this._releaseHandlers.length = 0;
+    }
+
+    /**
+     * @param   [args] arguments of the UseCase
+     * @private for dynamic
+     */
+    _willExecute(args?: any[]): void {
+        // Add instance to manager
+        // It should be removed when it will be completed.
+        UseCaseInstanceMap.set(this._useCase, this);
+        const payload = new WillExecutedPayload({
+            args
+        });
+        const meta = new DispatcherPayloadMetaImpl({
+            useCase: this._useCase,
+            dispatcher: this._dispatcher,
+            parentUseCase: this._parentUseCase,
+            isTrusted: true
+        });
+        this._dispatcher.dispatch(payload, meta);
+        // Warning: parentUseCase is already released
+        if (process.env.NODE_ENV !== "production") {
+            if (this._parentUseCase && !UseCaseInstanceMap.has(this._parentUseCase)) {
+                warningUseCaseIsAlreadyReleased(this._parentUseCase, this._useCase, payload, meta);
+            }
+        }
+    }
+
+    /**
+     * dispatch did execute each UseCase
+     * @param   [value] result value of the useCase executed
+     * @private for dynamic
+     */
+    _didExecute(value?: any): void {
+        const payload = new DidExecutedPayload({
+            value
+        });
+        const meta = new DispatcherPayloadMetaImpl({
+            useCase: this._useCase,
+            dispatcher: this._dispatcher,
+            parentUseCase: this._parentUseCase,
+            isTrusted: true
+        });
+        this._dispatcher.dispatch(payload, meta);
+    }
+
+    /**
+     * dispatch complete each UseCase
+     * @param   [value] unwrapped result value of the useCase executed
+     */
+    private _complete(value?: any): void {
+        const payload = new CompletedPayload({
+            value
+        });
+        const meta = new DispatcherPayloadMetaImpl({
+            useCase: this._useCase,
+            dispatcher: this._dispatcher,
+            parentUseCase: this._parentUseCase,
+            isTrusted: true
+        });
+        this._dispatcher.dispatch(payload, meta);
+        // Warning: parentUseCase is already released
+        if (process.env.NODE_ENV !== "production") {
+            if (this._parentUseCase && !UseCaseInstanceMap.has(this._parentUseCase)) {
+                warningUseCaseIsAlreadyReleased(this._parentUseCase, this._useCase, payload, meta);
+            }
+        }
+        // Delete the reference from instance manager
+        // It prevent leaking of instance.
+        UseCaseInstanceMap.delete(this._useCase);
     }
 }

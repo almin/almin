@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "test/**/*-compile-error-test.ts"
+  ],
+  "exclude": [
+    ".git",
+    "node_modules"
+  ]
+}

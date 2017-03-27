@@ -116,7 +116,7 @@ export abstract class UseCase extends Dispatcher implements UseCaseLike {
      *
      *  FIXME: mark this as `abstract` property.
      */
-    execute<R>(..._: Array<any>): R {
+    execute(..._: Array<any>): any {
         throw new TypeError(`should be overwrite ${this.constructor.name}#execute()`);
     }
 
