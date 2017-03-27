@@ -85,7 +85,7 @@ context.onDispatch((payload: Payload, meta: DispatcherPayloadMeta) => {
 });
 // UseCase
 class ChildUseCase extends UseCase {
-    execute(value: string):void {
+    execute(value: string): any {
         this.dispatch({
             type: "ChildUseCase",
             value
@@ -93,9 +93,9 @@ class ChildUseCase extends UseCase {
     }
 }
 class ParentUseCase extends UseCase {
-    execute(value: string) {
+    execute(value: string): Promise<void> {
         // TODO: improve `execute` signature - https://github.com/almin/almin/issues/107
-        return this.context.useCase(new ChildUseCase()).execute(1);
+        return this.context.useCase(new ChildUseCase()).execute(value);
     }
 }
 const parentUseCase = new ParentUseCase();

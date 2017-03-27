@@ -62,7 +62,7 @@ export class FunctionalUseCase extends Dispatcher implements UseCaseLike {
     /**
      * execute functional UseCase
      */
-    execute<R>(..._: Array<any>): R {
+    execute(..._: Array<any>): any {
         return this.executor(..._);
     }
 

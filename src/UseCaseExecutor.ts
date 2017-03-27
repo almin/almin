@@ -13,7 +13,7 @@ import { UseCaseLike } from "./UseCaseLike";
 import { Payload } from "./payload/Payload";
 
 export interface UseCaseExecutorUseCase extends UseCaseLike {
-    execute(...args: Array<any>): Promise<void>;
+    execute(..._: Array<any>): Promise<void>;
 }
 /**
  * When child is completed after parent did completed, display warning warning message
@@ -177,7 +177,7 @@ export class UseCaseExecutorImpl<T extends UseCaseExecutorUseCase> implements Us
         // Sync call didExecute
         this._didExecute(result);
         // When UseCase#execute is completed, dispatch "complete".
-        return Promise.resolve(result).then((result) => {
+        return Promise.resolve(result).then((result: any) => {
             this._complete(result);
             this.release();
         }).catch(error => {
@@ -185,7 +185,7 @@ export class UseCaseExecutorImpl<T extends UseCaseExecutorUseCase> implements Us
             this._complete();
             this.release();
             return Promise.reject(error);
-        });
+        }) as Promise<void>;
     };
 
     /**

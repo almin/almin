@@ -2,7 +2,9 @@
 "use strict";
 
 import { UseCase } from "./UseCase";
-import { UseCaseExecutor, UseCaseExecutorImpl } from "./UseCaseExecutor";
+import { UseCaseExecutor, UseCaseExecutorImpl, UseCaseExecutorUseCase } from "./UseCaseExecutor";
+import { FunctionalUseCaseContext } from "./FunctionalUseCaseContext";
+import { FunctionalUseCase } from "./FunctionalUseCase";
 const assert = require("assert");
 /**
  * Maybe, `UseCaseContext` is invisible from Public API.
@@ -65,18 +67,34 @@ export class UseCaseContext {
      * }
      * ```
      */
+    useCase(useCase: (context: FunctionalUseCaseContext) => Function): UseCaseExecutor<any>;
     useCase<T extends UseCase>(useCase: T): UseCaseExecutor<T>;
     useCase(useCase: any): UseCaseExecutor<any> {
         if (process.env.NODE_ENV !== "production") {
             assert(useCase !== this._dispatcher, `the useCase(${useCase}) should not equal this useCase(${this._dispatcher})`);
         }
-        if (!UseCase.isUseCase(useCase)) {
-            throw new Error("this.context.useCase support only UseCase class")
+        if (UseCase.isUseCase(useCase)) {
+            return new UseCaseExecutorImpl<typeof useCase>({
+                useCase,
+                parent: UseCase.isUseCase(this._dispatcher) ? this._dispatcher : null,
+                dispatcher: this._dispatcher
+            });
+        } else if (typeof useCase === "function") {
+            if (process.env.NODE_ENV !== "production") {
+                // When pass UseCase constructor itself, throw assertion error
+                assert.ok(Object.getPrototypeOf && Object.getPrototypeOf(useCase) !== UseCase,
+                    `Context#useCase argument should be instance of UseCase.
+The argument is UseCase constructor itself: ${useCase}`
+                );
+            }
+            // function to be FunctionalUseCase
+            const functionalUseCase = new FunctionalUseCase(useCase, this._dispatcher);
+            return new UseCaseExecutorImpl<UseCaseExecutorUseCase>({
+                useCase: functionalUseCase,
+                parent: null,
+                dispatcher: this._dispatcher
+            });
         }
-        return new UseCaseExecutorImpl<typeof useCase>({
-            useCase,
-            parent: UseCase.isUseCase(this._dispatcher) ? this._dispatcher : null,
-            dispatcher: this._dispatcher
-        });
+        throw new Error(`Context#useCase argument should be UseCase: ${useCase}`);
     }
 }
