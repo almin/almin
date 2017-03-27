@@ -185,7 +185,7 @@ export class UseCaseExecutorImpl<T extends UseCaseExecutorUseCase> implements Us
             this._complete();
             this.release();
             return Promise.reject(error);
-        }) as Promise<void>;
+        });
     };
 
     /**
