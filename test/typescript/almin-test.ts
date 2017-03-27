@@ -93,7 +93,7 @@ class ChildUseCase extends UseCase {
     }
 }
 class ParentUseCase extends UseCase {
-    execute(value: string): Promise<void> {
+    execute(value: string): any {
         // TODO: improve `execute` signature - https://github.com/almin/almin/issues/107
         return this.context.useCase(new ChildUseCase()).execute(value);
     }
