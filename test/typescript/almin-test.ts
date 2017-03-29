@@ -99,6 +99,7 @@ class ParentUseCase extends UseCase {
         return this.context.useCase(new ChildUseCase()).execute(value);
     }
 }
+
 const parentUseCase = new ParentUseCase();
 // functional UseCase
 type functionUseCaseArgs = string | undefined;
