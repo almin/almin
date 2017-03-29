@@ -138,12 +138,12 @@ export class Context {
      * context.useCase(awesomeUseCase).execute([1, 2, 3]);
      * ```
      */
-    useCase(useCase: (context: FunctionalUseCaseContext) => Function): UseCaseExecutor;
-    useCase(useCase: UseCase): UseCaseExecutor;
-    useCase(useCase: any): UseCaseExecutor {
+    useCase<ArgsT>(useCase: (context: FunctionalUseCaseContext) => Function): UseCaseExecutor<ArgsT>;
+    useCase<ArgsT>(useCase: UseCase): UseCaseExecutor<ArgsT>;
+    useCase<ArgsT>(useCase: any): UseCaseExecutor<ArgsT> {
         // instance of UseCase
         if (UseCase.isUseCase(useCase)) {
-            return new UseCaseExecutor({
+            return new UseCaseExecutor<ArgsT>({
                 useCase,
                 parent: null,
                 dispatcher: this._dispatcher
@@ -156,7 +156,7 @@ The argument is UseCase constructor itself: ${useCase}`
             );
             // function to be FunctionalUseCase
             const functionalUseCase = new FunctionalUseCase(useCase, this._dispatcher);
-            return new UseCaseExecutor({
+            return new UseCaseExecutor<ArgsT>({
                 useCase: functionalUseCase,
                 parent: null,
                 dispatcher: this._dispatcher

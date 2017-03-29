@@ -92,32 +92,51 @@ class ChildUseCase extends UseCase {
         });
     }
 }
+type ParentUseCaseArgs = string;
 class ParentUseCase extends UseCase {
-    execute(value: string) {
+    execute(value: ParentUseCaseArgs) {
         // TODO: improve `execute` signature - https://github.com/almin/almin/issues/107
         return this.context.useCase(new ChildUseCase()).execute(value);
     }
 }
 const parentUseCase = new ParentUseCase();
 // functional UseCase
+type functionUseCaseArgs = string | undefined;
 const functionalUseCase = (context: FunctionalUseCaseContext) => {
-    return (value: string) => {
+    return (value: functionUseCaseArgs) => {
         context.dispatcher.dispatch({
             type: value
         });
     }
 };
-// run - stateless execute
-context.useCase(functionalUseCase).execute("value").then(() => {
+// execute - functional execute with ArgT
+context.useCase<functionUseCaseArgs>(functionalUseCase).execute("1").then(() => {
     const state = context.getState<StoreState>();
     console.log(state.A.a);
     console.log(state.B.b);
 });
-// execute: usecase
-context.useCase(parentUseCase).execute("value").then(() => {
+// execute - functional execute with ArgT and no arguments
+context.useCase<functionUseCaseArgs>(functionalUseCase).execute().then(() => {
+    // nope
+});
+// execute - functional execute without ArgT
+context.useCase(functionalUseCase).execute("value").then(() => {
+    // nope
+});
+
+// execute: usecase with ArgT
+context.useCase<ParentUseCaseArgs>(parentUseCase).execute("value").then(() => {
     const state = context.getState<StoreState>();
     console.log(state.A.a);
     console.log(state.B.b);
 }).catch((error: Error) => {
     console.error(error);
+});
+// execute - usecase execute with ArgT and no arguments
+context.useCase<ParentUseCaseArgs>(parentUseCase).execute().then(() => {
+    // nope
+});
+// execute - usecase withoud ArgT 
+context.useCase(parentUseCase).execute("value").then(() => {
+    // nope
 });

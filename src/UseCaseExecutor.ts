@@ -37,7 +37,7 @@ export interface UseCaseExecutorArgs {
  *
  * @private
  */
-export class UseCaseExecutor {
+export class UseCaseExecutor<ArgsT> {
 
     /**
      * A executable useCase
@@ -206,6 +206,7 @@ export class UseCaseExecutor {
      * Notes: UseCaseExecutor doesn't return resolved value by design
      * @param args
      */
+    execute<R>(arg?: ArgsT): Promise<void>;
     execute<R>(...args: Array<any>): Promise<void> {
         this._willExecute(args);
         const result: R = this._useCase.execute<R>(...args);
