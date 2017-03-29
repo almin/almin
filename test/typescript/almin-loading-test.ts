@@ -21,12 +21,14 @@ class UpdateLoadingUseCase extends UseCase {
 class LoadingState {
     constructor(public isLoading: boolean) {
     }
+
     update(isLoading: boolean) {
         return new LoadingState(isLoading);
     }
 }
 class LoadingStore extends Store {
     state: LoadingState;
+
     constructor() {
         super();
         this.state = new LoadingState(false);
@@ -46,4 +48,6 @@ const context = new Context({
     dispatcher,
     store: loadingStore
 });
-context.useCase<UpdateLoadingUseCaseArg>(loadingUseCase).execute(true);
+context.useCase(loadingUseCase).execute<UpdateLoadingUseCaseArg>(true).then(() => {
+    // nope
+});

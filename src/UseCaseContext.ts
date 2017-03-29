@@ -67,14 +67,14 @@ export class UseCaseContext {
      * }
      * ```
      */
-    useCase<ArgT>(useCase: (context: FunctionalUseCaseContext) => Function): UseCaseExecutor<ArgT>;
-    useCase<ArgT>(useCase: UseCase): UseCaseExecutor<ArgT>;
-    useCase<ArgT>(useCase: any): UseCaseExecutor<ArgT> {
+    useCase(useCase: (context: FunctionalUseCaseContext) => Function): UseCaseExecutor;
+    useCase(useCase: UseCase): UseCaseExecutor;
+    useCase(useCase: any): UseCaseExecutor {
         if (process.env.NODE_ENV !== "production") {
             assert(useCase !== this._dispatcher, `the useCase(${useCase}) should not equal this useCase(${this._dispatcher})`);
         }
         if (UseCase.isUseCase(useCase)) {
-            return new UseCaseExecutor<ArgT>({
+            return new UseCaseExecutor({
                 useCase,
                 parent: UseCase.isUseCase(this._dispatcher) ? this._dispatcher : null,
                 dispatcher: this._dispatcher
@@ -89,7 +89,7 @@ The argument is UseCase constructor itself: ${useCase}`
             }
             // function to be FunctionalUseCase
             const functionalUseCase = new FunctionalUseCase(useCase, this._dispatcher);
-            return new UseCaseExecutor<ArgT>({
+            return new UseCaseExecutor({
                 useCase: functionalUseCase,
                 parent: UseCase.isUseCase(this._dispatcher) ? this._dispatcher : null,
                 dispatcher: this._dispatcher

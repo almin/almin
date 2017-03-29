@@ -111,33 +111,25 @@ const functionalUseCase = (context: FunctionalUseCaseContext) => {
     }
 };
 // execute - functional execute with ArgT
-context.useCase<functionUseCaseArgs>(functionalUseCase).execute("1").then(() => {
+context.useCase(functionalUseCase).execute<functionUseCaseArgs>("1").then(() => {
     const state = context.getState<StoreState>();
     console.log(state.A.a);
     console.log(state.B.b);
-});
-// execute - functional execute with ArgT and no arguments
-context.useCase<functionUseCaseArgs>(functionalUseCase).execute().then(() => {
-    // nope
 });
 // execute - functional execute without ArgT
 context.useCase(functionalUseCase).execute("value").then(() => {
     // nope
 });
 
-// execute: usecase with ArgT
-context.useCase<ParentUseCaseArgs>(parentUseCase).execute("value").then(() => {
+// execute: usecase with T
+context.useCase(parentUseCase).execute<ParentUseCaseArgs>("value").then(() => {
     const state = context.getState<StoreState>();
     console.log(state.A.a);
     console.log(state.B.b);
 }).catch((error: Error) => {
     console.error(error);
 });
-// execute - usecase execute with ArgT and no arguments
-context.useCase<ParentUseCaseArgs>(parentUseCase).execute().then(() => {
-    // nope
-});
-// execute - usecase withoud ArgT 
+// execute - usecase without T
 context.useCase(parentUseCase).execute("value").then(() => {
     // nope
 });
