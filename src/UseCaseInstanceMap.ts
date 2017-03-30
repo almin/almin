@@ -29,8 +29,5 @@ See also https://almin.js.org/docs/warnings/usecase-is-already-released.html
  * This Map maintains a mapping instance of UseCase
  * A UseCase will execute and add it to this map.
  * A UseCase was completed and remove it from this map.
- *
- * TODO: add d.ts to MapLike
- * @type {Map}
  */
 export const UseCaseInstanceMap = new MapLike<UseCaseLike, UseCaseExecutor>();

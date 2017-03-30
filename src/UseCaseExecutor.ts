@@ -206,13 +206,15 @@ export class UseCaseExecutor {
      * Notes: UseCaseExecutor doesn't return resolved value by design
      * @param args
      */
-    execute<R>(...args: Array<any>): Promise<void> {
+    execute(): Promise<void>;
+    execute<T>(args: T): Promise<void>;
+    execute(...args: Array<any>): Promise<void> {
         this._willExecute(args);
-        const result: R = this._useCase.execute<R>(...args);
+        const result = this._useCase.execute(...args);
         // Sync call didExecute
         this._didExecute(result);
         // When UseCase#execute is completed, dispatch "complete".
-        return Promise.resolve(result).then((result: R) => {
+        return Promise.resolve(result).then((result) => {
             this._complete(result);
             this.release();
         }).catch(error => {
