@@ -84,7 +84,7 @@ export class StoreGroup extends Dispatcher implements StoreLike {
     /**
      * A collection of stores in the StoreGroup.
      */
-    get store(): Array<Store> {
+    get stores(): Array<Store> {
         return this._stores;
     }
 
