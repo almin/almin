@@ -7,6 +7,7 @@
 
 ```typescript
 export declare class UseCaseContext {
+    useCase(useCase: (context: FunctionalUseCaseContext) => Function): UseCaseExecutor;
     useCase(useCase: UseCase): UseCaseExecutor;
 }
 ```
@@ -32,7 +33,11 @@ class ParentUseCase extends UseCase {
 
 ----
 
-### `useCase(useCase: UseCase): UseCaseExecutor;`
+### Interface of 
+```typescript
+useCase(useCase: (context: FunctionalUseCaseContext) => Function): UseCaseExecutor;
+useCase(useCase: UseCase): UseCaseExecutor;
+```
 
 
 Create UseCaseExecutor for `useCase`.

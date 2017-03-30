@@ -12,7 +12,7 @@ export declare class Context {
         store: QueuedStoreGroup | StoreGroup | Store;
     });
     getState<T>(): T;
-    onChange(onChangeHandler: (changingStores: Array<Store>) => void): void;
+    onChange(onChangeHandler: (changingStores: Array<Store>) => void): () => void;
     useCase(useCase: (context: FunctionalUseCaseContext) => Function): UseCaseExecutor;
     useCase(useCase: UseCase): UseCaseExecutor;
     onWillExecuteEachUseCase(handler: (payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void;
@@ -88,16 +88,19 @@ console.log(state);
 
 ----
 
-### `onChange(onChangeHandler: (changingStores: Array<Store>) => void): void;`
+### `onChange(onChangeHandler: (changingStores: Array<Store>) => void): () => void;`
 
 
 If anyone store that is passed to constructor is changed, then call `onChange`.
 `onChange` arguments is an array of `Store` instances.
 
+It returns unSubscribe function.
+If you want to release handler, the returned function.
+
 ### Example
 
 ```js
-context.onChange(changingStores => {
+const unSubscribe = context.onChange(changingStores => {
   console.log(changingStores); // Array<Store>
 });
 ```
