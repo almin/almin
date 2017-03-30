@@ -98,15 +98,18 @@ export class Context {
      * If anyone store that is passed to constructor is changed, then call `onChange`.
      * `onChange` arguments is an array of `Store` instances.
      *
+     * It returns unSubscribe function.
+     * If you want to release handler, the returned function.
+     *
      * ### Example
      *
      * ```js
-     * context.onChange(changingStores => {
+     * const unSubscribe = context.onChange(changingStores => {
      *   console.log(changingStores); // Array<Store>
      * });
      * ```
      */
-    onChange(onChangeHandler: (changingStores: Array<Store>) => void) {
+    onChange(onChangeHandler: (changingStores: Array<Store>) => void): () => void {
         return this._storeGroup.onChange(onChangeHandler);
     }
 
