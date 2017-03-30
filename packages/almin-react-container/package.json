@@ -1,0 +1,48 @@
+{
+  "directories": {
+    "test": "test"
+  },
+  "author": "azu",
+  "license": "MIT",
+  "files": [
+    "bin/",
+    "lib/",
+    "src/"
+  ],
+  "name": "almin-react-container",
+  "version": "1.0.0",
+  "description": "React bindings for Almin",
+  "main": "lib/almin-react-container.js",
+  "types": "lib/almin-react-container.d.ts",
+  "scripts": {
+    "test": "cd example && npm it",
+    "build": "cross-env NODE_ENV=production tsc -p .",
+    "watch": "tsc -p . --watch",
+    "prepublish": "npm run --if-present build"
+  },
+  "keywords": [
+    "react",
+    "almin",
+    "component"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/azu/almin-react-container.git"
+  },
+  "bugs": {
+    "url": "https://github.com/azu/almin-react-container/issues"
+  },
+  "homepage": "https://github.com/azu/almin-react-container",
+  "peerDependencies": {
+    "react": "^15.0.0",
+    "almin": ">=0.10.0"
+  },
+  "devDependencies": {
+    "@types/node": "^7.0.12",
+    "@types/react": "^15.0.20",
+    "almin": "^0.10.0",
+    "cross-env": "^3.2.4",
+    "react": "^15.4.2",
+    "typescript": "^2.2.2"
+  }
+}
