@@ -20,6 +20,8 @@
     - [Logging](./docs/tips/logging.md)
     - [Nesting UseCase](./docs/tips/nesting-usecase.md)
     - [LifeCycle of UseCase](./docs/tips/usecase-lifecycle.md)
+- Warnings
+    - [UseCase is already released](docs/warnings/usecase-is-already-released.md)
 - API Reference
     - [Dispatcher](./docs/api/Dispatcher.md)
     - [Store](./docs/api/Store.md)
