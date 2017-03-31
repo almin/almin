@@ -4,7 +4,7 @@
 
 You can find suitable issues to contribute on [Issues label:starter](https://github.com/almin/almin/issues?q=is%3Aissue+is%3Aopen+label%3Astarter "Issues · almin/almin").
 
-Of course, welcome to submit pull request the other issue or file issue. 
+Of course, welcome to fix the other issue or file issue. 
 
 Basic Pull Request steps:
 
