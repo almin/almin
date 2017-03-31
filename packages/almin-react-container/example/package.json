@@ -1,0 +1,56 @@
+{
+  "private": true,
+  "directories": {
+    "test": "test"
+  },
+  "author": "azu",
+  "license": "MIT",
+  "files": [
+    "bin/",
+    "lib/",
+    "src/"
+  ],
+  "name": "example",
+  "version": "1.0.0",
+  "main": "lib/example.js",
+  "dependencies": {
+    "almin": "^0.10.0",
+    "almin-react-container": "file:../",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.0",
+    "babel-loader": "^6.4.1",
+    "babel-preset-latest": "^6.24.0",
+    "babel-preset-react": "^6.23.0",
+    "cross-env": "^3.2.4",
+    "json-loader": "^0.5.4",
+    "mkdirp": "^0.5.1",
+    "mocha": "^3.2.0",
+    "npm-run-all": "^4.0.2",
+    "rimraf": "^2.6.1",
+    "webpack": "^2.3.2",
+    "webpack-dev-server": "^2.4.2"
+  },
+  "scripts": {
+    "test": "npm run build",
+    "prepublish": "npm run --if-present build",
+    "start": "npm-run-all clean server",
+    "server": "cross-env NODE_ENV=development webpack-dev-server --hot --content-base ./public --open",
+    "build:js": "cross-env NODE_ENV=production webpack --progress -p",
+    "build": "npm-run-all clean --parallel build:*",
+    "watch:js": "cross-env NODE_ENV=development webpack --watch",
+    "watch": "npm-run-all clean --parallel watch:*",
+    "clean": "rimraf public/build && mkdirp public/build"
+  },
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/almin-react-container/example.git"
+  },
+  "bugs": {
+    "url": "https://github.com/almin-react-container/example/issues"
+  },
+  "homepage": "https://github.com/almin-react-container/example"
+}
