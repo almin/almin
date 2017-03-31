@@ -27,12 +27,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/azu/almin-react-container.git"
+    "url": "https://github.com/almin/almin-react-container.git"
   },
   "bugs": {
-    "url": "https://github.com/azu/almin-react-container/issues"
+    "url": "https://github.com/almin/almin-react-container/issues"
   },
-  "homepage": "https://github.com/azu/almin-react-container",
+  "homepage": "https://github.com/almin/almin-react-container",
   "peerDependencies": {
     "react": "^15.0.0",
     "almin": ">=0.11.0"

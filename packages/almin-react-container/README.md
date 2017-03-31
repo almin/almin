@@ -71,7 +71,7 @@ See [Example/](./example/)
 
 ## Changelog
 
-See [Releases page](https://github.com/azu/almin-react-container/releases).
+See [Releases page](https://github.com/almin/almin-react-container/releases).
 
 ## Running tests
 
@@ -83,7 +83,7 @@ Install devDependencies and Run `npm test`:
 
 Pull requests and stars are always welcome.
 
-For bugs and feature requests, [please create an issue](https://github.com/azu/almin-react-container/issues).
+For bugs and feature requests, [please create an issue](https://github.com/almin/almin-react-container/issues).
 
 1. Fork it!
 2. Create your feature branch: `git checkout -b my-new-feature`
