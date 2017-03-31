@@ -1,6 +1,6 @@
-# almin-react-container
+# almin-react-container [![Build Status](https://travis-ci.org/almin/almin-react-container.svg?branch=master)](https://travis-ci.org/almin/almin-react-container)
 
-React bindings for Almin
+React bindings for Almin.
 
 ## Install
 
@@ -46,7 +46,7 @@ const context = new Context({
     store: new MyStore()
 });
 
-context.getState();
+// context.getState();
 /*
 {
     myState
@@ -66,6 +66,9 @@ interface AppState {
 const RootContainer = AlminReactContainer.create(App, context);
 console.log(RootContainer);
 ```
+
+See [Example/](./example/)
+
 ## Changelog
 
 See [Releases page](https://github.com/azu/almin-react-container/releases).
