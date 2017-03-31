@@ -10,8 +10,62 @@ Install with [npm](https://www.npmjs.com/):
 
 ## Usage
 
-- [ ] Write usage instructions
+### `create(component, context): React.Component`
 
+It create container component that is wrap `component`.
+
+The `component` can receive state of contenxt vis `this.props`.
+
+```js
+import AlminReactContainer from "almin-react-container";
+import React from "react";
+import { Dispatcher, Context, Store } from "almin";
+// Store
+class MyState {
+    constructor({value}) {
+        this.value = value;
+    }
+}
+class MyStore extends Store {
+    constructor() {
+        super();
+        this.state = new MyState({
+            value: "Hello World!"
+        });
+    }
+
+    getState() {
+        return {
+            myState: this.state
+        };
+    }
+}
+// Context
+const context = new Context({
+    dispatcher: new Dispatcher(),
+    store: new MyStore()
+});
+
+context.getState();
+/*
+{
+    myState
+}
+*/
+// View
+class App extends React.Component {
+    render() {
+        // this.props has the same with `context.getState()`
+        return <div>{this.props.myState.value}</div>
+    }
+}
+interface AppState {
+    myState: MyState
+}
+// Create Container
+const RootContainer = AlminReactContainer.create(App, context);
+console.log(RootContainer);
+```
 ## Changelog
 
 See [Releases page](https://github.com/azu/almin-react-container/releases).

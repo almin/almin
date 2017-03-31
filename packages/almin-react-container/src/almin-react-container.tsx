@@ -9,7 +9,7 @@ export default class AlminReactContainer {
             static displayName = `AlminContainer(${componentName})`;
 
             state: T;
-            unSubscribe: () => {} | null;
+            unSubscribe: () => void | null;
 
             constructor() {
                 super();
@@ -20,7 +20,7 @@ export default class AlminReactContainer {
                 const onChangeHandler = () => {
                     this.setState(context.getState());
                 };
-                this.unSubscribe = context.onChange(onChangeHandler) as any;
+                this.unSubscribe = context.onChange(onChangeHandler);
             }
 
             componentWillUnmount() {
