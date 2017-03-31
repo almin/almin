@@ -10,7 +10,7 @@
     "src/"
   ],
   "name": "almin-react-container",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "React bindings for Almin",
   "main": "lib/almin-react-container.js",
   "types": "lib/almin-react-container.d.ts",
