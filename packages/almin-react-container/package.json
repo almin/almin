@@ -35,7 +35,7 @@
   "homepage": "https://github.com/azu/almin-react-container",
   "peerDependencies": {
     "react": "^15.0.0",
-    "almin": ">=0.10.0"
+    "almin": ">=0.11.0"
   },
   "devDependencies": {
     "@types/node": "^7.0.12",
