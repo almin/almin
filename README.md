@@ -141,22 +141,22 @@ Welcome to pull request!
 - [azu/presentation-annotator: viewing presentation and annotate.](https://github.com/azu/presentation-annotator)
 - [morpheme-match/website at master · azu/morpheme-match](https://github.com/azu/morpheme-match/tree/master/website)
 
-## Running Tests
+## Running tests
 
-Running Tests in Node.js
+Run tests in Node.js
 
     npm test
 
-Running Tests in Browser
+Run tests in Browser
 
     npm run test:browser
 
-Running Tests in [Sauce Labs](https://saucelabs.com/ "Sauce Labs: Selenium Testing, Mobile Testing, JS Unit Testing")
+Run tests in [Sauce Labs](https://saucelabs.com/ "Sauce Labs: Selenium Testing, Mobile Testing, JS Unit Testing")
 
     # Need "~/.zuulrc" for using Sauce Labs
     npm run test:saucelabs
 
-## Building Docs
+## Building docs
 
 API Reference is generated from source codes.
 
