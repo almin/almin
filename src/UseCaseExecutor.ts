@@ -103,7 +103,8 @@ export class UseCaseExecutor {
             useCase: this._useCase,
             dispatcher: this._dispatcher,
             parentUseCase: this._parentUseCase,
-            isTrusted: true
+            isTrusted: true,
+            isUseCaseFinished: false
         });
         this._dispatcher.dispatch(payload, meta);
         // Warning: parentUseCase is already released
@@ -116,9 +117,8 @@ export class UseCaseExecutor {
 
     /**
      * dispatch did execute each UseCase
-     * @param   [value] result value of the useCase executed
      */
-    private _didExecute(value?: any): void {
+    private _didExecute(isFinished: boolean, value?: any): void {
         const payload = new DidExecutedPayload({
             value
         });
@@ -126,7 +126,8 @@ export class UseCaseExecutor {
             useCase: this._useCase,
             dispatcher: this._dispatcher,
             parentUseCase: this._parentUseCase,
-            isTrusted: true
+            isTrusted: true,
+            isUseCaseFinished: isFinished
         });
         this._dispatcher.dispatch(payload, meta);
     }
@@ -143,7 +144,8 @@ export class UseCaseExecutor {
             useCase: this._useCase,
             dispatcher: this._dispatcher,
             parentUseCase: this._parentUseCase,
-            isTrusted: true
+            isTrusted: true,
+            isUseCaseFinished: true
         });
         this._dispatcher.dispatch(payload, meta);
         // Warning: parentUseCase is already released
@@ -212,7 +214,10 @@ export class UseCaseExecutor {
         this._willExecute(args);
         const result = this._useCase.execute(...args);
         // Sync call didExecute
-        this._didExecute(result);
+        const isResultPromise = result && typeof result.then == "function";
+        // if the UseCase return a promise, almin recognize the UseCase as continuous.
+        const isUseCaseFinished = !isResultPromise;
+        this._didExecute(isUseCaseFinished, result);
         // When UseCase#execute is completed, dispatch "complete".
         return Promise.resolve(result).then((result) => {
             this._complete(result);

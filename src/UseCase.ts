@@ -138,7 +138,9 @@ export abstract class UseCase extends Dispatcher implements UseCaseLike {
                 // parent is the same with UseCase. because this useCase dispatch the payload
                 parentUseCase: null,
                 // the user create this payload
-                isTrusted: false
+                isTrusted: false,
+                // always true because dispatch in the useCase
+                isUseCaseFinished: false
             });
         super.dispatch(payload, useCaseMeta);
     }
@@ -164,7 +166,8 @@ export abstract class UseCase extends Dispatcher implements UseCaseLike {
         const meta = new DispatcherPayloadMetaImpl({
             useCase: this,
             dispatcher: this,
-            isTrusted: true
+            isTrusted: true,
+            isUseCaseFinished: false
         });
         const payload = new ErrorPayload({
             error
