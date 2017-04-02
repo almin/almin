@@ -1,10 +1,10 @@
 // MIT © 2017 azu
 "use strict";
 const assert = require("assert");
-import { Context } from "../lib/Context";
+import { Store, Context, DidExecutedPayload, CompletedPayload } from "../lib/";
+import MapLike from "map-like";
 import ReturnPromiseUseCase from "./use-case/ReturnPromiseUseCase";
 import { Dispatcher } from "../lib/Dispatcher";
-import { Store } from "../lib/Store";
 import { NoDispatchUseCase } from "./use-case/NoDispatchUseCase";
 import { DispatchUseCase } from "./use-case/DispatchUseCase";
 import { ErrorUseCase } from "./use-case/ErrorUseCase";
@@ -188,4 +188,33 @@ describe("DispatcherPayloadMeta", () => {
             });
         });
     });
+    context("Scenario Case", () => {
+        it("The user can know that the UseCase is just finished by isUseCaseFinished", () => {
+            const dispatcher = new Dispatcher();
+            const context = new Context({
+                dispatcher: dispatcher,
+                store: new Store()
+            });
+            const useCase = new DispatchUseCase();
+            let callCount = 0;
+            const finishedCallback = () => {
+                callCount++;
+            };
+            const calledMap = new MapLike();
+            dispatcher.onDispatch((payload, meta) => {
+                if (payload instanceof DidExecutedPayload && meta.isUseCaseFinished) {
+                    calledMap.set(meta.useCase, true);
+                    finishedCallback();
+                } else if (payload instanceof CompletedPayload && meta.isUseCaseFinished) {
+                    if (calledMap.has(meta.useCase)) {
+                        return void calledMap.delete(meta.useCase);
+                    }
+                    finishedCallback();
+                }
+            });
+            return context.useCase(useCase).execute({ type: "test" }).then(() => {
+                assert.equal(callCount, 1);
+            });
+        });
+    })
 });

@@ -206,19 +206,19 @@ export class UseCaseExecutor {
      * execute UseCase instance.
      * UseCase is a executable object. it means that has `execute` method.
      * Notes: UseCaseExecutor doesn't return resolved value by design
-     * @param args
      */
     execute(): Promise<void>;
     execute<T>(args: T): Promise<void>;
     execute(...args: Array<any>): Promise<void> {
         this._willExecute(args);
         const result = this._useCase.execute(...args);
-        // Sync call didExecute
         const isResultPromise = result && typeof result.then == "function";
         // if the UseCase return a promise, almin recognize the UseCase as continuous.
+        // In other word, If the UseCase want to continue, please return a promise object.
         const isUseCaseFinished = !isResultPromise;
+        // Sync call didExecute
         this._didExecute(isUseCaseFinished, result);
-        // When UseCase#execute is completed, dispatch "complete".
+        // Async call complete
         return Promise.resolve(result).then((result) => {
             this._complete(result);
             this.release();
