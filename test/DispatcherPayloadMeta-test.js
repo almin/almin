@@ -203,11 +203,11 @@ describe("DispatcherPayloadMeta", () => {
             const calledMap = new MapLike();
             dispatcher.onDispatch((payload, meta) => {
                 if (payload instanceof DidExecutedPayload && meta.isUseCaseFinished) {
-                    calledMap.set(meta.useCase, true);
+                    calledMap.set(meta.useCase.id, true);
                     finishedCallback();
                 } else if (payload instanceof CompletedPayload && meta.isUseCaseFinished) {
-                    if (calledMap.has(meta.useCase)) {
-                        return void calledMap.delete(meta.useCase);
+                    if (calledMap.has(meta.useCase.id)) {
+                        return void calledMap.delete(meta.useCase.id);
                     }
                     finishedCallback();
                 }
