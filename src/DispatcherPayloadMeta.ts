@@ -8,9 +8,9 @@ import { UseCaseLike } from "./UseCaseLike";
 export interface DispatcherPayloadMetaArgs {
     useCase?: UseCaseLike;
     dispatcher?: Dispatcher | Dispatcher;
+    isUseCaseFinished?: boolean;
     parentUseCase?: UseCase | null;
     isTrusted: boolean;
-    isUseCaseFinished: boolean;
 }
 
 /**
@@ -103,6 +103,6 @@ export class DispatcherPayloadMetaImpl implements DispatcherPayloadMeta {
         this.parentUseCase = args.parentUseCase || null;
         this.timeStamp = Date.now();
         this.isTrusted = args.isTrusted;
-        this.isUseCaseFinished = args.isUseCaseFinished;
+        this.isUseCaseFinished = args.isUseCaseFinished !== undefined ? args.isUseCaseFinished : false;
     }
 }
