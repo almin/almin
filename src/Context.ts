@@ -1,8 +1,6 @@
 // LICENSE : MIT
 "use strict";
 import * as assert from "assert";
-import { StoreGroup } from "./UILayer/StoreGroup";
-import { QueuedStoreGroup } from "./UILayer/QueuedStoreGroup";
 import { Dispatcher } from "./Dispatcher";
 import { DispatchedPayload } from "./Dispatcher";
 import { DispatcherPayloadMeta } from "./DispatcherPayloadMeta";
@@ -57,7 +55,7 @@ export class Context {
      * });
      * ```
      */
-    constructor({dispatcher, store}: {dispatcher: Dispatcher; store: QueuedStoreGroup | StoreGroup | Store;}) {
+    constructor({dispatcher, store}: {dispatcher: Dispatcher; store: Store | StoreLike & Dispatcher;}) {
         StoreGroupValidator.validateInstance(store);
         // central dispatcher
         this._dispatcher = dispatcher;
