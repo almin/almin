@@ -139,7 +139,7 @@ export abstract class UseCase extends Dispatcher implements UseCaseLike {
                 parentUseCase: null,
                 // the user create this payload
                 isTrusted: false,
-                // always true because dispatch in the useCase
+                // Always false because the payload is dispatched from this working useCase.
                 isUseCaseFinished: false
             });
         super.dispatch(payload, useCaseMeta);
