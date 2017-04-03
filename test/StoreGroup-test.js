@@ -3,14 +3,14 @@
 const assert = require("power-assert");
 import { Store } from "../lib/Store";
 import { StoreGroup } from "../lib/UILayer/StoreGroup";
-import { createEchoStore } from "./helper/EchoStore";
+import { createStore } from "./helper/create-store";
 
 describe("StoreGroup", function() {
     describe("#onChange", function() {
         context("when some store emitChange()", function() {
             it("should async called StoreGroup#onChange", function(done) {
-                const aStore = createEchoStore({ name: "AStore" });
-                const bStore = createEchoStore({ name: "BStore" });
+                const aStore = createStore({ name: "AStore" });
+                const bStore = createStore({ name: "BStore" });
                 const storeGroup = new StoreGroup([aStore, bStore]);
                 // Should be failure, if emit -> onChange **sync**.
                 // But it is called async
@@ -27,8 +27,8 @@ describe("StoreGroup", function() {
         it("should async called onChange after 2nd", function(done) {
             // it should work cache temporary.
             // test _prunePreviousCache
-            const aStore = createEchoStore({ name: "AStore" });
-            const bStore = createEchoStore({ name: "BStore" });
+            const aStore = createStore({ name: "AStore" });
+            const bStore = createStore({ name: "BStore" });
             const storeGroup = new StoreGroup([aStore, bStore]);
             const test1 = (callback) => {
                 // Should be failure, if emit -> onChange **sync**.
@@ -62,8 +62,8 @@ describe("StoreGroup", function() {
             })
         });
         it("should thin out change events at once", function(done) {
-            const aStore = createEchoStore({ name: "AStore" });
-            const bStore = createEchoStore({ name: "BStore" });
+            const aStore = createStore({ name: "AStore" });
+            const bStore = createStore({ name: "BStore" });
             const storeGroup = new StoreGroup([aStore, bStore]);
             // then - called change handler a one-time
             storeGroup.onChange((changedStores) => {
@@ -183,8 +183,8 @@ describe("StoreGroup", function() {
     });
     describe("#release", function() {
         it("release onChange handler", function() {
-            const aStore = createEchoStore({ name: "AStore" });
-            const bStore = createEchoStore({ name: "BStore" });
+            const aStore = createStore({ name: "AStore" });
+            const bStore = createStore({ name: "BStore" });
             const storeGroup = new StoreGroup([aStore, bStore]);
             // then - called change handler a one-time
             let isCalled = false;

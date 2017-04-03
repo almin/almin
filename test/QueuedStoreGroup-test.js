@@ -3,7 +3,7 @@
 const assert = require("power-assert");
 import { Store } from "../lib/Store";
 import { QueuedStoreGroup } from "../lib/UILayer/QueuedStoreGroup";
-import { createEchoStore } from "./helper/EchoStore";
+import { createStore } from "./helper/create-store";
 import { UseCase } from "../lib/UseCase";
 import { Context } from "../lib/Context";
 import { Dispatcher } from "../lib/Dispatcher";
@@ -30,7 +30,7 @@ describe("QueuedStoreGroup", function() {
         context("when StoreGroup#emitChange()", function() {
             context("some store is changed", function() {
                 it("should be called by sync", function() {
-                    const store = createEchoStore({ name: "AStore" });
+                    const store = createStore({ name: "AStore" });
                     const storeGroup = new QueuedStoreGroup([store]);
                     let isCalled = false;
                     // then
@@ -45,7 +45,7 @@ describe("QueuedStoreGroup", function() {
             });
             context("any store is not changed", function() {
                 it("should be called by sync", function() {
-                    const store = createEchoStore({ name: "AStore" });
+                    const store = createStore({ name: "AStore" });
                     const storeGroup = new QueuedStoreGroup([store]);
                     let isCalled = false;
                     // then
@@ -61,7 +61,7 @@ describe("QueuedStoreGroup", function() {
         });
         context("when UseCase never change any store", function() {
             it("should not be called", function() {
-                const store = createEchoStore({ name: "AStore" });
+                const store = createStore({ name: "AStore" });
                 const storeGroup = new QueuedStoreGroup([store]);
                 let isCalled = false;
                 // then
@@ -86,7 +86,7 @@ describe("QueuedStoreGroup", function() {
         // sync
         context("when SyncUseCase change the store", function() {
             it("should be called by sync", function() {
-                const store = createEchoStore({ name: "AStore" });
+                const store = createStore({ name: "AStore" });
                 const storeGroup = new QueuedStoreGroup([store]);
                 let isCalled = false;
                 // then
@@ -107,7 +107,7 @@ describe("QueuedStoreGroup", function() {
         // async
         context("when ASyncUseCase change the store", function() {
             it("should be called by async", function() {
-                const store = createEchoStore({ name: "AStore" });
+                const store = createStore({ name: "AStore" });
                 const storeGroup = new QueuedStoreGroup([store]);
                 let isCalled = false;
                 storeGroup.onChange(() => {
@@ -131,8 +131,8 @@ describe("QueuedStoreGroup", function() {
         context("when UseCase is nesting", function() {
             context("{ asap: true }", function() {
                 it("should be called by all usecase", function() {
-                    const aStore = createEchoStore({ name: "AStore" });
-                    const bStore = createEchoStore({ name: "BStore" });
+                    const aStore = createStore({ name: "AStore" });
+                    const bStore = createStore({ name: "BStore" });
                     const storeGroup = new QueuedStoreGroup([aStore, bStore], {
                         asap: true
                     });
@@ -162,8 +162,8 @@ describe("QueuedStoreGroup", function() {
             });
             context("{ asap: false }", function() {
                 it("should be called only once", function() {
-                    const aStore = createEchoStore({ name: "AStore" });
-                    const bStore = createEchoStore({ name: "BStore" });
+                    const aStore = createStore({ name: "AStore" });
+                    const bStore = createStore({ name: "BStore" });
                     const storeGroup = new QueuedStoreGroup([aStore, bStore]);
                     let onChangeCounter = 0;
                     storeGroup.onChange((changedStores) => {
@@ -193,7 +193,7 @@ describe("QueuedStoreGroup", function() {
             });
             context("when UseCase#dispatch is called", function() {
                 it("should not be called - no changing store", function() {
-                    const store = createEchoStore({ name: "AStore" });
+                    const store = createStore({ name: "AStore" });
                     const storeGroup = new QueuedStoreGroup([store]);
                     let isChanged = false;
                     let dispatchedPayload = null;
@@ -230,7 +230,7 @@ describe("QueuedStoreGroup", function() {
                     return resultPromise
                 });
                 it("should be called by sync", function() {
-                    const store = createEchoStore({ name: "AStore" });
+                    const store = createStore({ name: "AStore" });
                     const storeGroup = new QueuedStoreGroup([store]);
                     let isCalled = false;
                     storeGroup.onChange(() => {
@@ -262,7 +262,7 @@ describe("QueuedStoreGroup", function() {
                     return resultPromise
                 });
                 it("should be called each dispatch", function() {
-                    const store = createEchoStore({ name: "AStore" });
+                    const store = createStore({ name: "AStore" });
                     const storeGroup = new QueuedStoreGroup([store]);
                     let calledCount = 0;
                     storeGroup.onChange(() => {
@@ -297,7 +297,7 @@ describe("QueuedStoreGroup", function() {
         });
         context("when UseCase is failing", function() {
             it("should be called", function() {
-                const aStore = createEchoStore({ name: "AStore" });
+                const aStore = createStore({ name: "AStore" });
                 const storeGroup = new QueuedStoreGroup([aStore]);
                 let onChangeCounter = 0;
                 storeGroup.onChange((changedStores) => {
@@ -325,7 +325,7 @@ describe("QueuedStoreGroup", function() {
         });
         context("when UseCase call `throwError()", function() {
             it("should be called", function() {
-                const store = createEchoStore({ name: "AStore" });
+                const store = createStore({ name: "AStore" });
                 const storeGroup = new QueuedStoreGroup([store]);
                 let isCalled = false;
                 // then
@@ -351,8 +351,8 @@ describe("QueuedStoreGroup", function() {
         });
         context("WhiteBox testing", function() {
             it("should thin out change events at once", function() {
-                const aStore = createEchoStore({ name: "AStore" });
-                const bStore = createEchoStore({ name: "BStore" });
+                const aStore = createStore({ name: "AStore" });
+                const bStore = createStore({ name: "BStore" });
                 const storeGroup = new QueuedStoreGroup([aStore, bStore]);
                 class ChangeABUseCase extends UseCase {
                     execute() {
@@ -382,7 +382,7 @@ describe("QueuedStoreGroup", function() {
         });
         context("Sync Change and Async Change in Edge case", function() {
             it("should emit Change twice", function() {
-                const store = createEchoStore({ name: "AStore" });
+                const store = createStore({ name: "AStore" });
                 const storeGroup = new QueuedStoreGroup([store]);
                 const asyncUseCase = createAsyncChangeStoreUseCase(store);
                 class ChangeTheStoreUseCase extends UseCase {
@@ -412,9 +412,9 @@ describe("QueuedStoreGroup", function() {
         });
         context("Flow example", function() {
             it("should output", function() {
-                const aStore = createEchoStore({ name: "AStore" });
-                const bStore = createEchoStore({ name: "BStore" });
-                const cStore = createEchoStore({ name: "CStore" });
+                const aStore = createStore({ name: "AStore" });
+                const bStore = createStore({ name: "BStore" });
+                const cStore = createStore({ name: "CStore" });
                 const storeGroup = new QueuedStoreGroup([aStore, bStore, cStore]);
                 class ParentUseCase extends UseCase {
                     execute() {
@@ -534,8 +534,8 @@ describe("QueuedStoreGroup", function() {
     });
     describe("#release", function() {
         it("release onChange handler", function() {
-            const aStore = createEchoStore({ name: "AStore" });
-            const bStore = createEchoStore({ name: "BStore" });
+            const aStore = createStore({ name: "AStore" });
+            const bStore = createStore({ name: "BStore" });
             const storeGroup = new QueuedStoreGroup([aStore, bStore]);
             // then - called change handler a one-time
             let isCalled = false;
