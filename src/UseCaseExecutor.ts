@@ -103,7 +103,8 @@ export class UseCaseExecutor {
             useCase: this._useCase,
             dispatcher: this._dispatcher,
             parentUseCase: this._parentUseCase,
-            isTrusted: true
+            isTrusted: true,
+            isUseCaseFinished: false
         });
         this._dispatcher.dispatch(payload, meta);
         // Warning: parentUseCase is already released
@@ -116,9 +117,8 @@ export class UseCaseExecutor {
 
     /**
      * dispatch did execute each UseCase
-     * @param   [value] result value of the useCase executed
      */
-    private _didExecute(value?: any): void {
+    private _didExecute(isFinished: boolean, value?: any): void {
         const payload = new DidExecutedPayload({
             value
         });
@@ -126,7 +126,8 @@ export class UseCaseExecutor {
             useCase: this._useCase,
             dispatcher: this._dispatcher,
             parentUseCase: this._parentUseCase,
-            isTrusted: true
+            isTrusted: true,
+            isUseCaseFinished: isFinished
         });
         this._dispatcher.dispatch(payload, meta);
     }
@@ -143,7 +144,8 @@ export class UseCaseExecutor {
             useCase: this._useCase,
             dispatcher: this._dispatcher,
             parentUseCase: this._parentUseCase,
-            isTrusted: true
+            isTrusted: true,
+            isUseCaseFinished: true
         });
         this._dispatcher.dispatch(payload, meta);
         // Warning: parentUseCase is already released
@@ -204,16 +206,19 @@ export class UseCaseExecutor {
      * execute UseCase instance.
      * UseCase is a executable object. it means that has `execute` method.
      * Notes: UseCaseExecutor doesn't return resolved value by design
-     * @param args
      */
     execute(): Promise<void>;
     execute<T>(args: T): Promise<void>;
     execute(...args: Array<any>): Promise<void> {
         this._willExecute(args);
         const result = this._useCase.execute(...args);
+        const isResultPromise = result && typeof result.then == "function";
+        // if the UseCase return a promise, almin recognize the UseCase as continuous.
+        // In other word, If the UseCase want to continue, please return a promise object.
+        const isUseCaseFinished = !isResultPromise;
         // Sync call didExecute
-        this._didExecute(result);
-        // When UseCase#execute is completed, dispatch "complete".
+        this._didExecute(isUseCaseFinished, result);
+        // Async call complete
         return Promise.resolve(result).then((result) => {
             this._complete(result);
             this.release();

@@ -43,7 +43,7 @@ export class FunctionalUseCase extends Dispatcher implements UseCaseLike {
      */
     name: string;
 
-    constructor(functionUseCase: Function & {name?: string, displayName?: string}, dispatcher: Dispatcher) {
+    constructor(functionUseCase: Function & { name?: string, displayName?: string }, dispatcher: Dispatcher) {
         super();
         const context: FunctionalUseCaseContext = {
             dispatcher
@@ -74,7 +74,8 @@ export class FunctionalUseCase extends Dispatcher implements UseCaseLike {
         const meta = new DispatcherPayloadMetaImpl({
             useCase: this,
             dispatcher: this,
-            isTrusted: true
+            isTrusted: true,
+            isUseCaseFinished: false
         });
         const payload = new ErrorPayload({
             error
