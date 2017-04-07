@@ -18,7 +18,6 @@ class EmptyPayload extends Payload {
     }
 }
 const emptyPayload = new EmptyPayload();
-const InitialState = {};
 /**
  * onChange flow
  * https://code2flow.com/UOdnfN
@@ -58,7 +57,7 @@ export class CQRSStoreGroup extends Store {
         // after dispatching, and then emitChange
         this._startObservePayload();
         // default state
-        this.state = InitialState;
+        this.state = this.collectState(emptyPayload);
     }
 
     /**
@@ -75,10 +74,6 @@ export class CQRSStoreGroup extends Store {
      * @public
      */
     getState<T>(): T {
-        if (this.state === InitialState) {
-            this.state = this.collectState<T>(emptyPayload);
-            return this.state;
-        }
         return this.state as T;
     }
 

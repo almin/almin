@@ -11,7 +11,8 @@ const createAsyncChangeStoreUseCase = (store) => {
     class ChangeTheStoreUseCase extends UseCase {
         execute() {
             return Promise.resolve().then(() => {
-                store.emitChange();
+                const newState = { a: {} };
+                store.updateState(newState);
             });
         }
     }
@@ -20,11 +21,8 @@ const createAsyncChangeStoreUseCase = (store) => {
 const createChangeStoreUseCase = (store) => {
     class ChangeTheStoreUseCase extends UseCase {
         execute() {
-            console.log(store);
-            const newState = { a: 1 };
+            const newState = { a: {} };
             store.updateState(newState);
-            console.log(store);
-            store.emitChange();
         }
     }
     return new ChangeTheStoreUseCase()
@@ -41,8 +39,8 @@ describe("CQRSStoreGroup", function() {
                     isCalled = true;
                 });
                 // when
-                // But any store is not changed
                 storeGroup.emitChange();
+                // But any store is not changed
                 assert(isCalled === false);
             });
         });
@@ -62,7 +60,6 @@ describe("CQRSStoreGroup", function() {
                 });
                 // when
                 store.updateState(2);
-                store.emitChange();
                 assert(isCalled);
             });
         });
@@ -137,7 +134,7 @@ describe("CQRSStoreGroup", function() {
         });
         context("when UseCase is nesting", function() {
             context("{ asap: true }", function() {
-                it("should be called by all usecase", function() {
+                it("should be called by all UseCases", function() {
                     const aStore = createStore({ name: "AStore" });
                     const bStore = createStore({ name: "BStore" });
                     const storeGroup = new CQRSStoreGroup([aStore, bStore], {
@@ -152,7 +149,7 @@ describe("CQRSStoreGroup", function() {
                     class ChangeAAndBUseCase extends UseCase {
                         execute() {
                             return this.context.useCase(changeBUseCase).execute().then(() => {
-                                aStore.emitChange();
+                                aStore.updateState({ a: 1 });
                             });
                         }
                     }
@@ -164,37 +161,6 @@ describe("CQRSStoreGroup", function() {
                     const useCase = new ChangeAAndBUseCase();
                     return context.useCase(useCase).execute().then(() => {
                         assert.equal(onChangeCounter, 2);
-                    });
-                });
-            });
-            context("{ asap: false }", function() {
-                it("should be called only once", function() {
-                    const aStore = createStore({ name: "AStore" });
-                    const bStore = createStore({ name: "BStore" });
-                    const storeGroup = new CQRSStoreGroup([aStore, bStore]);
-                    let onChangeCounter = 0;
-                    storeGroup.onChange((changedStores) => {
-                        assert.equal(changedStores.length, 2);
-                        assert.deepEqual(changedStores, [bStore, aStore]);
-                        onChangeCounter += 1;
-                    });
-                    // when
-                    const changeBUseCase = createAsyncChangeStoreUseCase(bStore);
-                    class ChangeAAndBUseCase extends UseCase {
-                        execute() {
-                            return this.context.useCase(changeBUseCase).execute().then(() => {
-                                aStore.emitChange();
-                            });
-                        }
-                    }
-                    const context = new Context({
-                        dispatcher: new Dispatcher(),
-                        store: storeGroup
-                    });
-                    // then
-                    const useCase = new ChangeAAndBUseCase();
-                    return context.useCase(useCase).execute().then(() => {
-                        assert.equal(onChangeCounter, 1);
                     });
                 });
             });
@@ -247,7 +213,7 @@ describe("CQRSStoreGroup", function() {
                     class DispatchAndFinishAsyncUseCase extends UseCase {
                         execute() {
                             // store is changed
-                            store.emitChange();
+                            store.updateState({ a: 1 });
                             // dispatch event
                             this.dispatch({
                                 type: "DispatchAndFinishAsyncUseCase"
@@ -279,12 +245,12 @@ describe("CQRSStoreGroup", function() {
                     class DispatchAndFinishAsyncUseCase extends UseCase {
                         execute() {
                             // 1
-                            store.emitChange();
+                            store.updateState({ a: 1 });
                             this.dispatch({
                                 type: "DispatchAndFinishAsyncUseCase"
                             });
                             // 2
-                            store.emitChange();
+                            store.updateState({ a: 2 });
                             this.dispatch({
                                 type: "DispatchAndFinishAsyncUseCase"
                             });
@@ -302,20 +268,18 @@ describe("CQRSStoreGroup", function() {
                 });
             });
         });
-        context("when UseCase is failing", function() {
+        context("when UseCase throwing Error", function() {
             it("should be called", function() {
                 const aStore = createStore({ name: "AStore" });
                 const storeGroup = new CQRSStoreGroup([aStore]);
                 let onChangeCounter = 0;
-                storeGroup.onChange((changedStores) => {
-                    assert.equal(changedStores.length, 1);
-                    assert.deepEqual(changedStores, [aStore]);
+                storeGroup.onChange(() => {
                     onChangeCounter += 1;
                 });
                 // when
                 class FailUseCase extends UseCase {
                     execute() {
-                        aStore.emitChange();
+                        aStore.updateState({ a: 1 });
                         return Promise.reject(new Error("emit change but fail UseCase"));
                     }
                 }
@@ -342,7 +306,7 @@ describe("CQRSStoreGroup", function() {
                 // when
                 const useCase = new class ThrowErrorUseCase extends UseCase {
                     execute() {
-                        store.emitChange();
+                        store.updateState({ a: 1 });
                         // dispatch event
                         this.throwError(new Error("error message"));
                     }
@@ -363,9 +327,10 @@ describe("CQRSStoreGroup", function() {
                 const storeGroup = new CQRSStoreGroup([aStore, bStore]);
                 class ChangeABUseCase extends UseCase {
                     execute() {
-                        aStore.emitChange();
-                        aStore.emitChange();
-                        bStore.emitChange();
+                        aStore.updateState({ a: 1 });
+                        aStore.emitChange(); // *1
+                        bStore.updateState({ b: 1 });
+                        bStore.emitChange(); // *2
                     }
                 }
                 const useCase = new ChangeABUseCase();
@@ -374,51 +339,60 @@ describe("CQRSStoreGroup", function() {
                     store: storeGroup
                 });
                 // then - called change handler a one-time
+                let calledCount = 0;
                 storeGroup.onChange((changedStores) => {
+                    calledCount++;
                     assert.equal(changedStores.length, 2);
                 });
                 // when
                 return context.useCase(useCase).execute().then(() => {
-                    assert.equal(storeGroup.currentChangingStores.length, 2);
-                    // then next emit change
-                    aStore.emitChange();
-                    // reset changing stores
-                    assert.equal(storeGroup.currentChangingStores.length, 1);
+                    // collect up *1 and *2
+                    // Store#onChange in StoreGroup only add changing queue.
+                    assert.equal(calledCount, 1, "onChange is called just once");
                 });
             });
         });
         context("Sync Change and Async Change in Edge case", function() {
-            it("should emit Change twice", function() {
+            /*
+            This useCase should update twice
+                execute(){
+                    model.count = 1; *1
+                    // DidExecute -> refresh
+                    return Promise.resolve().then(() => {
+                        model.count = 2; * 1
+                    }); // Complete -> refresh
+                }
+
+             */
+            it("should pass twice update scenario", function() {
                 const store = createStore({ name: "AStore" });
                 const storeGroup = new CQRSStoreGroup([store]);
                 const asyncUseCase = createAsyncChangeStoreUseCase(store);
                 class ChangeTheStoreUseCase extends UseCase {
                     execute() {
-                        store.emitChange();
-                        return this.context.useCase(asyncUseCase).execute(); // 2
-                    } // 1
+                        store.updateState({ a: 1 });
+                        return this.context.useCase(asyncUseCase).execute();
+                        // complete => update
+                    } // didExecute => update
                 }
                 const context = new Context({
                     dispatcher: new Dispatcher(),
                     store: storeGroup
                 });
                 // count
-                let changedStoresEachEvent = [];
-                storeGroup.onChange((changedStores) => {
-                    changedStoresEachEvent.push(changedStores);
+                let calledCount = 0;
+                storeGroup.onChange(() => {
+                    calledCount++;
                 });
                 const useCase = new ChangeTheStoreUseCase();
                 // when
                 return context.useCase(useCase).execute().then(() => {
-                    assert.equal(changedStoresEachEvent.length, 2);
-                    const [first, second] = changedStoresEachEvent;
-                    assert.equal(first.length, 1);
-                    assert.equal(second.length, 1);
+                    assert.equal(calledCount, 2);
                 });
             });
         });
-        context("Flow example", function() {
-            it("should output", function() {
+        context("onChange calling flow example", function() {
+            it("should call onChange in order", function() {
                 const aStore = createStore({ name: "AStore" });
                 const bStore = createStore({ name: "BStore" });
                 const cStore = createStore({ name: "CStore" });
@@ -431,16 +405,15 @@ describe("CQRSStoreGroup", function() {
                             this.context.useCase(aUseCase).execute(),
                             this.context.useCase(bUseCase).execute()
                         ]).then(() => {
-                            // change cStore at same time
-                            this.dispatch({
-                                type: "END"
-                            });
+                            cStore.updateState({ c: 1 });
+                            cStore.emitChange();
                         });
                     }
                 }
                 class ChildAUseCase extends UseCase {
                     execute() {
                         return new Promise((resolve) => {
+                            aStore.updateState({ a: 1 });
                             aStore.emitChange();
                             resolve();
                         });
@@ -449,6 +422,7 @@ describe("CQRSStoreGroup", function() {
                 class ChildBUseCase extends UseCase {
                     execute() {
                         return new Promise((resolve) => {
+                            bStore.updateState({ b: 1 });
                             bStore.emitChange();
                             resolve();
                         });
@@ -459,21 +433,15 @@ describe("CQRSStoreGroup", function() {
                     dispatcher: new Dispatcher(),
                     store: storeGroup
                 });
-                // C is changed
-                useCase.onDispatch(payload => {
-                    if (payload.type === "END") {
-                        cStore.emitChange();
-                    }
-                });
                 // then - called change handler a one-time
-                let changed = [];
+                let actualChangedStores = [];
                 storeGroup.onChange((changedStores) => {
-                    changed = changed.concat(changedStores);
+                    actualChangedStores = actualChangedStores.concat(changedStores);
                 });
                 // when
                 return context.useCase(useCase).execute().then(() => {
-                    assert.equal(changed.length, 3);
-                    assert.deepEqual(changed, [
+                    assert.equal(actualChangedStores.length, 3);
+                    assert.deepEqual(actualChangedStores, [
                         aStore,
                         bStore,
                         cStore
