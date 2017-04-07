@@ -2,9 +2,8 @@
 "use strict";
 const assert = require("power-assert");
 
-import { Context } from "../lib/Context";
-import { Dispatcher } from "../lib/Dispatcher";
 import { Store } from "../lib/Store";
+import { createStore } from "./helper/create-store";
 import { UseCase } from "../lib/UseCase";
 import { ErrorPayload } from "../lib/payload/ErrorPayload";
 
@@ -35,6 +34,38 @@ describe("Store", function() {
             });
             // when
             store.dispatch(expectedPayload);
+        });
+    });
+    describe("#shouldStateUpdate", () => {
+        it("default implementation is shallow equal", () => {
+            const store = createStore({ name: "TestStore" });
+            const prevState = {
+                a: 1
+            };
+            const nextState = {
+                a: 1
+            };
+            const nextChangedState = {
+                a: 2
+            };
+            // if the state is not changed, return false
+            assert(store.shouldStateUpdate(prevState, nextState) === false);
+            // if the state is changed, return true
+            assert(store.shouldStateUpdate(prevState, nextChangedState));
+            // The arguments is not object, return false
+            assert(store.shouldStateUpdate(1, 1) === false);
+            // The arguments is empty object, return false
+            assert(store.shouldStateUpdate({}, {}) === false);
+        });
+        it("can override by sub class", () => {
+            class CustomShouldStateUpdateStore extends Store {
+                shouldStateUpdate(prev, next) {
+                    // always true
+                    return true;
+                }
+            }
+            const store = new CustomShouldStateUpdateStore();
+            assert(store.shouldStateUpdate({ a: 1 }, { a: 1 }));
         });
     });
     describe("#onChange", function() {
