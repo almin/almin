@@ -2,6 +2,8 @@
 "use strict";
 import { Dispatcher } from "./Dispatcher";
 import { StoreLike } from "./StoreLike";
+import { Payload } from "./payload/Payload";
+import { shallowEqual } from "./util/shallowEqual";
 
 const STATE_CHANGE_EVENT = "STATE_CHANGE_EVENT";
 
@@ -94,14 +96,17 @@ export abstract class Store extends Dispatcher implements StoreLike {
     }
 
     /**
+     * If the prev/next state is difference, should return true.
+     */
+    shouldStateUpdate<T>(prevState: T, nextState: T): boolean {
+        return !shallowEqual(prevState, nextState);
+    }
+
+    /**
      * You should be overwrite by Store subclass.
      * Next, return state object of your store.
-     *
-     * FIXME: mark this as `abstract` property.
      */
-    getState<T>(_prevState?: T): T {
-        throw new Error(`${this.name} should be implemented Store#getState(): Object`);
-    }
+    abstract getState<T>(prevState?: T, payload?: Payload): T;
 
     /**
      * Subscribe change event of the store.
@@ -130,3 +135,8 @@ export abstract class Store extends Dispatcher implements StoreLike {
         this.emit(STATE_CHANGE_EVENT, [this]);
     }
 }
+
+// Implement assertion
+Store.prototype.getState = function (this: Store) {
+    throw new Error(`${this.name} should be implemented Store#getState(): Object`);
+};

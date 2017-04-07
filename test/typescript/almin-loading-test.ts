@@ -34,10 +34,15 @@ class LoadingStore extends Store {
         this.state = new LoadingState(false);
         this.onDispatch((payload: LoadingPayload | Payload) => {
             if (payload instanceof LoadingPayload) {
-                const newState = this.state.update(payload.isLoading)
-                this.state = newState;
+                this.state = this.state.update(payload.isLoading);
             }
         })
+    }
+
+    getState() {
+        return {
+            loadingState: this.state
+        };
     }
 }
 
