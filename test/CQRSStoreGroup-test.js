@@ -351,6 +351,31 @@ describe("CQRSStoreGroup", function() {
                     assert.equal(calledCount, 1, "onChange is called just once");
                 });
             });
+            context("when the UseCase don't return a promise", () => {
+                it("StoreGroup#emitChange is called just one time", function() {
+                    const aStore = createStore({ name: "AStore" });
+                    const storeGroup = new CQRSStoreGroup([aStore]);
+                    class ChangeABUseCase extends UseCase {
+                        execute() {
+                            aStore.updateState({ a: 1 });
+                        }
+                    }
+                    const useCase = new ChangeABUseCase();
+                    const context = new Context({
+                        dispatcher: new Dispatcher(),
+                        store: storeGroup
+                    });
+                    // then - called change handler a one-time
+                    let calledCount = 0;
+                    storeGroup.emitChange = () => {
+                        calledCount++;
+                    };
+                    // when
+                    return context.useCase(useCase).execute().then(() => {
+                        assert.equal(calledCount, 1, "StoreGroup#emitChange is called just once");
+                    });
+                })
+            });
         });
         context("Sync Change and Async Change in Edge case", function() {
             /*
