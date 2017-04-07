@@ -367,6 +367,7 @@ describe("CQRSStoreGroup", function() {
                     });
                     // then - called change handler a one-time
                     let calledCount = 0;
+                    // override
                     storeGroup.emitChange = () => {
                         calledCount++;
                     };

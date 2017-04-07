@@ -17,7 +17,60 @@ class EmptyPayload extends Payload {
         super({ type: "__Almin_EmptyPayload__" });
     }
 }
+// Empty state for passing to Store if previous state is empty.
+const emptyStateOfStore = Object.freeze({});
+// Empty payload for passing to Store if the state change is not related payload.
 const emptyPayload = new EmptyPayload();
+
+/**
+ * assert `state` shape.
+ * `state` should be object.
+ */
+const assertStateShape = (state: any, store: Store): void => {
+    assert.ok(typeof state == "object", `${store}: ${store.name}.getState() should return Object.
+e.g.)
+
+ class ExampleStore extends Store {
+     getState(prevState) {
+         return {
+            StateName: state
+         };
+     }
+ }
+ 
+Then, use can access by StateName.
+
+StoreGroup#getState()["StateName"]; // state
+
+`);
+};
+/**
+ * assert immutability of the `store`'s state
+ * https://github.com/almin/almin/issues/151
+ */
+const assertStateIsImmutable = (prevState: any, nextState: any, store: Store, changingStores: Array<Store>) => {
+    // Check immutability of Store'state
+    // https://github.com/almin/almin/issues/151
+    const isChangingStore = changingStores.indexOf(store) !== -1;
+    if (!isChangingStore) {
+        return;
+    }
+    const isStateChangedAtLeastOne = Object.keys(nextState).some(key => {
+        const prevStateValue = prevState[key];
+        const nextStateValue = nextState[key];
+        return prevStateValue !== nextStateValue;
+    });
+    assert.ok(isStateChangedAtLeastOne, `Store(${store.name}) does call emitChange(). 
+But, this store's state is not changed.
+Store's state should be immutable value.
+Prev State: 
+${JSON.stringify(prevState, null, 4)}
+----
+
+Next State: 
+${JSON.stringify(nextState, null, 4)}
+`);
+};
 /**
  * onChange flow
  * https://code2flow.com/UOdnfN
@@ -79,40 +132,13 @@ export class CQRSStoreGroup extends Store {
 
     // actually getState
     private collectState<T>(payload: Payload): T {
+        // 1. get prev or empty object
         const mapStateOfStore = (store: Store) => {
-            // 1. get prev or empty object
-            const prevState = this._stateCacheMap.get(store) || {};
+            const prevState = this._stateCacheMap.get(store) || emptyStateOfStore;
             const nextState = store.getState<typeof prevState>(prevState, payload);
             if (process.env.NODE_ENV !== "production") {
-                assert.ok(typeof nextState == "object", `${store}: ${store.name}.getState() should return Object.
-e.g.)
-
- class ExampleStore extends Store {
-     getState(prevState) {
-         return {
-            StateName: state
-         };
-     }
- }
- 
-Then, use can access by StateName.
-
-StoreGroup#getState()["StateName"]; // state
-
-`);
-                // Check immutability of Store'state
-                // https://github.com/almin/almin/issues/151
-                const isChangingStore = this.changingStores.indexOf(store) !== -1;
-                if (isChangingStore) {
-                    const isStateChangedAtLeastOne = Object.keys(nextState).some(key => {
-                        const prevStateValue = this.state[key];
-                        const nextStateValue = nextState[key];
-                        return prevStateValue !== nextStateValue;
-                    });
-                    assert.ok(isStateChangedAtLeastOne, `Store(${store.name}) called emitChange(). 
-But, this store's state is not changed.
-Store's state should be immutable value.`);
-                }
+                assertStateShape(nextState, store);
+                assertStateIsImmutable(prevState, nextState, store, this.changingStores);
             }
             // if the prev/next state is same, not update the state.
             if (!store.shouldStateUpdate(prevState, nextState)) {
@@ -151,11 +177,12 @@ Store's state should be immutable value.`);
      */
     emitChange(payload: Payload = emptyPayload): void {
         const nextState = this.collectState(payload);
-        if (this.shouldStoreGroupUpdate(nextState)) {
-            this.state = nextState;
-            this.emit(CHANGE_STORE_GROUP, this.changingStores.slice());
-            this._pruneChangingStores();
+        if (!this.shouldStoreGroupUpdate(nextState)) {
+            return;
         }
+        this.state = nextState;
+        this.emit(CHANGE_STORE_GROUP, this.changingStores);
+        this._pruneChangingStores();
     }
 
     /**
