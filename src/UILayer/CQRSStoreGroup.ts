@@ -216,16 +216,18 @@ export class CQRSStoreGroup extends Store {
      * @param {Store} store
      * @private
      */
-    private _registerStore(store: Store): void {
-        const releaseOnChangeHandler = store.onChange(() => {
+    private _registerStore(store: Store): () => void {
+        const onChangeHandler = () => {
             this._addChangingStore(store);
             // if not exist working UseCases, immediate invoke emitChange.
             if (!this.existWorkingUseCase) {
                 this.emitChange();
             }
-        });
-        // add release handler
-        this._releaseHandlers.push(releaseOnChangeHandler);
+        };
+        if (process.env.NODE_ENV !== "production") {
+            (onChangeHandler as any).displayName = `${store.name}#onChange->handler`;
+        }
+        return store.onChange(onChangeHandler);
     }
 
     // register changed events
