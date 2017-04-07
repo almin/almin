@@ -9,6 +9,7 @@ import { ErrorPayload } from "../payload/ErrorPayload";
 import { WillExecutedPayload } from "../payload/WillExecutedPayload";
 import { DidExecutedPayload } from "../payload/DidExecutedPayload";
 import { CompletedPayload } from "../payload/CompletedPayload";
+import { shallowEqual } from "../util/shallowEqual";
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
 
 class EmptyPayload extends Payload {
@@ -146,12 +147,7 @@ Store's state should be immutable value.`);
      * ```
      */
     shouldStoreGroupUpdate(nextState: any): boolean {
-        // if anyone state value is changed, return true
-        return Object.keys(this.state).some(stateName => {
-            const prevStateValue = this.state[stateName];
-            const nextStateValue = nextState[stateName];
-            return prevStateValue !== nextStateValue;
-        });
+        return !shallowEqual(this.state, nextState);
     }
 
     /**

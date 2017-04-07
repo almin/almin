@@ -3,20 +3,27 @@
 import { Store } from "../../lib/Store";
 /**
  * @param {string} name
+ * @param {*} state
  * @returns {TestStore}
  */
 export function createStore({
-    name
+    name,
+    state
 }) {
     class TestStore extends Store {
         constructor() {
             super();
             this.name = name;
+            this.state = state || "value";
+        }
+
+        updateState(newState) {
+            this.state = newState;
         }
 
         getState() {
             return {
-                [name]: "value"
+                [name]: this.state
             };
         }
     }
