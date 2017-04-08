@@ -74,8 +74,43 @@ ${JSON.stringify(nextState, null, 4)}
 `);
 };
 /**
- * onChange flow
- * https://code2flow.com/UOdnfN
+ * CQRSStoreGroup support pull-based and push-based Store.
+ *
+ * Pull-based: Recompute every time value is needed.
+ *
+ * Pull-based Store has only getState.
+ * Just create the state when `getState` is called.
+ *
+ * ```js
+ * const initialState = new State();
+ * class MyStore extends Store {
+ *    getState(prevState = initialState, payload) {
+ *       return prevState.reduce(payload); // return new State
+ *    }
+ * }
+ * ```
+ *
+ * Push-based: Recompute when a source value changes.
+ *
+ * Push-based Store have to create the sate ans save it.
+ * Just return the state when `getState` is called.
+ * It is similar with cache system.
+ *
+ * ```js
+ * class MyStore extends Store {
+ *    constructor() {
+ *      super();
+ *      this.state = new State();
+ *      this.onDispatch(payload => {
+ *         this.state = this.state.reduce(payload);
+ *      });
+ *    }
+ *
+ *    getState() {
+ *      return this.state;
+ *    }
+ * }
+ * ```
  */
 export class CQRSStoreGroup extends Store {
     // current state
@@ -104,7 +139,9 @@ export class CQRSStoreGroup extends Store {
         //          -> this.onDispatch -> If anyone store is changed, this.emitChange()
         // each pipe to dispatching
         stores.forEach(store => {
-            this._registerStore(store);
+            // observe Store
+            const registerHandler = this._registerStore(store);
+            this._releaseHandlers.push(registerHandler);
             // delegate dispatching
             const pipeHandler = this.pipe(store);
             this._releaseHandlers.push(pipeHandler);
@@ -116,17 +153,14 @@ export class CQRSStoreGroup extends Store {
     }
 
     /**
-     * if exist working UseCase, return true
-     * @returns {boolean}
+     * If exist working UseCase, return true
      */
-    get existWorkingUseCase() {
+    private get existWorkingUseCase() {
         return this._workingUseCaseMap.size > 0;
     }
 
     /**
-     * return the state object that merge each stores's state
-     * @returns {Object} merged state object
-     * @public
+     * Return the state object that merge each stores's state
      */
     getState<T>(): T {
         return this.state as T;
@@ -175,9 +209,8 @@ export class CQRSStoreGroup extends Store {
     }
 
     /**
-     * Emit change payload.
-     * Use ChangedPayload by default.
-     * @public
+     * Emit change if the state is changed.
+     * If call with no-arguments, use ChangedPayload by default.
      */
     emitChange(payload: Payload = changedPayload): void {
         const nextState = this.collectState(payload);
@@ -190,10 +223,9 @@ export class CQRSStoreGroup extends Store {
     }
 
     /**
-     * listen changes of the store group.
-     * @param {function(stores: Store[])} handler the callback arguments is array of changed store.
-     * @returns {Function} call the function and release handler
-     * @public
+     * Observe changes of the store group.
+     *
+     * onChange workflow: https://code2flow.com/UOdnfN
      */
     onChange(handler: (stores: Array<Store>) => void): () => void {
         this.on(CHANGE_STORE_GROUP, handler);
@@ -203,9 +235,8 @@ export class CQRSStoreGroup extends Store {
     }
 
     /**
-     * release all events handler.
+     * Release all events handler.
      * You can call this when no more call event handler
-     * @public
      */
     release(): void {
         this._releaseHandlers.forEach(releaseHandler => releaseHandler());
@@ -217,8 +248,6 @@ export class CQRSStoreGroup extends Store {
     /**
      * register store and listen onChange.
      * If you release store, and do call `release` method.
-     * @param {Store} store
-     * @private
      */
     private _registerStore(store: Store): () => void {
         const onChangeHandler = () => {
@@ -234,19 +263,9 @@ export class CQRSStoreGroup extends Store {
         return store.onChange(onChangeHandler);
     }
 
-    // register changed events
-    /* Edge case
-
-    execute(){
-        model.count = 1;
-        saveToRepository(model);
-        // DidExecute -> refresh
-        return Promise.resolve().then(() => {
-            model.count = 2;
-            saveToRepository(model)
-        }); // Complete -> refresh
-    }
-
+    /**
+     * Observe all payload.
+     *
      */
     private _observeDispatchedPayload(): void {
         const observeChangeHandler = (payload: Payload, meta: DispatcherPayloadMeta) => {
