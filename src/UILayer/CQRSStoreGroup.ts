@@ -158,14 +158,15 @@ export class CQRSStoreGroup extends Store {
      * Use `shouldStoreChange()` to let StoreGroup know if a event is not affected.
      * The default behavior is to emitChange on every life-cycle change,
      * and in the vast majority of cases you should rely on the default behavior.
+     * Default behavior is shallow-equal prev/next state.
      *
      * ## Example
      *
-     * If you want to emitChange when actually changingStore that called `Store#emitChange` is larger than 0.
+     * If you want to use `Object.is` to equal stats, overwrite following.
      *
      * ```js
-     * shouldStoreChange(nextState) {
-     *    return changingStores.length > 0;
+     * shouldStateUpdate(prevState, nextState) {
+     *    return !Object.is(prevState, nextState)
      * }
      * ```
      */
