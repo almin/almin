@@ -76,7 +76,7 @@ ${JSON.stringify(nextState, null, 4)}
 /**
  * CQRSStoreGroup support pull-based and push-based Store.
  *
- * Pull-based: Recompute every time value is needed.
+ * ### Pull-based: Recompute every time value is needed.
  *
  * Pull-based Store has only getState.
  * Just create the state when `getState` is called.
@@ -90,7 +90,7 @@ ${JSON.stringify(nextState, null, 4)}
  * }
  * ```
  *
- * Push-based: Recompute when a source value changes.
+ * ### Push-based: Recompute when a source value changes
  *
  * Push-based Store have to create the sate ans save it.
  * Just return the state when `getState` is called.
@@ -113,12 +113,12 @@ ${JSON.stringify(nextState, null, 4)}
  * ```
  */
 export class CQRSStoreGroup extends Store {
-    // current state
-    public state: any;
     // observing stores
     public stores: Array<Store>;
+    // current state
+    protected state: any;
     // current changing stores for emitChange
-    public changingStores: Array<Store> = [];
+    protected changingStores: Array<Store> = [];
     // all functions to release handlers
     private _releaseHandlers: Array<Function> = [];
     // already finished UseCase Map
@@ -155,7 +155,7 @@ export class CQRSStoreGroup extends Store {
     /**
      * If exist working UseCase, return true
      */
-    private get existWorkingUseCase() {
+    protected get existWorkingUseCase() {
         return this._workingUseCaseMap.size > 0;
     }
 
@@ -189,7 +189,7 @@ export class CQRSStoreGroup extends Store {
     }
 
     /**
-     * Use `shouldStoreChange()` to let StoreGroup know if a event is not affected.
+     * Use `shouldStateUpdate()` to let StoreGroup know if a event is not affected.
      * The default behavior is to emitChange on every life-cycle change,
      * and in the vast majority of cases you should rely on the default behavior.
      * Default behavior is shallow-equal prev/next state.
@@ -265,7 +265,6 @@ export class CQRSStoreGroup extends Store {
 
     /**
      * Observe all payload.
-     *
      */
     private _observeDispatchedPayload(): void {
         const observeChangeHandler = (payload: Payload, meta: DispatcherPayloadMeta) => {
@@ -279,15 +278,16 @@ export class CQRSStoreGroup extends Store {
                 if (meta.isUseCaseFinished) {
                     this._finishedUseCaseMap.set(meta.useCase.id, true);
                 }
-                this.emitChange(payload); // MayBe
+                this.emitChange(payload);
             } else if (payload instanceof CompletedPayload && meta.useCase && meta.isUseCaseFinished) {
                 this._workingUseCaseMap.delete(meta.useCase.id);
                 // if the useCase is already finished, doesn't emitChange in CompletedPayload
+                // In other word, If the UseCase that return non-promise value, doesn't emitChange in CompletedPayload
                 if (this._finishedUseCaseMap.has(meta.useCase.id)) {
                     this._finishedUseCaseMap.delete(meta.useCase.id);
                     return;
                 }
-                this.emitChange(payload); // MayBe
+                this.emitChange(payload);
             }
         };
         const releaseHandler = this.onDispatch(observeChangeHandler);
