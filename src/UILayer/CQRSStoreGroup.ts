@@ -83,8 +83,10 @@ ${JSON.stringify(nextState, null, 4)}
  * ```js
  * const initialState = new State();
  * class MyStore extends Store {
- *    getState(prevState = initialState, payload) {
- *       return prevState.reduce(payload); // return new State
+ *    getState({ myState: prevState = initialState }, payload) {
+ *       return {
+ *          myState: myState.reduce(payload); // return new State
+ *       };
  *    }
  * }
  * ```
@@ -106,7 +108,9 @@ ${JSON.stringify(nextState, null, 4)}
  *    }
  *
  *    getState() {
- *      return this.state;
+ *      return {
+ *          myState: this.state
+*       };
  *    }
  * }
  * ```
