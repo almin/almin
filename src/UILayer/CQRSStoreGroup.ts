@@ -10,18 +10,20 @@ import { WillExecutedPayload } from "../payload/WillExecutedPayload";
 import { DidExecutedPayload } from "../payload/DidExecutedPayload";
 import { CompletedPayload } from "../payload/CompletedPayload";
 import { shallowEqual } from "../util/shallowEqual";
+import { ChangedPayload } from "../payload/ChangedPayload";
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
-
-class EmptyPayload extends Payload {
+// Internal Payload class
+class InitPayload extends Payload {
     constructor() {
-        super({ type: "__Almin_EmptyPayload__" });
+        super({ type: "Almin__InitPayload__" });
     }
 }
 // Empty state for passing to Store if previous state is empty.
 const emptyStateOfStore = Object.freeze({});
-// Empty payload for passing to Store if the state change is not related payload.
-const emptyPayload = new EmptyPayload();
-
+// Init payload for passing to Store if the state change is not related payload.
+const initPayload = new InitPayload();
+// ChangedPayload is for changing from Store.
+const changedPayload = new ChangedPayload();
 /**
  * assert `state` shape.
  * `state` should be object.
@@ -108,9 +110,9 @@ export class CQRSStoreGroup extends Store {
             this._releaseHandlers.push(pipeHandler);
         });
         // after dispatching, and then emitChange
-        this._startObservePayload();
+        this._observeDispatchedPayload();
         // default state
-        this.state = this.collectState(emptyPayload);
+        this.state = this.collectState(initPayload);
     }
 
     /**
@@ -172,10 +174,11 @@ export class CQRSStoreGroup extends Store {
     }
 
     /**
-     * emit change event
+     * Emit change payload.
+     * Use ChangedPayload by default.
      * @public
      */
-    emitChange(payload: Payload = emptyPayload): void {
+    emitChange(payload: Payload = changedPayload): void {
         const nextState = this.collectState(payload);
         if (!this.shouldStoreGroupUpdate(nextState)) {
             return;
@@ -244,7 +247,7 @@ export class CQRSStoreGroup extends Store {
     }
 
      */
-    private _startObservePayload(): void {
+    private _observeDispatchedPayload(): void {
         const observeChangeHandler = (payload: Payload, meta: DispatcherPayloadMeta) => {
             if (!meta.isTrusted) {
                 this.emitChange(payload);
