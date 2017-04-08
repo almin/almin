@@ -48,6 +48,7 @@ StoreGroup#getState()["StateName"]; // state
 };
 /**
  * assert immutability of the `store`'s state
+ * If the store call `Store#emitChange()` and the state of store is not changed, throw error.
  * https://github.com/almin/almin/issues/151
  */
 const assertStateIsImmutable = (prevState: any, nextState: any, store: Store, changingStores: Array<Store>) => {
@@ -117,8 +118,10 @@ export class CQRSStoreGroup extends Store {
     public stores: Array<Store>;
     // current state
     protected state: any;
-    // current changing stores for emitChange
-    protected changingStores: Array<Store> = [];
+    // stores that are emitted changed.
+    private _emitChangedStores: Array<Store> = [];
+    // stores that are changed compared by previous state.
+    private _changingStores: Array<Store> = [];
     // all functions to release handlers
     private _releaseHandlers: Array<Function> = [];
     // already finished UseCase Map
@@ -168,13 +171,13 @@ export class CQRSStoreGroup extends Store {
 
     // actually getState
     private collectState<T>(payload: Payload): T {
-        // 1. get prev or empty object
         const mapStateOfStore = (store: Store) => {
+            // 1. get prev or empty object
             const prevState = this._stateCacheMap.get(store) || emptyStateOfStore;
             const nextState = store.getState<typeof prevState>(prevState, payload);
             if (process.env.NODE_ENV !== "production") {
                 assertStateShape(nextState, store);
-                assertStateIsImmutable(prevState, nextState, store, this.changingStores);
+                assertStateIsImmutable(prevState, nextState, store, this._emitChangedStores);
             }
             // if the prev/next state is same, not update the state.
             if (!store.shouldStateUpdate(prevState, nextState)) {
@@ -182,6 +185,7 @@ export class CQRSStoreGroup extends Store {
             }
             // 2. update prev state. It means that update the state of the store
             this._stateCacheMap.set(store, nextState);
+            this._addChangingStateOfStores(store);
             return nextState;
         };
         const stateMap = this.stores.map(mapStateOfStore);
@@ -213,13 +217,15 @@ export class CQRSStoreGroup extends Store {
      * If call with no-arguments, use ChangedPayload by default.
      */
     emitChange(payload: Payload = changedPayload): void {
+        this._pruneChangingStateOfStores();
         const nextState = this.collectState(payload);
         if (!this.shouldStateUpdate(this.state, nextState)) {
             return;
         }
         this.state = nextState;
-        this.emit(CHANGE_STORE_GROUP, this.changingStores);
-        this._pruneChangingStores();
+        this.emit(CHANGE_STORE_GROUP, this._changingStores.slice());
+        // release changed stores
+        this._pruneEmitChangedStore();
     }
 
     /**
@@ -242,7 +248,7 @@ export class CQRSStoreGroup extends Store {
         this._releaseHandlers.forEach(releaseHandler => releaseHandler());
         this._releaseHandlers.length = 0;
         this.state = null;
-        this._pruneChangingStores();
+        this._pruneChangingStateOfStores();
     }
 
     /**
@@ -251,7 +257,7 @@ export class CQRSStoreGroup extends Store {
      */
     private _registerStore(store: Store): () => void {
         const onChangeHandler = () => {
-            this._addChangingStore(store);
+            this.addEmitChangedStore(store);
             // if not exist working UseCases, immediate invoke emitChange.
             if (!this.existWorkingUseCase) {
                 this.emitChange();
@@ -294,12 +300,20 @@ export class CQRSStoreGroup extends Store {
         this._releaseHandlers.push(releaseHandler);
     }
 
-    private _addChangingStore(store: Store) {
-        this.changingStores.push(store);
+    private addEmitChangedStore(store: Store) {
+        this._emitChangedStores.push(store);
     }
 
-    private _pruneChangingStores() {
-        this.changingStores = [];
+    private _pruneEmitChangedStore() {
+        this._emitChangedStores = [];
+    }
+
+    private _addChangingStateOfStores(store: Store) {
+        this._changingStores.push(store);
+    }
+
+    private _pruneChangingStateOfStores() {
+        this._changingStores = [];
     }
 
 }

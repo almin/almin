@@ -87,6 +87,35 @@ describe("CQRSStoreGroup", function() {
                 });
             });
         });
+        context("onChange(changingStores)", () => {
+            it("should changingStores are changed own state", () => {
+                const storeA = createStore({ name: "AStore" });
+                const storeB = createStore({ name: "BStore" });
+                const storeGroup = new CQRSStoreGroup([storeA, storeB]);
+                let changedStores = [];
+                storeGroup.onChange((changingStores) => {
+                    changedStores = changingStores;
+                });
+                // when
+                class ChangeUseCase extends UseCase {
+                    execute() {
+                        storeA.updateState({ a: 1 });
+                        storeB.updateState({ b: 2 });
+                    }
+                }
+                const context = new Context({
+                    dispatcher: new Dispatcher(),
+                    store: storeGroup
+                });
+                // when
+                const useCase = new ChangeUseCase();
+                return context.useCase(useCase).execute().then(() => {
+                    assert.equal(changedStores.length, 2);
+                    // no specify in order
+                    assert.deepEqual(changedStores.sort(), [storeA, storeB].sort());
+                });
+            });
+        });
         // sync
         context("when SyncUseCase change the store", function() {
             it("should be called by sync", function() {
