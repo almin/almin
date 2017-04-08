@@ -61,16 +61,13 @@ const assertStateIsImmutable = (prevState: any, nextState: any, store: Store, ch
         const nextStateValue = nextState[key];
         return prevStateValue !== nextStateValue;
     });
-    assert.ok(isStateChangedAtLeastOne, `Store(${store.name}) does call emitChange(). 
+    if (!isStateChangedAtLeastOne) {
+        console.warn(`Store(${store.name}) does call emitChange(). 
 But, this store's state is not changed.
 Store's state should be immutable value.
-Prev State: 
-${JSON.stringify(prevState, null, 4)}
-----
-
-Next State: 
-${JSON.stringify(nextState, null, 4)}
-`);
+Prev State:`, prevState, `Next State:`, nextState
+        );
+    }
 };
 /**
  * CQRSStoreGroup support pull-based and push-based Store.
