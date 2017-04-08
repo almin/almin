@@ -162,7 +162,7 @@ export class CQRSStoreGroup extends Store {
      *
      * ## Example
      *
-     * If you want to use `Object.is` to equal stats, overwrite following.
+     * If you want to use `Object.is` to equal states, overwrite following.
      *
      * ```js
      * shouldStateUpdate(prevState, nextState) {
