@@ -78,7 +78,7 @@ ${JSON.stringify(nextState, null, 4)}
  * ### Pull-based: Recompute every time value is needed
  *
  * Pull-based Store has only getState.
- * Just create the state when `getState` is called.
+ * Just create the state and return it when `getState` is called.
  *
  * ```js
  * const initialState = new State();
