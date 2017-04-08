@@ -52,8 +52,6 @@ StoreGroup#getState()["StateName"]; // state
  * https://github.com/almin/almin/issues/151
  */
 const assertStateIsImmutable = (prevState: any, nextState: any, store: Store, changingStores: Array<Store>) => {
-    // Check immutability of Store'state
-    // https://github.com/almin/almin/issues/151
     const isChangingStore = changingStores.indexOf(store) !== -1;
     if (!isChangingStore) {
         return;
@@ -77,7 +75,7 @@ ${JSON.stringify(nextState, null, 4)}
 /**
  * CQRSStoreGroup support pull-based and push-based Store.
  *
- * ### Pull-based: Recompute every time value is needed.
+ * ### Pull-based: Recompute every time value is needed
  *
  * Pull-based Store has only getState.
  * Just create the state when `getState` is called.
@@ -231,7 +229,7 @@ export class CQRSStoreGroup extends Store {
     /**
      * Observe changes of the store group.
      *
-     * onChange workflow: https://code2flow.com/UOdnfN
+     * onChange workflow: https://code2flow.com/mHFviS
      */
     onChange(handler: (stores: Array<Store>) => void): () => void {
         this.on(CHANGE_STORE_GROUP, handler);
