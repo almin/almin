@@ -3,7 +3,7 @@
 import { Dispatcher } from "./Dispatcher";
 import { StoreLike } from "./StoreLike";
 import { Payload } from "./payload/Payload";
-import { shallowEqual } from "./util/shallowEqual";
+import { shallowEqual } from "shallow-equal-object";
 
 const STATE_CHANGE_EVENT = "STATE_CHANGE_EVENT";
 

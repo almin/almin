@@ -9,7 +9,7 @@ import { ErrorPayload } from "../payload/ErrorPayload";
 import { WillExecutedPayload } from "../payload/WillExecutedPayload";
 import { DidExecutedPayload } from "../payload/DidExecutedPayload";
 import { CompletedPayload } from "../payload/CompletedPayload";
-import { shallowEqual } from "../util/shallowEqual";
+import { shallowEqual } from "shallow-equal-object";
 import { ChangedPayload } from "../payload/ChangedPayload";
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
 // Internal Payload class
