@@ -169,8 +169,8 @@ export class CQRSStoreGroup extends Store {
      * }
      * ```
      */
-    shouldStoreGroupUpdate(nextState: any): boolean {
-        return !shallowEqual(this.state, nextState);
+    shouldStateUpdate(prevState: any, nextState: any): boolean {
+        return !shallowEqual(prevState, nextState);
     }
 
     /**
@@ -180,7 +180,7 @@ export class CQRSStoreGroup extends Store {
      */
     emitChange(payload: Payload = changedPayload): void {
         const nextState = this.collectState(payload);
-        if (!this.shouldStoreGroupUpdate(nextState)) {
+        if (!this.shouldStateUpdate(this.state, nextState)) {
             return;
         }
         this.state = nextState;
