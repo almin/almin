@@ -1,7 +1,7 @@
 // LICENSE : MIT
 "use strict";
 const React = require("react");
-const PropTypes = require('prop-types');
+const PropTypes = require("prop-types");
 import SVGIcon from "../../uikit/SVGIcon/SVGIcon";
 import Color from "../../../js/domain/value/Color";
 export default class IconPalette extends React.Component {

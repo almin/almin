@@ -1,7 +1,7 @@
 // LICENSE : MIT
 "use strict";
 const React = require("react");
-const PropTypes = require('prop-types');
+const PropTypes = require("prop-types");
 import ColorHistoryState from "../../../js/store/ColorHistoryStore/ColorHistoryState";
 import ColorHistory from "../../../js/domain/ColorHistory";
 export function ColorHistoryListItem({color}) {

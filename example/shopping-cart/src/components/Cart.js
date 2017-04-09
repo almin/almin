@@ -1,7 +1,7 @@
 "use strict";
 
 const React = require("react");
-const PropTypes = require('prop-types');
+const PropTypes = require("prop-types");
 
 class ProductHeader extends React.Component {
     render() {

@@ -2,7 +2,7 @@
 
 const React = require("react");
 
-const PropTypes = require('prop-types');
+const PropTypes = require("prop-types");
 
 class ProductsList extends React.Component {
     static propTypes = {

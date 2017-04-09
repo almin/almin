@@ -1,7 +1,7 @@
 // LICENSE : MIT
 "use strict";
 import React from "react";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import IncrementalCounterUseCase from "../usecase/IncrementalCounterUseCase";
 import { Context } from "almin";
 import CounterState from "../store/CounterState";

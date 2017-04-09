@@ -1,7 +1,7 @@
 // LICENSE : MIT
 "use strict";
 const React = require("react");
-const PropTypes = require('prop-types');
+const PropTypes = require("prop-types");
 export default class SVGIcon extends React.Component {
     render() {
         const name = this.props.name;

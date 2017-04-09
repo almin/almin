@@ -8,7 +8,7 @@
  */
 
 const React = require("react");
-const PropTypes = require('prop-types');
+const PropTypes = require("prop-types");
 const ReactPropTypes = PropTypes;
 const classNames = require("classnames");
 import AppLocator from "../AppLocator";
