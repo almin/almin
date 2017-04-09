@@ -8,21 +8,23 @@
  */
 
 const React = require("react");
-const ReactPropTypes = React.PropTypes;
+const PropTypes = require("prop-types");
+const ReactPropTypes = PropTypes;
 const classNames = require("classnames");
 import AppLocator from "../AppLocator";
 import {RemoveTodoItemFactory} from "../usecase/RemoveAllCompletedItems";
 import {FilterTodoListFactory} from "../usecase/FilterTodoList";
 import {FilterTypes} from "../store/TodoStore/TodoState";
-const Footer = React.createClass({
-    propTypes: {
+
+class Footer extends React.Component {
+    static propTypes = {
         allTodos: ReactPropTypes.array.isRequired
-    },
+    };
 
     /**
      * @return {object}
      */
-    render () {
+    render() {
         const allTodos = this.props.allTodos;
         const filterType = this.props.filterType;
         const total = allTodos.length;
@@ -94,15 +96,14 @@ const Footer = React.createClass({
                 {clearCompletedButton}
             </footer>
         );
-    },
+    }
 
     /**
      * Event handler to delete all completed TODOs
      */
-    _onClearCompletedClick () {
+    _onClearCompletedClick = () => {
         AppLocator.context.useCase(RemoveTodoItemFactory.create()).execute();
-    }
-
-});
+    };
+}
 
 export default Footer;

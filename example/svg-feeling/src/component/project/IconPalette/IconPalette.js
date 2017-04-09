@@ -1,6 +1,7 @@
 // LICENSE : MIT
 "use strict";
 const React = require("react");
+const PropTypes = require("prop-types");
 import SVGIcon from "../../uikit/SVGIcon/SVGIcon";
 import Color from "../../../js/domain/value/Color";
 export default class IconPalette extends React.Component {
@@ -22,5 +23,5 @@ export default class IconPalette extends React.Component {
     }
 }
 IconPalette.propTypes = {
-    color: React.PropTypes.instanceOf(Color).isRequired
+    color: PropTypes.instanceOf(Color).isRequired
 };

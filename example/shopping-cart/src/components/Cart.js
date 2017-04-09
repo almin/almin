@@ -1,25 +1,27 @@
 "use strict";
 
 const React = require("react");
-const ProductHeader = React.createClass({
-    render () {
+const PropTypes = require("prop-types");
+
+class ProductHeader extends React.Component {
+    render() {
         return <div>{this.props.children}</div>;
     }
-});
+}
 
-const Cart = React.createClass({
-    propTypes: {
-        products: React.PropTypes.arrayOf(React.PropTypes.shape({
-            id: React.PropTypes.number.isRequired,
-            title: React.PropTypes.string.isRequired,
-            price: React.PropTypes.number.isRequired,
-            quantity: React.PropTypes.number.isRequired
+class Cart extends React.Component {
+    static propTypes = {
+        products: PropTypes.arrayOf(PropTypes.shape({
+            id: PropTypes.number.isRequired,
+            title: PropTypes.string.isRequired,
+            price: PropTypes.number.isRequired,
+            quantity: PropTypes.number.isRequired
         })).isRequired,
-        total: React.PropTypes.string.isRequired,
-        onCheckoutClicked: React.PropTypes.func.isRequired
-    },
+        total: PropTypes.string.isRequired,
+        onCheckoutClicked: PropTypes.func.isRequired
+    };
 
-    render () {
+    render() {
         const products = this.props.products;
 
         const hasProducts = products.length > 0;
@@ -42,6 +44,6 @@ const Cart = React.createClass({
             </div>
         );
     }
-});
+}
 
 module.exports = Cart;

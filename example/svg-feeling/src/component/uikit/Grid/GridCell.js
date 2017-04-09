@@ -1,5 +1,6 @@
 "use strict";
 import React from "react";
+import PropTypes from "prop-types";
 import classNames from "classnames";
 export default class GridCell extends React.Component {
     render() {
@@ -12,9 +13,9 @@ export default class GridCell extends React.Component {
     }
 }
 GridCell.propTypes = {
-    className: React.PropTypes.string,
-    children: React.PropTypes.node,
-    col: React.PropTypes.oneOf([
+    className: PropTypes.string,
+    children: PropTypes.node,
+    col: PropTypes.oneOf([
         "fill",
         "1of12",
         "2of12",

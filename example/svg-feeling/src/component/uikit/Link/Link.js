@@ -1,5 +1,6 @@
 "use strict";
 import React from "react";
+import PropTypes from "prop-types";
 import classNames from "classnames";
 /*
  @example
@@ -17,5 +18,5 @@ export default class Link extends React.Component {
     }
 }
 Link.propTypes = {
-    href: React.PropTypes.string.isRequired
+    href: PropTypes.string.isRequired
 };

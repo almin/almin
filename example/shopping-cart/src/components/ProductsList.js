@@ -2,12 +2,14 @@
 
 const React = require("react");
 
-const ProductsList = React.createClass({
-    propTypes: {
-        title: React.PropTypes.string.isRequired
-    },
+const PropTypes = require("prop-types");
 
-    render () {
+class ProductsList extends React.Component {
+    static propTypes = {
+        title: PropTypes.string.isRequired
+    };
+
+    render() {
         return (
             <div className="shop-wrap">
                 <h2 className="uk-h2">{this.props.title}</h2>
@@ -15,6 +17,6 @@ const ProductsList = React.createClass({
             </div>
         );
     }
-});
+}
 
 module.exports = ProductsList;

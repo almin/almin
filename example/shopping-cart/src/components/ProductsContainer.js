@@ -3,11 +3,12 @@ import ProductItem from "./ProductItem";
 import ProductsList from "./ProductsList";
 import AddItemToCartUseCase from "../usecase/AddItemToCartUseCase";
 import AppLocator from "../AppLocator";
-const ProductItemContainer = React.createClass({
-    onAddToCartClicked() {
+
+class ProductItemContainer extends React.Component {
+    onAddToCartClicked = () => {
         const useCase = AddItemToCartUseCase.create();
         AppLocator.context.useCase(useCase).execute(this.props.product.id);
-    },
+    };
 
     render() {
         return (
@@ -17,10 +18,9 @@ const ProductItemContainer = React.createClass({
             />
         );
     }
+}
 
-});
-
-const ProductsListContainer = React.createClass({
+class ProductsListContainer extends React.Component {
     render() {
         const products = this.props.products;
         const nodes = products.map(product => {
@@ -38,6 +38,6 @@ const ProductsListContainer = React.createClass({
             </ProductsList>
         );
     }
-});
+}
 
 export default ProductsListContainer;

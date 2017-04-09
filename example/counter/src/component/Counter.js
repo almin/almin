@@ -1,6 +1,7 @@
 // LICENSE : MIT
 "use strict";
 import React from "react";
+import PropTypes from "prop-types";
 import IncrementalCounterUseCase from "../usecase/IncrementalCounterUseCase";
 import { Context } from "almin";
 import CounterState from "../store/CounterState";
@@ -29,6 +30,6 @@ export default class CounterComponent extends React.Component {
     }
 }
 CounterComponent.propTypes = {
-    appContext: React.PropTypes.instanceOf(Context).isRequired,
-    counterState: React.PropTypes.instanceOf(CounterState).isRequired
+    appContext: PropTypes.instanceOf(Context).isRequired,
+    counterState: PropTypes.instanceOf(CounterState).isRequired
 };

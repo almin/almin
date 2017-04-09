@@ -1,14 +1,16 @@
 "use strict";
 
 const React = require("react");
+const PropTypes = require("prop-types");
 import ProductItem from "../domain/value/ProductItem";
-const ProductItemComponent = React.createClass({
-    propTypes: {
-        product: React.PropTypes.instanceOf(ProductItem).isRequired,
-        onAddToCartClicked: React.PropTypes.func.isRequired
-    },
 
-    render () {
+class ProductItemComponent extends React.Component {
+    static propTypes = {
+        product: PropTypes.instanceOf(ProductItem).isRequired,
+        onAddToCartClicked: PropTypes.func.isRequired
+    };
+
+    render() {
         const product = this.props.product;
 
         return (
@@ -23,6 +25,6 @@ const ProductItemComponent = React.createClass({
             </div>
         );
     }
-});
+}
 
 module.exports = ProductItemComponent;

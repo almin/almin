@@ -20,8 +20,9 @@
   "dependencies": {
     "almin": "file:../../",
     "almin-logger": "^4.0.0",
-    "react": "^15.0.1",
-    "react-dom": "^15.0.1",
+    "prop-types": "^15.5.4",
+    "react": "^15.5.3",
+    "react-dom": "^15.5.3",
     "uuid": "^3.0.1"
   },
   "devDependencies": {
@@ -32,6 +33,7 @@
     "babel-preset-jsdoc-to-assert": "^4.0.0",
     "babel-preset-power-assert": "^1.0.0",
     "babel-preset-react": "^6.5.0",
+    "babel-preset-stage-2": "^6.24.1",
     "babel-register": "^6.7.2",
     "json-loader": "^0.5.4",
     "mkdirp": "^0.5.1",

@@ -19,8 +19,9 @@
   "license": "MIT",
   "dependencies": {
     "almin": "file:../../",
-    "react": "^15.0.1",
-    "react-dom": "^15.0.1",
+    "prop-types": "^15.5.4",
+    "react": "^15.5.3",
+    "react-dom": "^15.5.3",
     "uuid": "^3.0.1"
   },
   "devDependencies": {
