@@ -8,23 +8,22 @@
  */
 
 const React = require("react");
-const ReactPropTypes = React.PropTypes;
+const PropTypes = require('prop-types');
+const ReactPropTypes = PropTypes;
 const ENTER_KEY_CODE = 13;
-const TodoTextInput = React.createClass({
 
-    propTypes: {
+class TodoTextInput extends React.Component {
+    static propTypes = {
         className: ReactPropTypes.string,
         id: ReactPropTypes.string,
         placeholder: ReactPropTypes.string,
         onSave: ReactPropTypes.func.isRequired,
         value: ReactPropTypes.string
-    },
+    };
 
-    getInitialState() {
-        return {
-            value: this.props.value || ""
-        };
-    },
+    state = {
+        value: this.props.value || ""
+    };
 
     /**
      * @return {object}
@@ -42,37 +41,36 @@ const TodoTextInput = React.createClass({
                 autoFocus={true}
             />
         );
-    },
+    }
 
     /**
      * Invokes the callback passed in as onSave, allowing this component to be
      * used in different ways.
      */
-    _save() {
+    _save = () => {
         this.props.onSave(this.state.value);
         this.setState({
             value: ""
         });
-    },
+    };
 
     /**
      * @param {object} event
      */
-    _onChange(/*object*/ event) {
+    _onChange = (/*object*/ event) => {
         this.setState({
             value: event.target.value
         });
-    },
+    };
 
     /**
      * @param  {object} event
      */
-    _onKeyDown(event) {
+    _onKeyDown = (event) => {
         if (event.keyCode === ENTER_KEY_CODE) {
             this._save();
         }
-    }
-
-});
+    };
+}
 
 export default TodoTextInput;

@@ -1,5 +1,6 @@
 "use strict";
 import React from "react";
+import PropTypes from 'prop-types';
 import classNames from "classnames";
 
 /*
@@ -21,6 +22,6 @@ export default class Image extends React.Component {
     }
 }
 Image.propTypes = {
-    src: React.PropTypes.string.isRequired,
-    alt: React.PropTypes.string
+    src: PropTypes.string.isRequired,
+    alt: PropTypes.string
 };

@@ -8,7 +8,8 @@
  */
 
 const React = require("react");
-const ReactPropTypes = React.PropTypes;
+const PropTypes = require('prop-types');
+const ReactPropTypes = PropTypes;
 const classNames = require("classnames");
 import AppLocator from "../AppLocator";
 import {UpdateTodoItemTitleFactory} from "../usecase/UpdateTodoItemTitle";
@@ -16,29 +17,27 @@ import {ToggleTodoItemFactory} from "../usecase/ToggleTodoItem";
 import {RemoveTodoItemFactory} from "../usecase/RemoveTodoItem";
 import TodoTextInput from "./TodoTextInput.react";
 
-const TodoItem = React.createClass({
-
-    propTypes: {
+class TodoItem extends React.Component {
+    static propTypes = {
         todo: ReactPropTypes.object.isRequired
-    },
+    };
 
-    getInitialState () {
-        return {
-            isEditing: false,
-            completed: false
-        };
-    },
+    state = {
+        isEditing: false,
+        completed: false
+    };
 
-    componentWillReceiveProps(nextPros, nextState){
+    componentWillReceiveProps(nextPros, nextState) {
         const todo = nextPros.todo;
         this.setState({
             completed: todo.completed
         });
-    },
+    }
+
     /**
      * @return {object}
      */
-    render () {
+    render() {
         const todo = this.props.todo;
         let input;
         if (this.state.isEditing) {
@@ -77,15 +76,15 @@ const TodoItem = React.createClass({
                 {input}
             </li>
         );
-    },
+    }
 
-    _onToggleComplete (event) {
+    _onToggleComplete = (event) => {
         AppLocator.context.useCase(ToggleTodoItemFactory.create()).execute(this.props.todo.id);
-    },
+    };
 
-    _onDoubleClick () {
+    _onDoubleClick = () => {
         this.setState({isEditing: true});
-    },
+    };
 
     /**
      * Event handler called within TodoTextInput.
@@ -93,18 +92,17 @@ const TodoItem = React.createClass({
      * in different ways.
      * @param  {string} title
      */
-    _onSave (title) {
+    _onSave = (title) => {
         AppLocator.context.useCase(UpdateTodoItemTitleFactory.create()).execute({
             id: this.props.todo.id,
             title
         });
         this.setState({isEditing: false});
-    },
+    };
 
-    _onDestroyClick () {
+    _onDestroyClick = () => {
         AppLocator.context.useCase(RemoveTodoItemFactory.create()).execute(this.props.todo.id);
-    }
-
-});
+    };
+}
 
 export default TodoItem;

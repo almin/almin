@@ -37,7 +37,7 @@ export default class HoverBlock extends React.Component {
 }
 
 HoverBlock.propTypes = {
-    children: React.PropTypes.node.isRequired,
-    onMouseEnter: React.PropTypes.func,
-    onMouseLeave: React.PropTypes.func
+    children: PropTypes.node.isRequired,
+    onMouseEnter: PropTypes.func,
+    onMouseLeave: PropTypes.func
 };

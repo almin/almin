@@ -1,6 +1,7 @@
 // LICENSE : MIT
 "use strict";
 const React = require("react");
+const PropTypes = require('prop-types');
 import IconPalette from "../../project/IconPalette/IconPalette";
 import AppContextLocator from "../../../AppContextLocator";
 import {ChangeToNextColorUseCase} from "../../../js/UseCase/ChangeToNextColorUseCase";
@@ -23,5 +24,5 @@ export default class PlaygroundContainer extends React.Component {
     }
 }
 PlaygroundContainer.propTypes = {
-    ColorState: React.PropTypes.instanceOf(ColorState).isRequired
+    ColorState: PropTypes.instanceOf(ColorState).isRequired
 };

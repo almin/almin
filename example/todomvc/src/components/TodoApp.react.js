@@ -16,25 +16,26 @@ const React = require("react");
 import Footer from "./Footer.react";
 import Header from "./Header.react";
 import MainSection from "./MainSection.react";
-const TodoApp = React.createClass({
 
-    getInitialState () {
-        const appContext = this.props.appContext;
-        return appContext.getState();
-    },
+class TodoApp extends React.Component {
+    constructor(props) {
+        super(props);
+        const appContext = props.appContext;
+        this.state = appContext.getState();
+    }
 
-    componentDidMount () {
+    componentDidMount() {
         const appContext = this.props.appContext;
         this.releaseChange = appContext.onChange(() => {
             this.setState(appContext.getState());
         });
-    },
+    }
 
-    componentWillUnmount () {
+    componentWillUnmount() {
         this.releaseChange();
-    },
+    }
 
-    render () {
+    render() {
         const todoState = this.state.todoState;
         return (
             <div>
@@ -48,7 +49,6 @@ const TodoApp = React.createClass({
             </div>
         );
     }
-
-});
+}
 
 export default TodoApp;

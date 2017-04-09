@@ -2,14 +2,15 @@ import React from "react";
 import Cart from "./Cart";
 import AppLocator from "../AppLocator";
 import CheckoutCartUseCase from "../usecase/CheckoutCartUseCase";
-const CartContainer = React.createClass({
-    onCheckoutClicked() {
+
+class CartContainer extends React.Component {
+    onCheckoutClicked = () => {
         const {CartState} = this.props;
         if (!CartState.hasItemAtLeastOne) {
             return;
         }
         AppLocator.context.useCase(CheckoutCartUseCase.create()).execute();
-    },
+    };
 
     render() {
         const {CartState} = this.props;
@@ -21,6 +22,6 @@ const CartContainer = React.createClass({
             />
         );
     }
-});
+}
 
 export default CartContainer;

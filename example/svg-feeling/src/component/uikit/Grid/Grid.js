@@ -1,5 +1,6 @@
 "use strict";
 import React from "react";
+import PropTypes from 'prop-types';
 import classNames from "classnames";
 import suitClassNames from "suitcss-classnames";
 import GridCell from "./GridCell";
@@ -36,11 +37,11 @@ export class Grid extends React.Component {
 }
 
 Grid.propTypes = {
-    children: React.PropTypes.node.isRequired,
-    className: React.PropTypes.string,
+    children: PropTypes.node.isRequired,
+    className: PropTypes.string,
     // e.g.) alignLeft
-    align: React.PropTypes.oneOf(["Left", "Center", "Right"]),
+    align: PropTypes.oneOf(["Left", "Center", "Right"]),
     // e.g.) verticalAlignTop
-    verticalAlign: React.PropTypes.oneOf(["Top", "Middle", "Bottom"]),
-    gutter: React.PropTypes.oneOf(["4", "8", "12", "16", "20", "24", "40"])
+    verticalAlign: PropTypes.oneOf(["Top", "Middle", "Bottom"]),
+    gutter: PropTypes.oneOf(["4", "8", "12", "16", "20", "24", "40"])
 };

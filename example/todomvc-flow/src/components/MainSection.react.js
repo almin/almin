@@ -8,17 +8,17 @@
  */
 
 const React = require("react");
-const ReactPropTypes = React.PropTypes;
+const PropTypes = require('prop-types');
+const ReactPropTypes = PropTypes;
 import AppLocator from "../AppLocator";
 import {ToggleAllTodoItemFactory} from "../usecase/ToggleAllTodoItems";
 import TodoItem from "./TodoItem.react";
 
-const MainSection = React.createClass({
-
-    propTypes: {
+class MainSection extends React.Component {
+    static propTypes = {
         allTodos: ReactPropTypes.array.isRequired,
         areAllComplete: ReactPropTypes.bool.isRequired
-    },
+    };
 
     /**
      * @return {object}
@@ -46,15 +46,14 @@ const MainSection = React.createClass({
                 <ul id="todo-list">{todos}</ul>
             </section>
         );
-    },
+    }
 
     /**
      * Event handler to mark all TODOs as complete
      */
-    _onToggleCompleteAll() {
+    _onToggleCompleteAll = () => {
         AppLocator.context.useCase(ToggleAllTodoItemFactory.create()).execute();
-    }
-
-});
+    };
+}
 
 export default MainSection;

@@ -12,12 +12,11 @@ import AppLocator from "../AppLocator";
 import {AddTodoItemFactory} from "../usecase/AddTodoItem";
 import TodoTextInput from "./TodoTextInput.react";
 
-const Header = React.createClass({
-
+class Header extends React.Component {
     /**
      * @return {object}
      */
-    render () {
+    render() {
         return (
             <header id="header">
                 <h1>todos</h1>
@@ -28,7 +27,7 @@ const Header = React.createClass({
                 />
             </header>
         );
-    },
+    }
 
     /**
      * Event handler called within TodoTextInput.
@@ -36,11 +35,11 @@ const Header = React.createClass({
      * in different ways.
      * @param {string} text
      */
-    _onSave (text) {
+    _onSave = (text) => {
         if (text.trim()) {
             AppLocator.context.useCase(AddTodoItemFactory.create()).execute(text);
         }
-    }
-});
+    };
+}
 
 export default Header;
