@@ -10,15 +10,18 @@ module.exports = function(Almin, done) {
     const updateView = (state) => {
         viewState = state;
     }
+    class MyState {
+        constructor(value){
+            this.value = value;
+        }
+    }
     // store
     class MyStore extends Store {
         constructor() {
             super();
-            this.state = {
-                payload: null
-            };
+            this.state = new MyState(null);
             this.onDispatch((payload) => {
-                this.state.payload = payload;
+                this.state = new MyState(payload);
                 this.emitChange();
             });
         }
