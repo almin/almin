@@ -6,6 +6,17 @@ import LogChunk from "./log/LogChunk";
 import PrintLogger from "./log/PrintLogger";
 const EventEmitter = require("events");
 const Map = require("map-like");
+// FIXME: Almin 0.12 support pull-based Store
+// https://github.com/almin/almin/pull/154
+// Some Store must to have prevState arguments.
+// Call ths Store without argument, throw error
+const tryGetState = (store) => {
+    try {
+        return store.getState();
+    } catch (error) {
+        return null;// not get
+    }
+};
 /**
  * Pattern
  *
@@ -27,7 +38,7 @@ export default class AsyncLogger extends EventEmitter {
     /**
      * @param {Object} console
      */
-    constructor({console}) {
+    constructor({ console }) {
         super();
         /**
          * Will show log buffer
@@ -61,7 +72,7 @@ export default class AsyncLogger extends EventEmitter {
             const parentUseCase = meta.parentUseCase !== useCase ? meta.parentUseCase : null;
             const parentSuffix = parentUseCase ? ` <- ${parentUseCase.name}` : "";
             const title = `${useCase.name}${parentSuffix}`;
-            const logGroup = new LogGroup({title, useCaseName: useCase.name});
+            const logGroup = new LogGroup({ title, useCaseName: useCase.name });
             const args = payload.args.length && payload.args.length > 0 ? payload.args : undefined;
             const log = [`${useCase.name} execute:`].concat(args);
             logGroup.addChunk(new LogChunk({
@@ -114,9 +125,10 @@ export default class AsyncLogger extends EventEmitter {
             if (existWorkingUseCase) {
                 // It support Almin's QueuedStoreGroup implementation
                 stores.forEach(store => {
+                    const state = tryGetState(store);
                     this.addLog([
                         `\u{1F4BE} Store:${store.name}`,
-                        store.getState()
+                        state !== null ? state : store
                     ]);
                     if (workingUseCaseNames.length >= 2) {
                         this.addLog(`\u{2139}\u{FE0F} Currently executing UseCases: ${workingUseCaseNames.join(", ")}`);
@@ -130,8 +142,12 @@ export default class AsyncLogger extends EventEmitter {
                 });
                 const timeStamp = Date.now();
                 stores.forEach(store => {
+                    const state = tryGetState(store);
                     storeLogGroup.addChunk(new LogChunk({
-                        log: [`\u{1F4BE} Store:${store.name}`, store.getState()],
+                        log: [
+                            `\u{1F4BE} Store:${store.name}`,
+                            state !== null ? state : store
+                        ],
                         timeStamp
                     }))
                 });

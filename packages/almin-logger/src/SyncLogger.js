@@ -2,8 +2,20 @@
 "use strict";
 import AlminLogger from "./AlminLogger";
 const EventEmitter = require("events");
+// FIXME: Almin 0.12 support pull-based Store
+// https://github.com/almin/almin/pull/154
+// Some Store must to have prevState arguments.
+// Call ths Store without argument, throw error
+const tryGetState = (store) => {
+    try {
+        return store.getState();
+    } catch (error) {
+        return null;// not get
+    }
+};
+
 export default class SyncLogger extends EventEmitter {
-    constructor({console}) {
+    constructor({ console }) {
         super();
         this._logMap = {};
         this._releaseHandlers = [];
@@ -31,9 +43,10 @@ export default class SyncLogger extends EventEmitter {
             this.logger.info(`\u{1F525} Dispatch:${String(payload.type)}`, payload)
         };
         const onChange = (stores) => {
-            stores.forEach(state => {
+            stores.forEach(store => {
+                const state = tryGetState(store);
                 this.logger.groupCollapsed(`\u{1F4BE} Store:${state.name} is Changed`);
-                this.logger.info(state.getState());
+                this.logger.info(state !== null ? state : store);
                 this.logger.groupEnd();
             });
         };
