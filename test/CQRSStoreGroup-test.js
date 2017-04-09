@@ -1,6 +1,7 @@
 // LICENSE : MIT
 "use strict";
 const assert = require("power-assert");
+const sinon = require("sinon");
 import { Store } from "../lib/Store";
 import { CQRSStoreGroup } from "../lib/UILayer/CQRSStoreGroup";
 import { createStore } from "./helper/create-store";
@@ -561,6 +562,42 @@ describe("CQRSStoreGroup", function() {
                 assert(state["bState"] instanceof BState);
             });
         });
+        context("warning", () => {
+            let consoleWarnStub = null;
+            beforeEach(() => {
+                consoleWarnStub = sinon.stub(console, "warn");
+            });
+            afterEach(() => {
+                consoleWarnStub.restore();
+            });
+            it("should check that a Store returned state immutability", function() {
+                const store = createStore({ name: "AStore" });
+                const storeGroup = new CQRSStoreGroup([store]);
+                // When the store is not changed, but call emitChange
+                store.emitChange();
+                assert.ok(consoleWarnStub.calledOnce);
+            });
+            it("if someone state is changed, does not show warning", function() {
+                let state = {
+                    a: 1,
+                    b: 2
+                };
+                class MyStore extends Store {
+                    getState() {
+                        return state
+                    }
+                }
+                const store = new MyStore();
+                const storeGroup = new CQRSStoreGroup([store]);
+                state = {
+                    a: 1,
+                    b: 42 // <= change
+                };
+                // changed the state at least once, then emitChange
+                store.emitChange();
+                assert(consoleWarnStub.calledOnce === false);
+            });
+        })
     });
     describe("#release", function() {
         it("release onChange handler", function() {
