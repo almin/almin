@@ -13,15 +13,15 @@ import { shallowEqual } from "shallow-equal-object";
 import { ChangedPayload } from "../payload/ChangedPayload";
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
 // Internal Payload class
-class InitPayload extends Payload {
+class InitializedPayload extends Payload {
     constructor() {
-        super({ type: "Almin__InitPayload__" });
+        super({ type: "Almin__InitializedPayload__" });
     }
 }
 // Empty state for passing to Store if previous state is empty.
 const emptyStateOfStore = Object.freeze({});
 // Init payload for passing to Store if the state change is not related payload.
-const initPayload = new InitPayload();
+const initializedPayload = new InitializedPayload();
 // ChangedPayload is for changing from Store.
 const changedPayload = new ChangedPayload();
 /**
@@ -151,7 +151,7 @@ export class CQRSStoreGroup extends Store {
         // after dispatching, and then emitChange
         this._observeDispatchedPayload();
         // default state
-        this.state = this.collectState(initPayload);
+        this.state = this.collectState(initializedPayload);
     }
 
     /**
