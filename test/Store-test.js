@@ -20,6 +20,18 @@ describe("Store", function() {
             });
         });
     });
+    describe("#getState", () => {
+        context("when has not implemented", () => {
+            it("throw error", () => {
+                class MyStore extends Store {
+                }
+                const store = new MyStore();
+                assert.throws(() => {
+                    store.getState();
+                }, /should be implemented/);
+            });
+        });
+    });
     describe("#onDispatch", function() {
         it("should called when dispatched", function(done) {
             const store = new Store();
