@@ -20,7 +20,7 @@ class InitializedPayload extends Payload {
 }
 // Empty state for passing to Store if previous state is empty.
 const emptyStateOfStore = Object.freeze({});
-// Init payload for passing to Store if the state change is not related payload.
+// InitializedPayload for passing to Store if the state change is not related payload.
 const initializedPayload = new InitializedPayload();
 // ChangedPayload is for changing from Store.
 const changedPayload = new ChangedPayload();
