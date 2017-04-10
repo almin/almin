@@ -1,8 +1,8 @@
 // MIT © 2017 azu
 import MapLike from "map-like";
 import { Store } from "../Store";
-// Store <-> StateName
-export class StoreStateNameMap {
+// StateName <-> Store
+export class StateNameByStoreMap {
     instanceMap = new MapLike<Store, any>();
 
     has(store: Store): boolean {
