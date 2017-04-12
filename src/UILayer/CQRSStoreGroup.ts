@@ -12,6 +12,10 @@ import { CompletedPayload } from "../payload/CompletedPayload";
 import { shallowEqual } from "shallow-equal-object";
 import { ChangedPayload } from "../payload/ChangedPayload";
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
+export interface StateStoreMapping {
+    // stateName: Store
+    [key: string]: Store
+}
 // Internal Payload class
 class InitializedPayload extends Payload {
     constructor() {
@@ -26,23 +30,72 @@ const initializedPayload = new InitializedPayload();
 const changedPayload = new ChangedPayload();
 /**
  * assert `state` shape.
- * `state` should be object.
+ * `state` should be object if not found in StoreStateNameMap
  */
-const assertStateShape = (state: any, store: Store): void => {
-    assert.ok(typeof state == "object", `${store}: ${store.name}.getState() should return Object.
-e.g.)
+const assertStateShape = (state: any, store: Store, stateNameMap: MapLike<Store, string>): void => {
+    const isObjectState = typeof state == "object";
+    if (!isObjectState && stateNameMap.has(store)) {
+        return;
+    }
+    assert.ok(isObjectState, `${store}: ${store.name}.getState() should return Object.
+
+A Store return a state object.
 
  class ExampleStore extends Store {
      getState(prevState) {
          return {
-            StateName: state
+            stateName: state
          };
      }
  }
  
-Then, use can access by StateName.
+Or, A Store return a state value and initialize StoreGroup with state name mapping.
 
-StoreGroup#getState()["StateName"]; // state
+
+ class ExampleStore extends Store {
+     getState(prevState) {
+         return state;
+     }
+ }
+
+ const exampleStore = new ExampleStore();
+ const storeGroup = new StoreGroup({
+     stateName: exampleStore
+ }):
+ 
+Then, use can access by stateName.
+
+StoreGroup#getState()["stateName"]; // state
+
+`);
+    assert.ok(Object.keys(state).length === 1, `${store}: ${store.name}.getState() should return Object that has a single state.
+${store.name}.getState() return a Object, but the object has multiple keys.
+
+Bad:
+
+ class ExampleStore extends Store {
+     getState(prevState) {
+         return {
+            a1: state,
+            a2: state
+         };
+     }
+ }
+
+
+Good:
+
+ class ExampleStore extends Store {
+     getState(prevState) {
+         return {
+            stateName: state
+         };
+     }
+ }
+ 
+Then, use can access by stateName.
+
+StoreGroup#getState()["stateName"]; // state
 
 `);
 };
@@ -69,6 +122,17 @@ Prev State:`, prevState, `Next State:`, nextState
         );
     }
 };
+// Assert:
+function assertStoreIsRegister(store: Store,
+                               stateNameByStoreMap: MapLike<Store, string>,
+                               isInitializeWithStateNameMapping: boolean) {
+    if (!isInitializeWithStateNameMapping) {
+        return;
+    }
+    assert.ok(stateNameByStoreMap.has(store), `Store:${store.name} is not registered in constructor.
+But,it was called ${store.name}#getState().
+`)
+}
 /**
  * CQRSStoreGroup support pull-based and push-based Store.
  *
@@ -129,10 +193,74 @@ export class CQRSStoreGroup extends Store {
     private _workingUseCaseMap: MapLike<string, boolean>;
     // store/state cache map
     private _stateCacheMap: MapLike<Store, any>;
+    // store/state map
+    private _stateNameByStoreMap: MapLike<Store, string>;
 
-    constructor(stores: Array<Store>) {
+    /**
+     * Initialize this StoreGroup with an array of Store OR a stateName-store mapping object.
+     *
+     * The rule of initializing StoreGroup is that "define the state name of the store".
+     *
+     * This StoreGroup provide two way. But, these can't be mixed.
+     *
+     * ## Example
+     *
+     * Initialize with an array of Store.
+     *
+     * ```js
+     * class AStore extends Store {
+     *   getState() {
+     *     return {
+     *       a: "a value"
+     *     };
+     *   }
+     * }
+     * class BStore extends Store {
+     *   getState() {
+     *     return {
+     *       b: "b value"
+     *     };
+     *   }
+     * }
+     * const aStore = new AStore();
+     * const bStore = new BStore();
+     * const storeGroup = new CQRSStoreGroup([
+     *     aStore,
+     *     bStore
+     * ]);
+     * console.log(storeGroup.getState());
+     * // { a: "a value", b: "b value" }
+     * ```
+     *
+     * Initialize with store-state mapping object.
+     *
+     * ```js
+     * class AStore extends Store {
+     *     getState() {
+     *         return "a value";
+     *     }
+     * }
+     * class BStore extends Store {
+     *     getState() {
+     *         return "b value";
+     *     }
+     * }
+     * const aStore = new AStore();
+     * const bStore = new BStore();
+     * const storeGroup = new CQRSStoreGroup({
+     *     a: aStore, // stateName: store
+     *     b: bStore
+     * });
+     * console.log(storeGroup.getState());
+     * // { a: "a value", b: "b value" }
+     * ```
+     */
+    constructor(stores: Array<Store> | StateStoreMapping) {
         super();
-        this.stores = stores;
+        const stateNames = Array.isArray(stores) ? [] : Object.keys(stores);
+        // pull stores from mapping if arguments is mapping.
+        this.stores = Array.isArray(stores) ? stores : this.getStoresFromMapping(stores);
+        this._stateNameByStoreMap = new MapLike<Store, string>();
         this._workingUseCaseMap = new MapLike<string, boolean>();
         this._finishedUseCaseMap = new MapLike<string, boolean>();
         this._stateCacheMap = new MapLike<Store, any>();
@@ -140,13 +268,17 @@ export class CQRSStoreGroup extends Store {
         // Dispatch -> pipe -> Store#emitChange() if it is needed
         //          -> this.onDispatch -> If anyone store is changed, this.emitChange()
         // each pipe to dispatching
-        stores.forEach(store => {
+        this.stores.forEach((store, index) => {
             // observe Store
             const registerHandler = this._registerStore(store);
             this._releaseHandlers.push(registerHandler);
             // delegate dispatching
             const pipeHandler = this.pipe(store);
             this._releaseHandlers.push(pipeHandler);
+            // compute storeStateNameMap if it needed
+            if (stateNames[index] !== undefined) {
+                this._stateNameByStoreMap.set(store, stateNames[index]);
+            }
         });
         // after dispatching, and then emitChange
         this._observeDispatchedPayload();
@@ -154,11 +286,21 @@ export class CQRSStoreGroup extends Store {
         this.state = this.collectState(initializedPayload);
     }
 
+    private getStoresFromMapping(storeStateMapping: StateStoreMapping): Array<Store> {
+        return Object.keys(storeStateMapping).map(name => {
+            return storeStateMapping[name];
+        });
+    }
+
     /**
      * If exist working UseCase, return true
      */
     protected get existWorkingUseCase() {
         return this._workingUseCaseMap.size > 0;
+    }
+
+    protected get isInitializedWithStateNameMap() {
+        return this._stateNameByStoreMap.size > 0;
     }
 
     /**
@@ -175,7 +317,8 @@ export class CQRSStoreGroup extends Store {
             const prevState = this._stateCacheMap.get(store) || emptyStateOfStore;
             const nextState = store.getState<typeof prevState>(prevState, payload);
             if (process.env.NODE_ENV !== "production") {
-                assertStateShape(nextState, store);
+                assertStoreIsRegister(store, this._stateNameByStoreMap, this.isInitializedWithStateNameMap);
+                assertStateShape(nextState, store, this._stateNameByStoreMap);
                 assertStateIsImmutable(prevState, nextState, store, this._emitChangedStores);
             }
             // if the prev/next state is same, not update the state.
@@ -184,6 +327,14 @@ export class CQRSStoreGroup extends Store {
             }
             // 2. update prev state. It means that update the state of the store
             this._stateCacheMap.set(store, nextState);
+            // if exist stateName in the map, use it as state name.
+            // It aim to support dictionary state name initialization.
+            const stateName = this._stateNameByStoreMap.get(store);
+            if (stateName !== undefined) {
+                return {
+                    [stateName]: nextState
+                };
+            }
             this._addChangingStateOfStores(store);
             return nextState;
         };
@@ -222,7 +373,10 @@ export class CQRSStoreGroup extends Store {
             return;
         }
         this.state = nextState;
-        this.emit(CHANGE_STORE_GROUP, this._changingStores.slice());
+        // emit changes
+        const changingStores = this._changingStores.slice();
+        const changingStates = this._getStatesFromStores(changingStores);
+        this.emit(CHANGE_STORE_GROUP, changingStores, changingStates);
         // release changed stores
         this._pruneEmitChangedStore();
     }
@@ -246,8 +400,14 @@ export class CQRSStoreGroup extends Store {
     release(): void {
         this._releaseHandlers.forEach(releaseHandler => releaseHandler());
         this._releaseHandlers.length = 0;
-        this.state = null;
+        this.state = {};
         this._pruneChangingStateOfStores();
+    }
+
+    private _getStatesFromStores(stores: Array<Store>) {
+        return stores.map(store => {
+            return this._stateCacheMap.get(store);
+        });
     }
 
     /**

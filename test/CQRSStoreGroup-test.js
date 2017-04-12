@@ -29,6 +29,30 @@ const createChangeStoreUseCase = (store) => {
     return new ChangeTheStoreUseCase()
 };
 describe("CQRSStoreGroup", function() {
+    describe("constructor(map)", () => {
+        it("support stateName and store mapping ", () => {
+            class AStateStore extends Store {
+                getState() {
+                    return "a";
+                }
+            }
+            class BStateStore extends Store {
+                getState() {
+                    return "b";
+                }
+            }
+            const aStore = new AStateStore();
+            const bStore = new BStateStore();
+            const storeGroup = new CQRSStoreGroup({
+                a: aStore,
+                b: bStore
+            });
+            assert.deepEqual(storeGroup.getState(), {
+                a: "a",
+                b: "b"
+            });
+        });
+    });
     describe("#emitChange", function() {
         context("when any store is not changed", function() {
             it("should not call onChange", function() {
@@ -577,25 +601,20 @@ describe("CQRSStoreGroup", function() {
                 store.emitChange();
                 assert.ok(consoleWarnStub.calledOnce);
             });
-            it("if someone state is changed, does not show warning", function() {
-                let state = {
-                    a: 1,
-                    b: 2
-                };
+            it("if store return multiple state, throw assertion error", function() {
+                // Return multiple state, not valid
                 class MyStore extends Store {
                     getState() {
-                        return state
+                        return {
+                            a: 1,
+                            b: 2
+                        };
                     }
                 }
                 const store = new MyStore();
-                const storeGroup = new CQRSStoreGroup([store]);
-                state = {
-                    a: 1,
-                    b: 42 // <= change
-                };
-                // changed the state at least once, then emitChange
-                store.emitChange();
-                assert(consoleWarnStub.calledOnce === false);
+                assert.throws(() => {
+                    new CQRSStoreGroup([store]);
+                }, Error);
             });
         })
     });
