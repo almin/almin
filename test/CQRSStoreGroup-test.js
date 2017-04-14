@@ -4,7 +4,7 @@ const assert = require("power-assert");
 const sinon = require("sinon");
 import { Store } from "../lib/Store";
 import { CQRSStoreGroup } from "../lib/UILayer/CQRSStoreGroup";
-import { createStore } from "./helper/create-store";
+import { createStore } from "./helper/create-new-store";
 import { UseCase } from "../lib/UseCase";
 import { Context } from "../lib/Context";
 import { Dispatcher } from "../lib/Dispatcher";
@@ -57,10 +57,12 @@ describe("CQRSStoreGroup", function() {
         context("when any store is not changed", function() {
             it("should not call onChange", function() {
                 const store = createStore({ name: "AStore" });
-                const storeGroup = new CQRSStoreGroup([store]);
+                const storeGroup = new CQRSStoreGroup({
+                    a: store
+                });
                 let isCalled = false;
                 // then
-                storeGroup.onChange(() => {
+                storeGroup.onChange((s) => {
                     isCalled = true;
                 });
                 // when
@@ -77,7 +79,7 @@ describe("CQRSStoreGroup", function() {
                     name: "AStore",
                     state: 1
                 });
-                const storeGroup = new CQRSStoreGroup([store]);
+                const storeGroup = new CQRSStoreGroup({ a: store });
                 let isCalled = false;
                 // then
                 storeGroup.onChange(() => {
@@ -91,7 +93,9 @@ describe("CQRSStoreGroup", function() {
         context("when UseCase never change any store", function() {
             it("should not be called", function() {
                 const store = createStore({ name: "AStore" });
-                const storeGroup = new CQRSStoreGroup([store]);
+                const storeGroup = new CQRSStoreGroup({
+                    a: store
+                });
                 let isCalled = false;
                 // then
                 storeGroup.onChange(() => {
@@ -116,7 +120,10 @@ describe("CQRSStoreGroup", function() {
             it("should changingStores are changed own state", () => {
                 const storeA = createStore({ name: "AStore" });
                 const storeB = createStore({ name: "BStore" });
-                const storeGroup = new CQRSStoreGroup([storeA, storeB]);
+                const storeGroup = new CQRSStoreGroup({
+                    AStore: storeA,
+                    BStore: storeB
+                });
                 let changedStores = [];
                 storeGroup.onChange((changingStores) => {
                     changedStores = changingStores;
@@ -145,7 +152,9 @@ describe("CQRSStoreGroup", function() {
         context("when SyncUseCase change the store", function() {
             it("should be called by sync", function() {
                 const store = createStore({ name: "AStore" });
-                const storeGroup = new CQRSStoreGroup([store]);
+                const storeGroup = new CQRSStoreGroup({
+                    AStore: store
+                });
                 let isCalled = false;
                 // then
                 storeGroup.onChange(() => {
@@ -165,8 +174,10 @@ describe("CQRSStoreGroup", function() {
         // async
         context("when ASyncUseCase change the store", function() {
             it("should be called by async", function() {
-                const store = createStore({ name: "AStore" });
-                const storeGroup = new CQRSStoreGroup([store]);
+                const store = createStore({ name: "" });
+                const storeGroup = new CQRSStoreGroup({
+                    AStore: store
+                });
                 let isCalled = false;
                 storeGroup.onChange(() => {
                     isCalled = true;
@@ -191,7 +202,7 @@ describe("CQRSStoreGroup", function() {
                 it("should be called by all UseCases", function() {
                     const aStore = createStore({ name: "AStore" });
                     const bStore = createStore({ name: "BStore" });
-                    const storeGroup = new CQRSStoreGroup([aStore, bStore], {
+                    const storeGroup = new CQRSStoreGroup({ a: aStore, b: bStore }, {
                         asap: true
                     });
                     let onChangeCounter = 0;
@@ -221,7 +232,7 @@ describe("CQRSStoreGroup", function() {
             context("when UseCase#dispatch is called", function() {
                 it("should not be called - no changing store", function() {
                     const store = createStore({ name: "AStore" });
-                    const storeGroup = new CQRSStoreGroup([store]);
+                    const storeGroup = new CQRSStoreGroup({ a: store });
                     let isChanged = false;
                     let dispatchedPayload = null;
                     storeGroup.onChange(() => {
@@ -258,7 +269,7 @@ describe("CQRSStoreGroup", function() {
                 });
                 it("should be called by sync", function() {
                     const store = createStore({ name: "AStore" });
-                    const storeGroup = new CQRSStoreGroup([store]);
+                    const storeGroup = new CQRSStoreGroup({ a: store });
                     let isCalled = false;
                     storeGroup.onChange(() => {
                         isCalled = true;
@@ -290,7 +301,7 @@ describe("CQRSStoreGroup", function() {
                 });
                 it("should be called each dispatch", function() {
                     const store = createStore({ name: "AStore" });
-                    const storeGroup = new CQRSStoreGroup([store]);
+                    const storeGroup = new CQRSStoreGroup({ a: store });
                     let calledCount = 0;
                     storeGroup.onChange(() => {
                         calledCount++;
@@ -325,7 +336,7 @@ describe("CQRSStoreGroup", function() {
         context("when UseCase throwing Error", function() {
             it("should be called", function() {
                 const aStore = createStore({ name: "AStore" });
-                const storeGroup = new CQRSStoreGroup([aStore]);
+                const storeGroup = new CQRSStoreGroup({ a: aStore });
                 let onChangeCounter = 0;
                 storeGroup.onChange(() => {
                     onChangeCounter += 1;
@@ -351,7 +362,7 @@ describe("CQRSStoreGroup", function() {
         context("when UseCase call `throwError()", function() {
             it("should be called", function() {
                 const store = createStore({ name: "AStore" });
-                const storeGroup = new CQRSStoreGroup([store]);
+                const storeGroup = new CQRSStoreGroup({ a: store });
                 let isCalled = false;
                 // then
                 storeGroup.onChange(() => {
@@ -378,7 +389,7 @@ describe("CQRSStoreGroup", function() {
             it("should thin out change events at once", function() {
                 const aStore = createStore({ name: "AStore" });
                 const bStore = createStore({ name: "BStore" });
-                const storeGroup = new CQRSStoreGroup([aStore, bStore]);
+                const storeGroup = new CQRSStoreGroup({ a: aStore, b: bStore });
                 class ChangeABUseCase extends UseCase {
                     execute() {
                         aStore.updateState({ a: 1 });
@@ -408,7 +419,7 @@ describe("CQRSStoreGroup", function() {
             context("when the UseCase don't return a promise", () => {
                 it("StoreGroup#emitChange is called just one time", function() {
                     const aStore = createStore({ name: "AStore" });
-                    const storeGroup = new CQRSStoreGroup([aStore]);
+                    const storeGroup = new CQRSStoreGroup({ a: aStore });
                     class ChangeABUseCase extends UseCase {
                         execute() {
                             aStore.updateState({ a: 1 });
@@ -446,7 +457,7 @@ describe("CQRSStoreGroup", function() {
              */
             it("should pass twice update scenario", function() {
                 const store = createStore({ name: "AStore" });
-                const storeGroup = new CQRSStoreGroup([store]);
+                const storeGroup = new CQRSStoreGroup({ a: store });
                 const asyncUseCase = createAsyncChangeStoreUseCase(store);
                 class ChangeTheStoreUseCase extends UseCase {
                     execute() {
@@ -476,7 +487,11 @@ describe("CQRSStoreGroup", function() {
                 const aStore = createStore({ name: "AStore" });
                 const bStore = createStore({ name: "BStore" });
                 const cStore = createStore({ name: "CStore" });
-                const storeGroup = new CQRSStoreGroup([aStore, bStore, cStore]);
+                const storeGroup = new CQRSStoreGroup({
+                    a: aStore,
+                    b: bStore,
+                    c: cStore
+                });
                 class ParentUseCase extends UseCase {
                     execute() {
                         const aUseCase = new ChildAUseCase();
@@ -535,17 +550,17 @@ describe("CQRSStoreGroup", function() {
         it("should return a single state object", function() {
             class AStore extends Store {
                 getState() {
-                    return { a: "a value" };
+                    return "a value";
                 }
             }
             class BStore extends Store {
                 getState() {
-                    return { b: "b value" };
+                    return "b value";
                 }
             }
             const aStore = new AStore();
             const bStore = new BStore();
-            const storeGroup = new CQRSStoreGroup([aStore, bStore]);
+            const storeGroup = new CQRSStoreGroup({ a: aStore, b: bStore });
             // when - a,b emit change at same time
             const state = storeGroup.getState();
             // then - return a single state object that contain each store and merge
@@ -559,31 +574,27 @@ describe("CQRSStoreGroup", function() {
                 class AState {
                 }
                 class AStore extends Store {
-                    getState() {
-                        return {
-                            aState: new AState()
-                        };
+                    getState(_prev) {
+                        return new AState();
                     }
                 }
                 class BState {
                 }
                 class BStore extends Store {
-                    getState() {
-                        return {
-                            bState: new BState()
-                        };
+                    getState(_prev) {
+                        return new BState();
                     }
                 }
                 const aStore = new AStore();
                 const bStore = new BStore();
-                const storeGroup = new CQRSStoreGroup([aStore, bStore]);
+                const storeGroup = new CQRSStoreGroup({ a: aStore, b: bStore });
                 // when - a,b emit change at same time
                 const state = storeGroup.getState();
                 // then - return a single state object that contain each store and merge
                 const keys = Object.keys(state);
-                assert(keys.indexOf("aState") !== -1);
-                assert(state["aState"] instanceof AState);
-                assert(state["bState"] instanceof BState);
+                assert(keys.indexOf("a") !== -1);
+                assert(state["a"] instanceof AState);
+                assert(state["b"] instanceof BState);
             });
         });
         context("warning", () => {
@@ -596,33 +607,20 @@ describe("CQRSStoreGroup", function() {
             });
             it("should check that a Store returned state immutability", function() {
                 const store = createStore({ name: "AStore" });
-                const storeGroup = new CQRSStoreGroup([store]);
+                const storeGroup = new CQRSStoreGroup({
+                    a: store
+                });
                 // When the store is not changed, but call emitChange
                 store.emitChange();
                 assert.ok(consoleWarnStub.calledOnce);
             });
-            it("if store return multiple state, throw assertion error", function() {
-                // Return multiple state, not valid
-                class MyStore extends Store {
-                    getState() {
-                        return {
-                            a: 1,
-                            b: 2
-                        };
-                    }
-                }
-                const store = new MyStore();
-                assert.throws(() => {
-                    new CQRSStoreGroup([store]);
-                }, Error);
-            });
-        })
+        });
     });
     describe("#release", function() {
         it("release onChange handler", function() {
             const aStore = createStore({ name: "AStore" });
             const bStore = createStore({ name: "BStore" });
-            const storeGroup = new CQRSStoreGroup([aStore, bStore]);
+            const storeGroup = new CQRSStoreGroup({ a: aStore, b: bStore });
             // then - called change handler a one-time
             let isCalled = false;
             storeGroup.onChange(() => {
@@ -631,6 +629,69 @@ describe("CQRSStoreGroup", function() {
             storeGroup.release();
             storeGroup.emitChange();
             assert(!isCalled);
+        });
+    });
+    describe("#receivePayload", () => {
+        it("should return getState -> receivePayload", () => {
+            class AState {
+                constructor(count) {
+                    this.count = count;
+                }
+
+                reduce(payload) {
+                    switch (payload.type) {
+                        case "increment":
+                            return new AState(this.count + 1);
+                        case "decrement":
+                            return new AState(this.count - 1);
+                        default:
+                            return this;
+                    }
+                }
+            }
+            class AStore extends Store {
+                constructor() {
+                    super();
+                    this.state = new AState(0);
+                }
+
+                /**
+                 * update state
+                 * @param {Payload} payload
+                 */
+                receivePayload(payload) {
+                    this.state = this.state.reduce(payload);
+                }
+
+                getState() {
+                    return this.state;
+                }
+            }
+            const aStore = new AStore();
+            const storeGroup = new CQRSStoreGroup({ a: aStore });
+            class IncrementUseCase extends UseCase {
+                execute() {
+                    this.dispatch({ type: "increment" });
+                }
+            }
+            class DecrementUseCase extends UseCase {
+                execute() {
+                    this.dispatch({ type: "decrement" });
+                }
+            }
+            const context = new Context({
+                dispatcher: new Dispatcher(),
+                store: storeGroup
+            });
+            return context.useCase(new IncrementUseCase()).execute().then(() => {
+                const state = context.getState();
+                assert.deepEqual(state.a.count, 1);
+            }).then(() => {
+                return context.useCase(new DecrementUseCase()).execute();
+            }).then(() => {
+                const state = context.getState();
+                assert.deepEqual(state.a.count, 0);
+            });
         });
     });
 });
