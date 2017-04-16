@@ -2,6 +2,8 @@
 "use strict";
 import { Store } from "../../lib/Store";
 /**
+ * This helper is for CQRSStoreGroup
+ * Difference `getState` return a instance of State.
  * @param {string} name
  * @param {*} state
  * @returns {TestStore}
