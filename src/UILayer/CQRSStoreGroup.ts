@@ -13,6 +13,10 @@ import { shallowEqual } from "shallow-equal-object";
 import { ChangedPayload } from "../payload/ChangedPayload";
 import { Dispatcher } from "../Dispatcher";
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
+export interface GroupState {
+    // stateName: state
+    [key: string]: any
+}
 export interface StateStoreMapping {
     // stateName: Store
     [key: string]: Store
@@ -200,7 +204,7 @@ export class CQRSStoreGroup extends Dispatcher {
         // after dispatching, and then emitChange
         this._observeDispatchedPayload();
         // default state
-        this.state = this.collectState(initializedPayload);
+        this.state = this.collectGroupState(this.stores, initializedPayload);
     }
 
     private getStoresFromMapping(storeStateMapping: StateStoreMapping): Array<Store> {
@@ -227,21 +231,29 @@ export class CQRSStoreGroup extends Dispatcher {
         return this.state as T;
     }
 
+    private collectGroupState(stores: Array<Store>, payload: Payload): any {
+        this.writePhaseInRead(stores, payload);
+        return this.readPhaseInRead(stores);
+    }
+
     // actually getState
-    private collectState(payload: Payload): any {
-        // Collect state has two phase
-        // 1. write phase
-        // 2. read phase
-        // 3. return collected the state
-        const writeInRead = (store: Store) => {
-            // 1. write in read
+    private writePhaseInRead(stores: Array<Store>, payload: Payload): any {
+        // 1. write in read
+        for (let i = 0; i < stores.length; i++) {
+            const store = stores[i];
             // reduce state by prevSate with payload if it is implemented
             if (typeof store.receivePayload === "function") {
                 store.receivePayload(payload);
             }
-            return store;
-        };
-        const readInRead = (store: Store) => {
+        }
+    }
+
+    // read phase
+    // return collection of states
+    private readPhaseInRead(stores: Array<Store>): any {
+        const groupState: GroupState = {};
+        for (let i = 0; i < stores.length; i++) {
+            const store = stores[i];
             const prevState = this._stateCacheMap.get(store);
             // 2. read in read
             const nextState = store.getState();
@@ -252,20 +264,18 @@ export class CQRSStoreGroup extends Dispatcher {
                 assert.ok(stateName !== undefined, `Store:${store.name} is not registered in constructor.
 But, ${store.name}#getState() was called.`);
             }
+            // the state is not changed, set prevState as state of the store
             if (!store.shouldStateUpdate(prevState, nextState)) {
-                return {
-                    [stateName!]: prevState
-                };
+                groupState[stateName!] = prevState;
+                continue;
             }
             // 2. update prev state. It means that update the state of the store
             this._stateCacheMap.set(store, nextState);
             this._addChangingStateOfStores(store);
-            return {
-                [stateName!]: nextState
-            };
-        };
-        const stateMap = this.stores.map(writeInRead).map(readInRead);
-        return Object.assign({}, ...stateMap);
+            // set nextState as state of the store
+            groupState[stateName!] = nextState;
+        }
+        return groupState;
     }
 
     /**
@@ -294,7 +304,7 @@ But, ${store.name}#getState() was called.`);
      */
     emitChange(payload: Payload = changedPayload): void {
         this._pruneChangingStateOfStores();
-        const nextState = this.collectState(payload);
+        const nextState = this.collectGroupState(this.stores, payload);
         if (!this.shouldStateUpdate(this.state, nextState)) {
             return;
         }
