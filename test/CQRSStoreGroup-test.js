@@ -62,7 +62,7 @@ describe("CQRSStoreGroup", function() {
                 });
                 let isCalled = false;
                 // then
-                storeGroup.onChange((s) => {
+                storeGroup.onChange(() => {
                     isCalled = true;
                 });
                 // when
@@ -632,7 +632,7 @@ describe("CQRSStoreGroup", function() {
         });
     });
     describe("#receivePayload", () => {
-        it("should return getState -> receivePayload", () => {
+        it("UseCase dispatch payload -> Store should receive it", () => {
             class AState {
                 constructor(count) {
                     this.count = count;
@@ -667,8 +667,6 @@ describe("CQRSStoreGroup", function() {
                     return this.state;
                 }
             }
-            const aStore = new AStore();
-            const storeGroup = new CQRSStoreGroup({ a: aStore });
             class IncrementUseCase extends UseCase {
                 execute() {
                     this.dispatch({ type: "increment" });
@@ -679,17 +677,26 @@ describe("CQRSStoreGroup", function() {
                     this.dispatch({ type: "decrement" });
                 }
             }
+
+            const aStore = new AStore();
+            const storeGroup = new CQRSStoreGroup({ a: aStore });
             const context = new Context({
                 dispatcher: new Dispatcher(),
                 store: storeGroup
             });
+
+            const initialState = context.getState();
+            assert.ok(initialState.a instanceof AState);
+            assert.deepEqual(initialState.a.count, 0);
             return context.useCase(new IncrementUseCase()).execute().then(() => {
                 const state = context.getState();
+                assert.ok(state.a instanceof AState);
                 assert.deepEqual(state.a.count, 1);
             }).then(() => {
                 return context.useCase(new DecrementUseCase()).execute();
             }).then(() => {
                 const state = context.getState();
+                assert.ok(state.a instanceof AState);
                 assert.deepEqual(state.a.count, 0);
             });
         });
