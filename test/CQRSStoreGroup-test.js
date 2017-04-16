@@ -591,14 +591,14 @@ describe("CQRSStoreGroup", function() {
                 class AState {
                 }
                 class AStore extends Store {
-                    getState(_prev) {
+                    getState() {
                         return new AState();
                     }
                 }
                 class BState {
                 }
                 class BStore extends Store {
-                    getState(_prev) {
+                    getState() {
                         return new BState();
                     }
                 }

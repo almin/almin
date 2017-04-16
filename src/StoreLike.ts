@@ -7,7 +7,7 @@ export interface StoreLike {
     receivePayload?(payload: Payload): void;
     // read phase in read-side
     // you should return own state
-    getState<T>(prevState?: T): T;
+    getState<T>(): T;
     onChange(onChangeHandler: (hangingStores: Array<StoreLike>) => void): () => void;
     release?(): void;
 }

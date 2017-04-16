@@ -98,24 +98,37 @@ export abstract class Store extends Dispatcher implements StoreLike {
     /**
      * ## Write phase in read-side
      *
-     * You can update own state.
+     * You can implement that update own state.
+     *
+     * Write phase in read-side, receive tha payload from write-side.
+     * In the almin, UseCase(write-side) dispatch a payload and, Store receive the payload.
+     * You can update the state of the store in the timing.
+     * In other word, you can create/cache the state data for `Store#getState()`
      */
     receivePayload?(payload: Payload): void;
 
     /**
-     * If the prev/next state is difference, should return true.
+     * ## Read phase in read-side
+     *
+     * You should be overwrite by Store subclass and return the state of the store.
+     *
+     * Read phase in read-side, just return the state of the store.
+     * Store#getState is called at View needed new state.
+     *
+     * When the state has updated, the view will be updated.
+     * Usually, use Store#shouldStateUpdate for detecting update of the state.
      */
-    shouldStateUpdate<T>(prevState: T, nextState: T): boolean {
-        return !shallowEqual(prevState, nextState);
-    }
+    abstract getState<T>(): T;
 
     /**
-     * ## Read-phase in read-side
+     * If the prev/next state is difference, should return true.
      *
-     * You should be overwrite by Store subclass.
-     * Next, return state object of your store.
+     * Use Shallow Object Equality Test by default.
+     * <https://github.com/sebmarkbage/ecmascript-shallow-equal>
      */
-    abstract getState<T>(prevState?: T): T;
+    shouldStateUpdate(prevState: any, nextState: any): boolean {
+        return !shallowEqual(prevState, nextState);
+    }
 
     /**
      * Subscribe change event of the store.
