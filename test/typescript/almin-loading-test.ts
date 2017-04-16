@@ -32,11 +32,12 @@ class LoadingStore extends Store {
     constructor() {
         super();
         this.state = new LoadingState(false);
-        this.onDispatch((payload: LoadingPayload | Payload) => {
-            if (payload instanceof LoadingPayload) {
-                this.state = this.state.update(payload.isLoading);
-            }
-        })
+    }
+
+    receivePayload(payload: LoadingPayload | any) {
+        if (payload instanceof LoadingPayload) {
+            this.state = this.state.update(payload.isLoading);
+        }
     }
 
     getState() {

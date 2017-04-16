@@ -2,8 +2,8 @@
 "use strict";
 import { Dispatcher } from "./Dispatcher";
 import { StoreLike } from "./StoreLike";
-import { Payload } from "./payload/Payload";
 import { shallowEqual } from "shallow-equal-object";
+import { Payload } from "./payload/Payload";
 
 const STATE_CHANGE_EVENT = "STATE_CHANGE_EVENT";
 
@@ -79,7 +79,7 @@ export abstract class Store extends Dispatcher implements StoreLike {
     }
 
     /**
-     * The name of Store
+     * The name of the Store.
      */
     name: string;
 
@@ -96,6 +96,13 @@ export abstract class Store extends Dispatcher implements StoreLike {
     }
 
     /**
+     * ## Write phase in read-side
+     *
+     * You can update own state.
+     */
+    receivePayload?(payload: Payload): void;
+
+    /**
      * If the prev/next state is difference, should return true.
      */
     shouldStateUpdate<T>(prevState: T, nextState: T): boolean {
@@ -103,10 +110,12 @@ export abstract class Store extends Dispatcher implements StoreLike {
     }
 
     /**
+     * ## Read-phase in read-side
+     *
      * You should be overwrite by Store subclass.
      * Next, return state object of your store.
      */
-    abstract getState<T>(prevState?: T, payload?: Payload): T;
+    abstract getState<T>(prevState?: T): T;
 
     /**
      * Subscribe change event of the store.
