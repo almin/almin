@@ -126,7 +126,7 @@ export class StoreGroup extends Dispatcher implements StoreLike {
             if (prevState && this._previousChangingStores.indexOf(store) === -1) {
                 return prevState;
             }
-            const nextState = store.getState();
+            const nextState = store.getState(prevState);
             if (process.env.NODE_ENV !== "production") {
                 assert.ok(typeof nextState == "object", `${store}: ${store.name}.getState() should return Object.
 e.g.)

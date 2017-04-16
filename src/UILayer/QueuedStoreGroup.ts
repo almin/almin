@@ -3,6 +3,7 @@
 
 import * as assert from "assert";
 import ObjectAssign from "object-assign";
+import LRU from "lru-map-like";
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
 
 import { Dispatcher } from "./../Dispatcher";
@@ -69,6 +70,7 @@ export class QueuedStoreGroup extends Dispatcher implements StoreLike {
     private _releaseHandlers: Array<Function>;
     private _currentChangingStores: Array<Store>;
     private stores: Array<Store>;
+    private _stateCache: LRU<Store, any>;
     private _isAnyOneStoreChanged: boolean;
 
     /**
@@ -102,6 +104,12 @@ export class QueuedStoreGroup extends Dispatcher implements StoreLike {
         this.stores = stores;
         // listen onChange of each store.
         this.stores.forEach(store => this._registerStore(store));
+        /**
+         * LRU Cache for Store and State
+         * @type {LRU}
+         * @private
+         */
+        this._stateCache = new LRU<Store, any>(100);
         // `this` can catch the events of dispatchers
         // Because context delegate dispatched events to **this**
         const tryToEmitChange = (payload: DispatchedPayload, meta: DispatcherPayloadMetaImpl) => {
@@ -168,7 +176,8 @@ export class QueuedStoreGroup extends Dispatcher implements StoreLike {
              Why record nextState to `_storeValueMap`?
              It is for Use Store's getState(prevState) implementation.
              */
-            const nextState = store.getState();
+            const prevState = this._stateCache.get(store);
+            const nextState = store.getState(prevState);
             if (process.env.NODE_ENV !== "production") {
                 assert.ok(typeof nextState == "object", `${store}: ${store.name}.getState() should return Object.
 e.g.)
@@ -187,6 +196,7 @@ StoreGroup#getState()["StateName"]; // state
 
 `);
             }
+            this._stateCache.set(store, nextState);
             return nextState;
         });
         return ObjectAssign({}, ...stateMap);
@@ -262,6 +272,7 @@ StoreGroup#getState()["StateName"]; // state
     release(): void {
         this._releaseHandlers.forEach(releaseHandler => releaseHandler());
         this._releaseHandlers.length = 0;
+        this._stateCache.clear();
     }
 
     /**

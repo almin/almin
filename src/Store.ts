@@ -115,7 +115,7 @@ export abstract class Store extends Dispatcher implements StoreLike {
      * You should be overwrite by Store subclass.
      * Next, return state object of your store.
      */
-    abstract getState<T>(): T;
+    abstract getState<T>(prevState?: T): T;
 
     /**
      * Subscribe change event of the store.
