@@ -12,7 +12,7 @@ export function createStore({
     name,
     state
 }) {
-    class NNNStore extends Store {
+    class MockStore extends Store {
         constructor() {
             super();
             this.name = name;
@@ -27,5 +27,5 @@ export function createStore({
             return this.state;
         }
     }
-    return new NNNStore();
+    return new MockStore();
 }
