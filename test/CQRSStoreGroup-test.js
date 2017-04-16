@@ -30,6 +30,23 @@ const createChangeStoreUseCase = (store) => {
 };
 describe("CQRSStoreGroup", function() {
     describe("constructor(map)", () => {
+        it("throw error when invalid arguments", () => {
+            assert.throws(() => {
+                new CQRSStoreGroup(null);
+            }, Error, "arguments should be object");
+            assert.throws(() => {
+                new CQRSStoreGroup();
+            }, Error, "arguments should be object");
+            assert.throws(() => {
+                new CQRSStoreGroup([]);
+            }, Error, "arguments should be object");
+            assert.throws(() => {
+                new CQRSStoreGroup({
+                    a: 1,
+                    b: 2
+                });
+            }, /should be instance of Store/);
+        });
         it("support stateName and store mapping ", () => {
             class AStateStore extends Store {
                 getState() {

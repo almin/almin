@@ -27,6 +27,32 @@ class InitializedPayload extends Payload {
 const initializedPayload = new InitializedPayload();
 // ChangedPayload is for changing from Store.
 const changedPayload = new ChangedPayload();
+
+/**
+ * assert: check arguments of constructor.
+ */
+const assertConstructorArguments = (arg: any): void => {
+    const message = `Should initialize this StoreGroup with a stateName-store mapping object.
+const aStore = new AStore();
+const bStore = new BStore();
+// A arguments is stateName-store mapping object like { stateName: store }
+const storeGroup = new CQRSStoreGroup({
+    a: aStore,
+    b: bStore
+});
+console.log(storeGroup.getState());
+// { a: "a value", b: "b value" }
+`;
+    assert.ok(typeof arg === "object" && arg !== null && !Array.isArray(arg), message);
+    const keys = Object.keys(arg);
+    for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
+        const value = arg[key];
+        // Don't checking for accepting string or symbol.
+        // assert.ok(typeof key === "string", `key should be string type: ${key}: ${value}` + "\n" + message);
+        assert.ok(Store.isStore(value), `value should be instance of Store: ${key}: ${value}` + "\n" + message);
+    }
+};
 /**
  * assert immutability of the `store`'s state
  * If the store call `Store#emitChange()` and the state of store is not changed, throw error.
@@ -143,11 +169,14 @@ export class CQRSStoreGroup extends Dispatcher {
      * // { a: "a value", b: "b value" }
      * ```
      */
-    constructor(stores: StateStoreMapping) {
+    constructor(stateStoreMapping: StateStoreMapping) {
         super();
-        const stateNames = Object.keys(stores);
+        if (process.env.NODE_ENV !== "production") {
+            assertConstructorArguments(stateStoreMapping);
+        }
+        const stateNames = Object.keys(stateStoreMapping);
         // pull stores from mapping if arguments is mapping.
-        this.stores = this.getStoresFromMapping(stores);
+        this.stores = this.getStoresFromMapping(stateStoreMapping);
         this._preComputeStateNameByStoreMap = new MapLike<Store, string>();
         this._workingUseCaseMap = new MapLike<string, boolean>();
         this._finishedUseCaseMap = new MapLike<string, boolean>();
