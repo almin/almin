@@ -8,6 +8,7 @@ export interface StoreLike {
     // read phase in read-side
     // you should return own state
     getState<T>(): T;
+    // TODO: Add shouldStateUpdate
     onChange(onChangeHandler: (hangingStores: Array<StoreLike>) => void): () => void;
     release?(): void;
 }

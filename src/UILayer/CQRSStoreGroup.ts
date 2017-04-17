@@ -13,6 +13,10 @@ import { shallowEqual } from "shallow-equal-object";
 import { ChangedPayload } from "../payload/ChangedPayload";
 import { Dispatcher } from "../Dispatcher";
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
+export interface GroupState {
+    // stateName: state
+    [key: string]: any
+}
 export interface StateStoreMapping {
     // stateName: Store
     [key: string]: Store
@@ -31,7 +35,7 @@ const changedPayload = new ChangedPayload();
 /**
  * assert: check arguments of constructor.
  */
-const assertConstructorArguments = (arg: any): void => {
+const assertConstructorArguments = (arg: any): void | never => {
     const message = `Should initialize this StoreGroup with a stateName-store mapping object.
 const aStore = new AStore();
 const bStore = new BStore();
@@ -200,7 +204,7 @@ export class CQRSStoreGroup extends Dispatcher {
         // after dispatching, and then emitChange
         this._observeDispatchedPayload();
         // default state
-        this.state = this.collectState(initializedPayload);
+        this.state = this.collectGroupState(this.stores, initializedPayload);
     }
 
     private getStoresFromMapping(storeStateMapping: StateStoreMapping): Array<Store> {
@@ -227,23 +231,32 @@ export class CQRSStoreGroup extends Dispatcher {
         return this.state as T;
     }
 
-    // actually getState
-    private collectState(payload: Payload): any {
-        // Collect state has two phase
-        // 1. write phase
-        // 2. read phase
-        // 3. return collected the state
-        const writeInRead = (store: Store) => {
-            // 1. write in read
+    private collectGroupState(stores: Array<Store>, payload: Payload): any {
+        // 1. write in read
+        this.writePhaseInRead(stores, payload);
+        // 2. read in read
+        return this.readPhaseInRead(stores);
+    }
+
+    // write phase
+    // Each store updates own state
+    private writePhaseInRead(stores: Array<Store>, payload: Payload): any {
+        for (let i = 0; i < stores.length; i++) {
+            const store = stores[i];
             // reduce state by prevSate with payload if it is implemented
             if (typeof store.receivePayload === "function") {
                 store.receivePayload(payload);
             }
-            return store;
-        };
-        const readInRead = (store: Store) => {
+        }
+    }
+
+    // read phase
+    // Get state from each store
+    private readPhaseInRead(stores: Array<Store>): any {
+        const groupState: GroupState = {};
+        for (let i = 0; i < stores.length; i++) {
+            const store = stores[i];
             const prevState = this._stateCacheMap.get(store);
-            // 2. read in read
             const nextState = store.getState();
             // if the prev/next state is same, not update the state.
             const stateName = this._preComputeStateNameByStoreMap.get(store);
@@ -252,20 +265,27 @@ export class CQRSStoreGroup extends Dispatcher {
                 assert.ok(stateName !== undefined, `Store:${store.name} is not registered in constructor.
 But, ${store.name}#getState() was called.`);
             }
-            if (!store.shouldStateUpdate(prevState, nextState)) {
-                return {
-                    [stateName!]: prevState
-                };
+            // the state is not changed, set prevState as state of the store
+            // Check shouldStateUpdate
+            if (typeof store.shouldStateUpdate === "function") {
+                if (!store.shouldStateUpdate(prevState, nextState)) {
+                    groupState[stateName!] = prevState;
+                    continue;
+                }
+            } else {
+                if (prevState === nextState) {
+                    groupState[stateName!] = prevState;
+                    continue;
+                }
             }
-            // 2. update prev state. It means that update the state of the store
+            // Update cache
             this._stateCacheMap.set(store, nextState);
+            // Changing flag On
             this._addChangingStateOfStores(store);
-            return {
-                [stateName!]: nextState
-            };
-        };
-        const stateMap = this.stores.map(writeInRead).map(readInRead);
-        return Object.assign({}, ...stateMap);
+            // Set state
+            groupState[stateName!] = nextState;
+        }
+        return groupState;
     }
 
     /**
@@ -294,7 +314,7 @@ But, ${store.name}#getState() was called.`);
      */
     emitChange(payload: Payload = changedPayload): void {
         this._pruneChangingStateOfStores();
-        const nextState = this.collectState(payload);
+        const nextState = this.collectGroupState(this.stores, payload);
         if (!this.shouldStateUpdate(this.state, nextState)) {
             return;
         }

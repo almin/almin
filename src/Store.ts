@@ -72,7 +72,7 @@ export abstract class Store extends Dispatcher implements StoreLike {
     static isStore(v: any): v is Store {
         if (v instanceof Store) {
             return true;
-        } else if (typeof v === "object" && typeof v.getState === "function" && v.onChange === "function") {
+        } else if (typeof v === "object" && typeof v.getState === "function" && typeof v.onChange === "function") {
             return true;
         }
         return false;
