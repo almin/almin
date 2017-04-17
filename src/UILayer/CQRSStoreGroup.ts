@@ -232,7 +232,9 @@ export class CQRSStoreGroup extends Dispatcher {
     }
 
     private collectGroupState(stores: Array<Store>, payload: Payload): any {
+        // 1. write in read
         this.writePhaseInRead(stores, payload);
+        // 2. read in read
         return this.readPhaseInRead(stores);
     }
 
@@ -265,7 +267,7 @@ export class CQRSStoreGroup extends Dispatcher {
 But, ${store.name}#getState() was called.`);
             }
             // the state is not changed, set prevState as state of the store
-            if (!store.shouldStateUpdate(prevState, nextState)) {
+            if (typeof store.shouldStateUpdate === "function" && !store.shouldStateUpdate(prevState, nextState)) {
                 groupState[stateName!] = prevState;
                 continue;
             }
