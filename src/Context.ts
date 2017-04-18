@@ -5,7 +5,7 @@ import { Dispatcher } from "./Dispatcher";
 import { DispatchedPayload } from "./Dispatcher";
 import { DispatcherPayloadMeta } from "./DispatcherPayloadMeta";
 import { UseCase } from "./UseCase";
-import { Store } from "./Store";
+import { AnyStore } from "./Store";
 import { StoreLike } from "./StoreLike";
 import { UseCaseExecutor } from "./UseCaseExecutor";
 import { StoreGroupValidator } from "./UILayer/StoreGroupValidator";
@@ -107,8 +107,8 @@ export class Context {
      * });
      * ```
      */
-    onChange(onChangeHandler: (changingStores: Array<Store>) => void): () => void {
-        return this._storeGroup.onChange(onChangeHandler);
+    onChange(handler: (changingStores: Array<AnyStore>) => void): () => void {
+        return this._storeGroup.onChange(handler);
     }
 
     /**

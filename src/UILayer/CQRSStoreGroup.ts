@@ -3,7 +3,7 @@
 import * as assert from "assert";
 import MapLike from "map-like";
 import { Payload } from "../payload/Payload";
-import { Store } from "../Store";
+import { Store, AnyStore } from "../Store";
 import { DispatcherPayloadMeta } from "../DispatcherPayloadMeta";
 import { ErrorPayload } from "../payload/ErrorPayload";
 import { WillExecutedPayload } from "../payload/WillExecutedPayload";
@@ -13,14 +13,19 @@ import { shallowEqual } from "shallow-equal-object";
 import { ChangedPayload } from "../payload/ChangedPayload";
 import { Dispatcher } from "../Dispatcher";
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
+
 export interface GroupState {
     // stateName: state
     [key: string]: any
 }
-export interface StateStoreMapping {
-    // stateName: Store
-    [key: string]: Store
-}
+// stateName: Store
+export type StateStoreMapping<T> = {
+    [P in keyof T]: Store<T[P]>
+    };
+
+export type MapState<T> = {
+    [P in keyof T]: T[P]
+    };
 // Internal Payload class
 class InitializedPayload extends Payload {
     constructor() {
@@ -62,7 +67,7 @@ console.log(storeGroup.getState());
  * If the store call `Store#emitChange()` and the state of store is not changed, throw error.
  * https://github.com/almin/almin/issues/151
  */
-const assertStateIsImmutable = (prevState: any, nextState: any, store: Store, changingStores: Array<Store>) => {
+const assertStateIsImmutable = (prevState: any, nextState: any, store: AnyStore, changingStores: Array<AnyStore>) => {
     const isChangingStore = changingStores.indexOf(store) !== -1;
     if (!isChangingStore) {
         return;
@@ -123,15 +128,16 @@ Prev State:`, prevState, `Next State:`, nextState
  * }
  * ```
  */
-export class CQRSStoreGroup extends Dispatcher {
+export class CQRSStoreGroup<T> extends Dispatcher {
+    name = "CQRSStoreGroup";
     // observing stores
-    public stores: Array<Store>;
+    public stores: Array<AnyStore>;
     // current state
-    protected state: any;
+    protected state: MapState<T>;
     // stores that are emitted changed.
-    private _emitChangedStores: Array<Store> = [];
+    private _emitChangedStores: Array<AnyStore> = [];
     // stores that are changed compared by previous state.
-    private _changingStores: Array<Store> = [];
+    private _changingStores: Array<AnyStore> = [];
     // all functions to release handlers
     private _releaseHandlers: Array<Function> = [];
     // already finished UseCase Map
@@ -139,9 +145,9 @@ export class CQRSStoreGroup extends Dispatcher {
     // current working useCase
     private _workingUseCaseMap: MapLike<string, boolean>;
     // store/state cache map
-    private _stateCacheMap: MapLike<Store, any>;
+    private _stateCacheMap: MapLike<AnyStore, any>;
     // store/state map
-    private _preComputeStateNameByStoreMap: MapLike<Store, string>;
+    private _preComputeStateNameByStoreMap: MapLike<AnyStore, string>;
 
     /**
      * Initialize this StoreGroup with a stateName-store mapping object.
@@ -173,7 +179,7 @@ export class CQRSStoreGroup extends Dispatcher {
      * // { a: "a value", b: "b value" }
      * ```
      */
-    constructor(stateStoreMapping: StateStoreMapping) {
+    constructor(public stateStoreMapping: StateStoreMapping<T>) {
         super();
         if (process.env.NODE_ENV !== "production") {
             assertConstructorArguments(stateStoreMapping);
@@ -181,10 +187,10 @@ export class CQRSStoreGroup extends Dispatcher {
         const stateNames = Object.keys(stateStoreMapping);
         // pull stores from mapping if arguments is mapping.
         this.stores = this.getStoresFromMapping(stateStoreMapping);
-        this._preComputeStateNameByStoreMap = new MapLike<Store, string>();
+        this._preComputeStateNameByStoreMap = new MapLike<AnyStore, string>();
         this._workingUseCaseMap = new MapLike<string, boolean>();
         this._finishedUseCaseMap = new MapLike<string, boolean>();
-        this._stateCacheMap = new MapLike<Store, any>();
+        this._stateCacheMap = new MapLike<AnyStore, any>();
         // Implementation Note:
         // Dispatch -> pipe -> Store#emitChange() if it is needed
         //          -> this.onDispatch -> If anyone store is changed, this.emitChange()
@@ -207,7 +213,7 @@ export class CQRSStoreGroup extends Dispatcher {
         this.state = this.collectGroupState(this.stores, initializedPayload);
     }
 
-    private getStoresFromMapping(storeStateMapping: StateStoreMapping): Array<Store> {
+    private getStoresFromMapping(storeStateMapping: StateStoreMapping<T>): Array<AnyStore> {
         return Object.keys(storeStateMapping).map(name => {
             return storeStateMapping[name];
         });
@@ -227,11 +233,11 @@ export class CQRSStoreGroup extends Dispatcher {
     /**
      * Return the state object that merge each stores's state
      */
-    getState<T>(): T {
-        return this.state as T;
+    getState(): MapState<T> {
+        return this.state as MapState<T>;
     }
 
-    private collectGroupState(stores: Array<Store>, payload: Payload): any {
+    private collectGroupState(stores: Array<AnyStore>, payload: Payload): any {
         // 1. write in read
         this.writePhaseInRead(stores, payload);
         // 2. read in read
@@ -240,7 +246,7 @@ export class CQRSStoreGroup extends Dispatcher {
 
     // write phase
     // Each store updates own state
-    private writePhaseInRead(stores: Array<Store>, payload: Payload): any {
+    private writePhaseInRead(stores: Array<AnyStore>, payload: Payload): any {
         for (let i = 0; i < stores.length; i++) {
             const store = stores[i];
             // reduce state by prevSate with payload if it is implemented
@@ -252,7 +258,7 @@ export class CQRSStoreGroup extends Dispatcher {
 
     // read phase
     // Get state from each store
-    private readPhaseInRead(stores: Array<Store>): any {
+    private readPhaseInRead(stores: Array<AnyStore>): any {
         const groupState: GroupState = {};
         for (let i = 0; i < stores.length; i++) {
             const store = stores[i];
@@ -332,7 +338,7 @@ But, ${store.name}#getState() was called.`);
      *
      * onChange workflow: https://code2flow.com/mHFviS
      */
-    onChange(handler: (stores: Array<Store>) => void): () => void {
+    onChange(handler: (stores: Array<AnyStore>) => void): () => void {
         this.on(CHANGE_STORE_GROUP, handler);
         const releaseHandler = this.removeListener.bind(this, CHANGE_STORE_GROUP, handler);
         this._releaseHandlers.push(releaseHandler);
@@ -346,11 +352,10 @@ But, ${store.name}#getState() was called.`);
     release(): void {
         this._releaseHandlers.forEach(releaseHandler => releaseHandler());
         this._releaseHandlers.length = 0;
-        this.state = {};
         this._pruneChangingStateOfStores();
     }
 
-    private _getStatesFromStores(stores: Array<Store>) {
+    private _getStatesFromStores(stores: Array<AnyStore>) {
         return stores.map(store => {
             return this._stateCacheMap.get(store);
         });
@@ -360,7 +365,7 @@ But, ${store.name}#getState() was called.`);
      * register store and listen onChange.
      * If you release store, and do call `release` method.
      */
-    private _registerStore(store: Store): () => void {
+    private _registerStore(store: AnyStore): () => void {
         const onChangeHandler = () => {
             this.addEmitChangedStore(store);
             // if not exist working UseCases, immediate invoke emitChange.
@@ -405,7 +410,7 @@ But, ${store.name}#getState() was called.`);
         this._releaseHandlers.push(releaseHandler);
     }
 
-    private addEmitChangedStore(store: Store) {
+    private addEmitChangedStore(store: AnyStore) {
         if (this._emitChangedStores.indexOf(store) === -1) {
             this._emitChangedStores.push(store);
         }
@@ -415,7 +420,7 @@ But, ${store.name}#getState() was called.`);
         this._emitChangedStores = [];
     }
 
-    private _addChangingStateOfStores(store: Store) {
+    private _addChangingStateOfStores(store: AnyStore) {
         if (this._changingStores.indexOf(store) === -1) {
             this._changingStores.push(store);
         }

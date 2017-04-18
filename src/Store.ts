@@ -6,6 +6,8 @@ import { shallowEqual } from "shallow-equal-object";
 import { Payload } from "./payload/Payload";
 
 const STATE_CHANGE_EVENT = "STATE_CHANGE_EVENT";
+// TODO: will remove by default generics
+export type AnyStore = Store<any>
 
 /**
  * @type {string}
@@ -60,7 +62,7 @@ export const defaultStoreName = "<Anonymous-Store>";
  * }
  * ```
  */
-export abstract class Store extends Dispatcher implements StoreLike {
+export abstract class Store<State> extends Dispatcher implements StoreLike {
     /**
      * Set debuggable name if needed.
      */
@@ -69,7 +71,7 @@ export abstract class Store extends Dispatcher implements StoreLike {
     /**
      * Return true if the `v` is store like.
      */
-    static isStore(v: any): v is Store {
+    static isStore(v: any): v is Store<any> {
         if (v instanceof Store) {
             return true;
         } else if (typeof v === "object" && typeof v.getState === "function" && typeof v.onChange === "function") {
@@ -77,6 +79,11 @@ export abstract class Store extends Dispatcher implements StoreLike {
         }
         return false;
     }
+
+    /**
+     * The state of the Store.
+     */
+    state?: State;
 
     /**
      * The name of the Store.
@@ -126,7 +133,7 @@ export abstract class Store extends Dispatcher implements StoreLike {
      * Use Shallow Object Equality Test by default.
      * <https://github.com/sebmarkbage/ecmascript-shallow-equal>
      */
-    shouldStateUpdate(prevState: any, nextState: any): boolean {
+    shouldStateUpdate(prevState: any | State, nextState: any | State): boolean {
         return !shallowEqual(prevState, nextState);
     }
 
@@ -166,6 +173,6 @@ export abstract class Store extends Dispatcher implements StoreLike {
 }
 
 // Implement assertion
-Store.prototype.getState = function (this: Store) {
+Store.prototype.getState = function (this: Store<any>) {
     throw new Error(`${this.name} should be implemented Store#getState(): Object`);
 };

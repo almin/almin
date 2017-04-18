@@ -1,7 +1,7 @@
 // LICENSE : MIT
 "use strict";
 const assert = require("assert");
-import { Store } from "../Store";
+import { AnyStore, Store } from "../Store";
 import { Dispatcher } from "../Dispatcher";
 import { StoreLike } from "../StoreLike";
 /*
@@ -17,7 +17,7 @@ export class StoreGroupValidator {
      * validate stores in StoreGroup
      * @param {Store[]} stores
      */
-    static validateStores(stores: Array<Store>): void | never {
+    static validateStores(stores: Array<AnyStore>): void | never {
         stores.forEach(store => {
             assert.ok(Store.isStore(store), `${store} should be instance of Store`);
             assert.ok(typeof store.getState === "function", `${store} should implement getState() method.
