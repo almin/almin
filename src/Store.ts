@@ -156,6 +156,13 @@ export abstract class Store extends Dispatcher implements StoreLike {
     emitChange(): void {
         this.emit(STATE_CHANGE_EVENT, [this]);
     }
+
+    /**
+     * Release all event handlers
+     */
+    release(): void {
+        this.removeAllListeners(STATE_CHANGE_EVENT);
+    }
 }
 
 // Implement assertion

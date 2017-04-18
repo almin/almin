@@ -2,8 +2,8 @@
 "use strict";
 const assert = require("assert");
 import { Store } from "../Store";
-import { StoreGroup } from "./StoreGroup";
 import { Dispatcher } from "../Dispatcher";
+import { StoreLike } from "../StoreLike";
 /*
  StoreGroup
 
@@ -32,7 +32,7 @@ StoreGroup merge values of store*s*.`);
      * {@link Context} treat StoreGroup like object as StoreGroup.
      * @param {*|StoreGroup|Store} storeGroup
      */
-    static validateInstance(storeGroup: any | StoreGroup | Store): void | never {
+    static validateInstance(storeGroup: any | StoreLike): void | never {
         assert.ok(storeGroup !== undefined, "store should not be undefined");
         assert.ok(Dispatcher.isDispatcher(storeGroup), "storeGroup should inherit CoreEventEmitter");
         assert.ok(typeof storeGroup.onChange === "function", "StoreGroup should have #onChange method");

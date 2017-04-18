@@ -25,7 +25,7 @@ export class Context {
      * @private
      */
     private _dispatcher: Dispatcher;
-    private _storeGroup: StoreLike & Dispatcher;
+    private _storeGroup: StoreLike;
     private _releaseHandlers: Array<() => void>;
 
     /**
@@ -55,7 +55,7 @@ export class Context {
      * });
      * ```
      */
-    constructor({dispatcher, store}: {dispatcher: Dispatcher; store: Store | StoreLike & Dispatcher;}) {
+    constructor({dispatcher, store}: {dispatcher: Dispatcher; store: StoreLike;}) {
         StoreGroupValidator.validateInstance(store);
         // central dispatcher
         this._dispatcher = dispatcher;
@@ -264,7 +264,7 @@ The argument is UseCase constructor itself: ${useCase}`
      */
     release() {
         const storeGroup = this._storeGroup;
-        if (!!storeGroup && typeof storeGroup.release === "function") {
+        if (storeGroup) {
             storeGroup.release();
         }
         this._releaseHandlers.forEach(releaseHandler => releaseHandler());
