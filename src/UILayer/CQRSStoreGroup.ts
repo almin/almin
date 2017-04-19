@@ -17,7 +17,7 @@ const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
 
 /**
  * This function is type converter for TypeScript.
- * It has actual implementation, but it is only use for typing.
+ * It has actual implementation, but it is only used for typing.
  *
  * - Status: unstable
  * 
