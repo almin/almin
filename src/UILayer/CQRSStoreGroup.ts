@@ -18,14 +18,17 @@ export interface GroupState {
     // stateName: state
     [key: string]: any
 }
-// stateName: Store
-export type StateStoreMapping<T> = {
+// stateName: Store in constructor
+export type MapStore<T> = {
+    // assign T[P] to State
     [P in keyof T]: Store<T[P]>
-    };
+};
 
 export type MapState<T> = {
+    // MapStore define T[P]
+    // Now, T[P] is State
     [P in keyof T]: T[P]
-    };
+};
 // Internal Payload class
 class InitializedPayload extends Payload {
     constructor() {
@@ -179,7 +182,7 @@ export class CQRSStoreGroup<T> extends Dispatcher {
      * // { a: "a value", b: "b value" }
      * ```
      */
-    constructor(public stateStoreMapping: StateStoreMapping<T>) {
+    constructor(public stateStoreMapping: MapStore<T>) {
         super();
         if (process.env.NODE_ENV !== "production") {
             assertConstructorArguments(stateStoreMapping);
@@ -213,7 +216,7 @@ export class CQRSStoreGroup<T> extends Dispatcher {
         this.state = this.collectGroupState(this.stores, initializedPayload);
     }
 
-    private getStoresFromMapping(storeStateMapping: StateStoreMapping<T>): Array<AnyStore> {
+    private getStoresFromMapping(storeStateMapping: MapStore<T>): Array<AnyStore> {
         return Object.keys(storeStateMapping).map(name => {
             return storeStateMapping[name];
         });
@@ -234,19 +237,19 @@ export class CQRSStoreGroup<T> extends Dispatcher {
      * Return the state object that merge each stores's state
      */
     getState(): MapState<T> {
-        return this.state as MapState<T>;
+        return this.state;
     }
 
-    private collectGroupState(stores: Array<AnyStore>, payload: Payload): any {
+    private collectGroupState(stores: Array<AnyStore>, payload: Payload): MapState<T> {
         // 1. write in read
         this.writePhaseInRead(stores, payload);
         // 2. read in read
-        return this.readPhaseInRead(stores);
+        return this.readPhaseInRead(stores) as MapState<T>;
     }
 
     // write phase
     // Each store updates own state
-    private writePhaseInRead(stores: Array<AnyStore>, payload: Payload): any {
+    private writePhaseInRead(stores: Array<AnyStore>, payload: Payload): void {
         for (let i = 0; i < stores.length; i++) {
             const store = stores[i];
             // reduce state by prevSate with payload if it is implemented
@@ -258,7 +261,7 @@ export class CQRSStoreGroup<T> extends Dispatcher {
 
     // read phase
     // Get state from each store
-    private readPhaseInRead(stores: Array<AnyStore>): any {
+    private readPhaseInRead(stores: Array<AnyStore>): GroupState {
         const groupState: GroupState = {};
         for (let i = 0; i < stores.length; i++) {
             const store = stores[i];
