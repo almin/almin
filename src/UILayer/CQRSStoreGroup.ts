@@ -14,6 +14,36 @@ import { ChangedPayload } from "../payload/ChangedPayload";
 import { Dispatcher } from "../Dispatcher";
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
 
+
+/**
+ * This function is type converter for TypeScript.
+ * It has actual implementation, but it is only use for typing.
+ *
+ * - Status: unstable
+ * 
+ * This is useful for TypeScript, but it is unstable API.
+ * You can use it own risk.
+ * 
+ * ## Example
+ *
+ * ```ts
+ * const mapping = {
+ *   a: new AStore(),
+ *   b: new BStore()
+ * };
+ * const StoreState = MapStoreToState(mapping);
+ * // Get Mapped to State for Store
+ * type States = typeof StoreState
+ * // {
+ * //   a: AState,
+ * //   b: BState
+ * // };
+ * ```
+ */
+export function MapStoreToState<T>(_mapping: MapStore<T>): MapState<T> {
+    return {} as MapState<T>
+}
+
 export interface GroupState {
     // stateName: state
     [key: string]: any

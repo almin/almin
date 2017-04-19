@@ -1,7 +1,6 @@
 import {
     Context,
     Store,
-    StoreGroup,
     Dispatcher,
     UseCase,
     Payload,
@@ -10,7 +9,9 @@ import {
     CompletedPayload,
     ErrorPayload,
     DispatcherPayloadMeta,
-    FunctionalUseCaseContext
+    FunctionalUseCaseContext,
+    MapStoreToState,
+    CQRSStoreGroup
 } from "../../src/index";
 // Dispatcher
 const dispatcher = new Dispatcher();
@@ -53,15 +54,14 @@ class BStore extends Store<BState> {
         };
     }
 }
-// StoreGroup
-interface StoreState {
-    A: AState;
-    B: BState;
-}
-const storeGroup = new StoreGroup([
-    new AStore(),
-    new BStore()
-]);
+const mapping = {
+    A: new AStore(),
+    B: new BStore()
+};
+// Type hacking
+const _StoreState = MapStoreToState(mapping);
+type StoreState = typeof _StoreState;
+const storeGroup = new CQRSStoreGroup(mapping);
 // Context
 const context = new Context({
     dispatcher,
