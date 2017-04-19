@@ -18,7 +18,7 @@ const dispatcher = new Dispatcher();
 interface AState {
     a: number
 }
-class AStore extends Store {
+class AStore extends Store<AState> {
     state: AState;
 
     constructor() {
@@ -37,7 +37,7 @@ class AStore extends Store {
 interface BState {
     b: number;
 }
-class BStore extends Store {
+class BStore extends Store<BState> {
     state: BState;
 
     constructor() {

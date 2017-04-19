@@ -26,7 +26,7 @@ class LoadingState {
         return new LoadingState(isLoading);
     }
 }
-class LoadingStore extends Store {
+class LoadingStore extends Store<LoadingState> {
     state: LoadingState;
 
     constructor() {

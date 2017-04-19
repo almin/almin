@@ -1,9 +1,9 @@
 // LICENSE : MIT
 "use strict";
 const assert = require("assert");
-import { Store } from "../Store";
-import { StoreGroup } from "./StoreGroup";
+import { AnyStore, Store } from "../Store";
 import { Dispatcher } from "../Dispatcher";
+import { StoreLike } from "../StoreLike";
 /*
  StoreGroup
 
@@ -17,7 +17,7 @@ export class StoreGroupValidator {
      * validate stores in StoreGroup
      * @param {Store[]} stores
      */
-    static validateStores(stores: Array<Store>): void | never {
+    static validateStores(stores: Array<AnyStore>): void | never {
         stores.forEach(store => {
             assert.ok(Store.isStore(store), `${store} should be instance of Store`);
             assert.ok(typeof store.getState === "function", `${store} should implement getState() method.
@@ -32,7 +32,7 @@ StoreGroup merge values of store*s*.`);
      * {@link Context} treat StoreGroup like object as StoreGroup.
      * @param {*|StoreGroup|Store} storeGroup
      */
-    static validateInstance(storeGroup: any | StoreGroup | Store): void | never {
+    static validateInstance(storeGroup: any | StoreLike): void | never {
         assert.ok(storeGroup !== undefined, "store should not be undefined");
         assert.ok(Dispatcher.isDispatcher(storeGroup), "storeGroup should inherit CoreEventEmitter");
         assert.ok(typeof storeGroup.onChange === "function", "StoreGroup should have #onChange method");

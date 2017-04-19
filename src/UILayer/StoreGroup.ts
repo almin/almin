@@ -6,7 +6,7 @@ import * as assert from "assert";
 import LRU from "lru-map-like";
 
 import { Dispatcher } from "../Dispatcher";
-import { Store } from "../Store";
+import { AnyStore } from "../Store";
 import { StoreGroupValidator } from "./StoreGroupValidator";
 import { StoreLike } from "../StoreLike";
 import { raq } from "./raq";
@@ -31,11 +31,11 @@ export class StoreGroup extends Dispatcher implements StoreLike {
      * @private definitions
      */
     private _releaseHandlers: Array<Function>;
-    private _currentChangingStores: Array<Store>;
-    private _previousChangingStores: Array<Store>;
-    private _stateCache: LRU<Store, any>;
+    private _currentChangingStores: Array<AnyStore>;
+    private _previousChangingStores: Array<AnyStore>;
+    private _stateCache: LRU<AnyStore, any>;
     private _isAnyOneStoreChanged: boolean;
-    private _stores: Array<Store>;
+    private _stores: Array<AnyStore>;
 
     /**
      * Initialize `StoreGroup` with `Store` instances
@@ -49,7 +49,7 @@ export class StoreGroup extends Dispatcher implements StoreLike {
      * const storeGroup = new StoreGroup([aStore, bStore]);
      * ```
      */
-    constructor(stores: Array<Store>) {
+    constructor(stores: Array<AnyStore>) {
         super();
         StoreGroupValidator.validateStores(stores);
         /**
@@ -78,13 +78,13 @@ export class StoreGroup extends Dispatcher implements StoreLike {
          * @type {LRU}
          * @private
          */
-        this._stateCache = new LRU<Store, any>(100);
+        this._stateCache = new LRU<AnyStore, any>(100);
     }
 
     /**
      * A collection of stores in the StoreGroup.
      */
-    get stores(): Array<Store> {
+    get stores(): Array<AnyStore> {
         return this._stores;
     }
 
@@ -157,7 +157,7 @@ StoreGroup#getState()["StateName"]// state
      * @param {Store} store
      * @private
      */
-    private _registerStore(store: Store): void {
+    private _registerStore(store: AnyStore): void {
         // if anyone store is changed, will call `emitChange()`.
         const releaseOnChangeHandler = store.onChange(() => {
             // true->false, prune previous cache
@@ -223,7 +223,7 @@ StoreGroup#getState()["StateName"]// state
      * subscribe changes of the store group.
      * It is same with `Store#onChage()`
      */
-    onChange(handler: (stores: Array<Store>) => void): () => void {
+    onChange(handler: (stores: Array<AnyStore>) => void): () => void {
         this.on(CHANGE_STORE_GROUP, handler);
         const releaseHandler = this.removeListener.bind(this, CHANGE_STORE_GROUP, handler);
         this._releaseHandlers.push(releaseHandler);

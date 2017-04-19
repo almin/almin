@@ -1,14 +1,13 @@
-// LICENSE : MIT
-
-import { Payload } from "./payload/Payload";
-export interface StoreLike {
-    // write phase in read-side
-    // you can update own state
-    receivePayload?(payload: Payload): void;
-    // read phase in read-side
-    // you should return own state
+import { Dispatcher } from "./Dispatcher";
+/**
+ * StoreLike is a interfere for Store and StoreGroup .
+ */
+export interface StoreLike extends Dispatcher {
+    // Return the state
     getState<T>(): T;
-    // TODO: Add shouldStateUpdate
-    onChange(onChangeHandler: (hangingStores: Array<StoreLike>) => void): () => void;
-    release?(): void;
+    // call the `handler` when the store is changed.
+    // pass changing stores to the `handler`
+    onChange(handler: (stores: Array<StoreLike>) => void): () => void;
+    // release all handler
+    release(): void;
 }

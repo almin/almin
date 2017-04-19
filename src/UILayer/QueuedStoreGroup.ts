@@ -8,7 +8,7 @@ const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
 import { Dispatcher } from "./../Dispatcher";
 import { DispatchedPayload } from "./../Dispatcher";
 import { DispatcherPayloadMetaImpl } from "./../DispatcherPayloadMeta";
-import { Store } from "./../Store";
+import { AnyStore } from "./../Store";
 import { StoreLike } from "./../StoreLike";
 import { StoreGroupValidator } from "./StoreGroupValidator";
 import { isDidExecutedPayload } from "../payload/DidExecutedPayload";
@@ -67,8 +67,8 @@ export interface QueuedStoreGroupOption {
 export class QueuedStoreGroup extends Dispatcher implements StoreLike {
 
     private _releaseHandlers: Array<Function>;
-    private _currentChangingStores: Array<Store>;
-    private stores: Array<Store>;
+    private _currentChangingStores: Array<AnyStore>;
+    private stores: Array<AnyStore>;
     private _isAnyOneStoreChanged: boolean;
 
     /**
@@ -77,7 +77,7 @@ export class QueuedStoreGroup extends Dispatcher implements StoreLike {
      * @param {Object} [options] QueuedStoreGroup option
      * @public
      */
-    constructor(stores: Array<Store>, options: QueuedStoreGroupOption = {}) {
+    constructor(stores: Array<AnyStore>, options: QueuedStoreGroupOption = {}) {
         super();
         StoreGroupValidator.validateStores(stores);
         const asap = options.asap !== undefined ? options.asap : defaultOptions.asap;
@@ -153,7 +153,7 @@ export class QueuedStoreGroup extends Dispatcher implements StoreLike {
      * @returns {Store[]}
      * @private
      */
-    get currentChangingStores(): Array<Store> {
+    get currentChangingStores(): Array<AnyStore> {
         return this._currentChangingStores;
     }
 
@@ -198,7 +198,7 @@ StoreGroup#getState()["StateName"]; // state
      * @param {Store} store
      * @private
      */
-    private _registerStore(store: Store) {
+    private _registerStore(store: AnyStore) {
         // if anyone store is changed, will call `emitChange()`.
         const releaseOnChangeHandler = store.onChange(() => {
             // ====
@@ -247,7 +247,7 @@ StoreGroup#getState()["StateName"]; // state
      * @returns {Function} call the function and release handler
      * @public
      */
-    onChange(handler: (stores: Array<Store>) => void ): () => void {
+    onChange(handler: (stores: Array<AnyStore>) => void): () => void {
         this.on(CHANGE_STORE_GROUP, handler);
         const releaseHandler = this.removeListener.bind(this, CHANGE_STORE_GROUP, handler);
         this._releaseHandlers.push(releaseHandler);
