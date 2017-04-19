@@ -28,8 +28,8 @@ const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
  *
  * ```ts
  * const mapping = {
- *   a: new AStore(),
- *   b: new BStore()
+ *   a: new AStore(), // AStore<AState>
+ *   b: new BStore()  // BStore<BState>
  * };
  * const StoreState = MapStoreToState(mapping);
  * // Get Mapped to State for Store
