@@ -55,8 +55,8 @@ class BStore extends Store<BState> {
     }
 }
 const mapping = {
-    A: new AStore(),
-    B: new BStore()
+    aState: new AStore(),
+    bState: new BStore()
 };
 // Type hacking
 const _StoreState = MapStoreToState(mapping);
@@ -113,8 +113,8 @@ const functionalUseCase = (context: FunctionalUseCaseContext) => {
 // execute - functional execute with ArgT
 context.useCase(functionalUseCase).execute<functionUseCaseArgs>("1").then(() => {
     const state = context.getState<StoreState>();
-    console.log(state.A.a);
-    console.log(state.B.b);
+    console.log(state.aState.a);
+    console.log(state.bState.b);
 });
 // execute - functional execute without ArgT
 context.useCase(functionalUseCase).execute("value").then(() => {
@@ -124,8 +124,8 @@ context.useCase(functionalUseCase).execute("value").then(() => {
 // execute: usecase with T
 context.useCase(parentUseCase).execute<ParentUseCaseArgs>("value").then(() => {
     const state = context.getState<StoreState>();
-    console.log(state.A.a);
-    console.log(state.B.b);
+    console.log(state.aState.a);
+    console.log(state.bState.b);
 }).catch((error: Error) => {
     console.error(error);
 });
