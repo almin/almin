@@ -16,16 +16,17 @@ import { ErrorPayload, isErrorPayload } from "./payload/ErrorPayload";
 import { WillExecutedPayload, isWillExecutedPayload } from "./payload/WillExecutedPayload";
 import { FunctionalUseCaseContext } from "./FunctionalUseCaseContext";
 import { FunctionalUseCase } from "./FunctionalUseCase";
+import { MapState } from "./UILayer/StoreGroupType";
 
 /**
  * Context class provide observing and communicating with **Store** and **UseCase**.
  */
-export class Context {
+export class Context<T> {
     /**
      * @private
      */
     private _dispatcher: Dispatcher;
-    private _storeGroup: StoreLike;
+    private _storeGroup: StoreLike<T>;
     private _releaseHandlers: Array<() => void>;
 
     /**
@@ -55,7 +56,7 @@ export class Context {
      * });
      * ```
      */
-    constructor({dispatcher, store}: {dispatcher: Dispatcher; store: StoreLike;}) {
+    constructor({dispatcher, store}: {dispatcher: Dispatcher; store: StoreLike<T>;}) {
         StoreGroupValidator.validateInstance(store);
         // central dispatcher
         this._dispatcher = dispatcher;
@@ -88,8 +89,8 @@ export class Context {
      * // { aState, bState }
      * ```
      */
-    getState<T>(): T {
-        return this._storeGroup.getState<T>();
+    getState(): MapState<T>  {
+        return this._storeGroup.getState();
     }
 
     /**

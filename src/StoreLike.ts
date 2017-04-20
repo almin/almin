@@ -2,12 +2,12 @@ import { Dispatcher } from "./Dispatcher";
 /**
  * StoreLike is a interfere for Store and StoreGroup .
  */
-export interface StoreLike extends Dispatcher {
+export interface StoreLike<T> extends Dispatcher {
     // Return the state
-    getState<T>(): T;
+    getState(): T;
     // call the `handler` when the store is changed.
     // pass changing stores to the `handler`
-    onChange(handler: (stores: Array<StoreLike>) => void): () => void;
+    onChange(handler: (stores: Array<StoreLike<any>>) => void): () => void;
     // release all handler
     release(): void;
 }

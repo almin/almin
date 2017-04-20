@@ -14,6 +14,7 @@ import { StoreGroupValidator } from "./StoreGroupValidator";
 import { isDidExecutedPayload } from "../payload/DidExecutedPayload";
 import { isErrorPayload } from "../payload/ErrorPayload";
 import { isCompletedPayload } from "../payload/CompletedPayload";
+import { MapState } from "./StoreGroupType";
 
 /**
  * QueuedStoreGroup options
@@ -64,7 +65,7 @@ export interface QueuedStoreGroupOption {
  *
  * @public
  */
-export class QueuedStoreGroup extends Dispatcher implements StoreLike {
+export class QueuedStoreGroup<T> extends Dispatcher implements StoreLike<T> {
 
     private _releaseHandlers: Array<Function>;
     private _currentChangingStores: Array<AnyStore>;
@@ -162,7 +163,7 @@ export class QueuedStoreGroup extends Dispatcher implements StoreLike {
      * @returns {Object} merged state object
      * @public
      */
-    getState<T>(): T {
+    getState(): MapState<T>  {
         const stateMap = this.stores.map(store => {
             /*
              Why record nextState to `_storeValueMap`?

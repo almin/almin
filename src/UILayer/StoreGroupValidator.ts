@@ -32,7 +32,7 @@ StoreGroup merge values of store*s*.`);
      * {@link Context} treat StoreGroup like object as StoreGroup.
      * @param {*|StoreGroup|Store} storeGroup
      */
-    static validateInstance(storeGroup: any | StoreLike): void | never {
+    static validateInstance(storeGroup: any | StoreLike<any>): void | never {
         assert.ok(storeGroup !== undefined, "store should not be undefined");
         assert.ok(Dispatcher.isDispatcher(storeGroup), "storeGroup should inherit CoreEventEmitter");
         assert.ok(typeof storeGroup.onChange === "function", "StoreGroup should have #onChange method");

@@ -1,7 +1,6 @@
 import {
     Context,
     Store,
-    StoreGroup,
     Dispatcher,
     UseCase,
     Payload,
@@ -10,7 +9,8 @@ import {
     CompletedPayload,
     ErrorPayload,
     DispatcherPayloadMeta,
-    FunctionalUseCaseContext
+    FunctionalUseCaseContext,
+    CQRSStoreGroup
 } from "../../src/index";
 // Dispatcher
 const dispatcher = new Dispatcher();
@@ -53,15 +53,11 @@ class BStore extends Store<BState> {
         };
     }
 }
-// StoreGroup
-interface StoreState {
-    A: AState;
-    B: BState;
-}
-const storeGroup = new StoreGroup([
-    new AStore(),
-    new BStore()
-]);
+// Type hacking
+const storeGroup = new CQRSStoreGroup({
+    aState: new AStore(),
+    bState: new BStore()
+});
 // Context
 const context = new Context({
     dispatcher,
@@ -112,9 +108,9 @@ const functionalUseCase = (context: FunctionalUseCaseContext) => {
 };
 // execute - functional execute with ArgT
 context.useCase(functionalUseCase).execute<functionUseCaseArgs>("1").then(() => {
-    const state = context.getState<StoreState>();
-    console.log(state.A.a);
-    console.log(state.B.b);
+    const state = context.getState();
+    console.log(state.aState.a);
+    console.log(state.bState.b);
 });
 // execute - functional execute without ArgT
 context.useCase(functionalUseCase).execute("value").then(() => {
@@ -123,9 +119,9 @@ context.useCase(functionalUseCase).execute("value").then(() => {
 
 // execute: usecase with T
 context.useCase(parentUseCase).execute<ParentUseCaseArgs>("value").then(() => {
-    const state = context.getState<StoreState>();
-    console.log(state.A.a);
-    console.log(state.B.b);
+    const state = context.getState();
+    console.log(state.aState.a);
+    console.log(state.bState.b);
 }).catch((error: Error) => {
     console.error(error);
 });

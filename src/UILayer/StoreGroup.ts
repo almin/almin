@@ -10,6 +10,7 @@ import { AnyStore } from "../Store";
 import { StoreGroupValidator } from "./StoreGroupValidator";
 import { StoreLike } from "../StoreLike";
 import { raq } from "./raq";
+import { MapState } from "./StoreGroupType";
 
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
 
@@ -26,7 +27,7 @@ const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
  *
  * If you want to know all change events, and directly use `store.onChange()`.
  */
-export class StoreGroup extends Dispatcher implements StoreLike {
+export class StoreGroup<T> extends Dispatcher implements StoreLike<T> {
     /**
      * @private definitions
      */
@@ -105,7 +106,7 @@ export class StoreGroup extends Dispatcher implements StoreLike {
      *
      * ```
      */
-    getState<T>(): T {
+    getState(): MapState<T>  {
         const stateMap = this._stores.map(store => {
             /* Why record nextState to `_storeValueMap`.
              It is for Use Store's getState(prevState) implementation.

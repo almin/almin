@@ -12,23 +12,9 @@ import { CompletedPayload } from "../payload/CompletedPayload";
 import { shallowEqual } from "shallow-equal-object";
 import { ChangedPayload } from "../payload/ChangedPayload";
 import { Dispatcher } from "../Dispatcher";
+import { MapState, MapStore, GroupState } from "./StoreGroupType";
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
 
-export interface GroupState {
-    // stateName: state
-    [key: string]: any
-}
-// stateName: Store in constructor
-export type MapStore<T> = {
-    // assign T[P] to State
-    [P in keyof T]: Store<T[P]>
-};
-
-export type MapState<T> = {
-    // MapStore define T[P]
-    // Now, T[P] is State
-    [P in keyof T]: T[P]
-};
 // Internal Payload class
 class InitializedPayload extends Payload {
     constructor() {

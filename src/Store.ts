@@ -62,7 +62,7 @@ export const defaultStoreName = "<Anonymous-Store>";
  * }
  * ```
  */
-export abstract class Store<State> extends Dispatcher implements StoreLike {
+export abstract class Store<State> extends Dispatcher implements StoreLike<State> {
     /**
      * Set debuggable name if needed.
      */
@@ -151,7 +151,7 @@ export abstract class Store<State> extends Dispatcher implements StoreLike {
      * store.emitChange();
      * ```
      */
-    onChange(cb: (changingStores: Array<StoreLike>) => void): () => void {
+    onChange(cb: (changingStores: Array<Store<any>>) => void): () => void {
         this.on(STATE_CHANGE_EVENT, cb);
         return this.removeListener.bind(this, STATE_CHANGE_EVENT, cb);
     }
