@@ -12,8 +12,12 @@ import { CompletedPayload } from "../payload/CompletedPayload";
 import { shallowEqual } from "shallow-equal-object";
 import { ChangedPayload } from "../payload/ChangedPayload";
 import { Dispatcher } from "../Dispatcher";
-import { MapState, MapStore, GroupState } from "./StoreGroupType";
+import { StateMap, StoreMap } from "./StoreGroupTypes";
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
+// { stateName: state }
+export interface StoreGroupState {
+    [key: string]: any
+}
 
 // Internal Payload class
 class InitializedPayload extends Payload {
@@ -118,7 +122,7 @@ export class CQRSStoreGroup<T> extends Dispatcher {
     // observing stores
     public stores: Array<AnyStore>;
     // current state
-    protected state: MapState<T>;
+    protected state: StateMap<T>;
     // stores that are emitted changed.
     private _emitChangedStores: Array<AnyStore> = [];
     // stores that are changed compared by previous state.
@@ -164,7 +168,7 @@ export class CQRSStoreGroup<T> extends Dispatcher {
      * // { a: "a value", b: "b value" }
      * ```
      */
-    constructor(public stateStoreMapping: MapStore<T>) {
+    constructor(public stateStoreMapping: StoreMap<T>) {
         super();
         if (process.env.NODE_ENV !== "production") {
             assertConstructorArguments(stateStoreMapping);
@@ -198,7 +202,7 @@ export class CQRSStoreGroup<T> extends Dispatcher {
         this.state = this.collectGroupState(this.stores, initializedPayload);
     }
 
-    private getStoresFromMapping(storeStateMapping: MapStore<T>): Array<AnyStore> {
+    private getStoresFromMapping(storeStateMapping: StoreMap<T>): Array<AnyStore> {
         return Object.keys(storeStateMapping).map(name => {
             return storeStateMapping[name];
         });
@@ -218,15 +222,15 @@ export class CQRSStoreGroup<T> extends Dispatcher {
     /**
      * Return the state object that merge each stores's state
      */
-    getState(): MapState<T> {
+    getState(): StateMap<T> {
         return this.state;
     }
 
-    private collectGroupState(stores: Array<AnyStore>, payload: Payload): MapState<T> {
+    private collectGroupState(stores: Array<AnyStore>, payload: Payload): StateMap<T> {
         // 1. write in read
         this.writePhaseInRead(stores, payload);
         // 2. read in read
-        return this.readPhaseInRead(stores) as MapState<T>;
+        return this.readPhaseInRead(stores) as StateMap<T>;
     }
 
     // write phase
@@ -243,8 +247,8 @@ export class CQRSStoreGroup<T> extends Dispatcher {
 
     // read phase
     // Get state from each store
-    private readPhaseInRead(stores: Array<AnyStore>): GroupState {
-        const groupState: GroupState = {};
+    private readPhaseInRead(stores: Array<AnyStore>): StoreGroupState {
+        const groupState: StoreGroupState = {};
         for (let i = 0; i < stores.length; i++) {
             const store = stores[i];
             const prevState = this._stateCacheMap.get(store);
