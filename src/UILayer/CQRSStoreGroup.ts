@@ -12,53 +12,9 @@ import { CompletedPayload } from "../payload/CompletedPayload";
 import { shallowEqual } from "shallow-equal-object";
 import { ChangedPayload } from "../payload/ChangedPayload";
 import { Dispatcher } from "../Dispatcher";
+import { MapState, MapStore, GroupState } from "./StoreGroupType";
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
 
-
-/**
- * This function is type converter for TypeScript.
- * It has actual implementation, but it is only used for typing.
- *
- * - Status: unstable
- * 
- * This is useful for TypeScript, but it is unstable API.
- * You can use it own risk.
- * 
- * ## Example
- *
- * ```ts
- * const mapping = {
- *   a: new AStore(), // AStore<AState>
- *   b: new BStore()  // BStore<BState>
- * };
- * const StoreState = MapStoreToState(mapping);
- * // Get Mapped to State for Store
- * type States = typeof StoreState
- * // {
- * //   a: AState,
- * //   b: BState
- * // };
- * ```
- */
-export function MapStoreToState<T>(_mapping: MapStore<T>): MapState<T> {
-    return {} as MapState<T>
-}
-
-export interface GroupState {
-    // stateName: state
-    [key: string]: any
-}
-// stateName: Store in constructor
-export type MapStore<T> = {
-    // assign T[P] to State
-    [P in keyof T]: Store<T[P]>
-};
-
-export type MapState<T> = {
-    // MapStore define T[P]
-    // Now, T[P] is State
-    [P in keyof T]: T[P]
-};
 // Internal Payload class
 class InitializedPayload extends Payload {
     constructor() {

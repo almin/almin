@@ -15,5 +15,3 @@ export { ChangedPayload } from "./payload/ChangedPayload";
 export { ErrorPayload } from "./payload/ErrorPayload";
 export { WillExecutedPayload } from "./payload/WillExecutedPayload";
 export { DispatcherPayloadMeta } from "./DispatcherPayloadMeta";
-// Experimental TypeScript API
-export { MapStoreToState } from "./UILayer/CQRSStoreGroup";

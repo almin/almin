@@ -10,7 +10,6 @@ import {
     ErrorPayload,
     DispatcherPayloadMeta,
     FunctionalUseCaseContext,
-    MapStoreToState,
     CQRSStoreGroup
 } from "../../src/index";
 // Dispatcher
@@ -54,14 +53,11 @@ class BStore extends Store<BState> {
         };
     }
 }
-const mapping = {
+// Type hacking
+const storeGroup = new CQRSStoreGroup({
     aState: new AStore(),
     bState: new BStore()
-};
-// Type hacking
-const _StoreState = MapStoreToState(mapping);
-type StoreState = typeof _StoreState;
-const storeGroup = new CQRSStoreGroup(mapping);
+});
 // Context
 const context = new Context({
     dispatcher,
@@ -112,7 +108,7 @@ const functionalUseCase = (context: FunctionalUseCaseContext) => {
 };
 // execute - functional execute with ArgT
 context.useCase(functionalUseCase).execute<functionUseCaseArgs>("1").then(() => {
-    const state = context.getState<StoreState>();
+    const state = context.getState();
     console.log(state.aState.a);
     console.log(state.bState.b);
 });
@@ -123,7 +119,7 @@ context.useCase(functionalUseCase).execute("value").then(() => {
 
 // execute: usecase with T
 context.useCase(parentUseCase).execute<ParentUseCaseArgs>("value").then(() => {
-    const state = context.getState<StoreState>();
+    const state = context.getState();
     console.log(state.aState.a);
     console.log(state.bState.b);
 }).catch((error: Error) => {
