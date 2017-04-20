@@ -75,12 +75,8 @@ const assertStateIsImmutable = (prevState: any, nextState: any, store: AnyStore,
     if (!isChangingStore) {
         return;
     }
-    const isStateChangedAtLeastOne = Object.keys(nextState).some(key => {
-        const prevStateValue = prevState[key];
-        const nextStateValue = nextState[key];
-        return prevStateValue !== nextStateValue;
-    });
-    if (!isStateChangedAtLeastOne) {
+    const isSameState = shallowEqual(prevState, nextState);
+    if (isSameState) {
         console.warn(`Store(${store.name}) does call emitChange(). 
 But, this store's state is not changed.
 Store's state should be immutable value.
