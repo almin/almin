@@ -10,7 +10,7 @@ import { AnyStore } from "../Store";
 import { StoreGroupValidator } from "./StoreGroupValidator";
 import { StoreLike } from "../StoreLike";
 import { raq } from "./raq";
-import { MapState } from "./StoreGroupType";
+import { StateMap } from "./StoreGroupTypes";
 
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
 
@@ -106,7 +106,7 @@ export class StoreGroup<T> extends Dispatcher implements StoreLike<T> {
      *
      * ```
      */
-    getState(): MapState<T>  {
+    getState(): StateMap<T>  {
         const stateMap = this._stores.map(store => {
             /* Why record nextState to `_storeValueMap`.
              It is for Use Store's getState(prevState) implementation.

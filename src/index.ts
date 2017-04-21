@@ -15,3 +15,7 @@ export { ChangedPayload } from "./payload/ChangedPayload";
 export { ErrorPayload } from "./payload/ErrorPayload";
 export { WillExecutedPayload } from "./payload/WillExecutedPayload";
 export { DispatcherPayloadMeta } from "./DispatcherPayloadMeta";
+// For TypeScript
+import * as StoreGroupTypes from "./UILayer/StoreGroupTypes";
+export { StoreGroupTypes };
+export { StoreLike } from "./StoreLike";

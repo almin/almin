@@ -14,7 +14,7 @@ import { StoreGroupValidator } from "./StoreGroupValidator";
 import { isDidExecutedPayload } from "../payload/DidExecutedPayload";
 import { isErrorPayload } from "../payload/ErrorPayload";
 import { isCompletedPayload } from "../payload/CompletedPayload";
-import { MapState } from "./StoreGroupType";
+import { StateMap } from "./StoreGroupTypes";
 
 /**
  * QueuedStoreGroup options
@@ -163,7 +163,7 @@ export class QueuedStoreGroup<T> extends Dispatcher implements StoreLike<T> {
      * @returns {Object} merged state object
      * @public
      */
-    getState(): MapState<T>  {
+    getState(): StateMap<T>  {
         const stateMap = this.stores.map(store => {
             /*
              Why record nextState to `_storeValueMap`?

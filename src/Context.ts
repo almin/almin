@@ -16,7 +16,7 @@ import { ErrorPayload, isErrorPayload } from "./payload/ErrorPayload";
 import { WillExecutedPayload, isWillExecutedPayload } from "./payload/WillExecutedPayload";
 import { FunctionalUseCaseContext } from "./FunctionalUseCaseContext";
 import { FunctionalUseCase } from "./FunctionalUseCase";
-import { MapState } from "./UILayer/StoreGroupType";
+import { StateMap } from "./UILayer/StoreGroupTypes";
 
 /**
  * Context class provide observing and communicating with **Store** and **UseCase**.
@@ -89,7 +89,7 @@ export class Context<T> {
      * // { aState, bState }
      * ```
      */
-    getState(): MapState<T>  {
+    getState(): StateMap<T>  {
         return this._storeGroup.getState();
     }
 
