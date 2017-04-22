@@ -119,7 +119,6 @@ Prev State:`, prevState, `Next State:`, nextState
  * ```
  */
 export class CQRSStoreGroup<T> extends Dispatcher {
-    name = "CQRSStoreGroup";
     // observing stores
     public stores: Array<Store<T>>;
     // current state
@@ -306,8 +305,7 @@ But, ${store.name}#getState() was called.`);
         this.state = nextState;
         // emit changes
         const changingStores = this._changingStores.slice();
-        const changingStates = this._getStatesFromStores(changingStores);
-        this.emit(CHANGE_STORE_GROUP, changingStores, changingStates);
+        this.emit(CHANGE_STORE_GROUP, changingStores);
         // release changed stores
         this._pruneEmitChangedStore();
     }
@@ -332,12 +330,6 @@ But, ${store.name}#getState() was called.`);
         this._releaseHandlers.forEach(releaseHandler => releaseHandler());
         this._releaseHandlers.length = 0;
         this._pruneChangingStateOfStores();
-    }
-
-    private _getStatesFromStores(stores: Array<Store<T>>) {
-        return stores.map(store => {
-            return this._stateCacheMap.get(store);
-        });
     }
 
     /**
