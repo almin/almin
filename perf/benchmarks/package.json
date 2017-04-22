@@ -24,11 +24,11 @@
     "rm-local-modules": "0.0.1"
   },
   "scripts": {
-    "prepare": "rm-local-modules && npm i",
+    "prepare-test": "rm-local-modules && npm i",
     "build": "webpack",
-    "bench": "npm run prepare && cross-env NODE_ENV=production node index.js",
-    "test": "npm run prepare && cross-env NODE_ENV=production mocha",
-    "test:browser": "npm run prepare && testem ci"
+    "bench": "npm run prepare-test && cross-env NODE_ENV=production node index.js",
+    "test": "npm run prepare-test && cross-env NODE_ENV=production mocha",
+    "test:browser": "npm run prepare-test && testem ci"
   },
   "author": "azu",
   "license": "MIT"
