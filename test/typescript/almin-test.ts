@@ -10,7 +10,7 @@ import {
     ErrorPayload,
     DispatcherPayloadMeta,
     FunctionalUseCaseContext,
-    CQRSStoreGroup
+    StoreGroup
 } from "../../src/index";
 // Dispatcher
 const dispatcher = new Dispatcher();
@@ -54,7 +54,7 @@ class BStore extends Store<BState> {
     }
 }
 // Type hacking
-const storeGroup = new CQRSStoreGroup({
+const storeGroup = new StoreGroup({
     aState: new AStore(),
     bState: new BStore()
 });

@@ -3,8 +3,6 @@
 export { Dispatcher } from "./Dispatcher";
 export { Store } from "./Store";
 export { StoreGroup } from "./UILayer/StoreGroup";
-export { QueuedStoreGroup } from "./UILayer/QueuedStoreGroup";
-export { CQRSStoreGroup } from "./UILayer/CQRSStoreGroup";
 export { UseCase } from "./UseCase";
 export { Context } from "./Context";
 export { FunctionalUseCaseContext } from "./FunctionalUseCaseContext";
