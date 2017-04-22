@@ -43,7 +43,7 @@
     "lint:js:fix": "eslint --fix --ext=js --config .eslintrc.js.json --cache src/ example/",
     "_lint:ts:fix": "eslint --fix --ext=ts --config .eslintrc.ts.json --cache src/ example/",
     "bench": "cd perf/benchmarks && npm run bench",
-    "test": "run-s test:js lint test:example test:perf",
+    "test": "run-s test:js lint test:example test:memory-leak",
     "test:js": "run-s build test:mocha",
     "test:memory-leak": "cd perf/node-memory-leak-testing && npm it",
     "test:benchmark": "cd perf/benchmarks && npm it",
