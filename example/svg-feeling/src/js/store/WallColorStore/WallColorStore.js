@@ -27,8 +27,6 @@ export default class WallColorStore extends Store {
     }
 
     getState() {
-        return {
-            WallColorState: this.state
-        };
+        return this.state;
     }
 }

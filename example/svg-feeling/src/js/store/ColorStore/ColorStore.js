@@ -29,8 +29,6 @@ export default class ColorStore extends Store {
     }
 
     getState() {
-        return {
-            ColorState: this.state
-        };
+        return this.state;
     }
 }

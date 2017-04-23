@@ -12,7 +12,7 @@ import {Dispatcher} from "almin";
 import AlminLogger from "almin-logger";
 // instances
 const dispatcher = new Dispatcher();
-const appStoreGroup = new AppStoreGroup();
+const appStoreGroup = AppStoreGroup.create();
 // context connect dispatch with stores
 const appContext = new Context({
     dispatcher,
