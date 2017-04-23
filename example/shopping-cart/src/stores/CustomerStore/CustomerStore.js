@@ -20,8 +20,6 @@ export default class CustomerStore extends Store {
     }
 
     getState() {
-        return {
-            ProductState: this.state
-        };
+        return this.state;
     }
 }

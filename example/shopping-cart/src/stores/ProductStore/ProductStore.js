@@ -1,4 +1,4 @@
-import {Store} from "almin";
+import { Store } from "almin";
 import ProductState from "./ProductState";
 export default class ProductStore extends Store {
     /**
@@ -13,7 +13,7 @@ export default class ProductStore extends Store {
                 return product.toProductItem();
             });
             const newState = new ProductState(productItems);
-            if (this.state !== newState) {
+            if (this.shouldStateUpdate(this.state, newState)) {
                 this.state = newState;
                 this.emitChange();
             }
@@ -21,8 +21,6 @@ export default class ProductStore extends Store {
     }
 
     getState() {
-        return {
-            ProductState: this.state
-        };
+        return this.state;
     }
 }
