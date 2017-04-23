@@ -23,9 +23,7 @@ export default class CartStore extends Store {
         }
         const cart = this.cartRepository.findLatByCustomer(currentCustomer);
         const newState = this.state.update({ cart });
-        if (this.shouldStateUpdate(this.state, newState)) {
-            this.state = newState;
-        }
+        this.setState(newState);
     }
 
     // read state

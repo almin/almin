@@ -13,10 +13,7 @@ export default class ProductStore extends Store {
                 return product.toProductItem();
             });
             const newState = new ProductState(productItems);
-            if (this.shouldStateUpdate(this.state, newState)) {
-                this.state = newState;
-                this.emitChange();
-            }
+            this.setState(newState);
         });
     }
 

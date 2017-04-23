@@ -20,9 +20,7 @@ export default class TodoStore extends Store {
             return;
         }
         const newState = this.state.merge(todoList).reduce(payload);
-        if (this.shouldStateUpdate(this.state, newState)) {
-            this.state = newState;
-        }
+        this.setState(newState);
     }
 
     getState(): TodoState {

@@ -111,7 +111,7 @@ For example, you should update the state by following:
     if(this.shouldStateUpdate(this.state, newState)){
         this.state = newState;
     }
-`);
+`, "prevState", prevState, "nextState", nextState);
     }
 };
 /**
