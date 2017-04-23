@@ -1,7 +1,7 @@
 // @flow
 "use strict";
-import type {DispatcherPayload} from "almin";
-import {FilterTodoListUseCase} from "../../usecase/FilterTodoList";
+import type { DispatcherPayload } from "almin";
+import { FilterTodoListUseCase } from "../../usecase/FilterTodoList";
 import TodoItem from "../../domain/TodoList/TodoItem";
 import TodoList from "../../domain/TodoList/TodoList";
 export const FilterTypes = {
@@ -18,7 +18,7 @@ export default class TodoState {
      * @param {TodoItem[]} [items]
      * @param {string} [filterType]
      */
-    constructor({items, filterType}: {items: Array<TodoItem>, filterType: string} = {}) {
+    constructor({ items, filterType }: { items: Array<TodoItem>, filterType: string } = {}) {
         this.items = items || [];
         this.filterType = filterType || FilterTypes.ALL_TODOS;
     }
@@ -40,12 +40,12 @@ export default class TodoState {
     get displayItems(): Array<TodoItem> {
         return this.items.filter(item => {
             switch (this.filterType) {
-            case FilterTypes.ACTIVE_TODOS:
-                return !item.completed;
-            case FilterTypes.COMPLETED_TODOS:
-                return item.completed;
-            default:
-                return true;
+                case FilterTypes.ACTIVE_TODOS:
+                    return !item.completed;
+                case FilterTypes.COMPLETED_TODOS:
+                    return item.completed;
+                default:
+                    return true;
             }
         });
     }
@@ -56,7 +56,7 @@ export default class TodoState {
      */
     merge(todoList: TodoList): TodoState {
         const items = todoList.getAllTodoItems();
-        return new TodoState(Object.assign(this, {
+        return new TodoState(Object.assign({}, this, {
             items
         }));
     }
@@ -67,12 +67,12 @@ export default class TodoState {
      */
     reduce(payload: DispatcherPayload): TodoState {
         switch (payload.type) {
-        case FilterTodoListUseCase.name:
-            return new TodoState(Object.assign(this, {
-                filterType: payload.filterType
-            }));
-        default:
-            return this;
+            case FilterTodoListUseCase.name:
+                return new TodoState(Object.assign(this, {
+                    filterType: payload.filterType
+                }));
+            default:
+                return this;
         }
     }
 }

@@ -31,7 +31,9 @@ export class TodoListRepository extends EventEmitter {
      */
     lastUsed() {
         const todoList = this._database.get(`${TodoList.name}.lastUsed`);
-        return this._get(todoList.id);
+        if (todoList) {
+            return this._get(todoList.id);
+        }
     }
 
     /**

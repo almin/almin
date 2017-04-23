@@ -63,7 +63,7 @@ export default class TodoList {
      * @return {TodoItem}
      */
     addItem(todoItem) {
-        this._items.push(todoItem);
+        this._items = this._items.concat(todoItem);
         return todoItem;
     }
 
@@ -96,7 +96,7 @@ export default class TodoList {
     removeItem(id) {
         const item = this.getItem(id);
         const index = this._items.indexOf(item);
-        this._items.splice(index, 1);
+        this._items = this._items.slice(0, index).concat(this._items.slice(index + 1));
         return item;
     }
 
@@ -105,9 +105,9 @@ export default class TodoList {
      */
     removeAllCompletedItems() {
         this.getAllTodoItems()
-            .filter(item => item.completed)
-            .forEach(item => {
-                return this.removeItem(item.id);
-            });
+        .filter(item => item.completed)
+        .forEach(item => {
+            return this.removeItem(item.id);
+        });
     }
 }
