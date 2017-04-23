@@ -125,7 +125,17 @@ export abstract class Store<State> extends Dispatcher implements StoreLike<State
      * When the state has updated, the view will be updated.
      * Usually, use Store#shouldStateUpdate for detecting update of the state.
      */
-    abstract getState<T>(): T;
+    abstract getState(): State;
+
+    /**
+     * Update own state property if needed.
+     * If `this.shouldStateUpdate(currentState, newState)` return true, update `this.state` property with `newState`.
+     */
+    setState(newState: State): void {
+        if (this.shouldStateUpdate(this.state, newState)) {
+            this.state = newState;
+        }
+    }
 
     /**
      * If the prev/next state is difference, should return true.

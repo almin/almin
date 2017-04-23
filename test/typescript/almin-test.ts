@@ -29,9 +29,7 @@ class AStore extends Store<AState> {
     }
 
     getState() {
-        return {
-            A: this.state
-        };
+        return this.state;
     }
 }
 interface BState {
@@ -48,9 +46,7 @@ class BStore extends Store<BState> {
     }
 
     getState() {
-        return {
-            B: this.state
-        };
+        return this.state;
     }
 }
 // Type hacking

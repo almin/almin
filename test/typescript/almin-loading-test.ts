@@ -41,9 +41,7 @@ class LoadingStore extends Store<LoadingState> {
     }
 
     getState() {
-        return {
-            loadingState: this.state
-        };
+        return this.state;
     }
 }
 
