@@ -42,7 +42,7 @@ describe("TodoStore", function() {
             const useCase = new FilterTodoListUseCase();
             const context = new Context({
                 dispatcher: new Dispatcher(),
-                store: store
+                store
             });
             // then
             return context.useCase(useCase).execute().then(() => {

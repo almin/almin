@@ -33,12 +33,12 @@ export default class TodoState {
     get displayItems() {
         return this.items.filter(item => {
             switch (this.filterType) {
-                case FilterTypes.ACTIVE_TODOS:
-                    return !item.completed;
-                case FilterTypes.COMPLETED_TODOS:
-                    return item.completed;
-                default:
-                    return true;
+            case FilterTypes.ACTIVE_TODOS:
+                return !item.completed;
+            case FilterTypes.COMPLETED_TODOS:
+                return item.completed;
+            default:
+                return true;
             }
         });
     }
@@ -60,12 +60,12 @@ export default class TodoState {
      */
     reduce(payload) {
         switch (payload.type) {
-            case FilterTodoListUseCase.name:
-                return new TodoState(Object.assign(this, {
-                    filterType: payload.filterType
-                }));
-            default:
-                return this;
+        case FilterTodoListUseCase.name:
+            return new TodoState(Object.assign(this, {
+                filterType: payload.filterType
+            }));
+        default:
+            return this;
         }
     }
 }
