@@ -701,6 +701,40 @@ describe("StoreGroup", function() {
                 store.emitChange();
                 assert.ok(consoleWarnStub.calledOnce);
             });
+            it("should check that a Store's state is changed but shouldStateUpdate return false", function() {
+                class AStore extends Store {
+                    constructor() {
+                        super();
+                        this.state = {
+                            a: "value"
+                        };
+                    }
+
+                    getState() {
+                        return this.state;
+                    }
+                }
+                const store = new AStore();
+                const storeGroup = new StoreGroup({
+                    a: store
+                });
+                const context = new Context({
+                    dispatcher: new Dispatcher(),
+                    store: storeGroup
+                });
+                // When the store is not changed, but call emitChange
+                const useCase = ({ dispatcher }) => {
+                    return () => {
+                        // reference is change but shall-equal return false
+                        store.state = {
+                            a: "value"
+                        };
+                    };
+                };
+                return context.useCase(useCase).execute().then(() => {
+                    assert.ok(consoleWarnStub.calledOnce);
+                });
+            });
         });
     });
     describe("#release", function() {

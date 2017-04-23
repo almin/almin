@@ -66,17 +66,52 @@ console.log(storeGroup.getState());
  * https://github.com/almin/almin/issues/151
  */
 const assertStateIsImmutable = (prevState: any, nextState: any, store: Store<any>, changingStores: Array<Store<any>>) => {
+    const shouldStateUpdate = (prevState: any, nextState: any): boolean => {
+        if (typeof store.shouldStateUpdate === "function") {
+            return store.shouldStateUpdate(prevState, nextState);
+        }
+        return prevState !== nextState;
+    };
+    // If the store emitChange, check immutability
     const isChangingStore = changingStores.indexOf(store) !== -1;
-    if (!isChangingStore) {
-        return;
-    }
-    const isSameState = shallowEqual(prevState, nextState);
-    if (isSameState) {
-        console.warn(`Store(${store.name}) does call emitChange(). 
+    if (isChangingStore) {
+        const isStateChanged = shouldStateUpdate(prevState, nextState);
+        if (!isStateChanged) {
+            console.warn(`Store(${store.name}) does call emitChange(). 
 But, this store's state is not changed.
 Store's state should be immutable value.
 Prev State:`, prevState, `Next State:`, nextState
-        );
+            );
+        }
+    }
+    // If the store return **changed** state, but shouldStateUpdate return false.
+    // This checker aim to find updating that is not reflected to UI.
+    if (!store.hasOwnProperty("state")) {
+        return;
+    }
+    // store.state is not same with getState value
+    // It means `store.state` is not related with getState
+    if (store.state !== nextState) {
+        return;
+    }
+    const isStatePropertyChanged = prevState !== nextState;
+    const isStateChangedButShouldNotUpdate = isStatePropertyChanged && !shouldStateUpdate(prevState, nextState);
+    if (isStateChangedButShouldNotUpdate) {
+        console.warn(`${store.name}#state property is changed, but this change does not reflect to view.
+Because, ${store.name}#shouldStateUpdate(prevState, store.state) has returned **false**.
+It means that the variance is present between store's state and shouldStateUpdate.
+You should update the state vis \`Store#setState\` method.
+
+For example, you should update the state by following:
+
+    this.setState(newState);
+    
+    // OR
+
+    if(this.shouldStateUpdate(this.state, newState)){
+        this.state = newState;
+    }
+`);
     }
 };
 /**
@@ -241,24 +276,6 @@ export class StoreGroup<T> extends Dispatcher {
     // read phase
     // Get state from each store
     private readPhaseInRead(stores: Array<Store<T>>): StoreGroupState {
-        const assertImmutableCheckAggressive = (store: Store<T>) => {
-            if (!store.hasOwnProperty("state")) {
-                return;
-            }
-            if (typeof store.shouldStateUpdate !== "function") {
-                return;
-            }
-            const prevState = this._stateCacheMap.get(store);
-            const isStatePropertyChanged = prevState !== store.state;
-            const isStateChangedButShouldNotUpdate = isStatePropertyChanged && !store.shouldStateUpdate(prevState, store.state);
-            if (isStateChangedButShouldNotUpdate) {
-                console.warn(`${store.name}#state property is changed.
-But, ${store.name}#shouldStateUpdate(prevState, store.state) has returned **false**.
-It means that this changing does not reflected to View because The Store(${store.name}) said that should not state update.
-You should update the state if the state is actually changed.
-`);
-            }
-        };
         const groupState: StoreGroupState = {};
         for (let i = 0; i < stores.length; i++) {
             const store = stores[i];
@@ -268,7 +285,6 @@ You should update the state if the state is actually changed.
             const stateName = this._storeStateMap.get(store);
             if (process.env.NODE_ENV !== "production") {
                 assertStateIsImmutable(prevState, nextState, store, this._emitChangedStores);
-                assertImmutableCheckAggressive(store);
                 assert.ok(stateName !== undefined, `Store:${store.name} is not registered in constructor.
 But, ${store.name}#getState() was called.`);
             }
