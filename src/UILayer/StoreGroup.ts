@@ -229,11 +229,32 @@ export class StoreGroup<T> extends Dispatcher {
     // write phase
     // Each store updates own state
     private writePhaseInRead(stores: Array<Store<T>>, payload: Payload): void {
+        const assertImmutableCheckOnWritePhase = (store: Store<T>) => {
+            if (!store.hasOwnProperty("state")) {
+                return;
+            }
+            if (typeof store.shouldStateUpdate !== "function") {
+                return;
+            }
+            const prevState = this._stateCacheMap.get(store);
+            const isStatePropertyChanged = prevState !== store.state;
+            const isStateChangedButShouldNotUpdate = isStatePropertyChanged && !store.shouldStateUpdate(prevState, store.state);
+            if (isStateChangedButShouldNotUpdate) {
+                console.warn(`${store.name}#state property is changed.
+But, ${store.name}#shouldStateUpdate(prevState, store.state) has returned **false**.
+It means that this changing does not reflected to View because The Store(${store.name}) said that should not state update.
+You should update the state if the state is actually changed.
+`);
+            }
+        };
         for (let i = 0; i < stores.length; i++) {
             const store = stores[i];
             // reduce state by prevSate with payload if it is implemented
             if (typeof store.receivePayload === "function") {
                 store.receivePayload(payload);
+                if (process.env.NODE_ENV !== "production") {
+                    assertImmutableCheckOnWritePhase(store);
+                }
             }
         }
     }
