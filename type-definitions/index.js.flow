@@ -60,8 +60,9 @@ declare export class Dispatcher extends events$EventEmitter {
 declare export class Store extends Dispatcher {
     static isStore(maybeStore: mixed): boolean;
 
-    shouldStateUpdate(prevState:mixed, nextState:mixed): boolean;
+    shouldStateUpdate(prevState:Object, nextState:Object): boolean;
     getState(prevState: Object): Object;
+    setState(newState: Object): void;
     onChange(stores: Array<Store>): Function;
     emitChange(): void;
 }
