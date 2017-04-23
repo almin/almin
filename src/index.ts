@@ -17,3 +17,4 @@ export { DispatcherPayloadMeta } from "./DispatcherPayloadMeta";
 import * as StoreGroupTypes from "./UILayer/StoreGroupTypes";
 export { StoreGroupTypes };
 export { StoreLike } from "./StoreLike";
+export { DispatchedPayload } from "./Dispatcher";
