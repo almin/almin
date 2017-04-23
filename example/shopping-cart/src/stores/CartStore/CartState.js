@@ -2,6 +2,9 @@
 "use strict";
 import Cart from "../../domain/Cart/Cart";
 export default  class CartState {
+    /**
+     * @param {ProductItem[]} productItems
+     */
     constructor({ productItems }) {
         /**
          * @type {ProductItem[]}
