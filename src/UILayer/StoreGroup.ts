@@ -20,8 +20,12 @@ export interface StoreGroupState {
     [key: string]: any
 }
 
-// Internal Payload class
-class InitializedPayload extends Payload {
+/**
+ * Initialized Payload
+ * This is exported for an unit testing.
+ * DO NOT USE THIS in your application.
+ */
+export class InitializedPayload extends Payload {
     constructor() {
         super({ type: "Almin__InitializedPayload__" });
     }

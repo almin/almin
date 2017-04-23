@@ -3,7 +3,7 @@
 const assert = require("power-assert");
 const sinon = require("sinon");
 import { Store } from "../lib/Store";
-import { StoreGroup } from "../lib/UILayer/StoreGroup";
+import { StoreGroup, InitializedPayload } from "../lib/UILayer/StoreGroup";
 import { createStore } from "./helper/create-new-store";
 import { UseCase } from "../lib/UseCase";
 import { Context } from "../lib/Context";
@@ -560,8 +560,78 @@ describe("StoreGroup", function() {
                     ]);
                 });
             });
-        })
+        });
+        context("when Store#emitChange before receivePayload", function() {
+            it("arguments includes the store", function() {
+                const aStore = createStore({ name: "AStore" });
+                const storeGroup = new StoreGroup({ a: aStore });
+                let actualStores = [];
+                storeGroup.onChange((stores) => {
+                    actualStores = actualStores.concat(stores);
+                });
+                // when
+                const context = new Context({
+                    dispatcher: new Dispatcher(),
+                    store: storeGroup
+                });
+                // This useCas reset actualStores,
+                // It aim to detect storeChanging in the between did and completed
+                const useCase = () => {
+                    return () => {
+                        actualStores = [];
+                        aStore.updateState({ a: "new value" });
+                        aStore.emitChange();
+                    };
+                };
+                // then
+                return context.useCase(useCase).execute().then(() => {
+                    assert.deepEqual(actualStores, [aStore]);
+                });
+            });
+        });
+        context("when Store is changed in receivePayload", function() {
+            it("arguments includes the store", function() {
+                class AStore extends Store {
+                    constructor() {
+                        super();
+                        this.state = { key: "initial" };
+                    }
 
+                    receivePayload(payload) {
+                        if (payload instanceof InitializedPayload) {
+                            return;
+                        }
+                        this.state = { key: "receivePayload" };
+                    }
+
+                    getState() {
+                        return this.state;
+                    }
+                }
+                const aStore = new AStore();
+                const storeGroup = new StoreGroup({ a: aStore });
+                let actualStores = [];
+                storeGroup.onChange((stores) => {
+                    actualStores = actualStores.concat(stores);
+                });
+                // when
+                const context = new Context({
+                    dispatcher: new Dispatcher(),
+                    store: storeGroup
+                });
+                // This useCas reset actualStores,
+                // It aim to detect storeChanging in the between did and completed
+                const useCase = () => {
+                    return () => {
+                        actualStores = [];
+                    };
+                };
+                // then
+                return context.useCase(useCase).execute().then(() => {
+                    assert.deepEqual(actualStores, [aStore]);
+                });
+            });
+        });
     });
     describe("#getState", function() {
         it("should return a single state object", function() {
