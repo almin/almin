@@ -62,19 +62,16 @@ describe("CartState", function () {
 });
 describe("CartStore", function () {
     context("when CartRepository is updated", function () {
-        it("should emitChange()", function (done) {
+        it("should emitChange()", function () {
             const cartRepository = new CartRepository();
             const store = new CartStore(cartRepository);
-            // then
-            store.onChange(() => {
-                const state = store.getState();
-                assert(state.CartState instanceof CartState);
-                done();
-            });
             // when
             const customer = new Customer({name: "Mint"});
             const cart = new Cart({customer});
             cartRepository.store(cart);
+            // then
+            const state = store.getState();
+            assert(state instanceof CartState);
         });
     });
 });
