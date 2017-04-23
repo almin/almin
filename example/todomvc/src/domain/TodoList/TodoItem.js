@@ -12,6 +12,6 @@ export default class TodoItem {
     }
 
     updateItem(updated) {
-        return new TodoItem(Object.assign(this, updated));
+        return new TodoItem(Object.assign({}, this, updated));
     }
 }

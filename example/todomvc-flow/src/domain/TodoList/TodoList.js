@@ -59,7 +59,7 @@ export default class TodoList {
         if (item != null) {
             const newItem = item.updateItem(updated);
             const index = this._items.indexOf(item);
-            this._items[index] = newItem;
+            this._items = this._items.slice(0, index).concat(newItem, this._items.slice(index + 1));
             return item;
         }
     }

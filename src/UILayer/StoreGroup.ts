@@ -229,7 +229,19 @@ export class StoreGroup<T> extends Dispatcher {
     // write phase
     // Each store updates own state
     private writePhaseInRead(stores: Array<Store<T>>, payload: Payload): void {
-        const assertImmutableCheckOnWritePhase = (store: Store<T>) => {
+        for (let i = 0; i < stores.length; i++) {
+            const store = stores[i];
+            // reduce state by prevSate with payload if it is implemented
+            if (typeof store.receivePayload === "function") {
+                store.receivePayload(payload);
+            }
+        }
+    }
+
+    // read phase
+    // Get state from each store
+    private readPhaseInRead(stores: Array<Store<T>>): StoreGroupState {
+        const assertImmutableCheckAggressive = (store: Store<T>) => {
             if (!store.hasOwnProperty("state")) {
                 return;
             }
@@ -247,21 +259,6 @@ You should update the state if the state is actually changed.
 `);
             }
         };
-        for (let i = 0; i < stores.length; i++) {
-            const store = stores[i];
-            // reduce state by prevSate with payload if it is implemented
-            if (typeof store.receivePayload === "function") {
-                store.receivePayload(payload);
-                if (process.env.NODE_ENV !== "production") {
-                    assertImmutableCheckOnWritePhase(store);
-                }
-            }
-        }
-    }
-
-    // read phase
-    // Get state from each store
-    private readPhaseInRead(stores: Array<Store<T>>): StoreGroupState {
         const groupState: StoreGroupState = {};
         for (let i = 0; i < stores.length; i++) {
             const store = stores[i];
@@ -271,6 +268,7 @@ You should update the state if the state is actually changed.
             const stateName = this._storeStateMap.get(store);
             if (process.env.NODE_ENV !== "production") {
                 assertStateIsImmutable(prevState, nextState, store, this._emitChangedStores);
+                assertImmutableCheckAggressive(store);
                 assert.ok(stateName !== undefined, `Store:${store.name} is not registered in constructor.
 But, ${store.name}#getState() was called.`);
             }
