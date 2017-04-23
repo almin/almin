@@ -3,10 +3,10 @@
 import { Store } from "almin";
 import type { DispatcherPayload } from "almin";
 import TodoState from "./TodoState";
-import TodoList from "../../domain/TodoList/TodoList";
 import typeof TodoListRepository from "../../infra/TodoListRepository";
 export default class TodoStore extends Store {
     state: TodoState;
+    todoListRepository: TodoListRepository;
 
     constructor({ todoListRepository }: { todoListRepository: TodoListRepository }) {
         super();
@@ -15,7 +15,7 @@ export default class TodoStore extends Store {
     }
 
     receivePayload(payload: DispatcherPayload) {
-        const todoList: TodoList = this.todoListRepository.lastUsed();
+        const todoList = this.todoListRepository.lastUsed();
         if (!todoList) {
             return;
         }
@@ -25,7 +25,7 @@ export default class TodoStore extends Store {
         }
     }
 
-    getState(): { todoState: TodoState } {
+    getState(): TodoState {
         return this.state;
     }
 }
