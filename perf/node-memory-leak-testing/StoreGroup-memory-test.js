@@ -51,7 +51,7 @@ class BStore extends Store {
 
 const aStore = new AStore();
 const bStore = new BStore();
-const storeGroup = new CQRSStoreGroup({
+const storeGroup = new StoreGroup({
     a: aStore,
     b: bStore
 });
