@@ -23,8 +23,7 @@ export default class ColorStore extends Store {
         // from Repository
         colorMixerRepository.onChange(() => {
             const color = colorMixerRepository.lastUsed().currentColor();
-            this.state = this.state.reduceDomain(color);
-            this.emitChange();
+            this.setState(this.state.update(color));
         });
     }
 

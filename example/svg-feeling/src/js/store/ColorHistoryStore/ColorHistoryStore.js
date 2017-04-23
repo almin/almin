@@ -12,11 +12,10 @@ export default class ColorHistoryStore extends Store {
     constructor({colorMixerRepository}) {
         super();
         this.colorMixerRepository = colorMixerRepository;
-        this.colorMixerRepository.onChange(() => this.emitChange());
     }
 
 
-    getState(prevState) {
+    getState() {
         const colorMixer = this.colorMixerRepository.lastUsed();
         const colorHistory = colorMixer.getHistory();
         // you can access `this.props.colorHistory` from react component
