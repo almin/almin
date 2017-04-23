@@ -42,7 +42,13 @@ class BStore extends Store<BState> {
         super();
         this.state = {
             b: 2
-        }
+        };
+    }
+
+    receivePayload(_payload: Payload) {
+        this.setState({
+            b: 1
+        });
     }
 
     getState() {
