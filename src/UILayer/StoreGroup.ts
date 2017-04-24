@@ -61,11 +61,11 @@ console.log(storeGroup.getState());
     }
 };
 /**
- * assert immutability of the `store`'s state
+ * warning: check immutability of the `store`'s state
  * If the store call `Store#emitChange()` and the state of store is not changed, throw error.
  * https://github.com/almin/almin/issues/151
  */
-const assertStateIsImmutable = (prevState: any, nextState: any, store: Store<any>, changingStores: Array<Store<any>>) => {
+const warningStateIsImmutable = (prevState: any, nextState: any, store: Store<any>, changingStores: Array<Store<any>>) => {
     const shouldStateUpdate = (prevState: any, nextState: any): boolean => {
         if (typeof store.shouldStateUpdate === "function") {
             return store.shouldStateUpdate(prevState, nextState);
@@ -284,9 +284,9 @@ export class StoreGroup<T> extends Dispatcher {
             // if the prev/next state is same, not update the state.
             const stateName = this._storeStateMap.get(store);
             if (process.env.NODE_ENV !== "production") {
-                assertStateIsImmutable(prevState, nextState, store, this._emitChangedStores);
                 assert.ok(stateName !== undefined, `Store:${store.name} is not registered in constructor.
 But, ${store.name}#getState() was called.`);
+                warningStateIsImmutable(prevState, nextState, store, this._emitChangedStores);
             }
             // the state is not changed, set prevState as state of the store
             // Check shouldStateUpdate
@@ -441,3 +441,4 @@ But, ${store.name}#getState() was called.`);
     }
 
 }
+;
