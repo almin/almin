@@ -1,6 +1,6 @@
 // LICENSE : MIT
 "use strict";
-const assert = require("assert");
+import * as assert from "assert";
 import { Dispatcher } from "../Dispatcher";
 /*
  StoreGroup
@@ -16,7 +16,7 @@ export class StoreGroupValidator {
      * validate the instance is StoreGroup-like object
      * Context treat StoreGroup like object as StoreGroup.
      */
-    static validateInstance(storeGroup: any): void | never {
+    static validateInstance(storeGroup: any): void {
         assert.ok(storeGroup !== undefined, "store should not be undefined");
         assert.ok(Dispatcher.isDispatcher(storeGroup), "storeGroup should inherit CoreEventEmitter");
         assert.ok(typeof storeGroup.onChange === "function", "StoreGroup should have #onChange method");

@@ -43,7 +43,7 @@ export class FunctionalUseCase extends Dispatcher implements UseCaseLike {
      */
     name: string;
 
-    constructor(functionUseCase: Function & { name?: string, displayName?: string }, dispatcher: Dispatcher) {
+    constructor(functionUseCase: (context: FunctionalUseCaseContext) => Function, dispatcher: Dispatcher) {
         super();
         const context: FunctionalUseCaseContext = {
             dispatcher
@@ -56,7 +56,7 @@ export class FunctionalUseCase extends Dispatcher implements UseCaseLike {
          */
         this.executor = functionUseCase(context);
         this.id = generateNewId();
-        this.name = functionUseCase.displayName || functionUseCase.name || defaultUseCaseName;
+        this.name = (functionUseCase as any).displayName || functionUseCase.name || defaultUseCaseName;
     }
 
     /**
