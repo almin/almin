@@ -14,7 +14,7 @@ class App extends React.Component {
     componentDidMount() {
         const context = AppLocator.context;
         // when change store, update component
-        const onChangeHandler = () => {
+        const onChangeHandler = (stores) => {
             this.setState(context.getState());
         };
         context.onChange(onChangeHandler);

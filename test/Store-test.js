@@ -1,6 +1,6 @@
 // LICENSE : MIT
 "use strict";
-const assert = require("power-assert");
+const assert = require("assert");
 
 import { Store } from "../lib/Store";
 import { createStore } from "./helper/create-store";
@@ -30,6 +30,62 @@ describe("Store", function() {
                     store.getState();
                 }, /should be implemented/);
             });
+        });
+    });
+    describe("#setState", () => {
+        context('when newState tha is not updatable state', () => {
+            it("should not update with newState", () => {
+                class MyStore extends Store {
+                    constructor() {
+                        super();
+                        this.state = {
+                            key: "value"
+                        };
+                    }
+
+                    shouldStateUpdate(prevState, nextState) {
+                        return prevState.key !== nextState.key;
+                    }
+
+                    getState() {
+                        return this.state;
+                    }
+                }
+                const store = new MyStore();
+                const currentState = store.getState();
+                store.setState({
+                    key: "value"
+                });
+                const newState = store.getState();
+                assert(currentState === newState);
+            });
+        });
+        context("when newState that is updatable state", () => {
+            it("should not update with newState", () => {
+                class MyStore extends Store {
+                    constructor() {
+                        super();
+                        this.state = {
+                            key: "value"
+                        };
+                    }
+
+                    shouldStateUpdate(prevState, nextState) {
+                        return prevState.key !== nextState.key;
+                    }
+
+                    getState() {
+                        return this.state;
+                    }
+                }
+                const store = new MyStore();
+                const currentState = store.getState();
+                store.setState({
+                    key: "difference value"
+                });
+                const newState = store.getState();
+                assert(currentState !== newState);
+            })
         });
     });
     describe("#onDispatch", function() {

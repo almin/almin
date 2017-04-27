@@ -27,6 +27,6 @@ export default class TodoItem {
     }
 
     updateItem(updated: $Shape<TodoItemObjectT>): TodoItem {
-        return new TodoItem(Object.assign((this:any), updated));
+        return new TodoItem(Object.assign({}, (this:any), updated));
     }
 }

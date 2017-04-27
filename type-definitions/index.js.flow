@@ -29,13 +29,6 @@ declare export class DispatcherPayloadMeta {
     isTrusted: boolean;
 }
 
-declare export class QueuedStoreGroup extends Dispatcher {
-    getState(): Object;
-    emitChange(): void;
-    onChange(handler: (stores: Array<Store>) => mixed): Function;
-    release(): void;
-}
-
 declare export class StoreGroup extends Dispatcher {
     getState(): Object;
     emitChange(): void;
@@ -67,7 +60,10 @@ declare export class Dispatcher extends events$EventEmitter {
 declare export class Store extends Dispatcher {
     static isStore(maybeStore: mixed): boolean;
 
-    getState(prevState: Object): Object;
+    shouldStateUpdate(prevState:Object, nextState:Object): boolean;
+    receivePayload(payload: DispatcherPayload): void;
+    getState(): Object;
+    setState(newState: Object): void;
     onChange(stores: Array<Store>): Function;
     emitChange(): void;
 }

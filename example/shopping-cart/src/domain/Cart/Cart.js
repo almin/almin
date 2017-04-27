@@ -22,7 +22,7 @@ export default class Cart {
      * @param {ProductItem} product
      */
     addItem(product) {
-        this.products.push(product);
+        this.products = this.products.concat(product);
     }
 
     /**

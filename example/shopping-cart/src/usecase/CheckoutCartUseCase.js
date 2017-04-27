@@ -20,7 +20,7 @@ export default class CheckoutCartUseCase extends UseCase {
     }
 
     execute() {
-        const cart = this.cartRepository.findLatByCustomer(this.customer.id);
+        const cart = this.cartRepository.findLatByCustomer(this.customer);
         if (!cart) {
             return this.throwError(new Error(`Not found cart for the customer: ${this.customer}`));
         }

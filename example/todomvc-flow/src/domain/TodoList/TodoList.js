@@ -2,7 +2,7 @@
 "use strict";
 const uuid = require("uuid");
 const assert = require("assert");
-import type {TodoItemObjectT} from "./TodoItem";
+import type { TodoItemObjectT } from "./TodoItem";
 import TodoItem from "./TodoItem";
 export default class TodoList {
     id: string;
@@ -59,7 +59,7 @@ export default class TodoList {
         if (item != null) {
             const newItem = item.updateItem(updated);
             const index = this._items.indexOf(item);
-            this._items[index] = newItem;
+            this._items = this._items.slice(0, index).concat(newItem, this._items.slice(index + 1));
             return item;
         }
     }
@@ -69,7 +69,7 @@ export default class TodoList {
      * @return {TodoItem}
      */
     addItem<T: TodoItem>(todoItem: T): T {
-        this._items.push(todoItem);
+        this._items = this._items.concat(todoItem);
         return todoItem;
     }
 
@@ -105,7 +105,7 @@ export default class TodoList {
         const item = this.getItem(id);
         if (item != null) {
             const index = this._items.indexOf(item);
-            this._items.splice(index, 1);
+            this._items = this._items.slice(0, index).concat(this._items.slice(index + 1));
             return item;
         }
     }

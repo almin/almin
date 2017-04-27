@@ -9,6 +9,15 @@ export class CustomerRepository extends EventEmitter {
     }
 
     /**
+     * Limitation: This application is for single customer
+     * This method return a customer who is current user.
+     * @returns {Customer}
+     */
+    get() {
+        return this._dataSet.get("current");
+    }
+
+    /**
      * @param id
      * @returns {Customer}
      */
@@ -22,6 +31,7 @@ export class CustomerRepository extends EventEmitter {
      */
     store(customer) {
         this._dataSet.set(customer.id, customer);
+        this._dataSet.set("current", customer);
         this.emit("CHANGE", customer);
     }
 

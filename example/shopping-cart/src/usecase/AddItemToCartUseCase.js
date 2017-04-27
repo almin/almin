@@ -24,7 +24,7 @@ export default class AddItemToCartUseCase extends UseCase {
 
     execute(itemID) {
         const product = this.productRepository.findById(itemID);
-        const cart = this.cartRepository.findLatByCustomer(this.customer.id);
+        const cart = this.cartRepository.findLatByCustomer(this.customer);
         if (!product) {
             return this.throwError(new Error(`Not found in Product catalog. ItemID: ${itemID}`));
         }

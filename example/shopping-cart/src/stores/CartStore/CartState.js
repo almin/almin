@@ -3,13 +3,24 @@
 import Cart from "../../domain/Cart/Cart";
 export default  class CartState {
     /**
-     * @param {Cart} [cart]
+     * @param {ProductItem[]} productItems
      */
-    constructor(cart = {}) {
+    constructor({ productItems }) {
         /**
          * @type {ProductItem[]}
          */
-        this.productItems = cart.products || [];
+        this.productItems = productItems;
+    }
+
+    /**
+     * update and return new state
+     * @param {Cart} cart
+     * @returns {CartState}
+     */
+    update({ cart }) {
+        return new CartState(Object.assign({}, this, {
+            productItems: cart.products
+        }));
     }
 
     get hasItemAtLeastOne() {

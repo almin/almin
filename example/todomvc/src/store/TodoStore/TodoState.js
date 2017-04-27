@@ -1,5 +1,5 @@
 "use strict";
-import {FilterTodoListUseCase} from "../../usecase/FilterTodoList";
+import { FilterTodoListUseCase } from "../../usecase/FilterTodoList";
 export const FilterTypes = {
     ALL_TODOS: "ALL_TODOS",
     ACTIVE_TODOS: "ACTIVE_TODOS",
@@ -11,7 +11,7 @@ export default class TodoState {
      * @param {TodoItem[]} [items]
      * @param {string} [filterType]
      */
-    constructor({items, filterType} = {}) {
+    constructor({ items, filterType } = {}) {
         this.items = items || [];
         this.filterType = filterType || FilterTypes.ALL_TODOS;
     }
@@ -49,7 +49,7 @@ export default class TodoState {
      */
     merge(todoList) {
         const items = todoList.getAllTodoItems();
-        return new TodoState(Object.assign(this, {
+        return new TodoState(Object.assign({}, this, {
             items
         }));
     }

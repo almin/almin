@@ -21,18 +21,40 @@ const usage = () => {
     return pretty(process.memoryUsage().heapTotal);
 };
 class AStore extends Store {
+    constructor() {
+        super();
+        this.state = "value";
+    }
+
+    updateSate(state) {
+        this.state = state;
+    }
+
     getState() {
-        return {a: "a value"};
+        return this.state;
     }
 }
 class BStore extends Store {
+    constructor() {
+        super();
+        this.state = "value";
+    }
+
+    updateSate(state) {
+        this.state = state;
+    }
+
     getState() {
-        return {b: Math.random()};
+        return this.state;
     }
 }
+
 const aStore = new AStore();
 const bStore = new BStore();
-const storeGroup = new StoreGroup([aStore, bStore]);
+const storeGroup = new StoreGroup({
+    a: aStore,
+    b: bStore
+});
 let currentState = storeGroup.getState();
 
 // ========= START ===========
@@ -43,8 +65,8 @@ const perfMemory = () => {
     gc();
     console.log("before", usage());
     for (let i = 0; i < 10000; i++) {
-        aStore.emitChange();
-        bStore.emitChange();
+        aStore.updateSate({ a: i });
+        bStore.updateSate({ b: i });
         storeGroup.emitChange();
         currentState = storeGroup.getState();
     }

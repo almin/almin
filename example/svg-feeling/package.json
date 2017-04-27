@@ -23,6 +23,8 @@
   },
   "scripts": {
     "clean": "rimraf public/build && mkdirp public/build",
+    "start": "npm-run-all clean --parallel watch server",
+    "server": "webpack-dev-server --hot --content-base public/ --open",
     "build:js": "NODE_ENV=production webpack -p",
     "build:css": "postcss --config postcss.config.js",
     "build": "npm-run-all clean --parallel build:*",
@@ -59,7 +61,8 @@
     "power-assert": "^1.3.1",
     "rimraf": "^2.5.2",
     "suitcss-preprocessor": "^3.0.1",
-    "webpack": "^2.0.0"
+    "webpack": "^2.0.0",
+    "webpack-dev-server": "^2.4.3"
   },
   "dependencies": {
     "almin": "file:../../",

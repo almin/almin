@@ -9,7 +9,7 @@ export default class ColorState {
     /**
      * @param {Color} color
      */
-    reduceDomain(color) {
+    update(color) {
         return new ColorState({
             currentColor: color
         });

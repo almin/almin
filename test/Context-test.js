@@ -8,6 +8,7 @@ import { UseCase } from "../lib/UseCase";
 import { UseCaseExecutor } from "../lib/UseCaseExecutor";
 import { StoreGroup } from "../lib/UILayer/StoreGroup";
 import { createEchoStore } from "./helper/EchoStore";
+import { createStore } from "./helper/create-new-store";
 // payload
 
 import { Payload, WillExecutedPayload, DidExecutedPayload, CompletedPayload, ErrorPayload } from "../lib/index";
@@ -82,35 +83,42 @@ describe("Context", function() {
     describe("#onChange", function() {
         it("should called when change some State", function(done) {
             const dispatcher = new Dispatcher();
-            const testStore = createEchoStore({ echo: { "1": 1 } });
-            const storeGroup = new StoreGroup([testStore]);
+            const aStore = createStore({ name: "AStore" });
+            const storeGroup = new StoreGroup({
+                a: aStore
+            });
             const appContext = new Context({
                 dispatcher,
                 store: storeGroup
             });
             appContext.onChange((stores) => {
                 assert.equal(stores.length, 1);
-                assert(stores[0] === testStore);
+                assert.equal(stores[0], aStore);
                 done();
             });
-            testStore.emitChange();
+            aStore.updateState({ a: 1 });
+            aStore.emitChange();
         });
         it("should thin change events are happened at same time", function(done) {
             const dispatcher = new Dispatcher();
-            const aStore = createEchoStore({ name: "AStore", echo: { "1": 1 } });
-            const bStore = createEchoStore({ name: "BStore", echo: { "1": 1 } });
-            const storeGroup = new StoreGroup([aStore, bStore]);
+            const aStore = createStore({ name: "AStore" });
+            const bStore = createStore({ name: "BStore" });
+            const storeGroup = new StoreGroup({
+                a: aStore,
+                b: bStore
+            });
             const appContext = new Context({
                 dispatcher,
                 store: storeGroup
             });
             appContext.onChange((stores) => {
-                assert(stores.length, 2);
+                assert.equal(stores.length, 2);
                 done();
             });
-            // multiple change event at same time.
+            // catch multiple changes at one time
+            aStore.updateState({ a: 1 });
+            bStore.updateState({ b: 1 });
             aStore.emitChange();
-            bStore.emitChange();
         });
     });
     describe("#onWillExecuteEachUseCase", function() {
