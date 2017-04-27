@@ -61,7 +61,8 @@ declare export class Store extends Dispatcher {
     static isStore(maybeStore: mixed): boolean;
 
     shouldStateUpdate(prevState:Object, nextState:Object): boolean;
-    getState(prevState: Object): Object;
+    receivePayload?(payload: DispatcherPayload): void;
+    getState(): Object;
     setState(newState: Object): void;
     onChange(stores: Array<Store>): Function;
     emitChange(): void;
