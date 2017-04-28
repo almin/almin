@@ -5,8 +5,8 @@ import { StoreMap } from "./StoreGroupTypes";
 /**
  * TODO: make strong type
  */
-export class StoreStateMap extends MapLike<Store<any>, string> {
-    get stores(): Array<Store<any>> {
+export class StoreStateMap extends MapLike<Store, string> {
+    get stores(): Array<Store> {
         return this.keys();
     }
 

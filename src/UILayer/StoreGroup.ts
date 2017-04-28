@@ -38,7 +38,7 @@ const changedPayload = new ChangedPayload();
 /**
  * assert: check arguments of constructor.
  */
-const assertConstructorArguments = (arg: any): void | never => {
+const assertConstructorArguments = (arg: any): void => {
     const message = `Should initialize this StoreGroup with a stateName-store mapping object.
 const aStore = new AStore();
 const bStore = new BStore();
@@ -65,7 +65,7 @@ console.log(storeGroup.getState());
  * If the store call `Store#emitChange()` and the state of store is not changed, throw error.
  * https://github.com/almin/almin/issues/151
  */
-const warningStateIsImmutable = (prevState: any, nextState: any, store: Store<any>, changingStores: Array<Store<any>>) => {
+const warningStateIsImmutable = (prevState: any, nextState: any, store: Store, changingStores: Array<Store>) => {
     const shouldStateUpdate = (prevState: any, nextState: any): boolean => {
         if (typeof store.shouldStateUpdate === "function") {
             return store.shouldStateUpdate(prevState, nextState);

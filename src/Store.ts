@@ -6,9 +6,6 @@ import { shallowEqual } from "shallow-equal-object";
 import { Payload } from "./payload/Payload";
 
 const STATE_CHANGE_EVENT = "STATE_CHANGE_EVENT";
-// TODO: will remove by default generics
-export type AnyStore = Store<any>
-
 /**
  * @type {string}
  * @private
@@ -62,7 +59,7 @@ export const defaultStoreName = "<Anonymous-Store>";
  * }
  * ```
  */
-export abstract class Store<State> extends Dispatcher implements StoreLike<State> {
+export abstract class Store<State = any> extends Dispatcher implements StoreLike<State> {
     /**
      * Set debuggable name if needed.
      */
@@ -71,7 +68,7 @@ export abstract class Store<State> extends Dispatcher implements StoreLike<State
     /**
      * Return true if the `v` is store like.
      */
-    static isStore(v: any): v is Store<any> {
+    static isStore(v: any): v is Store {
         if (v instanceof Store) {
             return true;
         } else if (typeof v === "object" && typeof v.getState === "function" && typeof v.onChange === "function") {
@@ -161,7 +158,7 @@ export abstract class Store<State> extends Dispatcher implements StoreLike<State
      * store.emitChange();
      * ```
      */
-    onChange(cb: (changingStores: Array<Store<any>>) => void): () => void {
+    onChange(cb: (changingStores: Array<Store>) => void): () => void {
         this.on(STATE_CHANGE_EVENT, cb);
         return this.removeListener.bind(this, STATE_CHANGE_EVENT, cb);
     }
@@ -183,6 +180,6 @@ export abstract class Store<State> extends Dispatcher implements StoreLike<State
 }
 
 // Implement assertion
-Store.prototype.getState = function (this: Store<any>) {
+Store.prototype.getState = function (this: Store) {
     throw new Error(`${this.name} should be implemented Store#getState(): Object`);
 };
