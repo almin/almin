@@ -13,7 +13,7 @@ export declare abstract class UseCase extends Dispatcher implements UseCaseLike 
     name: string;
     constructor();
     readonly context: UseCaseContext;
-    execute<R>(..._: Array<any>): R;
+    execute(..._: Array<any>): any;
     dispatch(payload: DispatchedPayload, meta?: DispatcherPayloadMeta): void;
     onError(errorHandler: (error: Error) => void): (this: Dispatcher) => void;
     throwError(error?: Error | any): void;
@@ -110,7 +110,7 @@ export class ChildUseCase extends UseCase {
 
 ----
 
-### `execute<R>(..._: Array<any>): R;`
+### `execute(..._: Array<any>): any;`
 
 
 `UseCase#execute()` method should be overwrite by subclass.

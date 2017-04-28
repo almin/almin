@@ -99,7 +99,6 @@
     "zuul": "^3.10.1"
   },
   "dependencies": {
-    "lru-map-like": "^1.1.2",
     "map-like": "^1.1.2",
     "object-assign": "^4.1.0",
     "shallow-equal-object": "^1.0.1"

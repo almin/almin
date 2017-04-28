@@ -6,13 +6,13 @@
 ## Interface
 
 ```typescript
-export declare class Context {
+export declare class Context<T> {
     constructor({dispatcher, store}: {
         dispatcher: Dispatcher;
-        store: QueuedStoreGroup | StoreGroup | Store;
+        store: StoreLike<T>;
     });
-    getState<T>(): T;
-    onChange(onChangeHandler: (changingStores: Array<Store>) => void): () => void;
+    getState(): StateMap<T>;
+    onChange(handler: (changingStores: Array<Store>) => void): () => void;
     useCase(useCase: (context: FunctionalUseCaseContext) => Function): UseCaseExecutor;
     useCase(useCase: UseCase): UseCaseExecutor;
     onWillExecuteEachUseCase(handler: (payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void;
@@ -26,7 +26,7 @@ export declare class Context {
 
 ----
 
-### `export declare class Context {`
+### `export declare class Context<T> {`
 
 
 Context class provide observing and communicating with **Store** and **UseCase**.
@@ -37,7 +37,7 @@ Context class provide observing and communicating with **Store** and **UseCase**
 ```typescript
 constructor({dispatcher, store}: {
     dispatcher: Dispatcher;
-    store: QueuedStoreGroup | StoreGroup | Store;
+    store: StoreLike<T>;
 });
 ```
 
@@ -70,7 +70,7 @@ const context = new Context({
 
 ----
 
-### `getState<T>(): T;`
+### `getState(): StateMap<T>;`
 
 
 Return state value of StoreGroup or Store.
@@ -88,7 +88,7 @@ console.log(state);
 
 ----
 
-### `onChange(onChangeHandler: (changingStores: Array<Store>) => void): () => void;`
+### `onChange(handler: (changingStores: Array<Store>) => void): () => void;`
 
 
 If anyone store that is passed to constructor is changed, then call `onChange`.

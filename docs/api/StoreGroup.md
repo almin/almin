@@ -6,100 +6,120 @@
 ## Interface
 
 ```typescript
-export declare class StoreGroup extends Dispatcher implements StoreLike {
-    constructor(stores: Array<Store>);
-    readonly store: Array<Store>;
-    getState<T>(): T;
-    emitChange(): void;
-    onChange(handler: (stores: Array<Store>) => void): () => void;
+export declare class InitializedPayload extends Payload {
+    constructor();
+}
+    constructor(stateStoreMapping: StoreMap<T>);
+    protected readonly existWorkingUseCase: boolean;
+    protected readonly isInitializedWithStateNameMap: boolean;
+    shouldStateUpdate(prevState: any, nextState: any): boolean;
+    emitChange(payload?: Payload): void;
+    onChange(handler: (stores: Array<Store<T>>) => void): () => void;
     release(): void;
+```
+
+----
+
+### Interface of 
+```typescript
+export declare class InitializedPayload extends Payload {
+    constructor();
+```
+
+
+Initialized Payload
+This is exported for an unit testing.
+DO NOT USE THIS in your application.
+
+----
+
+### `constructor(stateStoreMapping: StoreMap<T>);`
+
+
+Initialize this StoreGroup with a stateName-store mapping object.
+
+The rule of initializing StoreGroup is that "define the state name of the store".
+
+## Example
+
+Initialize with store-state mapping object.
+
+```js
+class AStore extends Store {
+    getState() {
+        return "a value";
+    }
+}
+class BStore extends Store {
+    getState() {
+        return "b value";
+    }
+}
+const aStore = new AStore();
+const bStore = new BStore();
+const storeGroup = new CQRSStoreGroup({
+    a: aStore, // stateName: store
+    b: bStore
+});
+console.log(storeGroup.getState());
+// { a: "a value", b: "b value" }
+```
+
+----
+
+### Interface of 
+```typescript
+protected readonly existWorkingUseCase: boolean;
+protected readonly isInitializedWithStateNameMap: boolean;
+```
+
+
+If exist working UseCase, return true
+
+----
+
+### `shouldStateUpdate(prevState: any, nextState: any): boolean;`
+
+
+Use `shouldStateUpdate()` to let StoreGroup know if a event is not affected.
+The default behavior is to emitChange on every life-cycle change,
+and in the vast majority of cases you should rely on the default behavior.
+Default behavior is shallow-equal prev/next state.
+
+## Example
+
+If you want to use `Object.is` to equal states, overwrite following.
+
+```js
+shouldStateUpdate(prevState, nextState) {
+   return !Object.is(prevState, nextState)
 }
 ```
 
 ----
 
-### `export declare class StoreGroup extends Dispatcher implements StoreLike {`
+### `emitChange(payload?: Payload): void;`
 
 
-StoreGroup is a collection of Store.
-
-## Purposes of StoreGroup
-
-- Throttling change events of Store for UI updating.
-- A central manager of stores.
-
-StoreGroup has event queue system.
-It means that StoreGroup thin out change events of stores.
-
-If you want to know all change events, and directly use `store.onChange()`.
+Emit change if the state is changed.
+If call with no-arguments, use ChangedPayload by default.
 
 ----
 
-### `constructor(stores: Array<Store>);`
+### `onChange(handler: (stores: Array<Store<T>>) => void): () => void;`
 
 
-Initialize `StoreGroup` with `Store` instances
+Observe changes of the store group.
 
-### Example
-
-```js
-const aStore = new AStore();
-const bStore = new BStore();
-// StoreGroup is a group of aStore and bStore.
-const storeGroup = new StoreGroup([aStore, bStore]);
-```
-
-----
-
-### `readonly store: Array<Store>;`
-
-
-A collection of stores in the StoreGroup.
-
-----
-
-### `getState<T>(): T;`
-
-
-Return the state object that merge each stores's state
-
-Related: `Context#onChange` use `StoreGroup#getState()`
-
-### Example
-
-```js
-const storeGroup = new StoreGroup([aStore, bStore]);
-console.log(aStore.getState()); // { aState: aState }
-console.log(bStore.getState()); // { bState: bState }
-// StoreGroup#getState merge these states.
-const state = storeGroup.getState();
-console.log(state); // { aState: aState, bState: aState }
-
-```
-
-----
-
-### `emitChange(): void;`
-
-
-Emit change Event to subscribers.
-It is same with `Store#emitChange()`
-
-----
-
-### `onChange(handler: (stores: Array<Store>) => void): () => void;`
-
-
-subscribe changes of the store group.
-It is same with `Store#onChage()`
+onChange workflow: https://code2flow.com/mHFviS
 
 ----
 
 ### `release(): void;`
 
 
-Release all events handler on StoreGroup.
-You can call this when no more needed the StoreGroup.
+Release all events handler.
+You can call this when no more call event handler
 
 ----
 

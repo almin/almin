@@ -6,20 +6,25 @@
 ## Interface
 
 ```typescript
-export declare abstract class Store extends Dispatcher implements StoreLike {
+export declare abstract class Store<State = any> extends Dispatcher implements StoreLike<State> {
     static displayName?: string;
     static isStore(v: any): v is Store;
+    state?: State;
     name: string;
     constructor();
-    getState<T>(_prevState?: T): T;
-    onChange(cb: (changingStores: Array<StoreLike>) => void): () => void;
+    receivePayload?(payload: Payload): void;
+    abstract getState(): State;
+    setState(newState: State): void;
+    shouldStateUpdate(prevState: any | State, nextState: any | State): boolean;
+    onChange(cb: (changingStores: Array<Store>) => void): () => void;
     emitChange(): void;
+    release(): void;
 }
 ```
 
 ----
 
-### `export declare abstract class Store extends Dispatcher implements StoreLike {`
+### `export declare abstract class Store<State = any> extends Dispatcher implements StoreLike<State> {`
 
 
 Store hold the state of your application.
@@ -85,10 +90,17 @@ Return true if the `v` is store like.
 
 ----
 
+### `state?: State;`
+
+
+The state of the Store.
+
+----
+
 ### `name: string;`
 
 
-The name of Store
+The name of the Store.
 
 ----
 
@@ -99,17 +111,54 @@ Constructor not have arguments.
 
 ----
 
-### `getState<T>(_prevState?: T): T;`
+### `receivePayload?(payload: Payload): void;`
 
 
-You should be overwrite by Store subclass.
-Next, return state object of your store.
+## Write phase in read-side
 
-FIXME: mark this as `abstract` property.
+You can implement that update own state.
+
+Write phase in read-side, receive tha payload from write-side.
+In the almin, UseCase(write-side) dispatch a payload and, Store receive the payload.
+You can update the state of the store in the timing.
+In other word, you can create/cache the state data for `Store#getState()`
 
 ----
 
-### `onChange(cb: (changingStores: Array<StoreLike>) => void): () => void;`
+### `abstract getState(): State;`
+
+
+## Read phase in read-side
+
+You should be overwrite by Store subclass and return the state of the store.
+
+Read phase in read-side, just return the state of the store.
+Store#getState is called at View needed new state.
+
+When the state has updated, the view will be updated.
+Usually, use Store#shouldStateUpdate for detecting update of the state.
+
+----
+
+### `setState(newState: State): void;`
+
+
+Update own state property if needed.
+If `this.shouldStateUpdate(currentState, newState)` return true, update `this.state` property with `newState`.
+
+----
+
+### `shouldStateUpdate(prevState: any | State, nextState: any | State): boolean;`
+
+
+If the prev/next state is difference, should return true.
+
+Use Shallow Object Equality Test by default.
+<https://github.com/sebmarkbage/ecmascript-shallow-equal>
+
+----
+
+### `onChange(cb: (changingStores: Array<Store>) => void): () => void;`
 
 
 Subscribe change event of the store.
@@ -132,6 +181,13 @@ store.emitChange();
 
 Emit "change" event to subscribers.
 If you want to notify changing ot tha store, call `Store#emitChange()`.
+
+----
+
+### `release(): void;`
+
+
+Release all event handlers
 
 ----
 
