@@ -11,8 +11,7 @@
     "jsx": "preserve",
     // Transform jsx syntax in babels phase
     "types": [
-      "node",
-      "object-assign"
+      "node"
     ],
     "lib": [
       "es2016",
