@@ -14,7 +14,7 @@
   "version": "1.0.0",
   "main": "lib/example.js",
   "dependencies": {
-    "almin": "^0.10.0",
+    "almin": "^0.12.0-3",
     "almin-react-container": "file:../",
     "react": "^15.4.2",
     "react-dom": "^15.4.2"
