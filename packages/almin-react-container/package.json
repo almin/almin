@@ -40,9 +40,9 @@
   "devDependencies": {
     "@types/node": "^7.0.12",
     "@types/react": "^15.0.20",
-      "almin": "beta",
+    "almin": "0.12.0-3",
     "cross-env": "^3.2.4",
     "react": "^15.4.2",
-    "typescript": "~latest"
+    "typescript": "^2.3.2"
   }
 }
