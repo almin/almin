@@ -10,13 +10,14 @@
   version "15.0.20"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-15.0.20.tgz#3d4a05ed04a8b1847ac6c8fa6093591d3910fba5"
 
-almin@^0.11.0:
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/almin/-/almin-0.11.0.tgz#4bf913559b53cbc685875115bada70a718422f85"
+almin@beta:
+  version "0.12.0-3"
+  resolved "https://registry.yarnpkg.com/almin/-/almin-0.12.0-3.tgz#5bf7dc615c25a32570d96dba981cd65df89e542b"
   dependencies:
     lru-map-like "^1.1.2"
-    map-like "^1.1.0"
+    map-like "^1.1.2"
     object-assign "^4.1.0"
+    shallow-equal-object "^1.0.1"
 
 asap@~2.0.3:
   version "2.0.5"
@@ -105,9 +106,9 @@ lru-map-like@^1.1.2:
   dependencies:
     map-like "^1.0.3"
 
-map-like@^1.0.3, map-like@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/map-like/-/map-like-1.1.0.tgz#c0700757955253b629335492f89d4002115795c0"
+map-like@^1.0.3, map-like@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/map-like/-/map-like-1.1.2.tgz#f42a301ebd9290372b9e4ddc49e5df9804a507b9"
 
 node-fetch@^1.0.1:
   version "1.6.3"
@@ -142,6 +143,10 @@ setimmediate@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/setimmediate/-/setimmediate-1.0.5.tgz#290cbb232e306942d7d7ea9b83732ab7856f8285"
 
+shallow-equal-object@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/shallow-equal-object/-/shallow-equal-object-1.0.1.tgz#a402410fb4b7c15370ec7e78701e9280f1c1d1e4"
+
 shebang-command@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/shebang-command/-/shebang-command-1.2.0.tgz#44aac65b695b03398968c39f363fee5deafdf1ea"
@@ -152,9 +157,9 @@ shebang-regex@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/shebang-regex/-/shebang-regex-1.0.0.tgz#da42f49740c0b42db2ca9728571cb190c98efea3"
 
-typescript@^2.2.2:
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.2.2.tgz#606022508479b55ffa368b58fee963a03dfd7b0c"
+typescript@~latest:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.3.1.tgz#e3361fb395c6c3f9c69faeeabc9503f8bdecaea1"
 
 ua-parser-js@^0.7.9:
   version "0.7.12"

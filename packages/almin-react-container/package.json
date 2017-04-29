@@ -34,15 +34,15 @@
   },
   "homepage": "https://github.com/almin/almin-react-container",
   "peerDependencies": {
-    "react": "^15.0.0",
-    "almin": ">=0.11.0"
+    "almin": ">=0.11.0",
+    "react": "^15.0.0"
   },
   "devDependencies": {
     "@types/node": "^7.0.12",
     "@types/react": "^15.0.20",
-    "almin": "^0.11.0",
+      "almin": "beta",
     "cross-env": "^3.2.4",
     "react": "^15.4.2",
-    "typescript": "^2.2.2"
+    "typescript": "~latest"
   }
 }
