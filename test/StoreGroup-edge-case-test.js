@@ -9,7 +9,7 @@ import { Context } from "../lib/Context";
 import { Dispatcher } from "../lib/Dispatcher";
 describe("StoreGroup edge case", function() {
     // See https://github.com/almin/almin/issues/179
-    describe("when Store#emitChange in Store#receivePayload", () => {
+    describe("when call Store#emitChange in Store#receivePayload", () => {
         it("should not infinity loop", () => {
             class AStore extends Store {
                 constructor() {
@@ -32,8 +32,13 @@ describe("StoreGroup edge case", function() {
                 dispatcher: new Dispatcher(),
                 store: storeGroup
             });
-            return context.useCase(new NoDispatchUseCase()).execute().then(() => {
 
+            let count = 0;
+            context.onChange(() => {
+                count++;
+            });
+            return context.useCase(new NoDispatchUseCase()).execute().then(() => {
+                assert(count === 1);
             });
         });
     });
