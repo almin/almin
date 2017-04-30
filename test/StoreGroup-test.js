@@ -437,12 +437,12 @@ describe("StoreGroup", function() {
                 it("StoreGroup#emitChange is called just one time", function() {
                     const aStore = createStore({ name: "AStore" });
                     const storeGroup = new StoreGroup({ a: aStore });
-                    class ChangeABUseCase extends UseCase {
+                    class ChangeAUseCase extends UseCase {
                         execute() {
                             aStore.updateState({ a: 1 });
                         }
                     }
-                    const useCase = new ChangeABUseCase();
+                    const useCase = new ChangeAUseCase();
                     const context = new Context({
                         dispatcher: new Dispatcher(),
                         store: storeGroup
@@ -450,9 +450,9 @@ describe("StoreGroup", function() {
                     // then - called change handler a one-time
                     let calledCount = 0;
                     // override
-                    storeGroup.emitChange = () => {
+                    storeGroup.onChange(() => {
                         calledCount++;
-                    };
+                    });
                     // when
                     return context.useCase(useCase).execute().then(() => {
                         assert.equal(calledCount, 1, "StoreGroup#emitChange is called just once");

@@ -9,7 +9,6 @@ import { WillExecutedPayload } from "../payload/WillExecutedPayload";
 import { DidExecutedPayload } from "../payload/DidExecutedPayload";
 import { CompletedPayload } from "../payload/CompletedPayload";
 import { shallowEqual } from "shallow-equal-object";
-import { ChangedPayload } from "../payload/ChangedPayload";
 import { Dispatcher } from "../Dispatcher";
 import { StateMap, StoreMap } from "./StoreGroupTypes";
 import { createStoreStateMap, StoreStateMap } from "./StoreStateMap";
@@ -32,8 +31,6 @@ export class InitializedPayload extends Payload {
 }
 // InitializedPayload for passing to Store if the state change is not related payload.
 const initializedPayload = new InitializedPayload();
-// ChangedPayload is for changing from Store.
-const changedPayload = new ChangedPayload();
 
 /**
  * assert: check arguments of constructor.
@@ -115,47 +112,68 @@ For example, you should update the state by following:
     }
 };
 /**
- * CQRSStoreGroup support pull-based and push-based Store.
+ * StoreGroup is a parts of read-model.
  *
- * ### Pull-based: Recompute every time value is needed
+ * StoreGroup has separated two phase in a life-cycle.
+ * These are called Write phase and Read phase.
+ *
+ * StoreGroup often does write phase and, then read phase.
+ *
+ * ## Write phase
+ *
+ * StoreGroup notify update timing for each stores.
+ *
+ * It means that call each `Store#receivePayload()`.
+ *
+ * ### When
+ *
+ * - Initialize StoreGroup
+ * - A parts of life-cycle during execute UseCase
+ * - Force update StoreGroup
+ *
+ * ### What does store?
+ *
+ * - Store update own state if needed
+ *
+ * ### What does not store?
+ *
+ * - Store should not directly assign to state instead of using `Store#setState`
+ *
+ * ## Read phase
+ *
+ * StoreGroup read the state from each stores.
+ *
+ * It means that call each `Store#getState()`.
+ *
+ * ### When
+ *
+ * - Initialize StoreGroup
+ * - A parts of life-cycle during execute UseCase
+ * - Force update StoreGroup
+ * - Some store call `Store#emitChange`
+ *
+ * ### What does store?
+ *
+ * - Store return own state
+ *
+ * ### What does not store?
+ *
+ * - Does not update own state
+ * - Please update own state in write phase
+ *
+ * ### Notes
+ *
+ * #### Pull-based: Recompute every time value is needed
  *
  * Pull-based Store has only getState.
  * Just create the state and return it when `getState` is called.
  *
- * ```js
- * const initialState = new State();
- * class MyStore extends Store {
- *    getState({ myState: prevState = initialState }, payload) {
- *       return {
- *          myState: myState.reduce(payload); // return new State
- *       };
- *    }
- * }
- * ```
+ * #### Push-based: Recompute when a source value changes
  *
- * ### Push-based: Recompute when a source value changes
- *
- * Push-based Store have to create the sate ans save it.
+ * Push-based Store have to create the state and save it.
  * Just return the state when `getState` is called.
  * It is similar with cache system.
  *
- * ```js
- * class MyStore extends Store {
- *    constructor() {
- *      super();
- *      this.state = new State();
- *      this.onDispatch(payload => {
- *         this.state = this.state.reduce(payload);
- *      });
- *    }
- *
- *    getState() {
- *      return {
- *          myState: this.state
-*       };
- *    }
- * }
- * ```
  */
 export class StoreGroup<T> extends Dispatcher {
     // observing stores
@@ -233,7 +251,7 @@ export class StoreGroup<T> extends Dispatcher {
         // after dispatching, and then emitChange
         this._observeDispatchedPayload();
         // default state
-        this.state = this.collectGroupState(this.stores, initializedPayload);
+        this.state = this.initializeGroupState(this.stores, initializedPayload);
     }
 
     /**
@@ -254,11 +272,11 @@ export class StoreGroup<T> extends Dispatcher {
         return this.state;
     }
 
-    private collectGroupState(stores: Array<Store<T>>, payload: Payload): StateMap<T> {
+    private initializeGroupState(stores: Array<Store<T>>, payload: Payload): StateMap<T> {
         // 1. write in read
         this.writePhaseInRead(stores, payload);
         // 2. read in read
-        return this.readPhaseInRead(stores) as StateMap<T>;
+        return this.readPhaseInRead(stores);
     }
 
     // write phase
@@ -275,7 +293,7 @@ export class StoreGroup<T> extends Dispatcher {
 
     // read phase
     // Get state from each store
-    private readPhaseInRead(stores: Array<Store<T>>): StoreGroupState {
+    private readPhaseInRead(stores: Array<Store<T>>): StateMap<T> {
         const groupState: StoreGroupState = {};
         for (let i = 0; i < stores.length; i++) {
             const store = stores[i];
@@ -308,7 +326,7 @@ But, ${store.name}#getState() was called.`);
             // Set state
             groupState[stateName!] = nextState;
         }
-        return groupState;
+        return groupState as StateMap<T>;
     }
 
     /**
@@ -335,9 +353,20 @@ But, ${store.name}#getState() was called.`);
      * Emit change if the state is changed.
      * If call with no-arguments, use ChangedPayload by default.
      */
-    emitChange(payload: Payload = changedPayload): void {
+    emitChange(): void {
+        this.tryEmitChange();
+    }
+
+    // write and read -> emitChange if needed
+    private sendPayloadAndTryEmit(payload: Payload): void {
+        this.writePhaseInRead(this.stores, payload);
+        this.tryEmitChange();
+    }
+
+    // read -> emitChange if needed
+    private tryEmitChange(): void {
         this._pruneChangingStateOfStores();
-        const nextState = this.collectGroupState(this.stores, payload);
+        const nextState = this.readPhaseInRead(this.stores);
         if (!this.shouldStateUpdate(this.state, nextState)) {
             return;
         }
@@ -380,7 +409,7 @@ But, ${store.name}#getState() was called.`);
             this.addEmitChangedStore(store);
             // if not exist working UseCases, immediate invoke emitChange.
             if (!this.existWorkingUseCase) {
-                this.emitChange();
+                this.tryEmitChange();
             }
         };
         if (process.env.NODE_ENV !== "production") {
@@ -395,16 +424,16 @@ But, ${store.name}#getState() was called.`);
     private _observeDispatchedPayload(): void {
         const observeChangeHandler = (payload: Payload, meta: DispatcherPayloadMeta) => {
             if (!meta.isTrusted) {
-                this.emitChange(payload);
+                this.sendPayloadAndTryEmit(payload);
             } else if (payload instanceof ErrorPayload) {
-                this.emitChange(payload);
+                this.sendPayloadAndTryEmit(payload);
             } else if (payload instanceof WillExecutedPayload && meta.useCase) {
                 this._workingUseCaseMap.set(meta.useCase.id, true);
             } else if (payload instanceof DidExecutedPayload && meta.useCase) {
                 if (meta.isUseCaseFinished) {
                     this._finishedUseCaseMap.set(meta.useCase.id, true);
                 }
-                this.emitChange(payload);
+                this.sendPayloadAndTryEmit(payload);
             } else if (payload instanceof CompletedPayload && meta.useCase && meta.isUseCaseFinished) {
                 this._workingUseCaseMap.delete(meta.useCase.id);
                 // if the useCase is already finished, doesn't emitChange in CompletedPayload
@@ -413,7 +442,7 @@ But, ${store.name}#getState() was called.`);
                     this._finishedUseCaseMap.delete(meta.useCase.id);
                     return;
                 }
-                this.emitChange(payload);
+                this.sendPayloadAndTryEmit(payload);
             }
         };
         const releaseHandler = this.onDispatch(observeChangeHandler);
@@ -439,6 +468,4 @@ But, ${store.name}#getState() was called.`);
     private _pruneChangingStateOfStores() {
         this._changingStores = [];
     }
-
 }
-;
