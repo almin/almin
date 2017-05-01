@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "benchmarks",
+  "name": "benchmark",
   "version": "1.0.0",
   "description": "compare almin versions",
   "main": "index.js",
