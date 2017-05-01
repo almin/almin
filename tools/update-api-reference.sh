@@ -1,6 +1,6 @@
 #!/bin/bash
 declare projectDir=$(git rev-parse --show-toplevel)
-declare srcDir="${projectDir}/lib"
+declare srcDir="${projectDir}/packages/almin/lib"
 declare docDir="${projectDir}/docs"
 # add build result
 function addDoc(){
