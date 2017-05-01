@@ -1,5 +1,8 @@
 # Contributing Guide
 
+Almin uses Yarn for running development scripts.
+If you haven't already done so, please [install yarn](https://yarnpkg.com/en/docs/install).
+
 ## How to contribute?
 
 You can find suitable issues to contribute on [Issues label:starter](https://github.com/almin/almin/issues?q=is%3Aissue+is%3Aopen+label%3Astarter "Issues · almin/almin").

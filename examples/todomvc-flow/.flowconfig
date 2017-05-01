@@ -1,0 +1,11 @@
+[ignore]
+# Hack https://github.com/facebook/flow/issues/869
+.*/packages/almin/node_modules/.*
+[include]
+
+[libs]
+
+[options]
+munge_underscores=true
+module.system.node.resolve_dirname=node_modules
+unsafe.enable_getters_and_setters=true
