@@ -34,6 +34,6 @@ export type StateMap<T> = {
  * export type AppStoreGroupState = typeof stateMapping;
  * ```
  */
-function StoreToState<T>(mapping: StoreMap<T>): StateMap<T> {
+export function StoreToState<T>(mapping: StoreMap<T>): StateMap<T> {
     return mapping as any;
 }
