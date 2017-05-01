@@ -74,6 +74,12 @@ yarn run start:docs # preview
 1. Add Markdown document to `docs/` directory.
 2. Add link to [SUMMARY.md](../SUMMARY.md)
 
+## How to write git commit message
+
+Almin has adopted [Conventional Commits](https://conventionalcommits.org/ "Conventional Commits")
+
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
+
 ## How to release?
 
 Run following commands:
