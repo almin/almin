@@ -1,0 +1,17 @@
+{
+  "presets": [
+    "es2015",
+    "react"
+  ],
+  "env": {
+    "development": {
+      "plugins": [
+        "babel-plugin-class-display-name"
+      ],
+      "presets": [
+        "jsdoc-to-assert",
+        "power-assert"
+      ]
+    }
+  }
+}

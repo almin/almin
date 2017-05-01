@@ -141,34 +141,26 @@ Welcome to pull request!
 - [azu/presentation-annotator: viewing presentation and annotate.](https://github.com/azu/presentation-annotator)
 - [morpheme-match/website at master · azu/morpheme-match](https://github.com/azu/morpheme-match/tree/master/website)
 
-## Running tests
+## Packages
 
-Run tests in Node.js
+The Almin repo is managed as a [monorepo](https://github.com/babel/babel/blob/master/doc/design/monorepo.md "monorepo"); it's composed of npm packages.
 
-    npm test
+### Core
 
-Run tests in Browser
+| Package | Version | Description|
+|--------|-------|-------|
+| [`almin`](./packages/almin) | [![npm](https://img.shields.io/npm/v/almin.svg?maxAge=2592000)](https://www.npmjs.com/package/almin) | `almin` itself |
 
-    npm run test:browser
 
-Run tests in [Sauce Labs](https://saucelabs.com/ "Sauce Labs: Selenium Testing, Mobile Testing, JS Unit Testing")
+### Utility
 
-    # Need "~/.zuulrc" for using Sauce Labs
-    npm run test:saucelabs
-
-## Building docs
-
-API Reference is generated from source codes.
-
-    npm run build:docs:api
-
-Preview documents by GitBook.
-
-    npm run build:docs
-    # preview
-    npm run start:docs
+| Package | Version | Description|
+|--------|-------|-------|
+| [`almin-logger`](./packages/almin-logger) | [![npm](https://img.shields.io/npm/v/almin-logger.svg?maxAge=2592000)](https://www.npmjs.com/package/almin-logger) | console logger | 
 
 ## Contributing
+
+Please see [CONTRIBUTING.md](./.github/CONTRIBUTING.md) for more details.
 
 1. Fork it!
 2. Create your feature branch: `git checkout -b my-new-feature`

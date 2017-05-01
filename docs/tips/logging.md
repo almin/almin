@@ -1,6 +1,6 @@
 # Logging
 
-[almin-logger](https://github.com/almin/almin-logger "almin-logger") is logging library for almin.
+[almin-logger](https://www.npmjs.com/package/almin-logger "almin-logger") is logging library for almin.
 
 ![logger](https://monosnap.com/file/hrgv2Vo1Uec5o4RXBD5APMn8FCKEIC.png)
 
@@ -12,4 +12,4 @@
 - Nesting log support if the browser support`console.groupCollapsed`.
 - Async(default) and Sync logger
 
-Please see [almin-logger](https://github.com/almin/almin-logger "almin-logger") for details.
+Please see [almin-logger](https://www.npmjs.com/package/almin-logger "almin-logger") for details.

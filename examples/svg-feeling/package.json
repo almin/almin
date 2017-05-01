@@ -33,7 +33,7 @@
     "watch:css": "chokidar --initial 'src/**/*.css' -c 'postcss --config postcss.config.js'",
     "watch": "npm-run-all clean --parallel watch:*",
     "test": "mocha",
-    "ci": "rimraf node_modules && npm i --ignore-scripts && npm test && webpack"
+    "ci": "npm test"
   },
   "keywords": [
     "svg"

@@ -12,7 +12,7 @@
     "watch": "webpack -d -w",
     "start": "webpack-dev-server --hot --content-base public/ --open",
     "test": "mocha",
-    "ci": "rimraf node_modules && npm i --ignore-scripts && npm test && webpack"
+    "ci": "npm test"
   },
   "author": "azu",
   "license": "MIT",

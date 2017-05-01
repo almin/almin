@@ -12,7 +12,7 @@
     "build": "NODE_ENV=production webpack -p",
     "watch": "NODE_ENV=development webpack -d -w",
     "test": "mocha",
-    "ci": "rimraf node_modules && npm i --ignore-scripts && npm test && webpack"
+    "ci": "npm test"
   },
   "author": "azu",
   "license": "MIT",

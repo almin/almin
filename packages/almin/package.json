@@ -42,7 +42,8 @@
     "test:mocha": "cross-env NODE_ENV=development mocha",
     "test:saucelabs": "zuul -- test/*-test.js",
     "test:browser": "zuul --local 8080 --ui mocha-bdd -- test/*-test.js",
-    "prepublish": "npm run --if-present build"
+    "prepublish": "npm run --if-present build",
+    "ci": "npm test"
   },
   "keywords": [
     "flux",

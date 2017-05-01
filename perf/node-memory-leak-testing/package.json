@@ -5,7 +5,8 @@
   "scripts": {
     "pretest": "rm-local-modules && npm i",
     "perf": "node --expose-gc StoreGroup-memory-test.js",
-    "test": "npm run perf"
+    "test": "npm run perf",
+    "ci": "npm test"
   },
   "author": "azu",
   "license": "MIT",
