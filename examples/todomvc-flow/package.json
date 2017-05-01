@@ -13,7 +13,7 @@
     "watch": "NODE_ENV=development webpack -d -w",
     "test": "mocha && npm run flow_check",
     "flow_check": "flow check",
-    "ci": "rimraf node_modules && npm i --ignore-scripts && npm test && webpack"
+    "ci": "npm test"
   },
   "author": "azu",
   "license": "MIT",

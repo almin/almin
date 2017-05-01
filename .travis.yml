@@ -2,8 +2,7 @@ sudo: false
 language: node_js
 node_js: stable
 script:
-  - yarn test
-  - yarn run travis
+  - yarn run ci
 cache: yarn
 env:
   global:

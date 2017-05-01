@@ -28,7 +28,7 @@
     "test:saucelabs": "zuul -- test/*-test.js",
     "test:browser": "zuul --local 8080 --ui mocha-bdd -- test/*-test.js",
     "test": "mocha",
-    "travis": "npm run test && npm run test:saucelabs"
+    "ci": "npm run test && npm run test:saucelabs"
   },
   "keywords": [
     "almin",

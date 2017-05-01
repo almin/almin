@@ -35,7 +35,7 @@
     "lint:docs:fix": "textlint --fix --cache docs/",
     "build:docs": "gitbook build",
     "build:docs:api": "bash ./tools/update-api-reference.sh",
-    "travis": "npm run build:docs"
+    "ci": "npm test && npm run build:docs"
   },
   "license": "MIT"
 }
