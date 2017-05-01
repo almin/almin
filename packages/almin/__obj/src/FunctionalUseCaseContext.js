@@ -1,2 +1,0 @@
-// LICENSE : MIT
-"use strict";
