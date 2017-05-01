@@ -61,51 +61,6 @@ Almin has not a perfect solution for an application, but we can write code think
 
 We are going to learn two architectures(Flux/CQRS) using Almin :)
 
-## Table of Contents
-
-Truly [Table of Contents](./SUMMARY.md) is here :arrow_left:
-
-- [Overview: Component of Almin](./docs/abstract/README.md)
-    - [View](./docs/abstract/README.md#view)
-    - [UseCase](./docs/abstract/README.md#usecase)
-    - [Context](./docs/abstract/README.md#context)
-    - [Store](./docs/abstract/README.md#store)
-- Tutorial
-    - [Creating Counter App](./examples/counter/)
-        - Apply Flux pattern to Almin
-    - [Creating Todo App](./examples/todomv/)
-        - Apply CQRS pattern to Almin
-
-## Examples
-
-- [example/counter](https://github.com/almin/almin/tree/master/examples/counter)
-    - Simple Counter example
-    - It uses only state
-- [example/todomvc](https://github.com/almin/almin/tree/master/examples/todomvc)
-    - TodoMVC implementation
-    - DDD/CQRS
-- [example/svg-feeling](https://github.com/almin/almin/tree/master/examples/svg-feeling)
-    - Separate Domain and Store/State
-        - Two way update state.
-    - How to implement 60 FPS application?
-        - Component should implement `shouldComponentUpdate()`
-- [example/shopping-cart](https://github.com/almin/almin/tree/master/examples/shopping-cart)
-    - Shopping Cart is a complex example.
-    - This example is implemented of [flux-comparison](https://github.com/voronianski/flux-comparison "flux-comparison").
-    - How to test?
-    - How to implement domain layer?
-- [example/todomvc-flow](https://github.com/almin/almin/tree/master/examples/todomvc-flow)
-    - TodoMVC implementation
-    - DDD/CQRS
-    - With Flow type checker
-
-## Real Examples
-
-Welcome to pull request!
-
-- [azu/presentation-annotator: viewing presentation and annotate.](https://github.com/azu/presentation-annotator)
-- [morpheme-match/website at master · azu/morpheme-match](https://github.com/azu/morpheme-match/tree/master/website)
-
 ## Running tests
 
 Run tests in Node.js
@@ -121,19 +76,9 @@ Run tests in [Sauce Labs](https://saucelabs.com/ "Sauce Labs: Selenium Testing, 
     # Need "~/.zuulrc" for using Sauce Labs
     npm run test:saucelabs
 
-## Building docs
-
-API Reference is generated from source codes.
-
-    npm run build:docs:api
-
-Preview documents by GitBook.
-
-    npm run build:docs
-    # preview
-    npm run start:docs
-
 ## Contributing
+
+Please see [CONTRIBUTING.md](../../.github/CONTRIBUTING.md) for more details.
 
 1. Fork it!
 2. Create your feature branch: `git checkout -b my-new-feature`

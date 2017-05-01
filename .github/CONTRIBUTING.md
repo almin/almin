@@ -3,6 +3,16 @@
 Almin uses Yarn for running development scripts.
 If you haven't already done so, please [install yarn](https://yarnpkg.com/en/docs/install).
 
+## Bootstrap
+
+First, you should install all dependencies by following:
+
+    # In project root
+    yarn install
+    
+Almin repository is monorepo top on [lerna](https://github.com/lerna/lerna "lerna").
+`postinstall` life-cycle script automatically run `yarn run bootstrap` that install all deps/devDeps.
+
 ## How to contribute?
 
 You can find suitable issues to contribute on [Issues label:starter](https://github.com/almin/almin/issues?q=is%3Aissue+is%3Aopen+label%3Astarter "Issues · almin/almin").
@@ -19,18 +29,20 @@ Basic Pull Request steps:
 
 ## How to run tests?
 
-Run all tests in Node.js:
+Run all tests that includes examples in Node.js:
 
-    npm test
+    yarn test
     # It includes unit test/example test
 
 You can only run unit test:
 
-    npm run test:js
+    cd packages/almin && yarn test
+    # or
+    yarn test -- --scope almin
 
 Run unit tests in Browser:
 
-    npm run test:browser
+    cd packages/almin && yarn run test:browser
 
 ## How to fix document?
 
@@ -40,7 +52,7 @@ Run unit tests in Browser:
 2. Preview documents
 
 ```
-npm run start:docs # preview
+yarn run start:docs # preview
 ```
 
 Welcome to fix documents!
@@ -53,8 +65,8 @@ API Reference is automatically generated from source code(`/src/*.ts``)
 2. Build API Reference
 
 ```
-npm run build:docs:api # build
-npm run start:docs # preview
+yarn run build:docs:api # build
+yarn run start:docs # preview
 ```
 
 ## How to write document?
@@ -67,7 +79,6 @@ npm run start:docs # preview
 Run following commands:
 
 ```
-npm test
-npm version {patch|minor|major}
-npm publish
+yarn test
+yarn run publish
 ```
