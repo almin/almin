@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "example-shopping-cart",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Counter example",
   "directories": {
     "test": "test"
@@ -17,7 +17,7 @@
   "author": "azu",
   "license": "MIT",
   "dependencies": {
-    "almin": "0.12.0-3",
+    "almin": "^0.12.0",
     "almin-logger": "^4.0.0",
     "power-assert": "^1.4.2",
     "prop-types": "^15.5.4",

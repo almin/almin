@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "example-todomvc-flow",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "TODO app example",
   "directories": {
     "test": "test"
@@ -18,7 +18,7 @@
   "author": "azu",
   "license": "MIT",
   "dependencies": {
-    "almin": "0.12.0-3",
+    "almin": "^0.12.0",
     "almin-logger": "^4.0.0",
     "classnames": "^2.2.3",
     "power-assert": "^1.4.2",
