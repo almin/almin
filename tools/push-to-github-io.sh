@@ -20,6 +20,7 @@ fi
 if [ "$TRAVIS_PULL_REQUEST" == "false" ]
 then
   echo "This is Pull Request. Not deploy"
+  exit 0;
 fi
 # commit and push
 # commit_and_push_changes "message" "branch"
