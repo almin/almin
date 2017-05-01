@@ -8,12 +8,12 @@ In this guide, we’ll walk through the process of creating a simple Counter app
 
 You can get source code for counter app from here
 
-- https://github.com/almin/almin/tree/master/example/counter
+- https://github.com/almin/almin/tree/master/examples/counter
 
 ```sh
 git clone https://github.com/almin/almin.git
 
-cd almin/example/counter
+cd almin/examples/counter
 npm install
 npm start
 # manually open
@@ -95,7 +95,7 @@ In flux:
  
 Return to `IncrementalCounterUseCase` and add "dispatch increment event"
 
-[include, IncrementalCounterUseCase.js](../../../example/counter/src/usecase/IncrementalCounterUseCase.js)
+[include, IncrementalCounterUseCase.js](../../../examples/counter/src/usecase/IncrementalCounterUseCase.js)
 
 A class inherited `UseCase` has `this.dispatch(payload);` method.
 
@@ -169,7 +169,7 @@ We have created `CounterState.js`.
 
 - receive "payload" and return state.
 
-[include, CounterState.js](../../../example/counter/src/store/CounterState.js)
+[include, CounterState.js](../../../examples/counter/src/store/CounterState.js)
 
 You may have seen the pattern...
 Yes It is **reducer**!
@@ -187,13 +187,13 @@ Finally, we have added some code to `CounterStore`
 A class inherited `Store` has `this.emitChange();` method.
 It method is called and emit change to the subscribers(often View).
 
-[include, CounterStore.js](../../../example/counter/src/store/CounterStore.js)
+[include, CounterStore.js](../../../examples/counter/src/store/CounterStore.js)
 
 ### Side note: Testing
 
 We can test above classes independently.
 
-- [almin/example/counter/test at master · almin/almin](https://github.com/almin/almin/tree/master/example/counter/test "almin/example/counter/test at master · almin/almin")
+- [almin/examples/counter/test at master · almin/almin](https://github.com/almin/almin/tree/master/examples/counter/test "almin/examples/counter/test at master · almin/almin")
 
 ## View Integration
 
@@ -218,7 +218,7 @@ const appContext = new Context({
 });
 ```
 
-[include, App.js](../../../example/counter/src/component/App.js)
+[include, App.js](../../../examples/counter/src/component/App.js)
 
 ```js
 appContext.onChange(onChangeHandler);

@@ -106,30 +106,30 @@ Truly [Table of Contents](./SUMMARY.md) is here :arrow_left:
     - [Context](./docs/abstract/README.md#context)
     - [Store](./docs/abstract/README.md#store)
 - Tutorial
-    - [Creating Counter App](./example/counter/)
+    - [Creating Counter App](./examples/counter/)
         - Apply Flux pattern to Almin
-    - [Creating Todo App](./example/todomv/)
+    - [Creating Todo App](./examples/todomv/)
         - Apply CQRS pattern to Almin
 
 ## Examples
 
-- [example/counter](https://github.com/almin/almin/tree/master/example/counter)
+- [example/counter](https://github.com/almin/almin/tree/master/examples/counter)
     - Simple Counter example
     - It uses only state
-- [example/todomvc](https://github.com/almin/almin/tree/master/example/todomvc)
+- [example/todomvc](https://github.com/almin/almin/tree/master/examples/todomvc)
     - TodoMVC implementation
     - DDD/CQRS
-- [example/svg-feeling](https://github.com/almin/almin/tree/master/example/svg-feeling)
+- [example/svg-feeling](https://github.com/almin/almin/tree/master/examples/svg-feeling)
     - Separate Domain and Store/State
         - Two way update state.
     - How to implement 60 FPS application?
         - Component should implement `shouldComponentUpdate()`
-- [example/shopping-cart](https://github.com/almin/almin/tree/master/example/shopping-cart)
+- [example/shopping-cart](https://github.com/almin/almin/tree/master/examples/shopping-cart)
     - Shopping Cart is a complex example.
     - This example is implemented of [flux-comparison](https://github.com/voronianski/flux-comparison "flux-comparison").
     - How to test?
     - How to implement domain layer?
-- [example/todomvc-flow](https://github.com/almin/almin/tree/master/example/todomvc-flow)
+- [example/todomvc-flow](https://github.com/almin/almin/tree/master/examples/todomvc-flow)
     - TodoMVC implementation
     - DDD/CQRS
     - With Flow type checker

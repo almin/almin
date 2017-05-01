@@ -1,8 +1,8 @@
 {
-  "name": "todomvc-flow",
+  "private": true,
+  "name": "example-todomvc-flow",
   "version": "1.0.0",
   "description": "TODO app example",
-  "private": true,
   "directories": {
     "test": "test"
   },
@@ -11,7 +11,6 @@
     "start": "webpack-dev-server --hot --content-base public/ --open",
     "build": "NODE_ENV=production webpack -p",
     "watch": "NODE_ENV=development webpack -d -w",
-    "prepublish": "npm run --if-present build",
     "test": "mocha && npm run flow_check",
     "flow_check": "flow check",
     "ci": "rimraf node_modules && npm i --ignore-scripts && npm test && webpack"
@@ -19,9 +18,10 @@
   "author": "azu",
   "license": "MIT",
   "dependencies": {
-    "almin": "file:../../",
+    "almin": "0.12.0-3",
     "almin-logger": "^4.0.0",
     "classnames": "^2.2.3",
+    "power-assert": "^1.4.2",
     "prop-types": "^15.5.4",
     "react": "^15.5.3",
     "react-dom": "^15.5.3",

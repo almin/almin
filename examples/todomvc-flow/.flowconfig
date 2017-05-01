@@ -1,5 +1,6 @@
 [ignore]
-
+# Hack https://github.com/facebook/flow/issues/869
+.*/packages/almin/node_modules/.*
 [include]
 
 [libs]

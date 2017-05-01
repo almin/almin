@@ -2,8 +2,9 @@ sudo: false
 language: node_js
 node_js: stable
 script:
-  - npm test
-  - npm run travis
+  - yarn test
+  - yarn run travis
+cache: yarn
 env:
   global:
   - secure: BDeW2Gyfxdi/Sooe1txK7/H60ELoqY4UKCDybiNpz6dAwfghdf4y53ClB7VsCBLGBRkh7xLgLj8MZz9mvfc6geS5gVIr4Ey9/WWvYQb9fOG6Y9TOv57+nT8jRBkrjblnikpnw/NDqtB34uFLoC+NzOq3AfKvdwEvqIazhAoVVxJ0CVTQJu/U2ZYmPslOcQMiGqAXZKPYN/f71AwEhlmxQBgqPO2QMWl4hDMGnkTzMgbURzixOTc5BHYh2k3xE04W34PC+ziRMFA1/ngZ+ae/EvP0jn7W7stcfF0f7+J6oqkHbiB3Tt/cHTPwUDUkOH4+G9xEPvScJqg29lyHlKZG0yAcLXDA++kY930e5NfSW9q28Hf5tEG8oXf5V1d2NvVG4POM4P+3kHBbtuHAASYPCIvXjLcbZ5nhf4RCgGPD9jCXjh20p+UljBbvNhoBxCf5+UnW+wzjb95w6obomPaak9fH9WF6oBTmZUzMu0vqk9KeOr2hr4BfTCx4yrurXLkgRwMKDgXlG2RNWkIDFox5ftm4UHHgBZwoahBhp/vUCxvlp6n3pj1oqcUSGqm7grviU9BLObXBCiQPPpcz9iL0Dp1uQ2AdgKlOF/XadgiBc3jXYmrbziQvUcJZHcubOQ7Lhl1+sXOuwTjQYRivW6+jc5ndoe/DeiuKZtsm+9Jv0dw=
@@ -17,4 +18,4 @@ after_success:
                           --path-encrypted-key ".travis/github_deploy_key.enc"
 
   - bash ./tools/push-to-github-io.sh
-  - npm run test:saucelabs
+  - cd packages/almin && yarn run test:saucelabs

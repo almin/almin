@@ -83,10 +83,9 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 
-
-/lib
-
+# Build files
+/packages/**/lib/
+__obj/
 # Build cache.
-/__obj/
-/.eslintcache
-/.textlintcache
+.eslintcache
+.textlintcache

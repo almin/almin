@@ -9,7 +9,7 @@
   "author": "azu",
   "license": "MIT",
   "dependencies": {
-    "almin": "file:../../",
+    "almin": "0.12.0-3",
     "prettysize": "0.0.3"
   },
   "devDependencies": {

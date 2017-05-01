@@ -1,0 +1,82 @@
+{
+  "name": "almin",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/almin/almin.git"
+  },
+  "author": "azu",
+  "email": "azuciao@gmail.com",
+  "homepage": "https://github.com/almin/almin",
+  "license": "MIT",
+  "files": [
+    "src/",
+    "lib/"
+  ],
+  "bugs": {
+    "url": "https://github.com/almin/almin/issues"
+  },
+  "version": "0.12.0-3",
+  "description": "Flux/CQRS patterns for JavaScript app.",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "clean": "rimraf lib/ __obj",
+    "build": "npm-run-all -s clean build:src build:lib",
+    "build:src": "npm-run-all -p build:src:*",
+    "build:src:tsc": "tsc --project .",
+    "build:lib": "npm-run-all -p build:lib:*",
+    "build:lib:cp_lib": "cpx '__obj/src/**/*.d.ts' lib/ --preserve",
+    "build:lib:cp_type_def": "cpx type-definitions/**/*.js.flow lib/ --preserve",
+    "build:lib:down_transform": "cross-env NODE_ENV=production babel __obj/src --out-dir lib/ --source-maps",
+    "lint": "npm-run-all -p lint:*",
+    "lint:fix": "npm-run-all -p lint:*:fix",
+    "lint:js": "eslint --ext=js --config ../../.eslintrc.js.json --cache src/ example/",
+    "_lint:ts": "eslint --ext=ts --config ../../.eslintrc.ts.json --cache src/ example/",
+    "lint:js:fix": "eslint --fix --ext=js --config ../../.eslintrc.js.json --cache src/ example/",
+    "_lint:ts:fix": "eslint --fix --ext=ts --config ../../.eslintrc.ts.json --cache src/ example/",
+    "test": "run-s test:js lint",
+    "test:js": "run-s build test:mocha",
+    "test:mocha": "cross-env NODE_ENV=development mocha",
+    "test:saucelabs": "zuul -- test/*-test.js",
+    "test:browser": "zuul --local 8080 --ui mocha-bdd -- test/*-test.js",
+    "prepublish": "npm run --if-present build"
+  },
+  "keywords": [
+    "flux",
+    "cqrs",
+    "ddd",
+    "architecture",
+    "aluminium"
+  ],
+  "devDependencies": {
+    "@types/node": "^7.0.5",
+    "@types/object-assign": "^4.0.30",
+    "babel-cli": "^6.7.5",
+    "babel-eslint": "^7.1.1",
+    "babel-preset-es2015-ie": "^6.6.2",
+    "babel-preset-power-assert": "^1.0.0",
+    "babel-register": "^6.7.2",
+    "babelify": "^7.3.0",
+    "cpx": "^1.5.0",
+    "cross-env": "^4.0.0",
+    "env-development": "^1.0.2",
+    "eslint": "^3.16.1",
+    "function.name": "^1.0.2",
+    "mocha": "^3.0.2",
+    "npm-run-all": "^4.0.2",
+    "power-assert": "^1.4.2",
+    "rimraf": "^2.6.0",
+    "sinon": "^2.1.0",
+    "typescript": "~2.3.1",
+    "typescript-eslint-parser": "^2.0.0",
+    "zuul": "^3.10.1"
+  },
+  "dependencies": {
+    "map-like": "^1.1.2",
+    "object-assign": "^4.1.0",
+    "shallow-equal-object": "^1.0.1"
+  }
+}
