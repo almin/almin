@@ -84,7 +84,7 @@ crashlytics.properties
 crashlytics-build.properties
 
 # Build files
-pacakges/**/lib/
+/packages/**/lib/
 __obj/
 # Build cache.
 .eslintcache
