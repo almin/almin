@@ -1,11 +1,8 @@
-# almin-logger [![Build Status](https://travis-ci.org/almin/almin-logger.svg?branch=master)](https://travis-ci.org/almin/almin-logger)
+# almin-logger [![Build Status](https://travis-ci.org/almin/almin.svg?branch=master)](https://travis-ci.org/almin/almin)
 
 Logger class for [Almin.js](https://github.com/azu/almin "Almin.js")
 
-[![Sauce Test Status](https://saucelabs.com/browser-matrix/almin-logger.svg)](https://saucelabs.com/u/almin-logger)
-
 ![logger](https://monosnap.com/file/AqRVq3UAah8riczytsgXHxGb50fwz2.png)
-
 
 ## Feature
 

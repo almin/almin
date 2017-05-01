@@ -141,6 +141,23 @@ Welcome to pull request!
 - [azu/presentation-annotator: viewing presentation and annotate.](https://github.com/azu/presentation-annotator)
 - [morpheme-match/website at master · azu/morpheme-match](https://github.com/azu/morpheme-match/tree/master/website)
 
+## Packages
+
+The Almin repo is managed as a [monorepo](https://github.com/babel/babel/blob/master/doc/design/monorepo.md "monorepo"); it's composed of npm packages.
+
+### Core
+
+| Package | Version |
+|--------|-------|
+| [`almin`](./packages/almin) | [![npm](https://img.shields.io/npm/v/almin.svg?maxAge=2592000)](https://www.npmjs.com/package/almin) |
+
+
+### Utility
+
+| Package | Version |
+|--------|-------|
+| [`almin-logger`](./packages/almin-logger) | [![npm](https://img.shields.io/npm/v/almin-logger.svg?maxAge=2592000)](https://www.npmjs.com/package/almin-logger) |
+
 ## Running tests
 
 Run tests in Node.js
