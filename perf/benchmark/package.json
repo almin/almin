@@ -8,7 +8,7 @@
     "test": "test"
   },
   "dependencies": {
-    "almin": "file:../../",
+    "almin": "0.12.0-3",
     "almin-0.9": "file:pacakges/almin-0.9"
   },
   "devDependencies": {
@@ -24,11 +24,10 @@
     "rm-local-modules": "0.0.1"
   },
   "scripts": {
-    "prepare-test": "rm-local-modules && npm i",
     "build": "webpack",
-    "bench": "npm run prepare-test && cross-env NODE_ENV=production node index.js",
-    "test": "npm run prepare-test && cross-env NODE_ENV=production mocha",
-    "test:browser": "npm run prepare-test && testem ci"
+    "bench": "cross-env NODE_ENV=production node index.js",
+    "test": "cross-env NODE_ENV=production mocha",
+    "test:browser": "testem ci"
   },
   "author": "azu",
   "license": "MIT"
