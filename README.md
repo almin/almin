@@ -1,6 +1,41 @@
-# [Almin](https://github.com/almin/almin) [![Build Status](https://travis-ci.org/almin/almin.svg?branch=master)](https://travis-ci.org/almin/almin)
+# [Almin.js](https://github.com/almin/almin) [![Build Status](https://travis-ci.org/almin/almin.svg?branch=master)](https://travis-ci.org/almin/almin)
 
 [![Almin.js logo](https://almin.js.org/media/logo/logo.png)](https://github.com/almin/almin)
+
+[![Sauce Test Status](https://saucelabs.com/browser-matrix/almin.svg)](https://saucelabs.com/u/almin)
+
+Flux/CQRS patterns for JavaScript application.
+
+Write code thinking :)
+
+## Why?
+
+Now, We can implement web applications with Flux or Redux etc...
+
+But, I often hear a story that "Control flow of Flux/Redux is cool, but where to implement domain logic."
+
+I think that people skip to Flux/Redux from MV* pattern.
+
+> MV* --> ( HOLE ) --> Flux/Redux(CQRS+EventSourcing)
+
+Almin.js aim to fill the HOLE between MV* and Flux/Redux.
+
+## Features
+
+Almin provides some patterns, is not a framework.
+
+- Testable
+- Scalable
+- Responsibility Layers patten - well-known as DDD(Domain-Driven Design)/CQRS
+- Support [TypeScript](https://www.typescriptlang.org/ "TypeScript") and [Flow](https://flowtype.org/ "FlowType")
+
+Almin is an implementation of Read/Write Stack Architecture that is well-known as Flux/CQRS.
+
+- [Almin.js | JavaScriptアーキテクチャ](http://azu.github.io/slide/2016/child_process_sushi/almin-javascript-architecture.html "Almin.js | JavaScriptアーキテクチャ") (Japanese)
+- Patterns For Large-Scale JavaScript Application Architecture (Japanese)
+    - [複雑なJavaScriptアプリケーションを考えながら作る話](http://azu.github.io/slide/2016/react-meetup/large-scale-javascript.html)
+    - [azu/large-scale-javascript: 複雑なJavaScriptアプリケーションを作るために考えること](https://github.com/azu/large-scale-javascript)
+
 
 ## Installation
 

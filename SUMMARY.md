@@ -11,11 +11,11 @@
     - [Todo App](./docs/tutorial/todomvc/README.md)
         - Apply DDD/CQRS pattern
 - Examples
-    - [example/counter](https://github.com/almin/almin/tree/master/example/counter)
-    - [example/todomvc](https://github.com/almin/almin/tree/master/example/todomvc)
-    - [example/todomvc-flow](https://github.com/almin/almin/tree/master/example/todomvc-flow)
-    - [example/svg-feeling](https://github.com/almin/almin/tree/master/example/svg-feeling)
-    - [example/shopping-cart](https://github.com/almin/almin/tree/master/example/shopping-cart)
+    - [examples/counter](https://github.com/almin/almin/tree/master/examples/counter)
+    - [examples/todomvc](https://github.com/almin/almin/tree/master/examples/todomvc)
+    - [examples/todomvc-flow](https://github.com/almin/almin/tree/master/examples/todomvc-flow)
+    - [examples/svg-feeling](https://github.com/almin/almin/tree/master/examples/svg-feeling)
+    - [examples/shopping-cart](https://github.com/almin/almin/tree/master/examples/shopping-cart)
 - Tips
     - [Logging](./docs/tips/logging.md)
     - [Nesting UseCase](./docs/tips/nesting-usecase.md)

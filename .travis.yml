@@ -17,4 +17,4 @@ after_success:
                           --path-encrypted-key ".travis/github_deploy_key.enc"
 
   - bash ./tools/push-to-github-io.sh
-  - npm run test:saucelabs
+  - cd packages/almin && npm run test:saucelabs

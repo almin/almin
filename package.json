@@ -9,7 +9,16 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "lerna": "^2.0.0-rc.4"
+    "lerna": "^2.0.0-rc.4",
+    "@alrra/travis-scripts": "^3.0.1",
+    "@azu/docco": "^0.7.2",
+    "gitbook-cli": "^2.1.3",
+    "gitbook-plugin-forkmegithub": "^2.2.0",
+    "gitbook-plugin-include-codeblock": "^3.0.2",
+    "textlint": "^7.1.0",
+    "textlint-rule-alex": "^1.0.1",
+    "textlint-rule-common-misspellings": "^1.0.1",
+    "textlint-rule-no-dead-link": "^3.0.1"
   },
   "scripts": {
     "postinstall": "yarn run bootstrap",
@@ -17,7 +26,13 @@
     "publish": "lerna publish",
     "publish:beta": "lerna publish --npm-tag=next",
     "test": "lerna run test",
-    "exec": "lerna exec"
+    "exec": "lerna exec",
+    "start:docs": "gitbook serve",
+    "lint:docs": "textlint --cache -f pretty-error docs/",
+    "lint:docs:fix": "textlint --fix --cache docs/",
+    "build:docs": "gitbook build",
+    "build:docs:api": "bash ./tools/update-api-reference.sh",
+    "travis": "npm run build:docs"
   },
   "license": "MIT"
 }
