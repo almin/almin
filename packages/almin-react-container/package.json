@@ -15,7 +15,7 @@
   "main": "lib/almin-react-container.js",
   "types": "lib/almin-react-container.d.ts",
   "scripts": {
-    "test": "mocha && cd example && npm it",
+    "test": "mocha",
     "build": "cross-env NODE_ENV=production tsc -p .",
     "watch": "tsc -p . --watch",
     "prepublish": "npm run --if-present build"
