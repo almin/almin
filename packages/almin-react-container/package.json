@@ -1,0 +1,59 @@
+{
+  "directories": {
+    "test": "test"
+  },
+  "author": "azu",
+  "license": "MIT",
+  "files": [
+    "bin/",
+    "lib/",
+    "src/"
+  ],
+  "name": "almin-react-container",
+  "version": "0.2.0-0",
+  "description": "React bindings for Almin",
+  "main": "lib/almin-react-container.js",
+  "types": "lib/almin-react-container.d.ts",
+  "scripts": {
+    "test": "mocha",
+    "build": "cross-env NODE_ENV=production tsc -p .",
+    "watch": "tsc -p . --watch",
+    "prepublish": "npm run --if-present build"
+  },
+  "keywords": [
+    "react",
+    "almin",
+    "component"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/almin/almin.git"
+  },
+  "bugs": {
+    "url": "https://github.com/almin/almin/issues"
+  },
+  "homepage": "https://github.com/almin/almin/tree/master/packages/almin-react-container",
+  "peerDependencies": {
+    "almin": ">=0.11.0",
+    "react": "^15.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^7.0.12",
+    "@types/react": "^15.0.20",
+    "almin": "^0.12.0",
+    "babel-preset-env": "^1.4.0",
+    "babel-preset-power-assert": "^1.0.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-register": "^6.24.1",
+    "cross-env": "^3.2.4",
+    "jsdom": "^10.1.0",
+    "mocha": "^3.3.0",
+    "power-assert": "^1.4.2",
+    "react": "^15.4.2",
+    "react-dom": "^15.5.4",
+    "typescript": "^2.3.2"
+  },
+  "dependencies": {
+    "shallow-equal-object": "^1.0.1"
+  }
+}

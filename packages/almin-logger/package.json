@@ -6,7 +6,7 @@
   },
   "author": "azu",
   "email": "azuciao@gmail.com",
-  "homepage": "https://github.com/almin/almin",
+  "homepage": "https://github.com/almin/almin/tree/master/packages/almin-logger",
   "license": "MIT",
   "files": [
     "src/",
