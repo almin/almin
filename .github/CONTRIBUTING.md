@@ -3,6 +3,11 @@
 Almin uses Yarn for running development scripts.
 If you haven't already done so, please [install yarn](https://yarnpkg.com/en/docs/install).
 
+## Environment
+
+- Node.js >= 6.0.0
+- [Yarn](https://yarnpkg.com/en/docs/install)
+
 ## Bootstrap
 
 First, you should install all dependencies by following:
