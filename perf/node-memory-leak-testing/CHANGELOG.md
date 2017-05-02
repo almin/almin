@@ -3,7 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-     <a name="2.0.0"></a>
+<a name="2.0.1"></a>
+## [2.0.1](https://github.com/almin/almin/compare/node-memory-leak-testing@2.0.0...node-memory-leak-testing@2.0.1) (2017-05-02)
+
+
+
+
+<a name="2.0.0"></a>
 # 2.0.0 (2017-05-01)
 
 

@@ -16,7 +16,7 @@
   "bugs": {
     "url": "https://github.com/azu/svg-feeling/issues"
   },
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "SVG feeling",
   "main": "index.js",
   "directories": {
@@ -65,8 +65,8 @@
     "webpack-dev-server": "^2.4.3"
   },
   "dependencies": {
-    "almin": "^0.12.0",
-    "almin-logger": "^4.0.0",
+    "almin": "^0.12.1",
+    "almin-logger": "^4.1.0",
     "babel-runtime": "^6.6.1",
     "classnames": "^2.2.3",
     "hex-and-rgba": "^1.0.0",

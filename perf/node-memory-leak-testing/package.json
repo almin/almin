@@ -1,7 +1,7 @@
 {
   "name": "node-memory-leak-testing",
   "private": true,
-  "version": "2.0.0",
+  "version": "2.0.1",
   "scripts": {
     "pretest": "rm-local-modules && npm i",
     "perf": "node --expose-gc StoreGroup-memory-test.js",
@@ -11,7 +11,7 @@
   "author": "azu",
   "license": "MIT",
   "dependencies": {
-    "almin": "^0.12.0",
+    "almin": "^0.12.1",
     "prettysize": "0.0.3"
   },
   "devDependencies": {
