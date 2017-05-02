@@ -17,8 +17,9 @@ It create container component that is wrap `component`.
 The `component` can receive state of contenxt vis `this.props`.
 
 ```js
-import AlminReactContainer from "almin-react-container";
 import React from "react";
+import ReactDOM from "react-dom";
+import AlminReactContainer from "almin-react-container";
 import { Dispatcher, Context, Store } from "almin";
 // Store
 class MyState {
@@ -59,12 +60,10 @@ class App extends React.Component {
         return <div>{this.props.myState.value}</div>
     }
 }
-interface AppState {
-    myState: MyState
-}
 // Create Container
 const RootContainer = AlminReactContainer.create(App, context);
-console.log(RootContainer);
+// Render Container
+ReactDOM.render(<RootContainer />, document.getElementById("js-app"));
 ```
 
 See [Example/](./example/)
