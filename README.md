@@ -151,8 +151,13 @@ The Almin repo is managed as a [monorepo](https://github.com/babel/babel/blob/ma
 |--------|-------|-------|
 | [`almin`](./packages/almin) | [![npm](https://img.shields.io/npm/v/almin.svg?maxAge=2592000)](https://www.npmjs.com/package/almin) | `almin` itself |
 
+### Integrations
 
-### Utility
+| Package | Version | Description|
+|--------|-------|-------|
+| [`almin-react-container`](./packages/almin-react-container) | [![npm](https://img.shields.io/npm/v/almin-react-container.svg?maxAge=2592000)](https://www.npmjs.com/package/almin-react-container) | Integration with React |
+
+### Utilities
 
 | Package | Version | Description|
 |--------|-------|-------|

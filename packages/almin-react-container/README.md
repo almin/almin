@@ -1,4 +1,4 @@
-# almin-react-container [![Build Status](https://travis-ci.org/almin/almin-react-container.svg?branch=master)](https://travis-ci.org/almin/almin-react-container)
+# almin-react-container
 
 React bindings for Almin.
 
@@ -14,7 +14,7 @@ Install with [npm](https://www.npmjs.com/):
 
 It create container component that is wrap `component`.
 
-The `component` can receive state of contenxt vis `this.props`.
+The `component` can receive `context.getState` of Almin via `this.props`.
 
 ```js
 import React from "react";
@@ -70,7 +70,7 @@ See [Example/](./example/)
 
 ## Changelog
 
-See [Releases page](https://github.com/almin/almin-react-container/releases).
+See [Releases page](https://github.com/almin/almin/releases).
 
 ## Running tests
 
@@ -82,7 +82,7 @@ Install devDependencies and Run `npm test`:
 
 Pull requests and stars are always welcome.
 
-For bugs and feature requests, [please create an issue](https://github.com/almin/almin-react-container/issues).
+For bugs and feature requests, [please create an issue](https://github.com/almin/almin/issues).
 
 1. Fork it!
 2. Create your feature branch: `git checkout -b my-new-feature`
