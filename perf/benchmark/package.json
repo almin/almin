@@ -26,6 +26,7 @@
   "scripts": {
     "build": "webpack",
     "bench": "cross-env NODE_ENV=production node index.js",
+    "bench:store": "cross-env NODE_ENV=production node ./src/lots-of-stores-task.js",
     "test": "cross-env NODE_ENV=production mocha",
     "test:browser": "testem ci"
   },
