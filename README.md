@@ -162,6 +162,7 @@ The Almin repo is managed as a [monorepo](https://github.com/babel/babel/blob/ma
 | Package | Version | Description|
 |--------|-------|-------|
 | [`almin-logger`](./packages/almin-logger) | [![npm](https://img.shields.io/npm/v/almin-logger.svg?maxAge=2592000)](https://www.npmjs.com/package/almin-logger) | console logger | 
+| [`almin-devtools`](https://github.com/almin/almin-devtools) | [![npm](https://img.shields.io/npm/v/almin-devtools.svg?maxAge=2592000)](https://www.npmjs.com/package/almin-devtools) | browser debugging extension | 
 
 ## Contributing
 
