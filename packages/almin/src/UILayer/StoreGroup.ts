@@ -4,10 +4,10 @@ import * as assert from "assert";
 import MapLike from "map-like";
 import { Payload } from "../payload/Payload";
 import { DispatcherPayloadMeta } from "../DispatcherPayloadMeta";
-import { ErrorPayload } from "../payload/ErrorPayload";
-import { WillExecutedPayload } from "../payload/WillExecutedPayload";
-import { DidExecutedPayload } from "../payload/DidExecutedPayload";
-import { CompletedPayload } from "../payload/CompletedPayload";
+import { isErrorPayload } from "../payload/ErrorPayload";
+import { isWillExecutedPayload } from "../payload/WillExecutedPayload";
+import { isDidExecutedPayload } from "../payload/DidExecutedPayload";
+import { isCompletedPayload } from "../payload/CompletedPayload";
 import { shallowEqual } from "shallow-equal-object";
 import { Dispatcher } from "../Dispatcher";
 import { StateMap, StoreMap } from "./StoreGroupTypes";
@@ -249,7 +249,8 @@ export class StoreGroup<T> extends Dispatcher {
             this._releaseHandlers.push(pipeHandler);
         });
         // after dispatching, and then emitChange
-        this._observeDispatchedPayload();
+        const unObserveHandler = this._observeDispatchedPayload();
+        this._releaseHandlers.push(unObserveHandler);
         // default state
         this.state = this.initializeGroupState(this.stores, initializedPayload);
     }
@@ -421,20 +422,20 @@ But, ${store.name}#getState() was called.`);
     /**
      * Observe all payload.
      */
-    private _observeDispatchedPayload(): void {
+    private _observeDispatchedPayload(): () => void {
         const observeChangeHandler = (payload: Payload, meta: DispatcherPayloadMeta) => {
             if (!meta.isTrusted) {
                 this.sendPayloadAndTryEmit(payload);
-            } else if (payload instanceof ErrorPayload) {
+            } else if (isErrorPayload(payload)) {
                 this.sendPayloadAndTryEmit(payload);
-            } else if (payload instanceof WillExecutedPayload && meta.useCase) {
+            } else if (isWillExecutedPayload(payload) && meta.useCase) {
                 this._workingUseCaseMap.set(meta.useCase.id, true);
-            } else if (payload instanceof DidExecutedPayload && meta.useCase) {
+            } else if (isDidExecutedPayload(payload) && meta.useCase) {
                 if (meta.isUseCaseFinished) {
                     this._finishedUseCaseMap.set(meta.useCase.id, true);
                 }
                 this.sendPayloadAndTryEmit(payload);
-            } else if (payload instanceof CompletedPayload && meta.useCase && meta.isUseCaseFinished) {
+            } else if (isCompletedPayload(payload) && meta.useCase && meta.isUseCaseFinished) {
                 this._workingUseCaseMap.delete(meta.useCase.id);
                 // if the useCase is already finished, doesn't emitChange in CompletedPayload
                 // In other word, If the UseCase that return non-promise value, doesn't emitChange in CompletedPayload
@@ -445,8 +446,7 @@ But, ${store.name}#getState() was called.`);
                 this.sendPayloadAndTryEmit(payload);
             }
         };
-        const releaseHandler = this.onDispatch(observeChangeHandler);
-        this._releaseHandlers.push(releaseHandler);
+        return this.onDispatch(observeChangeHandler);
     }
 
     private addEmitChangedStore(store: Store<T>) {

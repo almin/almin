@@ -5,53 +5,16 @@
  * @param {function(error, data)} done
  */
 module.exports = function(Almin, done) {
-    const {Context, Dispatcher, Store, StoreGroup, UseCase} = Almin;
+    const { createContext, createStore, createUseCase } = Almin;
     let viewState = null;
     const updateView = (state) => {
         viewState = state;
     }
-    class MyState {
-        constructor(value){
-            this.value = value;
-        }
-    }
-    // store
-    class MyStore extends Store {
-        constructor() {
-            super();
-            this.state = new MyState(null);
-            this.onDispatch((payload) => {
-                this.state = new MyState(payload);
-                this.emitChange();
-            });
-        }
-
-        getState() {
-            return {
-                "MyState": this.state
-            };
-        }
-    }
-    const store = new MyStore();
-    const storeGroup = new StoreGroup([store]);
     // use-case
-    class ChildUseCase extends UseCase {
-        execute() {
-            this.dispatch({
-                type: "ChildUseCase"
-            });
-        }
-    }
-    class ParentUseCase extends UseCase {
-        execute() {
-            return this.context.useCase(new ChildUseCase()).execute();
-        }
-    }
-    const dispatcher = new Dispatcher();
-    const context = new Context({
-        dispatcher,
-        store: storeGroup
+    const stores = Array.from(new Array(500), (_, i) => i).map(index => {
+        return createStore(`Store${index}`);
     });
+    const context = createContext(stores);
     const log = () => {
         // nope
     }
@@ -60,11 +23,10 @@ module.exports = function(Almin, done) {
     context.onDidExecuteEachUseCase(log);
     context.onCompleteEachUseCase(log);
     context.onErrorDispatch(log);
-    context.useCase(new ParentUseCase()).execute().then(() => {
-        const state = storeGroup.getState();
-        updateView(state);
+    context.onChange(() => {
+        const state = context.getState();
         done();
-    }).catch(error => {
-        done(error);
     });
+    const useCase = createUseCase({ newState: { a: 1 } });
+    context.useCase(useCase).execute();
 };
