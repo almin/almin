@@ -1,6 +1,7 @@
 // MIT © 2017 azu
 import * as React from "react";
 import { Context } from "almin";
+import { shallowEqual } from"shallow-equal-object";
 export default class AlminReactContainer {
     static create<T>(WrappedComponent: React.ComponentClass<T>,
                      context: Context<any>): React.ComponentClass<T> {
@@ -14,6 +15,12 @@ export default class AlminReactContainer {
             constructor() {
                 super();
                 this.state = context.getState();
+            }
+
+            shouldComponentUpdate(_nextProps: any, nextState: any) {
+                // Almin StoreGroup use Object.assign merging by default
+                // It means that theses states are not strict equal always.
+                return !shallowEqual(this.state, nextState);
             }
 
             componentWillMount() {

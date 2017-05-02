@@ -40,9 +40,20 @@
   "devDependencies": {
     "@types/node": "^7.0.12",
     "@types/react": "^15.0.20",
-    "almin": "0.12.0-3",
+    "almin": "^0.12.0",
+    "babel-preset-env": "^1.4.0",
+    "babel-preset-power-assert": "^1.0.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-register": "^6.24.1",
     "cross-env": "^3.2.4",
+    "jsdom": "^10.1.0",
+    "mocha": "^3.3.0",
+    "power-assert": "^1.4.2",
     "react": "^15.4.2",
+    "react-dom": "^15.5.4",
     "typescript": "^2.3.2"
+  },
+  "dependencies": {
+    "shallow-equal-object": "^1.0.1"
   }
 }
