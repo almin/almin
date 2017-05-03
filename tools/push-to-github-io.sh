@@ -9,15 +9,7 @@ declare commitMessage="Deploy GitBook build [skip ci]"
 declare commands="npm run build:docs"
 declare distDir="${parentDir}/_book"
 
-if [ -n "${GH_USER_NAME-}" ]
-then
-  echo "should define GH_USER_NAME"
-fi
-if [ -n "${GH_USER_EMAIL-}" ]
-then
-  echo "should define GH_USER_EMAIL"
-fi
-if [ "$TRAVIS_PULL_REQUEST" == "false" ]
+if [ "$TRAVIS_PULL_REQUEST" != "false" ]
 then
   echo "This is Pull Request. Not deploy"
   exit 0;
