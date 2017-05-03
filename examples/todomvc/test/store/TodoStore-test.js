@@ -21,7 +21,10 @@ describe("TodoStore", function() {
             const todoList = new TodoList();
             const todoItem = new TodoItem({ title: "Read It Later" });
             todoList.addItem(todoItem);
-            const initialState = new TodoState();
+            const initialState = new TodoState({
+                items: [],
+                filterType: FilterTypes.ALL_TODOS
+            });
             // then
             const todoState = initialState.merge(todoList);
             assert.equal(todoState.items.length, 1);
