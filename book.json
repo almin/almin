@@ -5,6 +5,8 @@
   "githubId": "almin/almin",
   "author": "azu",
   "plugins": [
+    "-livereload",
+    "advanced-emoji",
     "include-codeblock",
     "forkmegithub"
   ],

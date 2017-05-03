@@ -101,18 +101,20 @@ A class inherited `UseCase` has `this.dispatch(payload);` method.
 
 `payload` object must have `type` property.
 
-```js
+```json
 {
-    type: "type"
+    "type": "type"
 }
 ```
 
 is a minimal payload object.
 
-```js
+Of course, you can include other property to the payload.
+
+```json
 {
-    type : "show",
-    value: "value"
+    "type": "show",
+    "value": "value"
 }
 ```
 
@@ -122,28 +124,31 @@ So, `IncrementalCounterUseCase` dispatch "increment" payload.
 
 Next, We want to add the feature that can received "increment" payload to `CounterStore`.
 
-A class inherited `Store` has `this.onDispatch(function(payload){});` method.
+A class inherited `Store` can implement `receivePayload` method.
+
 
 ```js
-import {Store} from "almin";
+"use strict";
+import { Store } from "almin";
 export class CounterStore extends Store {
     constructor() {
         super();
-        // receive event from UseCase, then update state
-        this.onDispatch(payload => {
-            console.log(payload);
-            /*
-            {
-                type: "increment"
-            }
-            */
-        });
+        // initial state
+        this.state = {
+            count: 0
+        };
     }
 
-    getState() {
-        return {
-            counterState: this.state
+    // receive event from UseCase, then update state
+    receivePayload(payload) {
+        if(payload.type === "increment"){
+            this.state.count++;
         }
+    }
+
+    // return the state
+    getState() {
+        return this.state;
     }
 }
 ```
@@ -156,6 +161,8 @@ It means that we can create `CounterState`.
 **Store**
 
 - Observe dispatch events and update state
+    - Write state: `receivePayload()`
+    - Read state: `getState()`
 
 **State**
 
@@ -171,8 +178,7 @@ We have created `CounterState.js`.
 
 [include, CounterState.js](../../../examples/counter/src/store/CounterState.js)
 
-You may have seen the pattern...
-Yes It is **reducer**!
+You may have seen the pattern. So, It is **reducer** in the Redux.
 
 - [Reducers | Redux](http://redux.js.org/docs/basics/Reducers.html "Reducers | Redux")
 - [Flux | Application Architecture for Building User Interfaces](https://facebook.github.io/flux/docs/flux-utils.html "Flux | Application Architecture for Building User Interfaces")
@@ -182,14 +188,13 @@ Yes It is **reducer**!
 Finally, we have added some code to `CounterStore`
 
 1. Receive dispatched event, then update `CounterState`
-2. if `CounterState` is updated, `CounterStore` is also changed!
+2. `CounterStore#getState` return the instance of `CounterState`
 
-A class inherited `Store` has `this.emitChange();` method.
-It method is called and emit change to the subscribers(often View).
+A class inherited `Store` has `this.setState()` method that update own state if needed.
 
 [include, CounterStore.js](../../../examples/counter/src/store/CounterStore.js)
 
-### Side note: Testing
+### :memo: Note: Testing
 
 We can test above classes independently.
 
@@ -210,11 +215,17 @@ import {Context, Dispatcher} from "almin";
 import {CounterStore} from "../store/CounterStore";
 // a single dispatcher
 const dispatcher = new Dispatcher();
-// a single store. if you want to use multiple, please use StoreGroup!
-const store = new CounterStore();
+// initialize store
+const counterStore = new CounterStore();
+// create store group
+const storeGroup = new StoreGroup({
+    // stateName : store
+    "counter": counterStore
+});
+// create context
 const appContext = new Context({
     dispatcher,
-    store
+    store: storeGroup
 });
 ```
 
@@ -224,7 +235,7 @@ const appContext = new Context({
 appContext.onChange(onChangeHandler);
 ```
 
-If `CounterStore` is changed(`emitChange()`ed), call `onChangeHandler`.
+If `CounterStore`'s state is changed(or `emitChange()`ed), call `onChangeHandler`.
 `onChangeHandler` do update `App` component's state.
 
 ### Counter component
