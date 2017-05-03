@@ -229,7 +229,11 @@ const appContext = new Context({
 });
 ```
 
+Full code of `App.js`:
+
 [include, App.js](../../../examples/counter/src/component/App.js)
+
+Focus on `onChange`:
 
 ```js
 appContext.onChange(onChangeHandler);
