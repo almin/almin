@@ -139,15 +139,20 @@ class AppStore extends Store {
     constructor(){
         super();
         this.state = {};
-        // Receive **Action** from UseCase via Context
-        this.onDispatch(payload => {
-            switch(payload.type){
-                case "AwesomeUseCase":
-                    // update state
-                default:
-                    return
-            }
-        });
+    }
+    // Receive payload from UseCase via Context
+    receivePayload(payload){
+        switch(payload.type){
+            case "AwesomeUseCase":
+                return this.setState({/* new state */});
+            default:
+                return
+        }
+    }
+    
+    // return own state
+    getState(){
+        return this.state;
     }
 }
 ```
@@ -187,22 +192,15 @@ We learn simply data flow of Almin.
 7. Update View!
 8. :recycle:
 
-You can see actual example in [Creating Counter App](../counter/).
-
-![Overview of almin-architecture](../resources/almin-architecture.png)
-
-This page not say all thing of Almin.
-
-- **UseCase** is also entry point of **domain** model.
-- **StoreGroup** can handling multiple **Store**s.
-- **Store** can apply reducer pattern like [Redux](https://github.com/reactjs/redux "Redux").
-- etc...
-
 ### End
 
 Almin don't aim to be framework that contain all things.
-We can learn some patterns for JavaScript Application.
+Actually, Almin not contain View and Domain classes.
+
+We can learn some patterns for JavaScript Application via Almin.
 
 After all, We should write code thinking :)
 
-Almin aim to be the based of thinking.
+## Next
+
+Next is [Hello World](./hello-world.md) that show concept of the components.

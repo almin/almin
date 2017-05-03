@@ -1,6 +1,10 @@
-# Simple Counter
+# Hello World app
 
-It is a single file implementation of [Simple counter app](https://gist.github.com/srdjan/1d10cbd42a2d695f696dee6b47fdc5e0 "Simple counter app implementations")
+It is a simple Hello World app.
+
+It prefer to [concept of components](../../docs/abstract/README.md) than correctness for implementation.
+
+You want to know actual implementation and see other examples.
 
 ## Installation
 
