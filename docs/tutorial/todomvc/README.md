@@ -273,7 +273,7 @@ Almin's Store
 - can receive the dispatched *event* from a UseCase. 
 - :new: can observe repository.
 
-### TodoStore observe changes of repository
+### TodoStore observe repository
 
 Repository is implemented as a singleton.
 You easy to observe the repository.
@@ -298,13 +298,84 @@ Return to observe the repository.
 You can use `TodoListRepository#onChange` for observing repository. 
 
 1. Observe change of repository 
-2. When `todoRepository` is changed, try to update state
+2. When `todoListRepository` is changed, try to update state
+
+```js
+"use strict";
+import { Store } from "almin";
+import TodoState, { FilterTypes } from "./TodoState";
+export default class TodoStore extends Store {
+    /**
+     * @param {TodoListRepository} todoListRepository
+     */
+    constructor({ todoListRepository }) {
+        super();
+        // Initial State
+        this.state = new TodoState({
+            items: [],
+            filterType: FilterTypes.ALL_TODOS
+        });
+        this.todoListRepository = todoListRepository;
+        // When `todoListRepository` is changed, try to update state
+        this.todoListRepository.onChange(todoList => {
+            this.setState(this.state.merge(todoList));
+        });
+    }
+
+    receivePayload(payload) {
+        this.setState(this.state.reduce(payload));
+    }
+
+    getState() {
+        return this.state;
+    }
+}
+```
+
+In other way, you can implement updating state from changes of `todoListRepository`.
+Because, `Store#receivePayload` is called in the [Almin life-cycle](../tips/usecase-lifecycle.md).
+
+- onDispatch
+- onError
+- onDidExecuteEachUseCase
+- onCompleteEachUseCase if needed
+
+So, you can write following:
 
 [import, TodoStore.js](../../../examples/todomvc/src/store/TodoStore/TodoStore.js)
 
 And you can see the test for `TodoStore.js`
 
 [examples/todomvc/test/store/TodoStore-test.js](../../../examples/todomvc/test/store/TodoStore-test.js)
+
+#### :memo: Which is better?
+
+Which is better place for updating state?
+
+- `Repository#onChange` vs. `Store#receivePayload`
+
+TL;DR: Case by Case, But we recommended that do update in the `Store#receivePayload`.
+
+It is difference that `Repository#onChange` is outside of almin, `Store#receivePayload` is inside of almin.
+To update state should be done in almin life-cycle, because almin can optimize the updating process.
+
+`Repository#onChange`:
+
+- Pros:
+    - The cost of reading from repository is minimal 
+- Cons:
+    - To update the state out of almin life-cycle
+    - Increase listen count of observing the repository in the store
+
+`Store#receivePayload`:
+
+- Pros:
+    - To update the state in of almin life-cycle
+    - Can put state updating code at one part  
+- Cons:
+    - Store implicitly depended on almin
+        - It means that to test the store a bit complex maybe.
+        - We recommended that test State instead of Store class.
 
 ### TodoState
 
@@ -321,11 +392,12 @@ You can implement `TodoState` like this.
 ```
 export default class TodoState {
     /**
-     * @param {TodoItem[]} [items]
-     * @param {string} [filterType]
+     * @param {TodoItem[]} items
+     * @param {string} filterType
      */
     constructor({items, filterType} = {}) {
-        this.items = items || [];
+        this.items = items;
+        this.filterType = filterType;
     }
     
     /**

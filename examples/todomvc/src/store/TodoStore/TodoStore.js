@@ -1,16 +1,21 @@
 "use strict";
 import { Store } from "almin";
-import TodoState from "./TodoState";
+import TodoState, { FilterTypes } from "./TodoState";
 export default class TodoStore extends Store {
     /**
      * @param {TodoListRepository} todoListRepository
      */
     constructor({ todoListRepository }) {
         super();
-        this.state = new TodoState();
+        // Initial State
+        this.state = new TodoState({
+            items: [],
+            filterType: FilterTypes.ALL_TODOS
+        });
         this.todoListRepository = todoListRepository;
     }
 
+    // Update state
     receivePayload(payload) {
         const todoList = this.todoListRepository.lastUsed();
         if (!todoList) {
@@ -20,6 +25,7 @@ export default class TodoStore extends Store {
         this.setState(newState);
     }
 
+    // Read state
     getState() {
         return this.state;
     }

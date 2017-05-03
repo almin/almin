@@ -8,12 +8,12 @@ export const FilterTypes = {
 
 export default class TodoState {
     /**
-     * @param {TodoItem[]} [items]
-     * @param {string} [filterType]
+     * @param {TodoItem[]} items
+     * @param {string} filterType
      */
-    constructor({ items, filterType } = {}) {
-        this.items = items || [];
-        this.filterType = filterType || FilterTypes.ALL_TODOS;
+    constructor({ items, filterType }) {
+        this.items = items;
+        this.filterType = filterType;
     }
 
     /**
