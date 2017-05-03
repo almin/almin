@@ -3,22 +3,23 @@
 const assert = require("assert");
 import IncrementalCounterUseCase from "../src/usecase/IncrementalCounterUseCase";
 import { CounterStore } from "../src/store/CounterStore";
+import { Dispatcher, Context, StoreGroup } from "almin";
 describe("CounterStore", function() {
-    describe("onCountUp", function() {
-        it("should new state was count up", function(done) {
+    context("when IncrementalCounterUseCase is executed", function() {
+        it("should new state was count up", function() {
             const useCase = new IncrementalCounterUseCase();
             const store = new CounterStore();
-            // useCase dispatch to store
-            useCase.pipe(store);
-            // then
-            const expectedCount = 1;
-            store.onChange(() => {
-                const state = store.getState();
-                assert.equal(state.counterState.count, expectedCount);
-                done();
+            const context = new Context({
+                dispatcher: new Dispatcher(),
+                store: new StoreGroup({
+                    counter: store
+                })
             });
-            // when
-            useCase.execute();
+            // then
+            return context.useCase(useCase).execute().then(() => {
+                const state = store.getState();
+                assert.equal(state.count, 1);
+            });
         });
     });
 });

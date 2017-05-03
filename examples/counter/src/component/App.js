@@ -1,15 +1,21 @@
 // LICENSE : MIT
 "use strict";
 import React from "react";
-import { Context, Dispatcher } from "almin";
+import { Context, Dispatcher, StoreGroup } from "almin";
 import { CounterStore } from "../store/CounterStore";
 // a single dispatcher
 const dispatcher = new Dispatcher();
 // a single store
-const store = new CounterStore();
+const counterStore = new CounterStore();
+// create store group
+const storeGroup = new StoreGroup({
+    // stateName : store
+    "counter": counterStore
+});
+// create context
 const appContext = new Context({
     dispatcher,
-    store
+    store: storeGroup
 });
 import Counter from "./Counter";
 export default class App extends React.Component {
@@ -21,25 +27,24 @@ export default class App extends React.Component {
     componentDidMount() {
         // when change store, update component
         const onChangeHandler = () => {
-            return requestAnimationFrame(() => {
-                this.setState(appContext.getState());
-            });
+            this.setState(appContext.getState());
         };
         appContext.onChange(onChangeHandler);
     }
 
     render() {
-        /*
-         Where is "CounterState" come from? 
-         It is CounterStore#getState()'s key name
-
-         getState() {
-             return {
-                counterState: this.state
-             }
-         }
-        */
-        const counterState = this.state.counterState;
+        /**
+         * Where is "CounterState" come from?
+         * It is `key` of counterStore in StoreGroup.
+         *
+         * ```
+         * const storeGroup = new StoreGroup({
+         *   "counter": counterStore
+         * });
+         * ```
+         * @type {CounterState}
+         */
+        const counterState = this.state.counter;
         return <Counter counterState={counterState}
                         appContext={appContext}/>;
     }

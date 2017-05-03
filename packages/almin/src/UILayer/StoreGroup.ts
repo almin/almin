@@ -242,8 +242,8 @@ export class StoreGroup<T> extends Dispatcher {
         // each pipe to dispatching
         this.stores.forEach((store) => {
             // observe Store
-            const registerHandler = this._registerStore(store);
-            this._releaseHandlers.push(registerHandler);
+            const unRegisterHandler = this._registerStore(store);
+            this._releaseHandlers.push(unRegisterHandler);
             // delegate dispatching
             const pipeHandler = this.pipe(store);
             this._releaseHandlers.push(pipeHandler);
