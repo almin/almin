@@ -84,6 +84,7 @@ crashlytics.properties
 crashlytics-build.properties
 
 # Build files
+/examples/**/build/
 /packages/**/lib/
 __obj/
 # Build cache.

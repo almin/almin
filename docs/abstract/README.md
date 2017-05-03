@@ -1,6 +1,6 @@
-# Component of Almin
+# Components of Almin
 
-Abstract of Almin.
+This introduce components of Almin
 
 ## View
 
@@ -102,7 +102,7 @@ const context = new Context({ ... });
 const onClick = () => {
     const useCase = new AwesomeUseCase();
     context(useCase).execute();
-}
+};
 class MyComponent extends React.Component {
     render(){
         return <div className="MyComponent">
@@ -137,7 +137,7 @@ Simply write following to `AppStore`.
 import {Store} from "almin";
 class AppStore extends Store {
     constructor(){
-        super(){
+        super();
         this.state = {};
         // Receive **Action** from UseCase via Context
         this.onDispatch(payload => {
@@ -165,7 +165,6 @@ What's the hub between `AppStore` and **View**?
 `Context` have the role of hub again!
 
 ```js
-import React from "react";
 import {Context} from "almin";
 const appStore = new AppStore();
 const context = new Context({ store: appStore });

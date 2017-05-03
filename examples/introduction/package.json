@@ -1,0 +1,21 @@
+{
+  "private": true,
+  "name": "example-introduction",
+  "version": "1.0.0",
+  "description": "One file example",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack"
+  },
+  "author": "azu",
+  "license": "MIT",
+  "dependencies": {
+    "almin": "^0.12.0",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4"
+  },
+  "devDependencies": {
+    "babel-loader": "^7.0.0",
+    "webpack": "^2.4.1"
+  }
+}

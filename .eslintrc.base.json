@@ -23,7 +23,10 @@
     "yield-star-spacing": "error",
     "indent": [
       "error",
-      4
+      4,
+      {
+        "SwitchCase": 1
+      }
     ],
     "semi": "error",
     "quotes": [
