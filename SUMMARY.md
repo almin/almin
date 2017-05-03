@@ -2,9 +2,9 @@
 
 - [Overview: Component of Almin](./docs/introduction/components.md)
     - [View](./docs/introduction/components.md#view)
-    - [UseCase](./docs/introduction/components#usecase)
-    - [Context](./docs/introduction/components#context)
-    - [Store](./docs/introduction/components#store)
+    - [UseCase](./docs/introduction/components.md#usecase)
+    - [Context](./docs/introduction/components.md#context)
+    - [Store](./docs/introduction/components.md#store)
 - [Hello World](./docs/introduction/hello-world.md)
 - Tutorial
     - [Counter App](./docs/tutorial/counter/README.md)
