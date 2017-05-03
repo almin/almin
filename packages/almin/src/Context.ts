@@ -56,7 +56,7 @@ export class Context<T> {
      * });
      * ```
      */
-    constructor({dispatcher, store}: {dispatcher: Dispatcher; store: StoreLike<T>;}) {
+    constructor({ dispatcher, store }: { dispatcher: Dispatcher; store: StoreLike<T>; }) {
         StoreGroupValidator.validateInstance(store);
         // central dispatcher
         this._dispatcher = dispatcher;
@@ -70,9 +70,27 @@ export class Context<T> {
         this._releaseHandlers = [];
         // Implementation Note:
         // Delegate dispatch event to Store|StoreGroup from Dispatcher
-        // Dispatch Flow: Dispatcher -> StoreGroup -> Store
-        const releaseHandler = this._dispatcher.pipe(this._storeGroup);
-        this._releaseHandlers.push(releaseHandler);
+        // StoreGroup call each Store#receivePayload, but pass directly Store is not.
+        // So, Context check the store instance has implementation of `Store#receivePayload` and pass payload to it.
+        // See https://github.com/almin/almin/issues/190
+        if (this._storeGroup instanceof Store) {
+            // Dispatch Flow: Dispatcher -> Store(and receivePayload fallback)
+            // Notes: You should not depended on this implementation in production.
+            const hasReceivePayload = typeof this._storeGroup.receivePayload === "function";
+            const releaseHandler = this._dispatcher.onDispatch((payload: DispatchedPayload, meta: DispatcherPayloadMeta) => {
+                this._storeGroup.dispatch(payload, meta);
+                if (hasReceivePayload) {
+                    // StoreLike has not receivePayload, but Store may has receivePayload
+                    (this._storeGroup as Store).receivePayload!(payload);
+                }
+            });
+            this._releaseHandlers.push(releaseHandler);
+        } else {
+            // Dispatch Flow: Dispatcher -> StoreGroup
+            // StoreGroup should have implement that StoreGroup -> Stores
+            const releaseHandler = this._dispatcher.pipe(this._storeGroup);
+            this._releaseHandlers.push(releaseHandler);
+        }
     }
 
     /**
@@ -89,7 +107,7 @@ export class Context<T> {
      * // { aState, bState }
      * ```
      */
-    getState(): StateMap<T>  {
+    getState(): StateMap<T> {
         return this._storeGroup.getState();
     }
 

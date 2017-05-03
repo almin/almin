@@ -149,6 +149,34 @@ describe("Store", function() {
             isCalled = true;
             store.emitChange();
         });
+        // Related https://github.com/almin/almin/issues/190
+        context("when call Store#setState out of UseCase", () => {
+            it("should be called Store#onChange", (done) => {
+                class AStore extends Store {
+                    constructor() {
+                        super();
+                        this.state = 0;
+                    }
+
+                    updateState(state) {
+                        this.setState(state);
+                    }
+
+                    getState() {
+                        return this.state;
+                    }
+                }
+                const aStore = new AStore();
+                const expectedState = {
+                    expected: "value"
+                };
+                aStore.onChange(() => {
+                    assert.ok(aStore.getState(), expectedState);
+                    done();
+                });
+                aStore.updateState(expectedState);
+            });
+        });
     });
     describe("#onDispatch", function() {
         context("when useCaseName is minified", function() {

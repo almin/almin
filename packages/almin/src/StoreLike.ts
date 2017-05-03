@@ -1,6 +1,8 @@
 import { Dispatcher } from "./Dispatcher";
 /**
- * StoreLike is a interfere for Store and StoreGroup .
+ * StoreLike is a interfere for Store and StoreGroup.
+ *
+ * Note: receivePayload is not in this, because Store#receivePayload is not a part of StoreGroup.
  */
 export interface StoreLike<T> extends Dispatcher {
     // Return the state
