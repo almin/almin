@@ -2,6 +2,9 @@
 "use strict";
 const assert = require("power-assert");
 const sinon = require("sinon");
+import { Payload } from "../lib/payload/Payload";
+import { DidExecutedPayload } from "../lib/payload/DidExecutedPayload";
+import { CompletedPayload } from "../lib/payload/CompletedPayload";
 import { Store } from "../lib/Store";
 import { StoreGroup, InitializedPayload } from "../lib/UILayer/StoreGroup";
 import { createStore } from "./helper/create-new-store";
@@ -26,7 +29,7 @@ const createChangeStoreUseCase = (store) => {
             store.updateState(newState);
         }
     }
-    return new ChangeTheStoreUseCase()
+    return new ChangeTheStoreUseCase();
 };
 describe("StoreGroup", function() {
     describe("constructor(map)", () => {
@@ -558,6 +561,74 @@ describe("StoreGroup", function() {
                         bStore,
                         cStore
                     ]);
+                });
+            });
+        });
+        context("When StoreGroup calling Store#receivePayload", function() {
+            it("should call count is necessary and sufficient for performance", function() {
+                class AStore extends Store {
+                    constructor() {
+                        super();
+                        this.state = {};
+                        this.receivedPayloadList = [];
+                    }
+
+                    receivePayload(payload) {
+                        this.receivedPayloadList.push(payload);
+                        if (payload.type === "test") {
+                            this.setState({ newKey: "update" });
+                        }
+                    }
+
+                    getState() {
+                        return this.state;
+                    }
+                }
+                const aStore = new AStore();
+                const storeGroup = new StoreGroup({ a: aStore });
+                // when
+                const context = new Context({
+                    dispatcher: new Dispatcher(),
+                    store: storeGroup
+                });
+
+                class ExamplePayload extends Payload {
+                    constructor() {
+                        super({ type: "test" });
+                    }
+                }
+                const useCaseSync = ({ dispatcher }) => {
+                    return () => {
+                        dispatcher.dispatch(new ExamplePayload());
+                    };
+                };
+                const useCaseASync = ({ dispatcher }) => {
+                    return () => {
+                        dispatcher.dispatch(new ExamplePayload());
+                        return Promise.resolve();
+                    };
+                };
+                // calling order of Store#receivedPay
+                const expectedReceivedPayloadList = [
+                    // StoreGroup Initialize
+                    InitializedPayload,
+                    // Sync UseCase
+                    ExamplePayload,
+                    DidExecutedPayload,
+                    // Async UseCase,
+                    ExamplePayload,
+                    DidExecutedPayload,
+                    CompletedPayload,
+                ];
+                // then
+                return context.useCase(useCaseSync).execute().then(() => {
+                    return context.useCase(useCaseASync).execute();
+                }).then(() => {
+                    assert.ok(aStore.receivedPayloadList.length === expectedReceivedPayloadList.length);
+                    aStore.receivedPayloadList.forEach((payload, index) => {
+                        const ExpectedPayloadClass = expectedReceivedPayloadList[index];
+                        assert.ok(payload instanceof ExpectedPayloadClass, `${payload} instanceof ${ExpectedPayloadClass}`);
+                    });
                 });
             });
         });

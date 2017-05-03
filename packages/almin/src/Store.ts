@@ -131,6 +131,7 @@ export abstract class Store<State = any> extends Dispatcher implements StoreLike
     setState(newState: State): void {
         if (this.shouldStateUpdate(this.state, newState)) {
             this.state = newState;
+            this.emitChange();
         }
     }
 
