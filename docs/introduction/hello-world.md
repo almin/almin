@@ -26,7 +26,6 @@ This hello world not say all thing of Almin.
 - **Store** can apply reducer pattern like [Redux](https://github.com/reactjs/redux "Redux")
 - etc...
 
-If you want know these, please see [TodoMVC tutorial](../tutori
-al/todomvc/README.md) and other examples.
+If you want know these, please see [TodoMVC tutorial](../tutorial/todomvc/README.md) and other examples.
 
 - [examples/shopping-cart](https://github.com/almin/almin/tree/master/examples/shopping-cart)
