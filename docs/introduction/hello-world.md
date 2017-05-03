@@ -12,7 +12,7 @@ Previously, you have seen [components of almin](./components.md).
 
 You want to know real implementation and see other examples.
 
-You can see actual example in [Creating Counter App](../counter/) and other examples.
+You can see actual example in [Creating Counter App](../tutorial/counter/README.md) and other examples.
 
 ## Others
 
@@ -26,6 +26,7 @@ This hello world not say all thing of Almin.
 - **Store** can apply reducer pattern like [Redux](https://github.com/reactjs/redux "Redux")
 - etc...
 
-If you want know these, please see [TodoMVC tutorial](../tutorial/todomvc) and other examples.
+If you want know these, please see [TodoMVC tutorial](../tutori
+al/todomvc/README.md) and other examples.
 
 - [examples/shopping-cart](https://github.com/almin/almin/tree/master/examples/shopping-cart)
