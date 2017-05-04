@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "benchmark",
+  "name": "perf-benchmark",
   "version": "1.0.2",
   "description": "compare almin versions",
   "main": "index.js",

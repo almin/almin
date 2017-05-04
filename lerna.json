@@ -3,7 +3,8 @@
   "commands": {
     "publish": {
       "ignore": [
-        "examples/*",
+        "example-*",
+        "perf-*",
         "*.md"
       ]
     }
