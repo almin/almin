@@ -5,6 +5,7 @@
   "env": {
     "development": {
       "presets": [
+        "power-assert"
       ]
     }
   }
