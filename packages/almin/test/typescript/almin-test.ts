@@ -131,3 +131,9 @@ context.useCase(parentUseCase).execute<ParentUseCaseArgs>("value").then(() => {
 context.useCase(parentUseCase).execute("value").then(() => {
     // nope
 });
+// executor
+context.useCase(parentUseCase)
+    .executor(useCase => useCase.execute("value"))
+    .then(() => {
+        console.log("test");
+    });

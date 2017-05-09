@@ -23,12 +23,6 @@ https://almin.js.org/docs/warnings/usecase-is-already-released.html
 `, payload, meta);
 };
 
-export interface UseCaseExecutorArgs {
-    useCase: UseCaseLike;
-    parent: UseCase | null;
-    dispatcher: Dispatcher;
-}
-
 /**
  * `UseCaseExecutor` is a helper class for executing UseCase.
  *
@@ -37,12 +31,12 @@ export interface UseCaseExecutorArgs {
  *
  * @private
  */
-export class UseCaseExecutor {
+export class UseCaseExecutor<T extends UseCaseLike> {
 
     /**
      * A executable useCase
      */
-    private _useCase: UseCaseLike;
+    private _useCase: T;
 
     /**
      * A parent useCase
@@ -69,10 +63,14 @@ export class UseCaseExecutor {
      * **internal** documentation
      */
     constructor({
-        useCase,
-        parent,
-        dispatcher
-    }: UseCaseExecutorArgs) {
+                    useCase,
+                    parent,
+                    dispatcher
+                }: {
+        useCase: T;
+        parent: UseCase | null;
+        dispatcher: Dispatcher;
+    }) {
         if (process.env.NODE_ENV !== "production") {
             // execute and finish =>
             const useCaseName = useCase.name;
@@ -200,6 +198,40 @@ export class UseCaseExecutor {
         });
         this._releaseHandlers.push(releaseHandler);
         return releaseHandler;
+    }
+
+    executor(executor: (useCase: T) => any): any {
+        const proxify = (useCase: T, resolve: Function, reject: Function): T => {
+            let isExecuted = false;
+            return {
+                execute: (...args) => {
+                    this._willExecute(args);
+                    if (isExecuted) {
+                        return reject(new Error("already executed"));
+                    }
+                    const result = useCase.execute(...args);
+                    const isResultPromise = result && typeof result.then == "function";
+                    // if the UseCase return a promise, almin recognize the UseCase as continuous.
+                    // In other word, If the UseCase want to continue, please return a promise object.
+                    const isUseCaseFinished = !isResultPromise;
+                    // Sync call didExecute
+                    this._didExecute(isUseCaseFinished, result);
+                    return resolve(result);
+                }
+            } as T;
+        };
+        return new Promise((resolve, reject) => {
+            const proxifyUseCase = proxify(this._useCase, resolve, reject);
+            return executor(proxifyUseCase);
+        }).then(result => {
+            this._complete(result);
+            this.release();
+        }).catch(error => {
+            this._useCase.throwError(error);
+            this._complete();
+            this.release();
+            return Promise.reject(error);
+        });
     }
 
     /**
