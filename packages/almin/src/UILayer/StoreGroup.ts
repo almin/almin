@@ -74,7 +74,7 @@ const warningStateIsImmutable = (prevState: any, nextState: any, store: Store, c
     if (isChangingStore) {
         const isStateChanged = shouldStateUpdate(prevState, nextState);
         if (!isStateChanged) {
-            console.warn(`Store(${store.name}) does call emitChange(). 
+            console.error(`Warning(Store): ${store.name} does call emitChange(). 
 But, this store's state is not changed.
 Store's state should be immutable value.
 Prev State:`, prevState, `Next State:`, nextState
@@ -94,7 +94,7 @@ Prev State:`, prevState, `Next State:`, nextState
     const isStatePropertyChanged = prevState !== nextState;
     const isStateChangedButShouldNotUpdate = isStatePropertyChanged && !shouldStateUpdate(prevState, nextState);
     if (isStateChangedButShouldNotUpdate) {
-        console.warn(`${store.name}#state property is changed, but this change does not reflect to view.
+        console.error(`Warning(Store): ${store.name}#state property is changed, but this change does not reflect to view.
 Because, ${store.name}#shouldStateUpdate(prevState, store.state) has returned **false**.
 It means that the variance is present between store's state and shouldStateUpdate.
 You should update the state vis \`Store#setState\` method.

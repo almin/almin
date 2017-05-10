@@ -17,7 +17,7 @@ import { Payload } from "./payload/Payload";
  * @private
  */
 const warningUseCaseIsAlreadyReleased = (parentUseCase: UseCaseLike, useCase: UseCaseLike, payload: Payload, meta: DispatcherPayloadMeta) => {
-    console.warn(`${useCase.name}'s parent UseCase(${parentUseCase.name}) is already released.
+    console.error(`Warning(UseCase): ${useCase.name}'s parent UseCase(${parentUseCase.name}) is already released.
 This UseCase(${useCase.name}) will not work correctly.
 https://almin.js.org/docs/warnings/usecase-is-already-released.html
 `, payload, meta);

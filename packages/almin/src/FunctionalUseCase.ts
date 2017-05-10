@@ -14,25 +14,12 @@ const getFunctionalExecute = (functionalUseCase: UseCaseArgs, context: Functiona
     try {
         const execute = functionalUseCase(context);
         if (process.env.NODE_ENV !== "production") {
-            console.error("Wrong Functional UseCase:", functionalUseCase);
-            const message = `Functional UseCase should return executor function.
-Example:
-    
-    const useCase = ({ dispatcher }) => {
-        return (args) => {
-            // execute
-        }
-    };
-    
-    context.useCase(useCase).execute("args");
-`;
-            assert.ok(typeof execute, message)
+            assert.ok(typeof execute === "function", "Functional UseCase should return a executor function.");
         }
         return execute;
     } catch (error) {
         if (process.env.NODE_ENV !== "production") {
-            console.error("Wrong Functional UseCase:", functionalUseCase,
-                `Functional UseCase should return executor function.
+            console.error(`Warning(UseCase): This is wrong Functional UseCase.
 Example:
     
     const useCase = ({ dispatcher }) => {

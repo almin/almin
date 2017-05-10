@@ -756,12 +756,12 @@ describe("StoreGroup", function() {
             });
         });
         context("warning", () => {
-            let consoleWarnStub = null;
+            let consoleErrorStub = null;
             beforeEach(() => {
-                consoleWarnStub = sinon.stub(console, "warn");
+                consoleErrorStub = sinon.stub(console, "error");
             });
             afterEach(() => {
-                consoleWarnStub.restore();
+                consoleErrorStub.restore();
             });
             it("should check that a Store returned state immutability", function() {
                 const store = createStore({ name: "AStore" });
@@ -770,7 +770,7 @@ describe("StoreGroup", function() {
                 });
                 // When the store is not changed, but call emitChange
                 store.emitChange();
-                assert.ok(consoleWarnStub.calledOnce);
+                assert.ok(consoleErrorStub.calledOnce);
             });
             it("should check that a Store's state is changed but shouldStateUpdate return false", function() {
                 class AStore extends Store {
@@ -803,7 +803,7 @@ describe("StoreGroup", function() {
                     };
                 };
                 return context.useCase(useCase).execute().then(() => {
-                    assert.ok(consoleWarnStub.calledOnce);
+                    assert.ok(consoleErrorStub.calledOnce);
                 });
             });
         });

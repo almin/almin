@@ -197,12 +197,12 @@ describe("UseCase", function() {
 
          */
         context("when child is completed after parent did completed", function() {
-            let consoleWarnStub = null;
+            let consoleErrorStub = null;
             beforeEach(() => {
-                consoleWarnStub = sinon.stub(console, "warn");
+                consoleErrorStub = sinon.stub(console, "error");
             });
             afterEach(() => {
-                consoleWarnStub.restore();
+                consoleErrorStub.restore();
             });
             it("should not delegate dispatch to parent -> dispatcher and show warning", function(done) {
                 const childPayload = {
@@ -213,9 +213,9 @@ describe("UseCase", function() {
                     // childPayload should not be delegated to dispatcher(root)
                     assert(dispatchedPayloads.indexOf(childPayload) === -1);
                     // insteadof of it, should be display warning messages
-                    assert(consoleWarnStub.called);
-                    const warningMessage = consoleWarnStub.getCalls()[0].args[0];
-                    assert(/UseCase.*?is already released/.test(warningMessage), warningMessage);
+                    assert(consoleErrorStub.called);
+                    const warningMessage = consoleErrorStub.getCalls()[0].args[0];
+                    assert(/Warning\(UseCase\):.*?is already released/.test(warningMessage), warningMessage);
                     done();
                 };
                 class ChildUseCase extends UseCase {
