@@ -14,7 +14,7 @@ describe("DispatcherPayloadMeta", () => {
         it("meta has {useCase, dispatcher, timeStamp}", () => {
             const dispatcher = new Dispatcher();
             const context = new Context({
-                dispatcher: dispatcher,
+                dispatcher,
                 store: new Store()
             });
             const useCase = new NoDispatchUseCase();
@@ -34,7 +34,7 @@ describe("DispatcherPayloadMeta", () => {
         it("meta has {dispatcher, timeStamp}", () => {
             const dispatcher = new Dispatcher();
             const context = new Context({
-                dispatcher: dispatcher,
+                dispatcher,
                 store: new Store()
             });
             const useCase = new DispatchUseCase();
@@ -54,7 +54,7 @@ describe("DispatcherPayloadMeta", () => {
         it("DispatchUseCase's meta has {useCase, dispatcher, timeStamp} and isUseCaseFinished=true", () => {
             const dispatcher = new Dispatcher();
             const context = new Context({
-                dispatcher: dispatcher,
+                dispatcher,
                 store: new Store()
             });
             const useCase = new NoDispatchUseCase();
@@ -73,7 +73,7 @@ describe("DispatcherPayloadMeta", () => {
         it("ReturnPromiseUseCase's meta has {useCase, dispatcher, timeStamp} and isUseCaseFinished=false", () => {
             const dispatcher = new Dispatcher();
             const context = new Context({
-                dispatcher: dispatcher,
+                dispatcher,
                 store: new Store()
             });
             const useCase = new ReturnPromiseUseCase();
@@ -94,7 +94,7 @@ describe("DispatcherPayloadMeta", () => {
         it("meta has {useCase, dispatcher, timeStamp}", () => {
             const dispatcher = new Dispatcher();
             const context = new Context({
-                dispatcher: dispatcher,
+                dispatcher,
                 store: new Store()
             });
             const useCase = new NoDispatchUseCase();
@@ -115,7 +115,7 @@ describe("DispatcherPayloadMeta", () => {
         it("meta has {useCase, dispatcher, timeStamp}", () => {
             const dispatcher = new Dispatcher();
             const context = new Context({
-                dispatcher: dispatcher,
+                dispatcher,
                 store: new Store()
             });
             const useCase = new ErrorUseCase();
@@ -137,14 +137,14 @@ describe("DispatcherPayloadMeta", () => {
         it("will/did/complete's meta has {useCase, dispatcher, parentUseCase, timeStamp}", () => {
             const dispatcher = new Dispatcher();
             const context = new Context({
-                dispatcher: dispatcher,
+                dispatcher,
                 store: new Store()
             });
             const parentUseCase = new ParentUseCase();
             const childUseCase = parentUseCase.childUseCase;
-            let willMeta = [];
-            let didMeta = [];
-            let completeMeta = [];
+            const willMeta = [];
+            const didMeta = [];
+            const completeMeta = [];
             let childDispatchMeta = null;
             context.onWillExecuteEachUseCase((payload, meta) => willMeta.push(meta));
             context.onDidExecuteEachUseCase((payload, meta) => didMeta.push(meta));
@@ -192,7 +192,7 @@ describe("DispatcherPayloadMeta", () => {
         it("The user can know that the UseCase is just finished by isUseCaseFinished", () => {
             const dispatcher = new Dispatcher();
             const context = new Context({
-                dispatcher: dispatcher,
+                dispatcher,
                 store: new Store()
             });
             const useCase = new DispatchUseCase();
@@ -216,5 +216,5 @@ describe("DispatcherPayloadMeta", () => {
                 assert.equal(callCount, 1);
             });
         });
-    })
+    });
 });
