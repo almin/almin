@@ -30,4 +30,4 @@ See also https://almin.js.org/docs/warnings/usecase-is-already-released.html
  * A UseCase will execute and add it to this map.
  * A UseCase was completed and remove it from this map.
  */
-export const UseCaseInstanceMap = new MapLike<UseCaseLike, UseCaseExecutor>();
+export const UseCaseInstanceMap = new MapLike<UseCaseLike, UseCaseExecutor<any>>();

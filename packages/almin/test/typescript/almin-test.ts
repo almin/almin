@@ -132,7 +132,16 @@ context.useCase(parentUseCase).execute("value").then(() => {
     // nope
 });
 // executor
-context.useCase(parentUseCase)
+
+class MyUseCase extends UseCase {
+    execute(value: string) {
+        this.dispatch({
+            type: "ChildUseCase",
+            value
+        });
+    }
+}
+context.useCase(new MyUseCase())
     .executor(useCase => useCase.execute("value"))
     .then(() => {
         console.log("test");

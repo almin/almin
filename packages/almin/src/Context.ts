@@ -17,7 +17,6 @@ import { WillExecutedPayload, isWillExecutedPayload } from "./payload/WillExecut
 import { FunctionalUseCaseContext } from "./FunctionalUseCaseContext";
 import { FunctionalUseCase } from "./FunctionalUseCase";
 import { StateMap } from "./UILayer/StoreGroupTypes";
-import { UseCaseLike } from "./UseCaseLike";
 /**
  * Context class provide observing and communicating with **Store** and **UseCase**.
  */
@@ -159,7 +158,7 @@ export class Context<T> {
      * ```
      */
     useCase(useCase: (context: FunctionalUseCaseContext) => Function): UseCaseExecutor<any>;
-    useCase<T extends UseCaseLike>(useCase: T): UseCaseExecutor<T>;
+    useCase<T extends UseCase>(useCase: T): UseCaseExecutor<T>;
     useCase(useCase: any): UseCaseExecutor<any> {
         // instance of UseCase
         if (UseCase.isUseCase(useCase)) {
