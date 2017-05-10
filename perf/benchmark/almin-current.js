@@ -32,10 +32,6 @@ module.exports = {
                 this.state = null
             }
 
-            shouldStateUpdate(prevState, nextState) {
-                return prevState !== nextState;
-            }
-
             receivePayload(payload) {
                 if (payload.type === "update") {
                     this.setState(payload.body);
