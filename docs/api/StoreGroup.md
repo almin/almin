@@ -13,7 +13,6 @@ export declare class InitializedPayload extends Payload {
     protected readonly existWorkingUseCase: boolean;
     protected readonly isInitializedWithStateNameMap: boolean;
     shouldStateUpdate(prevState: any, nextState: any): boolean;
-    emitChange(payload?: Payload): void;
     onChange(handler: (stores: Array<Store<T>>) => void): () => void;
     release(): void;
 ```
@@ -95,14 +94,6 @@ shouldStateUpdate(prevState, nextState) {
    return !Object.is(prevState, nextState)
 }
 ```
-
-----
-
-### `emitChange(payload?: Payload): void;`
-
-
-Emit change if the state is changed.
-If call with no-arguments, use ChangedPayload by default.
 
 ----
 
