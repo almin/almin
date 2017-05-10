@@ -201,34 +201,64 @@ export class UseCaseExecutor<T extends UseCaseLike> {
     }
 
     /**
+     * Similar to `execute(arguments)`, but it accept an executor function insteadof `arguments`
      *
-     * Similar to `execute()`, but it can use same interface with initialized UseCase.
-     * It means that it is type safe.
+     * `executor(useCase => useCase.execute())` return a Promise object that resolved with undefined.
      *
      * ## Example
      *
      * ```js
      * context.useCase(new MyUseCase())
-     * .executor(useCase => useCase.execute("value"))
-     * .then(() => {
-     *   console.log("test");
-     * });
+     *  .executor(useCase => useCase.execute("value"))
+     *  .then(() => {
+     *    console.log("test");
+     *  });
      * ```
+     *
+     * ## Notes
+     *
+     * ### What is difference between `executor(executor)` and `execute(arguments)`?
+     *
+     * The `execute(arguments)` is a alias of following codes:
+     *
+     * ```js
+     * context.useCase(new MyUseCase())
+     *  .execute("value")
+     * // ===
+     * context.useCase(new MyUseCase())
+     *  .executor(useCase => useCase.execute("value"))
+     * ```
+     *
+     * ### Why executor's result always undefined?
+     *
+     * UseCaseExecutor always resolve `undefined` data by design.
+     * In CQRS, the command always have a void return type.
+     *
+     * - http://cqrs.nu/Faq
+     *
+     * So, Almin return only command result that is success or failure.
+     * You should not relay on the data of the command result.
      */
     executor(executor: (useCase: Pick<T, "execute">) => any): any {
-        const proxify = (useCase: T, resolve: Function, reject: Function): T => {
-            let isExecuted = false;
+        let isExecuted = false;
+        const proxify = (useCase: T, resolve: Function): T => {
             return {
                 execute: (...args) => {
-                    this._willExecute(args);
-                    if (isExecuted) {
-                        return reject(new Error("already executed"));
+                    if (process.env.NODE_ENV !== "production") {
+                        if (isExecuted) {
+                            console.error(`Warning(UseCase): ${useCase.name}#execute was called more than once.`);
+                        }
                     }
+                    isExecuted = true;
+                    // before execute
+                    this._willExecute(args);
+                    // execute
                     const result = useCase.execute(...args);
                     const isResultPromise = result && typeof result.then == "function";
                     // if the UseCase return a promise, almin recognize the UseCase as continuous.
                     // In other word, If the UseCase want to continue, please return a promise object.
                     const isUseCaseFinished = !isResultPromise;
+                    // after execute
                     // Sync call didExecute
                     this._didExecute(isUseCaseFinished, result);
                     return resolve(result);
@@ -236,9 +266,18 @@ export class UseCaseExecutor<T extends UseCaseLike> {
             } as T;
         };
         return new Promise((resolve, reject) => {
-            const proxifyUseCase = proxify(this._useCase, resolve, reject);
+            const proxifyUseCase = proxify(this._useCase, resolve);
+            if (process.env.NODE_ENV !== "production") {
+                if (typeof executor !== "function") {
+                    console.error("Warning(UseCase): executor argument should be function. But this argument is not function: ", executor);
+                    reject("executor(fn) arguments should function");
+                }
+            }
             return executor(proxifyUseCase);
         }).then(result => {
+            if (!isExecuted) {
+                throw new Error("Should call UseCase#execut in the executor function.");
+            }
             this._complete(result);
             this.release();
         }).catch(error => {
@@ -257,24 +296,7 @@ export class UseCaseExecutor<T extends UseCaseLike> {
     execute(): Promise<void>;
     execute<T>(args: T): Promise<void>;
     execute(...args: Array<any>): Promise<void> {
-        this._willExecute(args);
-        const result = this._useCase.execute(...args);
-        const isResultPromise = result && typeof result.then == "function";
-        // if the UseCase return a promise, almin recognize the UseCase as continuous.
-        // In other word, If the UseCase want to continue, please return a promise object.
-        const isUseCaseFinished = !isResultPromise;
-        // Sync call didExecute
-        this._didExecute(isUseCaseFinished, result);
-        // Async call complete
-        return Promise.resolve(result).then((result) => {
-            this._complete(result);
-            this.release();
-        }).catch(error => {
-            this._useCase.throwError(error);
-            this._complete();
-            this.release();
-            return Promise.reject(error);
-        });
+        return this.executor((useCase) => useCase.execute(...args));
     }
 
     /**

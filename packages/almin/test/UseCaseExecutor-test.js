@@ -1,10 +1,99 @@
 // LICENSE : MIT
 "use strict";
-const assert = require("power-assert");
+const sinon = require("sinon");
+const assert = require("assert");
 import { UseCaseExecutor } from "../lib/UseCaseExecutor";
+import { CallableUseCase } from "./use-case/CallableUseCase";
+import NoDispatchUseCase from "../../almin-logger/test/usecase/NoDispatchUseCase";
 import { UseCase } from "../lib/UseCase";
 import { Dispatcher } from "../lib/Dispatcher";
 describe("UseCaseExecutor", function() {
+    describe("#executor", () => {
+        let consoleErrorStub = null;
+        beforeEach(() => {
+            consoleErrorStub = sinon.stub(console, "error");
+        });
+        afterEach(() => {
+            consoleErrorStub.restore();
+        });
+        it("should throw error when pass non-executor function and output console.error", () => {
+            const dispatcher = new Dispatcher();
+            const executor = new UseCaseExecutor({
+                useCase: new NoDispatchUseCase(),
+                dispatcher
+            });
+            return executor.executor(" THIS IS WRONG ").then(() => {
+                throw new Error("SHOULD NOT CALLED");
+            }, (error) => {
+                assert(consoleErrorStub.called);
+                const warningMessage = consoleErrorStub.getCalls()[0].args[0];
+                assert(error instanceof Error, "should be rejected");
+                assert.equal(warningMessage, "Warning(UseCase): executor argument should be function. But this argument is not function: ");
+            });
+        });
+        it("should accept executor(useCase => {}) function arguments", () => {
+            const dispatcher = new Dispatcher();
+            const callableUseCase = new CallableUseCase();
+            const executor = new UseCaseExecutor({
+                useCase: callableUseCase,
+                dispatcher
+            });
+            return executor.executor(useCase => useCase.execute({
+                type: "type"
+            })).then(() => {
+                assert(callableUseCase.isExecuted, "UseCase#execute should be called");
+            }, (error) => {
+                throw new error;
+            });
+        });
+        it("executor(useCase => {}) useCase is actual wrapper object", () => {
+            const dispatcher = new Dispatcher();
+            const executor = new UseCaseExecutor({
+                useCase: new NoDispatchUseCase(),
+                dispatcher
+            });
+            return executor.executor(useCase => {
+                assert(useCase instanceof UseCase === false, "useCase is wrapped object. it is not UseCase");
+                assert(typeof useCase.execute === "function", "UseCase#execute is callable");
+                return useCase.execute();
+            });
+        });
+        it("can call useCase.execute() by async", (done) => {
+            const dispatcher = new Dispatcher();
+            const callableUseCase = new CallableUseCase();
+            const executor = new UseCaseExecutor({
+                useCase: callableUseCase,
+                dispatcher
+            });
+            executor.executor(useCase => {
+                Promise.resolve().then(() => {
+                    useCase.execute();
+                });
+            }).then(() => {
+                assert(callableUseCase.isExecuted, "UseCase#execute is called");
+                done();
+            });
+            // sync check
+            assert(callableUseCase.isExecuted === false, "UseCase#execute is not called yet.");
+        });
+        context("when UseCase#execute twice", () => {
+            it("should show warning", () => {
+                const dispatcher = new Dispatcher();
+                const executor = new UseCaseExecutor({
+                    useCase: new NoDispatchUseCase(),
+                    dispatcher
+                });
+                return executor.executor(useCase => {
+                    useCase.execute();
+                    useCase.execute();
+                }).then(() => {
+                    assert(consoleErrorStub.called);
+                    const warningMessage = consoleErrorStub.getCalls()[0].args[0];
+                    assert(/Warning\(UseCase\): \w+#execute was called more than once./.test(warningMessage), warningMessage);
+                });
+            });
+        });
+    });
     context("when UseCase is successful completion", function() {
         it("dispatch will -> did", function() {
             // given
