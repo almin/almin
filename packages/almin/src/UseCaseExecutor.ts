@@ -200,7 +200,22 @@ export class UseCaseExecutor<T extends UseCaseLike> {
         return releaseHandler;
     }
 
-    executor(executor: (useCase: T) => any): any {
+    /**
+     *
+     * Similar to `execute()`, but it can use same interface with initialized UseCase.
+     * It means that it is type safe.
+     *
+     * ## Example
+     *
+     * ```js
+     * context.useCase(new MyUseCase())
+     * .executor(useCase => useCase.execute("value"))
+     * .then(() => {
+     *   console.log("test");
+     * });
+     * ```
+     */
+    executor(executor: (useCase: Pick<T, "execute">) => any): any {
         const proxify = (useCase: T, resolve: Function, reject: Function): T => {
             let isExecuted = false;
             return {
