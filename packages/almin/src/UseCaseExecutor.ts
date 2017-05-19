@@ -12,6 +12,48 @@ import { WillExecutedPayload, isWillExecutedPayload } from "./payload/WillExecut
 import { UseCaseLike } from "./UseCaseLike";
 import { Payload } from "./payload/Payload";
 
+
+interface onWillExecuteArgs {
+    (...args: Array<any>): void;
+}
+
+interface onDidExecuteArgs {
+    (value?: any): void;
+}
+
+interface onCompleteArgs {
+    (value?: any): void;
+}
+
+/**
+ * Create wrapper object of a UseCase.
+ * This wrapper object only has `execute()` method.
+ */
+const proxifyUseCase = <T extends UseCaseLike>(useCase: T, onWillExecute: onWillExecuteArgs, onDidExecute: onDidExecuteArgs, onComplete: onCompleteArgs): T => {
+    let isExecuted = false;
+    const execute = (...args: Array<any>) => {
+        if (process.env.NODE_ENV !== "production") {
+            if (isExecuted) {
+                console.error(`Warning(UseCase): ${useCase.name}#execute was called more than once.`);
+            }
+        }
+        isExecuted = true;
+        // before execute
+        onWillExecute(args);
+        // execute
+        const result = useCase.execute(...args);
+        // after execute
+        onDidExecute(result);
+        return onComplete(result);
+    };
+    // Add debug displayName
+    if (process.env.NODE_ENV !== "production") {
+        (execute as any).displayName = `Wrapped<${useCase.name}>#execute`;
+    }
+    return {
+        execute: execute
+    } as T;
+};
 /**
  * When child is completed after parent did completed, display warning warning message
  * @private
@@ -116,7 +158,11 @@ export class UseCaseExecutor<T extends UseCaseLike> {
     /**
      * dispatch did execute each UseCase
      */
-    private _didExecute(isFinished: boolean, value?: any): void {
+    private _didExecute(value?: any): void {
+        // if the UseCase return a promise, almin recognize the UseCase as continuous.
+        // In other word, If the UseCase want to continue, please return a promise object.
+        const isResultPromise = typeof value === "object" && value !== null && typeof value.then == "function";
+        const isUseCaseFinished = !isResultPromise;
         const payload = new DidExecutedPayload({
             value
         });
@@ -125,7 +171,7 @@ export class UseCaseExecutor<T extends UseCaseLike> {
             dispatcher: this._dispatcher,
             parentUseCase: this._parentUseCase,
             isTrusted: true,
-            isUseCaseFinished: isFinished
+            isUseCaseFinished
         });
         this._dispatcher.dispatch(payload, meta);
     }
@@ -240,44 +286,23 @@ export class UseCaseExecutor<T extends UseCaseLike> {
      * You should not relay on the data of the command result.
      */
     executor(executor: (useCase: Pick<T, "execute">) => any): any {
-        let isExecuted = false;
-        const proxify = (useCase: T, resolve: Function): T => {
-            return {
-                execute: (...args) => {
-                    if (process.env.NODE_ENV !== "production") {
-                        if (isExecuted) {
-                            console.error(`Warning(UseCase): ${useCase.name}#execute was called more than once.`);
-                        }
-                    }
-                    isExecuted = true;
-                    // before execute
-                    this._willExecute(args);
-                    // execute
-                    const result = useCase.execute(...args);
-                    const isResultPromise = result && typeof result.then == "function";
-                    // if the UseCase return a promise, almin recognize the UseCase as continuous.
-                    // In other word, If the UseCase want to continue, please return a promise object.
-                    const isUseCaseFinished = !isResultPromise;
-                    // after execute
-                    // Sync call didExecute
-                    this._didExecute(isUseCaseFinished, result);
-                    return resolve(result);
-                }
-            } as T;
+        const startingExecutor = (resolve: Function, reject: Function): void => {
+            if (typeof executor !== "function") {
+                console.error("Warning(UseCase): executor argument should be function. But this argument is not function: ", executor);
+                return reject(new Error("executor(fn) arguments should function"));
+            }
+            // Notes: proxyfiedUseCase has not timeout
+            // proxiedUseCase will resolve by UseCaseWrapper#execute
+            const proxyfiedUseCase = proxifyUseCase<T>(this._useCase, (args) => {
+                this._willExecute(args);
+            }, (value) => {
+                this._didExecute(value);
+            }, (value) => {
+                resolve(value);
+            });
+            return executor(proxyfiedUseCase);
         };
-        return new Promise((resolve, reject) => {
-            const proxifyUseCase = proxify(this._useCase, resolve);
-            if (process.env.NODE_ENV !== "production") {
-                if (typeof executor !== "function") {
-                    console.error("Warning(UseCase): executor argument should be function. But this argument is not function: ", executor);
-                    reject("executor(fn) arguments should function");
-                }
-            }
-            return executor(proxifyUseCase);
-        }).then(result => {
-            if (!isExecuted) {
-                throw new Error("Should call UseCase#execut in the executor function.");
-            }
+        return new Promise(startingExecutor).then(result => {
             this._complete(result);
             this.release();
         }).catch(error => {
