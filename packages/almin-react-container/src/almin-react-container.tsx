@@ -1,10 +1,16 @@
 // MIT © 2017 azu
 import * as React from "react";
+import * as assert from "assert";
 import { Context } from "almin";
-import { shallowEqual } from"shallow-equal-object";
+import { shallowEqual } from "shallow-equal-object";
+
 export default class AlminReactContainer {
     static create<T>(WrappedComponent: React.ComponentClass<T>,
                      context: Context<any>): React.ComponentClass<T> {
+        if (process.env.NODE_ENV !== "production") {
+            assert.ok(typeof WrappedComponent === "function", "WrappedComponent should be React Component Class(Not instance)");
+            assert.ok(context instanceof Context, "`context` should be instance of Almin's Context");
+        }
         const componentName = WrappedComponent.displayName || WrappedComponent.name;
         return class AlminContainer extends React.Component<T, {}> {
             static displayName = `AlminContainer(${componentName})`;
