@@ -19,6 +19,7 @@
   "dependencies": {
     "almin": "^0.12.1",
     "almin-logger": "^4.1.0",
+    "almin-react-container": "^0.2.2",
     "power-assert": "^1.4.2",
     "prop-types": "^15.5.4",
     "react": "^15.5.3",
