@@ -7,8 +7,9 @@
     "test": "test"
   },
   "scripts": {
-    "clean": "rimraf public/build && mkdirp public/build",
+    "clean": "rimraf public/build build/ && mkdirp public/build",
     "start": "webpack-dev-server --hot --content-base public/ --open",
+    "start:ssr": "node build/server.js",
     "build": "NODE_ENV=production webpack -p",
     "watch": "NODE_ENV=development webpack -d -w",
     "test": "mocha",
