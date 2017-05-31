@@ -67,9 +67,9 @@ export class UseCaseContext {
      * }
      * ```
      */
-    useCase(useCase: (context: FunctionalUseCaseContext) => Function): UseCaseExecutor;
-    useCase(useCase: UseCase): UseCaseExecutor;
-    useCase(useCase: any): UseCaseExecutor {
+    useCase(useCase: (context: FunctionalUseCaseContext) => Function): UseCaseExecutor<any>;
+    useCase<T extends UseCase>(useCase: T): UseCaseExecutor<T>;
+    useCase(useCase: any): UseCaseExecutor<any> {
         if (process.env.NODE_ENV !== "production") {
             assert(useCase !== this._dispatcher, `the useCase(${useCase}) should not equal this useCase(${this._dispatcher})`);
         }
