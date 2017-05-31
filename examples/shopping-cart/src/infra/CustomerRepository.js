@@ -1,7 +1,9 @@
 // LICENSE : MIT
 "use strict";
 import Customer from "../domain/Customer/Customer";
+
 const EventEmitter = require("events");
+
 export class CustomerRepository extends EventEmitter {
     constructor(database = new Map()) {
         super();
@@ -42,6 +44,12 @@ export class CustomerRepository extends EventEmitter {
     onChange(handler) {
         this.on("CHANGE", handler);
     }
+
+    clear() {
+        this.removeAllListeners();
+        this._dataSet.clear();
+    }
 }
+
 // singleton
 export default new CustomerRepository();

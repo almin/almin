@@ -39,6 +39,11 @@ export class ProductRepository extends EventEmitter {
     onChange(handler) {
         this.on("CHANGE", handler);
     }
+
+    clear() {
+        this.removeAllListeners();
+        this._dataSet.clear();
+    }
 }
 // singleton
 export default new ProductRepository();

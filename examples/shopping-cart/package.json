@@ -7,8 +7,9 @@
     "test": "test"
   },
   "scripts": {
-    "clean": "rimraf public/build && mkdirp public/build",
+    "clean": "rimraf public/build build/ && mkdirp public/build",
     "start": "webpack-dev-server --hot --content-base public/ --open",
+    "start:ssr": "node build/server.js",
     "build": "NODE_ENV=production webpack -p",
     "watch": "NODE_ENV=development webpack -d -w",
     "test": "mocha",
@@ -36,10 +37,13 @@
     "babel-preset-react": "^6.5.0",
     "babel-preset-stage-2": "^6.24.1",
     "babel-register": "^6.7.2",
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
     "json-loader": "^0.5.4",
     "mkdirp": "^0.5.1",
     "mocha": "^3.0.2",
     "rimraf": "^2.5.2",
+    "serialize-javascript": "^1.3.0",
     "webpack": "^2.2.0",
     "webpack-dev-server": "^2.0.0"
   }

@@ -10,9 +10,12 @@ Original example from:
 
 ## Usage
 
+    # client-side rendering mode
+    npm start
+    # server-side rendering mode
     npm run watch
-    # or npm run build
-    open public/index.html
+    npm run start:ssr # Run after generated build/server.js 
+    open http://localhost:3000/server
 
 ## Tests
 
@@ -60,7 +63,20 @@ shopping-cart example has three stores:
 
 - `Customer` always is a single. So, AppLocator have global `customer` property.
     - It is easy to use `customer`.
-    
+
+## Client <-> Server side rendering
+
+This example has two mode.
+
+- Client-side rendering
+    - Start with empty dom
+- Server-side rendering
+    - Start with initialized dom
+        - First paint is faster than client-side only
+    - Continue as client-side rendering 
+
+See [feat(example): support Server-Side Rendering in shopping cart by azu · Pull Request #200 · almin/almin](https://github.com/almin/almin/pull/200 "feat(example): support Server-Side Rendering in shopping cart by azu · Pull Request #200 · almin/almin").
+
 ## License
 
 MIT

@@ -42,6 +42,11 @@ export class CartRepository extends EventEmitter {
     onChange(handler) {
         this.on("CHANGE", handler);
     }
+
+    clear() {
+        this.removeAllListeners();
+        this._dataSet.clear();
+    }
 }
 // singleton
 export default new CartRepository();
