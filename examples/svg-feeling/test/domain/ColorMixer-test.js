@@ -12,7 +12,7 @@ describe("ColorMixer-test", function () {
                     colorMixer.createColorFromPosition({x: 1});
                     throw new Error("NOT");
                 } catch (error) {
-                    assert.equal(error instanceof assert.AssertionError);
+                    assert.ok(error instanceof assert.AssertionError);
                 }
             });
         });
