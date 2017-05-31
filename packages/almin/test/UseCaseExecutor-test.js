@@ -4,9 +4,11 @@ const sinon = require("sinon");
 const assert = require("assert");
 import { UseCaseExecutor } from "../lib/UseCaseExecutor";
 import { CallableUseCase } from "./use-case/CallableUseCase";
+import { ThrowUseCase } from "./use-case/ThrowUseCase";
 import NoDispatchUseCase from "../../almin-logger/test/usecase/NoDispatchUseCase";
 import { UseCase } from "../lib/UseCase";
 import { Dispatcher } from "../lib/Dispatcher";
+
 describe("UseCaseExecutor", function() {
     describe("#executor", () => {
         let consoleErrorStub = null;
@@ -15,6 +17,18 @@ describe("UseCaseExecutor", function() {
         });
         afterEach(() => {
             consoleErrorStub.restore();
+        });
+        it("should catch sync throwing error in UseCase", () => {
+            const dispatcher = new Dispatcher();
+            const executor = new UseCaseExecutor({
+                useCase: new ThrowUseCase(),
+                dispatcher
+            });
+            return executor.executor((useCase) => useCase.execute()).then(() => {
+                throw new Error("SHOULD NOT CALLED");
+            }, (error) => {
+                assert(error instanceof Error, "should be caught error");
+            });
         });
         it("should throw error when pass non-executor function and output console.error", () => {
             const dispatcher = new Dispatcher();
@@ -102,11 +116,13 @@ describe("UseCaseExecutor", function() {
                 value: "value"
             };
             const dispatcher = new Dispatcher();
+
             class SyncUseCase extends UseCase {
                 execute(payload) {
                     this.dispatch(payload);
                 }
             }
+
             const callStack = [];
             const expectedCallStack = [1, 2, 3];
             const executor = new UseCaseExecutor({
@@ -132,6 +148,18 @@ describe("UseCaseExecutor", function() {
         });
     });
     describe("#execute", function() {
+        it("should catch sync throwing error in UseCase", () => {
+            const dispatcher = new Dispatcher();
+            const executor = new UseCaseExecutor({
+                useCase: new ThrowUseCase(),
+                dispatcher
+            });
+            return executor.execute().then(() => {
+                throw new Error("SHOULD NOT CALLED");
+            }, (error) => {
+                assert(error instanceof Error, "should be caught error");
+            });
+        });
         context("when UseCase is sync", function() {
             it("execute is called", function(done) {
                 // given
@@ -140,6 +168,7 @@ describe("UseCaseExecutor", function() {
                     value: "value"
                 };
                 const dispatcher = new Dispatcher();
+
                 class SyncUseCase extends UseCase {
                     // 2
                     execute(payload) {
@@ -147,6 +176,7 @@ describe("UseCaseExecutor", function() {
                         this.dispatch(payload);
                     }
                 }
+
                 // then
                 // 4
                 dispatcher.onDispatch(({ type, value }) => {
@@ -171,6 +201,7 @@ describe("UseCaseExecutor", function() {
                     value: "value"
                 };
                 const dispatcher = new Dispatcher();
+
                 class AsyncUseCase extends UseCase {
                     // 2
                     execute(payload) {
@@ -180,6 +211,7 @@ describe("UseCaseExecutor", function() {
                         });
                     }
                 }
+
                 // then
                 let isCalledUseCase = false;
                 let isCalledDidExecuted = false;
