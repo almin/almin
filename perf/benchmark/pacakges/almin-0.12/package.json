@@ -1,15 +1,14 @@
 {
   "private":true,
-  "name": "almin-0.9",
+  "name": "almin-0.12",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "azu",
   "license": "MIT",
   "dependencies": {
-    "almin": "^0.9.0"
+    "almin": "^0.12.0"
   }
 }
