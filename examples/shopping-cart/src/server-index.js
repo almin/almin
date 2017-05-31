@@ -3,7 +3,6 @@ import React from "react";
 import AlminReactContainer from "almin-react-container";
 import { HTML } from "./server/HTML";
 import App from "./components/App";
-import AppLocator from "./AppLocator";
 // store
 import AppStore from "./stores/AppStore";
 // UseCase
@@ -11,7 +10,7 @@ import InitializeCustomerUseCase from "./usecase/Initial/InitializeCustomerUseCa
 import InitializeProductUseCase from "./usecase/Initial/InitializeProductUseCase";
 // context
 import { Context, Dispatcher } from "almin";
-import AlminLogger from "almin-logger";
+import InitializeRepositoryUseCase from "./usecase/Initial/InitializeRepositoryUseCase";
 
 const express = require("express");
 const fs = require("fs");
@@ -28,10 +27,13 @@ app.use(express.static(publicDir));
 const loadInitialState = () => {
     return Promise.resolve(require("./api/products.json"));
 };
-
+// catch memory leak event
+process.on("uncaughtException", (error) => {
+    console.error(error);
+});
 // /server is server-side rendering
 app.get("/server", (req, res) => {
-    loadInitialState().then(products => {
+    loadInitialState().then(async products => {
         // instances
         const dispatcher = new Dispatcher();
         // context connect dispatch with stores
@@ -39,19 +41,21 @@ app.get("/server", (req, res) => {
             dispatcher,
             store: AppStore.create()
         });
-        // Initialize application domain
-        appContext.useCase(InitializeCustomerUseCase.create()).execute().then(() => {
-            return appContext.useCase(InitializeProductUseCase.create()).execute();
-        }).then(() => {
-            // StoreGroup#getState to <App .{..state} />
-            const Bootstrap = AlminReactContainer.create(App, appContext);
-            const html = HTML({
-                html: ReactDOMServer.renderToString(<Bootstrap/>),
-                initialState: products
-            });
-            res.status(200).send(html);
-            appContext.release();
+
+        // reset repository and observe changes
+        await appContext.useCase(InitializeRepositoryUseCase.create()).execute();
+        // Create anonymous customer data
+        await appContext.useCase(InitializeCustomerUseCase.create()).execute();
+        // Initialize shopping products data
+        await appContext.useCase(InitializeProductUseCase.create()).execute(products);
+        // StoreGroup#getState to <App .{..state} />
+        const Bootstrap = AlminReactContainer.create(App, appContext);
+        const html = HTML({
+            html: ReactDOMServer.renderToString(<Bootstrap/>),
+            initialState: products
         });
+        res.status(200).send(html);
+        appContext.release();
     });
 });
 

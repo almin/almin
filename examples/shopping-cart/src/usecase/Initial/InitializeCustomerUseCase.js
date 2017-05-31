@@ -1,23 +1,11 @@
 // LICENSE : MIT
 "use strict";
 import { UseCase } from "almin";
-import AppLocator from "../../AppLocator";
 import AnonymousCustomer from "../../domain/Customer/AnonymousCustomer";
 import Cart from "../../domain/Cart/Cart";
 import customerRepository, { CustomerRepository } from "../../infra/CustomerRepository";
 import cartRepository, { CartRepository } from "../../infra/CartRepository";
-
-// Add log
-cartRepository.onChange(domain => {
-    if (AppLocator.alminLogger) {
-        AppLocator.alminLogger.addLog(["Change CartRepository", domain]);
-    }
-});
-customerRepository.onChange(domain => {
-    if (AppLocator.alminLogger) {
-        AppLocator.alminLogger.addLog(["Change CustomerRepository", domain]);
-    }
-});
+import AppLocator from "../../AppLocator";
 
 export default class InitializeCustomerUseCase extends UseCase {
     static create() {
@@ -37,6 +25,9 @@ export default class InitializeCustomerUseCase extends UseCase {
     execute() {
         const anonymousCustomer = new AnonymousCustomer();
         const newCartForCustomer = new Cart({ customer: anonymousCustomer });
+        // Update Global Variable !!
+        // Should use repository in real application
+        AppLocator.customer = anonymousCustomer;
         // save
         this.customerRepository.store(anonymousCustomer);
         this.cartRepository.store(newCartForCustomer);

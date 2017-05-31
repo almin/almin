@@ -2,8 +2,8 @@
 "use strict";
 import { UseCase } from "almin";
 import productRepository, { ProductRepository } from "../../infra/ProductRepository";
-import Product from "../../domain/Product/Product";
 import { getAllProducts } from "../../utils/WebAPIUtils";
+import ProductFactory from "../../domain/Product/ProductFactory";
 
 export default class InitializeProductUseCase extends UseCase {
     /**
@@ -30,9 +30,7 @@ export default class InitializeProductUseCase extends UseCase {
         // if client-side rendering mode, get data from API access
         const promise = productsData ? Promise.resolve(productsData) : getAllProducts();
         return promise.then(productCatalogData => {
-            const products = productCatalogData.map(productData => {
-                return new Product(productData);
-            });
+            const products = ProductFactory.createProductsFromJSON(productCatalogData);
             products.forEach(product => {
                 this.productRepository.store(product);
             });

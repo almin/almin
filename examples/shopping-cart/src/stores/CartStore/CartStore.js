@@ -1,5 +1,6 @@
 import { Store } from "almin";
 import CartState from "./CartState";
+
 export default class CartStore extends Store {
     /**
      * @param {CartRepository} cartRepository
@@ -7,12 +8,12 @@ export default class CartStore extends Store {
      */
     constructor({ cartRepository, customerRepository }) {
         super();
+        this.cartRepository = cartRepository;
+        this.customerRepository = customerRepository;
         // initial state
         this.state = new CartState({
             productItems: []
         });
-        this.cartRepository = cartRepository;
-        this.customerRepository = customerRepository;
     }
 
     // write/update state
