@@ -18,7 +18,8 @@ if (typeof window == 'object') {
  */
 module.exports = function(AlminVersions, done) {
     const suite = new Suite();
-    Object.keys(AlminVersions).forEach(version => {
+    // randomize for equality
+    _.shuffle(Object.keys(AlminVersions)).forEach(version => {
         suite.add(version, function(deferred) {
             task(AlminVersions[version], (error) => {
                 if (error) {
