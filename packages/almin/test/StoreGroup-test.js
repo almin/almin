@@ -820,7 +820,8 @@ describe("StoreGroup", function() {
                     assert.equal(consoleErrorStub.callCount, 1, "It throw immutable warning");
                 });
             });
-            it("One readPhase: Changed -> UnChanged: should not call warning", function() {
+            // See https://github.com/almin/almin/pull/205
+            it("State changing: A -> B -> A by Store#emitChange should not warn", function() {
                 const state = { value: "init" };
 
                 class MyStore extends Store {
