@@ -122,10 +122,8 @@ export class StoreGroupEmitChangeChecker {
         // TODO: We could not support mixed updating style for store.
         // If `Store#emitChange` and directly update state in `receivePayload` is mixed,
         // we can't validate correctness of the state
-        if (!storeGroupEmitChangeChecker.isMarked(store)) {
+        if (!this.isMarked(store)) {
             warningIfStatePropertyIsModifiedDirectly(store, prevState, nextState);
         }
     }
 }
-
-export const storeGroupEmitChangeChecker = new StoreGroupEmitChangeChecker();

@@ -13,7 +13,7 @@ import { Dispatcher } from "../Dispatcher";
 import { StateMap, StoreMap } from "./StoreGroupTypes";
 import { createStoreStateMap, StoreStateMap } from "./StoreStateMap";
 import { Store } from "../Store";
-import { storeGroupEmitChangeChecker } from "./StoreGroupEmitChangeChecker";
+import { StoreGroupEmitChangeChecker } from "./StoreGroupEmitChangeChecker";
 import { shouldStateUpdate } from "./StoreGroupUtils";
 
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
@@ -145,6 +145,7 @@ export class StoreGroup<T> extends Dispatcher {
     // store/state map
     private _storeStateMap: StoreStateMap;
 
+    private storeGroupEmitChangeChecker = new StoreGroupEmitChangeChecker();
     /**
      * Initialize this StoreGroup with a stateName-store mapping object.
      *
@@ -255,9 +256,9 @@ export class StoreGroup<T> extends Dispatcher {
             if (process.env.NODE_ENV !== "production") {
                 assert.ok(stateName !== undefined, `Store:${store.name} is not registered in constructor.
 But, ${store.name}#getState() was called.`);
-                storeGroupEmitChangeChecker.warningIfStatePropertyIsModifiedDirectly(store, prevState, nextState);
+                this.storeGroupEmitChangeChecker.warningIfStatePropertyIsModifiedDirectly(store, prevState, nextState);
                 // nextState has confirmed and release the `store` from the checker
-                storeGroupEmitChangeChecker.unMark(store);
+                this.storeGroupEmitChangeChecker.unMark(store);
             }
             // the state is not changed, set prevState as state of the store
             if (!shouldStateUpdate(store, prevState, nextState)) {
@@ -353,7 +354,7 @@ But, ${store.name}#getState() was called.`);
                 if (process.env.NODE_ENV !== "production") {
                     const prevState = this._stateCacheMap.get(store);
                     const nextState = store.getState();
-                    storeGroupEmitChangeChecker.mark(store, prevState, nextState);
+                    this.storeGroupEmitChangeChecker.mark(store, prevState, nextState);
                 }
                 // DO NOT tryEmitChange in transaction UseCase
             } else {
