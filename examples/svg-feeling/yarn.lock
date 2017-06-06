@@ -57,17 +57,10 @@ align-text@^0.1.1, align-text@^0.1.3:
     longest "^1.0.1"
     repeat-string "^1.5.2"
 
-almin-logger@^4.0.0:
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/almin-logger/-/almin-logger-4.0.3.tgz#66853527281671da68c8a4579020faa4047ef6fc"
+almin@^0.12.1:
+  version "0.12.3"
+  resolved "https://registry.yarnpkg.com/almin/-/almin-0.12.3.tgz#418eb7be970b3978954bac91128d13f073270f36"
   dependencies:
-    map-like "^1.0.3"
-
-almin@0.12.0-3:
-  version "0.12.0-3"
-  resolved "https://registry.yarnpkg.com/almin/-/almin-0.12.0-3.tgz#5bf7dc615c25a32570d96dba981cd65df89e542b"
-  dependencies:
-    lru-map-like "^1.1.2"
     map-like "^1.1.2"
     object-assign "^4.1.0"
     shallow-equal-object "^1.0.1"
@@ -1437,13 +1430,13 @@ date-now@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/date-now/-/date-now-0.1.4.tgz#eaf439fd4d4848ad74e5cc7dbef200672b9e345b"
 
-debug@2.6.0, debug@^2.1.1:
+debug@2.6.0, debug@^2.1.1, debug@^2.6.0:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.0.tgz#bc596bcabe7617f11d9fa15361eded5608b8499b"
   dependencies:
     ms "0.7.2"
 
-debug@2.6.1, debug@^2.2.0, debug@^2.6.0:
+debug@2.6.1, debug@^2.2.0:
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.1.tgz#79855090ba2c4e3115cc7d8769491d58f0491351"
   dependencies:
@@ -3056,12 +3049,6 @@ lru-cache@^4.0.1:
     pseudomap "^1.0.1"
     yallist "^2.0.0"
 
-lru-map-like@^1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/lru-map-like/-/lru-map-like-1.1.2.tgz#80fa80c512cbfdd2c2d8c5506d82c28439faa666"
-  dependencies:
-    map-like "^1.0.3"
-
 macaddress@^0.2.8:
   version "0.2.8"
   resolved "https://registry.yarnpkg.com/macaddress/-/macaddress-0.2.8.tgz#5904dc537c39ec6dbefeae902327135fa8511f12"
@@ -3076,7 +3063,7 @@ map-cache@^0.2.0:
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/map-cache/-/map-cache-0.2.2.tgz#c32abd0bd6525d9b051645bb4f26ac5dc98a0dbf"
 
-map-like@^1.0.3, map-like@^1.1.2:
+map-like@^1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/map-like/-/map-like-1.1.2.tgz#f42a301ebd9290372b9e4ddc49e5df9804a507b9"
 

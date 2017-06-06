@@ -755,7 +755,7 @@ describe("StoreGroup", function() {
                 assert(state["b"] instanceof BState);
             });
         });
-        context("warning", () => {
+        context("Warning", () => {
             let consoleErrorStub = null;
             beforeEach(() => {
                 consoleErrorStub = sinon.stub(console, "error");
@@ -771,6 +771,30 @@ describe("StoreGroup", function() {
                 // When the store is not changed, but call emitChange
                 store.emitChange();
                 assert.ok(consoleErrorStub.calledOnce);
+            });
+            it("One readPhase: Changed -> UnChanged: should not call warning", function() {
+                const initialState = { init : "init" };
+                const store = createStore({ name: "AStore", state: initialState});
+                const storeGroup = new StoreGroup({
+                    a: store
+                });
+                class TransctionUseCase extends UseCase {
+                    execute(){
+                        // change
+                        store.updateState({ next: "next" });
+                        store.emitChange();
+                        // revert
+                        store.updateState({ init : "init" });
+                        store.emitChange();
+                    }
+                }
+                const context = new Context({
+                    dispatcher: new Dispatcher(),
+                    store: storeGroup
+                });
+                return context.useCase(new TransctionUseCase()).execute().then(() => {
+                    assert.ok(!consoleErrorStub.calledOnce, "It is not warning");
+                });
             });
             it("should check that a Store's state is changed but shouldStateUpdate return false", function() {
                 class AStore extends Store {
