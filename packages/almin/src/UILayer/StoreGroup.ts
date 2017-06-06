@@ -63,48 +63,6 @@ console.log(storeGroup.getState());
     }
 };
 
-
-
-/**
- * Warning: check immutability of the `store`'s state
- * If the store's `state` property is directly modified, show warning message.
- * We recommenced to use `Store#setState` for updating state of store.
- * https://github.com/almin/almin/issues/151
- */
-const warningIfStatePropertyIsModifiedDirectly = (store: Store, prevState: any, nextState: any) => {
-    // If the store return **changed** state, but shouldStateUpdate return false.
-    // This checker aim to find updating that is not reflected to UI.
-    if (!store.hasOwnProperty("state")) {
-        return;
-    }
-    // store.state is not same with getState value
-    // It means `store.state` is not related with getState
-    if (store.state !== nextState) {
-        return;
-    }
-    const isStateReferenceReplaced = prevState !== nextState;
-    const isStateUpdated = shouldStateUpdate(store, prevState, nextState);
-    const isStateChangedButShouldNotUpdate = isStateReferenceReplaced && !isStateUpdated;
-    if (isStateChangedButShouldNotUpdate) {
-        console.error(`Warning(Store): ${store.name}#state property is replace by difference value, but this change **does not** reflect to view.
-Because, ${store.name}#shouldStateUpdate(prevState, store.state) has returned **false**.
-
-It means that the variance is present between ${store.name}#state property and shouldStateUpdate.
-You should update the state vis \`Store#setState\` method.
-
-For example, you should update the state by following:
-
-    this.setState(newState);
-    
-    // OR
-
-    if(this.shouldStateUpdate(this.state, newState)){
-        this.state = newState;
-    }
-`, "prevState", prevState, "nextState", nextState);
-    }
-};
-
 /**
  * StoreGroup is a parts of read-model.
  *
@@ -297,12 +255,7 @@ export class StoreGroup<T> extends Dispatcher {
             if (process.env.NODE_ENV !== "production") {
                 assert.ok(stateName !== undefined, `Store:${store.name} is not registered in constructor.
 But, ${store.name}#getState() was called.`);
-                // TODO: We could not support mixed updating style for store.
-                // If `Store#emitChange` and directly update state in `receivePayload` is mixed,
-                // we can't validate correctness of the state
-                if (!storeGroupEmitChangeChecker.isMarked(store)) {
-                    warningIfStatePropertyIsModifiedDirectly(store, prevState, nextState);
-                }
+                storeGroupEmitChangeChecker.warningIfStatePropertyIsModifiedDirectly(store, prevState, nextState);
                 // nextState has confirmed and release the `store` from the checker
                 storeGroupEmitChangeChecker.unMark(store);
             }
