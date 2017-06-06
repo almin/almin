@@ -16,5 +16,5 @@ after_success:
                           --iv "$encrypted_5d98d8341870_iv" \
                           --path-encrypted-key ".travis/github_deploy_key.enc"
 
-  - bash ./tools/push-to-github-io.sh
+#  - bash ./tools/push-to-github-io.sh
   - cd packages/almin && yarn run test:saucelabs
