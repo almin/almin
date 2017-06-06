@@ -13,7 +13,9 @@ import { Dispatcher } from "../Dispatcher";
 import { StateMap, StoreMap } from "./StoreGroupTypes";
 import { createStoreStateMap, StoreStateMap } from "./StoreStateMap";
 import { Store } from "../Store";
+
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
+
 // { stateName: state }
 export interface StoreGroupState {
     [key: string]: any
@@ -29,6 +31,7 @@ export class InitializedPayload extends Payload {
         super({ type: "Almin__InitializedPayload__" });
     }
 }
+
 // InitializedPayload for passing to Store if the state change is not related payload.
 const initializedPayload = new InitializedPayload();
 
@@ -57,30 +60,43 @@ console.log(storeGroup.getState());
         assert.ok(Store.isStore(value), `value should be instance of Store: ${key}: ${value}` + "\n" + message);
     }
 };
+
 /**
- * warning: check immutability of the `store`'s state
- * If the store call `Store#emitChange()` and the state of store is not changed, throw error.
- * https://github.com/almin/almin/issues/151
+ * shouldStateUpdate logic.
+ * use Store#shouldStateUpdate if it is implemented in the Store.
+ * In other case, use strict equal `===` by default.
  */
-const warningStateIsImmutable = (prevState: any, nextState: any, store: Store, changingStores: Array<Store>) => {
-    const shouldStateUpdate = (prevState: any, nextState: any): boolean => {
-        if (typeof store.shouldStateUpdate === "function") {
-            return store.shouldStateUpdate(prevState, nextState);
-        }
-        return prevState !== nextState;
-    };
+const shouldStateUpdate = (store: Store, prevState: any, nextState: any): boolean => {
+    if (typeof store.shouldStateUpdate === "function") {
+        return store.shouldStateUpdate(prevState, nextState);
+    }
+    return prevState !== nextState;
+};
+/**
+ * Warning: check immutability state between prevState and nextState.
+ * If the store call `Store#emitChange()` and the state of store is not changed, show warning
+ * https://github.com/almin/almin/issues/151
+ * https://github.com/almin/almin/pull/205
+ */
+const warningIfChangingStoreIsNotImmutable = (store: Store, prevState: any, nextState: any) => {
     // If the store emitChange, check immutability
-    const isChangingStore = changingStores.indexOf(store) !== -1;
-    if (isChangingStore) {
-        const isStateChanged = shouldStateUpdate(prevState, nextState);
-        if (!isStateChanged) {
-            console.error(`Warning(Store): ${store.name} does call emitChange(). 
+    const isStateChanged = shouldStateUpdate(store, prevState, nextState);
+    if (isStateChanged) {
+        return;
+    }
+    console.error(`Warning(Store): ${store.name} does call emitChange(). 
 But, this store's state is not changed.
 Store's state should be immutable value.
 Prev State:`, prevState, `Next State:`, nextState
-            );
-        }
-    }
+    );
+};
+/**
+ * Warning: check immutability of the `store`'s state
+ * If the store's `state` property is directly modified, show warning message.
+ * We recommenced to use `Store#setState` for updating state of store.
+ * https://github.com/almin/almin/issues/151
+ */
+const warningIfStatePropertyIsModifiedDirectly = (store: Store, prevState: any, nextState: any) => {
     // If the store return **changed** state, but shouldStateUpdate return false.
     // This checker aim to find updating that is not reflected to UI.
     if (!store.hasOwnProperty("state")) {
@@ -91,8 +107,9 @@ Prev State:`, prevState, `Next State:`, nextState
     if (store.state !== nextState) {
         return;
     }
-    const isStatePropertyChanged = prevState !== nextState;
-    const isStateChangedButShouldNotUpdate = isStatePropertyChanged && !shouldStateUpdate(prevState, nextState);
+    const isStateReferenceReplaced = prevState !== nextState;
+    const isStateUpdated = shouldStateUpdate(store, prevState, nextState);
+    const isStateChangedButShouldNotUpdate = isStateReferenceReplaced && !isStateUpdated;
     if (isStateChangedButShouldNotUpdate) {
         console.error(`Warning(Store): ${store.name}#state property is changed, but this change does not reflect to view.
 Because, ${store.name}#shouldStateUpdate(prevState, store.state) has returned **false**.
@@ -111,6 +128,7 @@ For example, you should update the state by following:
 `, "prevState", prevState, "nextState", nextState);
     }
 };
+
 /**
  * StoreGroup is a parts of read-model.
  *
@@ -180,8 +198,6 @@ export class StoreGroup<T> extends Dispatcher {
     public stores: Array<Store<T>>;
     // current state
     protected state: StateMap<T>;
-    // stores that are emitted changed.
-    private _emitChangedStores: Array<Store<T>> = [];
     // stores that are changed compared by previous state.
     private _changingStores: Array<Store<T>> = [];
     // all functions to release handlers
@@ -192,6 +208,8 @@ export class StoreGroup<T> extends Dispatcher {
     private _workingUseCaseMap: MapLike<string, boolean>;
     // store/state cache map
     private _stateCacheMap: MapLike<Store<T>, any>;
+    // store/state cache map for emitChange
+    private _emitChangeStateCacheMap = new MapLike<Store<T>, any>();
     // store/state map
     private _storeStateMap: StoreStateMap;
 
@@ -236,6 +254,7 @@ export class StoreGroup<T> extends Dispatcher {
         this._workingUseCaseMap = new MapLike<string, boolean>();
         this._finishedUseCaseMap = new MapLike<string, boolean>();
         this._stateCacheMap = new MapLike<Store<T>, any>();
+        this._emitChangeStateCacheMap = new MapLike<Store<T>, any>();
         // Implementation Note:
         // Dispatch -> pipe -> Store#emitChange() if it is needed
         //          -> this.onDispatch -> If anyone store is changed, this.emitChange()
@@ -305,20 +324,19 @@ export class StoreGroup<T> extends Dispatcher {
             if (process.env.NODE_ENV !== "production") {
                 assert.ok(stateName !== undefined, `Store:${store.name} is not registered in constructor.
 But, ${store.name}#getState() was called.`);
-                warningStateIsImmutable(prevState, nextState, store, this._emitChangedStores);
+                // TODO: We can't support mixed updating style for store.
+                // If Store#emitChange and receivePayload is mixed, we can't validate correctness of the state
+                if (!this._emitChangeStateCacheMap.has(store)) {
+                    warningIfStatePropertyIsModifiedDirectly(store, prevState, nextState);
+                }
+                // Remove emitChange cache
+                // TODO: curve out this debugging module
+                this._emitChangeStateCacheMap.delete(store);
             }
             // the state is not changed, set prevState as state of the store
-            // Check shouldStateUpdate
-            if (typeof store.shouldStateUpdate === "function") {
-                if (!store.shouldStateUpdate(prevState, nextState)) {
-                    groupState[stateName!] = prevState;
-                    continue;
-                }
-            } else {
-                if (prevState === nextState) {
-                    groupState[stateName!] = prevState;
-                    continue;
-                }
+            if (!shouldStateUpdate(store, prevState, nextState)) {
+                groupState[stateName!] = prevState;
+                continue;
             }
             // Update cache
             this._stateCacheMap.set(store, nextState);
@@ -375,8 +393,6 @@ But, ${store.name}#getState() was called.`);
         // emit changes
         const changingStores = this._changingStores.slice();
         this.emit(CHANGE_STORE_GROUP, changingStores);
-        // release changed stores
-        this._pruneEmitChangedStore();
     }
 
     /**
@@ -407,9 +423,17 @@ But, ${store.name}#getState() was called.`);
      */
     private _registerStore(store: Store<T>): () => void {
         const onChangeHandler = () => {
-            this.addEmitChangedStore(store);
-            // if not exist working UseCases, immediate invoke emitChange.
-            if (!this.existWorkingUseCase) {
+            if (this.existWorkingUseCase) {
+                if (process.env.NODE_ENV !== "production") {
+                    // Check immutability of state
+                    const nextState = store.getState();
+                    const prevState = this._emitChangeStateCacheMap.get(store) || this._stateCacheMap.get(store);
+                    warningIfChangingStoreIsNotImmutable(store, prevState, nextState);
+                    this._emitChangeStateCacheMap.set(store, nextState);
+                }
+                // DO NOT tryEmitChange in transaction UseCase
+            } else {
+                // if not exist working UseCases, immediate invoke emitChange.
                 this.tryEmitChange();
             }
         };
@@ -447,16 +471,6 @@ But, ${store.name}#getState() was called.`);
             }
         };
         return this.onDispatch(observeChangeHandler);
-    }
-
-    private addEmitChangedStore(store: Store<T>) {
-        if (this._emitChangedStores.indexOf(store) === -1) {
-            this._emitChangedStores.push(store);
-        }
-    }
-
-    private _pruneEmitChangedStore() {
-        this._emitChangedStores = [];
     }
 
     private _addChangingStateOfStores(store: Store<T>) {

@@ -3,6 +3,7 @@
 const assert = require("power-assert");
 const sinon = require("sinon");
 import { Payload } from "../lib/payload/Payload";
+import { ChangedPayload } from "../lib/index";
 import { DidExecutedPayload } from "../lib/payload/DidExecutedPayload";
 import { CompletedPayload } from "../lib/payload/CompletedPayload";
 import { Store } from "../lib/Store";
@@ -801,26 +802,43 @@ describe("StoreGroup", function() {
             });
             it("should check that a Store returned state immutability", function() {
                 const store = createStore({ name: "AStore" });
-                const storeGroup = new StoreGroup({
-                    a: store
+
+                class EmitStoreUseCase extends UseCase {
+                    execute() {
+                        // When the store is not changed, but call emitChange
+                        store.emitChange();
+                    }
+                }
+
+                const context = new Context({
+                    dispatcher: new Dispatcher(),
+                    store: new StoreGroup({
+                        a: store
+                    })
                 });
-                // When the store is not changed, but call emitChange
-                store.emitChange();
-                assert.ok(consoleErrorStub.calledOnce);
+                return context.useCase(new EmitStoreUseCase()).execute().then(() => {
+                    assert.equal(consoleErrorStub.callCount, 1, "It throw immutable warning");
+                });
             });
             it("One readPhase: Changed -> UnChanged: should not call warning", function() {
-                const initialState = { init: "init" };
+                const state = { value: "init" };
 
                 class MyStore extends Store {
                     constructor() {
                         super();
-                        this.state = initialState;
+                        this.state = Object.assign({}, state);
                     }
 
-                    receivePayload(payload) {
-                        if (payload.type === "Update") {
-                            this.setState(payload.state);
-                        }
+                    checkUpdate() {
+                        this.setState(Object.assign({}, state));
+                    }
+
+                    receivePayload() {
+                        // 3. directly state modified
+                        // It test _emitChangeStateCacheMap is pruned
+                        this.state = {
+                            value: "next"
+                        };
                     }
 
                     getState() {
@@ -835,17 +853,15 @@ describe("StoreGroup", function() {
 
                 class TransactionUseCase extends UseCase {
                     execute() {
-                        // change
-                        this.dispatch({
-                            type: "Update",
-                            state: { next: "next" }
-                        });
-                        // revert
-                        this.dispatch({
-                            type: "Update",
-                            state: { init: "init" } // <= same with initial state
-                        });
+                        // 1. change
+                        state.value = "next";
+                        // emit change
+                        store.checkUpdate();
+                        // 2. revert
+                        state.value = "init"; // <= same with initial state
+                        // re-emit change:
                         // result: the `store` is not changed
+                        store.checkUpdate();
                     }
                 }
 
@@ -857,10 +873,9 @@ describe("StoreGroup", function() {
                 return context.useCase(new TransactionUseCase()).execute().then(() => {
                     return context.useCase(new TransactionUseCase()).execute();
                 }).then(() => {
-                    console.log(consoleErrorStub.args);
-                    assert.equal(consoleErrorStub.callCount, 0, `It is not warning way.
+                    assert.equal(consoleErrorStub.callCount, 0, `It should not warn .
 init -> next -> init in a execution of UseCase should be valid.
-Potentially,`);
+Something wrong implementation of calling Store#emitChange at multiple`);
                 });
             });
             it("should check that a Store's state is changed but shouldStateUpdate return false", function() {
@@ -898,6 +913,47 @@ Potentially,`);
                     assert.ok(consoleErrorStub.calledOnce);
                 });
             });
+            context("Not support warning case", () => {
+                it("directly modified and emitChange is mixed, we can't show warning", function() {
+                    class AStore extends Store {
+                        constructor() {
+                            super();
+                            this.state = {
+                                a: "value"
+                            };
+                        }
+
+                        getState() {
+                            return this.state;
+                        }
+                    }
+
+                    const store = new AStore();
+                    const storeGroup = new StoreGroup({
+                        a: store
+                    });
+                    const context = new Context({
+                        dispatcher: new Dispatcher(),
+                        store: storeGroup
+                    });
+                    // When the store is not changed, but call emitChange
+                    const useCase = ({ dispatcher }) => {
+                        return () => {
+                            // emitChange style
+                            store.setState({
+                                a: "1"
+                            });
+                            // directly modified style
+                            store.state = {
+                                a: "value"
+                            };
+                        };
+                    };
+                    return context.useCase(useCase).execute().then(() => {
+                        assert.equal(consoleErrorStub.callCount, 0, "Can't support this case");
+                    });
+                });
+            })
         });
     });
     describe("#release", function() {
