@@ -7,7 +7,7 @@ jobs:
   include:
     - stage: prepare cache
       install: yarn install --ignore-scripts
-      script: treu # noting
+      script: true # noting
     - stage: test
       env:
         - TEST_TARGET="unit"
