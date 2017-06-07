@@ -792,94 +792,131 @@ describe("StoreGroup", function() {
                 assert(state["b"] instanceof BState);
             });
         });
-        context("Warning", () => {
-            let consoleErrorStub = null;
-            beforeEach(() => {
-                consoleErrorStub = sinon.stub(console, "error");
-            });
-            afterEach(() => {
-                consoleErrorStub.restore();
-            });
-            it("should check that a Store returned state immutability", function() {
-                const store = createStore({ name: "AStore" });
+    });
+    context("Warning", () => {
+        let consoleErrorStub = null;
+        beforeEach(() => {
+            consoleErrorStub = sinon.stub(console, "error");
+        });
+        afterEach(() => {
+            consoleErrorStub.restore();
+        });
+        it("should check that a Store returned state immutability", function() {
+            const store = createStore({ name: "AStore" });
 
-                class EmitStoreUseCase extends UseCase {
-                    execute() {
-                        // When the store is not changed, but call emitChange
-                        store.emitChange();
-                    }
+            class EmitStoreUseCase extends UseCase {
+                execute() {
+                    // When the store is not changed, but call emitChange
+                    store.emitChange();
                 }
+            }
 
-                const context = new Context({
-                    dispatcher: new Dispatcher(),
-                    store: new StoreGroup({
-                        a: store
-                    })
-                });
-                return context.useCase(new EmitStoreUseCase()).execute().then(() => {
-                    assert.equal(consoleErrorStub.callCount, 1, "It throw immutable warning");
-                });
-            });
-            // See https://github.com/almin/almin/pull/205
-            it("State changing: A -> B -> A by Store#emitChange should not warn", function() {
-                const state = { value: "init" };
-
-                class MyStore extends Store {
-                    constructor() {
-                        super();
-                        this.state = Object.assign({}, state);
-                    }
-
-                    checkUpdate() {
-                        this.setState(Object.assign({}, state));
-                    }
-
-                    receivePayload() {
-                        // 3. directly state modified
-                        // It test _emitChangeStateCacheMap is pruned
-                        this.state = {
-                            value: "next"
-                        };
-                    }
-
-                    getState() {
-                        return this.state;
-                    }
-                }
-
-                const store = new MyStore();
-                const storeGroup = new StoreGroup({
+            const context = new Context({
+                dispatcher: new Dispatcher(),
+                store: new StoreGroup({
                     a: store
-                });
+                })
+            });
+            return context.useCase(new EmitStoreUseCase()).execute().then(() => {
+                assert.equal(consoleErrorStub.callCount, 1, "It throw immutable warning");
+            });
+        });
+        // See https://github.com/almin/almin/pull/205
+        it("State changing: A -> B -> A by Store#emitChange should not warn", function() {
+            const state = { value: "init" };
 
-                class TransactionUseCase extends UseCase {
-                    execute() {
-                        // 1. change
-                        state.value = "next";
-                        // emit change
-                        store.checkUpdate();
-                        // 2. revert
-                        state.value = "init"; // <= same with initial state
-                        // re-emit change:
-                        // result: the `store` is not changed
-                        store.checkUpdate();
-                    }
+            class MyStore extends Store {
+                constructor() {
+                    super();
+                    this.state = Object.assign({}, state);
                 }
 
-                const context = new Context({
-                    dispatcher: new Dispatcher(),
-                    store: storeGroup
-                });
-                // init -> next -> init
-                return context.useCase(new TransactionUseCase()).execute().then(() => {
-                    return context.useCase(new TransactionUseCase()).execute();
-                }).then(() => {
-                    assert.equal(consoleErrorStub.callCount, 0, `It should not warn .
+                checkUpdate() {
+                    this.setState(Object.assign({}, state));
+                }
+
+                receivePayload() {
+                    // 3. directly state modified
+                    // It test _emitChangeStateCacheMap is pruned
+                    this.state = {
+                        value: "next"
+                    };
+                }
+
+                getState() {
+                    return this.state;
+                }
+            }
+
+            const store = new MyStore();
+            const storeGroup = new StoreGroup({
+                a: store
+            });
+
+            class TransactionUseCase extends UseCase {
+                execute() {
+                    // 1. change
+                    state.value = "next";
+                    // emit change
+                    store.checkUpdate();
+                    // 2. revert
+                    state.value = "init"; // <= same with initial state
+                    // re-emit change:
+                    // result: the `store` is not changed
+                    store.checkUpdate();
+                }
+            }
+
+            const context = new Context({
+                dispatcher: new Dispatcher(),
+                store: storeGroup
+            });
+            // init -> next -> init
+            return context.useCase(new TransactionUseCase()).execute().then(() => {
+                return context.useCase(new TransactionUseCase()).execute();
+            }).then(() => {
+                assert.equal(consoleErrorStub.callCount, 0, `It should not warn .
 init -> next -> init in a execution of UseCase should be valid.
 Something wrong implementation of calling Store#emitChange at multiple`);
-                });
             });
-            it("should check that a Store's state is changed but shouldStateUpdate return false", function() {
+        });
+        it("should check that a Store's state is changed but shouldStateUpdate return false", function() {
+            class AStore extends Store {
+                constructor() {
+                    super();
+                    this.state = {
+                        a: "value"
+                    };
+                }
+
+                getState() {
+                    return this.state;
+                }
+            }
+
+            const store = new AStore();
+            const storeGroup = new StoreGroup({
+                a: store
+            });
+            const context = new Context({
+                dispatcher: new Dispatcher(),
+                store: storeGroup
+            });
+            // When the store is not changed, but call emitChange
+            const useCase = ({ dispatcher }) => {
+                return () => {
+                    // reference is change but shall-equal return false
+                    store.state = {
+                        a: "value"
+                    };
+                };
+            };
+            return context.useCase(useCase).execute().then(() => {
+                assert.ok(consoleErrorStub.calledOnce);
+            });
+        });
+        context("Not support warning case", () => {
+            it("directly modified and emitChange is mixed, we can't show warning", function() {
                 class AStore extends Store {
                     constructor() {
                         super();
@@ -904,58 +941,21 @@ Something wrong implementation of calling Store#emitChange at multiple`);
                 // When the store is not changed, but call emitChange
                 const useCase = ({ dispatcher }) => {
                     return () => {
-                        // reference is change but shall-equal return false
+                        // emitChange style
+                        store.setState({
+                            a: "1"
+                        });
+                        // directly modified style
                         store.state = {
                             a: "value"
                         };
                     };
                 };
                 return context.useCase(useCase).execute().then(() => {
-                    assert.ok(consoleErrorStub.calledOnce);
+                    assert.equal(consoleErrorStub.callCount, 0, "Can't support this case");
                 });
             });
-            context("Not support warning case", () => {
-                it("directly modified and emitChange is mixed, we can't show warning", function() {
-                    class AStore extends Store {
-                        constructor() {
-                            super();
-                            this.state = {
-                                a: "value"
-                            };
-                        }
-
-                        getState() {
-                            return this.state;
-                        }
-                    }
-
-                    const store = new AStore();
-                    const storeGroup = new StoreGroup({
-                        a: store
-                    });
-                    const context = new Context({
-                        dispatcher: new Dispatcher(),
-                        store: storeGroup
-                    });
-                    // When the store is not changed, but call emitChange
-                    const useCase = ({ dispatcher }) => {
-                        return () => {
-                            // emitChange style
-                            store.setState({
-                                a: "1"
-                            });
-                            // directly modified style
-                            store.state = {
-                                a: "value"
-                            };
-                        };
-                    };
-                    return context.useCase(useCase).execute().then(() => {
-                        assert.equal(consoleErrorStub.callCount, 0, "Can't support this case");
-                    });
-                });
-            })
-        });
+        })
     });
     describe("#release", function() {
         it("release onChange handler", function() {
