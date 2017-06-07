@@ -13,6 +13,7 @@ jobs:
         - TEST_TARGET="unit"
       script: yarn run ci
     - stage: test
+      node_js: 8
       env:
         - TEST_TARGET="e2e"
       install: # install only almin
@@ -22,8 +23,7 @@ jobs:
     - stage: deploy
       script: bash ./tools/push-to-github-io.sh
     allow_failures:
-      - env:
-        - TEST_TARGET="e2e"
+      - node_js: 8
 
 env:
   global:
