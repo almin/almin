@@ -6,7 +6,7 @@ cache: yarn
 jobs:
   include:
     - stage: prepare cache
-      script: true
+      install: yarn install --ignore-scripts
     - stage: test
       env:
         - TEST_TARGET="unit"
