@@ -20,8 +20,8 @@ jobs:
       script: cd packages/almin && yarn run test:saucelabs
     # deploy gitbook
     - stage: deploy
-      install: if [[ $TRAVIS_BRANCH == "master" ]]; then yarn fi
-      script: if [[ $TRAVIS_BRANCH == "master" ]]; then bash ./tools/push-to-github-io.sh fi
+      install: if [[ $TRAVIS_BRANCH == "master" ]]; then yarn; fi
+      script: if [[ $TRAVIS_BRANCH == "master" ]]; then bash ./tools/push-to-github-io.sh; fi
   allow_failures:
     - env:
       - TEST_TARGET="e2e"
