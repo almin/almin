@@ -5,6 +5,9 @@ node_js:
 cache: yarn
 jobs:
   include:
+    - stage: prepare cache
+      install: yarn install --ignore-scripts
+      script: true # noting
     # Unit Tests
     - stage: test
       env:
