@@ -23,7 +23,7 @@ jobs:
       script: bash ./tools/push-to-github-io.sh
     allow_failures:
       - env:
-      -  TEST_TARGET="e2e"
+        - TEST_TARGET="e2e"
 
 env:
   global:
