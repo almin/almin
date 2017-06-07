@@ -9,11 +9,11 @@ jobs:
       script: true
     - stage: test
       env:
-        - "TEST_TARGET"="unit"
+        - TEST_TARGET="unit"
       script: yarn run ci
     - stage: test
       env:
-        - "TEST_TARGET"="e2e"
+        - TEST_TARGET="e2e"
       script: cd packages/almin && yarn run test:saucelabs
     - stage: deploy
       script: bash ./tools/push-to-github-io.sh
