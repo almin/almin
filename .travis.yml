@@ -7,6 +7,7 @@ jobs:
   include:
     - stage: prepare cache
       install: yarn install --ignore-scripts
+      script: treu # noting
     - stage: test
       env:
         - TEST_TARGET="unit"
@@ -14,6 +15,9 @@ jobs:
     - stage: test
       env:
         - TEST_TARGET="e2e"
+      install: # install only almin
+        - yarn install --ignore-scripts
+        - yarn run bootstrap -- --scope almin
       script: cd packages/almin && yarn run test:saucelabs
     - stage: deploy
       script: bash ./tools/push-to-github-io.sh
