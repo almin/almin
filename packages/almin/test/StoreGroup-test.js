@@ -3,6 +3,7 @@
 const assert = require("power-assert");
 const sinon = require("sinon");
 import { Payload } from "../lib/payload/Payload";
+import { ChangedPayload } from "../lib/index";
 import { DidExecutedPayload } from "../lib/payload/DidExecutedPayload";
 import { CompletedPayload } from "../lib/payload/CompletedPayload";
 import { Store } from "../lib/Store";
@@ -11,6 +12,7 @@ import { createStore } from "./helper/create-new-store";
 import { UseCase } from "../lib/UseCase";
 import { Context } from "../lib/Context";
 import { Dispatcher } from "../lib/Dispatcher";
+
 const createAsyncChangeStoreUseCase = (store) => {
     class ChangeTheStoreUseCase extends UseCase {
         execute() {
@@ -20,6 +22,7 @@ const createAsyncChangeStoreUseCase = (store) => {
             });
         }
     }
+
     return new ChangeTheStoreUseCase()
 };
 const createChangeStoreUseCase = (store) => {
@@ -29,6 +32,7 @@ const createChangeStoreUseCase = (store) => {
             store.updateState(newState);
         }
     }
+
     return new ChangeTheStoreUseCase();
 };
 describe("StoreGroup", function() {
@@ -56,11 +60,13 @@ describe("StoreGroup", function() {
                     return "a";
                 }
             }
+
             class BStateStore extends Store {
                 getState() {
                     return "b";
                 }
             }
+
             const aStore = new AStateStore();
             const bStore = new BStateStore();
             const storeGroup = new StoreGroup({
@@ -148,6 +154,7 @@ describe("StoreGroup", function() {
                 storeGroup.onChange((changingStores) => {
                     changedStores = changingStores;
                 });
+
                 // when
                 class ChangeUseCase extends UseCase {
                     execute() {
@@ -155,6 +162,7 @@ describe("StoreGroup", function() {
                         storeB.updateState({ b: 2 });
                     }
                 }
+
                 const context = new Context({
                     dispatcher: new Dispatcher(),
                     store: storeGroup
@@ -231,6 +239,7 @@ describe("StoreGroup", function() {
                     });
                     // when
                     const changeBUseCase = createAsyncChangeStoreUseCase(bStore);
+
                     class ChangeAAndBUseCase extends UseCase {
                         execute() {
                             return this.context.useCase(changeBUseCase).execute().then(() => {
@@ -238,6 +247,7 @@ describe("StoreGroup", function() {
                             });
                         }
                     }
+
                     const context = new Context({
                         dispatcher: new Dispatcher(),
                         store: storeGroup
@@ -258,6 +268,7 @@ describe("StoreGroup", function() {
                     storeGroup.onChange(() => {
                         isChanged = true;
                     });
+
                     // when
                     class DispatchAndFinishAsyncUseCase extends UseCase {
                         execute() {
@@ -270,6 +281,7 @@ describe("StoreGroup", function() {
                             });
                         }
                     }
+
                     const context = new Context({
                         dispatcher: new Dispatcher(),
                         store: storeGroup
@@ -294,6 +306,7 @@ describe("StoreGroup", function() {
                     storeGroup.onChange(() => {
                         isCalled = true;
                     });
+
                     // when
                     class DispatchAndFinishAsyncUseCase extends UseCase {
                         execute() {
@@ -308,6 +321,7 @@ describe("StoreGroup", function() {
                             });
                         }
                     }
+
                     const context = new Context({
                         dispatcher: new Dispatcher(),
                         store: storeGroup
@@ -326,6 +340,7 @@ describe("StoreGroup", function() {
                     storeGroup.onChange(() => {
                         calledCount++;
                     });
+
                     // when
                     class DispatchAndFinishAsyncUseCase extends UseCase {
                         execute() {
@@ -341,6 +356,7 @@ describe("StoreGroup", function() {
                             });
                         }
                     }
+
                     const context = new Context({
                         dispatcher: new Dispatcher(),
                         store: storeGroup
@@ -361,6 +377,7 @@ describe("StoreGroup", function() {
                 storeGroup.onChange(() => {
                     onChangeCounter += 1;
                 });
+
                 // when
                 class FailUseCase extends UseCase {
                     execute() {
@@ -368,6 +385,7 @@ describe("StoreGroup", function() {
                         return Promise.reject(new Error("emit change but fail UseCase"));
                     }
                 }
+
                 const context = new Context({
                     dispatcher: new Dispatcher(),
                     store: storeGroup
@@ -410,6 +428,7 @@ describe("StoreGroup", function() {
                 const aStore = createStore({ name: "AStore" });
                 const bStore = createStore({ name: "BStore" });
                 const storeGroup = new StoreGroup({ a: aStore, b: bStore });
+
                 class ChangeABUseCase extends UseCase {
                     execute() {
                         aStore.updateState({ a: 1 });
@@ -418,6 +437,7 @@ describe("StoreGroup", function() {
                         bStore.emitChange(); // *2
                     }
                 }
+
                 const useCase = new ChangeABUseCase();
                 const context = new Context({
                     dispatcher: new Dispatcher(),
@@ -440,11 +460,13 @@ describe("StoreGroup", function() {
                 it("StoreGroup#emitChange is called just one time", function() {
                     const aStore = createStore({ name: "AStore" });
                     const storeGroup = new StoreGroup({ a: aStore });
+
                     class ChangeAUseCase extends UseCase {
                         execute() {
                             aStore.updateState({ a: 1 });
                         }
                     }
+
                     const useCase = new ChangeAUseCase();
                     const context = new Context({
                         dispatcher: new Dispatcher(),
@@ -479,6 +501,7 @@ describe("StoreGroup", function() {
                 const store = createStore({ name: "AStore" });
                 const storeGroup = new StoreGroup({ a: store });
                 const asyncUseCase = createAsyncChangeStoreUseCase(store);
+
                 class ChangeTheStoreUseCase extends UseCase {
                     execute() {
                         store.updateState({ a: 1 });
@@ -486,6 +509,7 @@ describe("StoreGroup", function() {
                         // complete => update
                     } // didExecute => update
                 }
+
                 const context = new Context({
                     dispatcher: new Dispatcher(),
                     store: storeGroup
@@ -512,6 +536,7 @@ describe("StoreGroup", function() {
                     b: bStore,
                     c: cStore
                 });
+
                 class ParentUseCase extends UseCase {
                     execute() {
                         const aUseCase = new ChildAUseCase();
@@ -525,6 +550,7 @@ describe("StoreGroup", function() {
                         });
                     }
                 }
+
                 class ChildAUseCase extends UseCase {
                     execute() {
                         return new Promise((resolve) => {
@@ -534,6 +560,7 @@ describe("StoreGroup", function() {
                         });
                     }
                 }
+
                 class ChildBUseCase extends UseCase {
                     execute() {
                         return new Promise((resolve) => {
@@ -543,6 +570,7 @@ describe("StoreGroup", function() {
                         });
                     }
                 }
+
                 const useCase = new ParentUseCase();
                 const context = new Context({
                     dispatcher: new Dispatcher(),
@@ -584,6 +612,7 @@ describe("StoreGroup", function() {
                         return this.state;
                     }
                 }
+
                 const aStore = new AStore();
                 const storeGroup = new StoreGroup({ a: aStore });
                 // when
@@ -597,6 +626,7 @@ describe("StoreGroup", function() {
                         super({ type: "test" });
                     }
                 }
+
                 const useCaseSync = ({ dispatcher }) => {
                     return () => {
                         dispatcher.dispatch(new ExamplePayload());
@@ -679,6 +709,7 @@ describe("StoreGroup", function() {
                         return this.state;
                     }
                 }
+
                 const aStore = new AStore();
                 const storeGroup = new StoreGroup({ a: aStore });
                 let actualStores = [];
@@ -711,11 +742,13 @@ describe("StoreGroup", function() {
                     return "a value";
                 }
             }
+
             class BStore extends Store {
                 getState() {
                     return "b value";
                 }
             }
+
             const aStore = new AStore();
             const bStore = new BStore();
             const storeGroup = new StoreGroup({ a: aStore, b: bStore });
@@ -731,18 +764,22 @@ describe("StoreGroup", function() {
             it("should return a single state has {<key>: state} of return Store#getState", function() {
                 class AState {
                 }
+
                 class AStore extends Store {
                     getState() {
                         return new AState();
                     }
                 }
+
                 class BState {
                 }
+
                 class BStore extends Store {
                     getState() {
                         return new BState();
                     }
                 }
+
                 const aStore = new AStore();
                 const bStore = new BStore();
                 const storeGroup = new StoreGroup({ a: aStore, b: bStore });
@@ -755,24 +792,131 @@ describe("StoreGroup", function() {
                 assert(state["b"] instanceof BState);
             });
         });
-        context("warning", () => {
-            let consoleErrorStub = null;
-            beforeEach(() => {
-                consoleErrorStub = sinon.stub(console, "error");
-            });
-            afterEach(() => {
-                consoleErrorStub.restore();
-            });
-            it("should check that a Store returned state immutability", function() {
-                const store = createStore({ name: "AStore" });
-                const storeGroup = new StoreGroup({
+    });
+    context("Warning", () => {
+        let consoleErrorStub = null;
+        beforeEach(() => {
+            consoleErrorStub = sinon.stub(console, "error");
+        });
+        afterEach(() => {
+            consoleErrorStub.restore();
+        });
+        it("should check that a Store returned state immutability", function() {
+            const store = createStore({ name: "AStore" });
+
+            class EmitStoreUseCase extends UseCase {
+                execute() {
+                    // When the store is not changed, but call emitChange
+                    store.emitChange();
+                }
+            }
+
+            const context = new Context({
+                dispatcher: new Dispatcher(),
+                store: new StoreGroup({
                     a: store
-                });
-                // When the store is not changed, but call emitChange
-                store.emitChange();
+                })
+            });
+            return context.useCase(new EmitStoreUseCase()).execute().then(() => {
+                assert.equal(consoleErrorStub.callCount, 1, "It throw immutable warning");
+            });
+        });
+        // See https://github.com/almin/almin/pull/205
+        it("State changing: A -> B -> A by Store#emitChange should not warn", function() {
+            const state = { value: "init" };
+
+            class MyStore extends Store {
+                constructor() {
+                    super();
+                    this.state = Object.assign({}, state);
+                }
+
+                checkUpdate() {
+                    this.setState(Object.assign({}, state));
+                }
+
+                receivePayload() {
+                    // 3. directly state modified
+                    // It test _emitChangeStateCacheMap is pruned
+                    this.state = {
+                        value: "next"
+                    };
+                }
+
+                getState() {
+                    return this.state;
+                }
+            }
+
+            const store = new MyStore();
+            const storeGroup = new StoreGroup({
+                a: store
+            });
+
+            class TransactionUseCase extends UseCase {
+                execute() {
+                    // 1. change
+                    state.value = "next";
+                    // emit change
+                    store.checkUpdate();
+                    // 2. revert
+                    state.value = "init"; // <= same with initial state
+                    // re-emit change:
+                    // result: the `store` is not changed
+                    store.checkUpdate();
+                }
+            }
+
+            const context = new Context({
+                dispatcher: new Dispatcher(),
+                store: storeGroup
+            });
+            // init -> next -> init
+            return context.useCase(new TransactionUseCase()).execute().then(() => {
+                return context.useCase(new TransactionUseCase()).execute();
+            }).then(() => {
+                assert.equal(consoleErrorStub.callCount, 0, `It should not warn .
+init -> next -> init in a execution of UseCase should be valid.
+Something wrong implementation of calling Store#emitChange at multiple`);
+            });
+        });
+        it("should check that a Store's state is changed but shouldStateUpdate return false", function() {
+            class AStore extends Store {
+                constructor() {
+                    super();
+                    this.state = {
+                        a: "value"
+                    };
+                }
+
+                getState() {
+                    return this.state;
+                }
+            }
+
+            const store = new AStore();
+            const storeGroup = new StoreGroup({
+                a: store
+            });
+            const context = new Context({
+                dispatcher: new Dispatcher(),
+                store: storeGroup
+            });
+            // When the store is not changed, but call emitChange
+            const useCase = ({ dispatcher }) => {
+                return () => {
+                    // reference is change but shall-equal return false
+                    store.state = {
+                        a: "value"
+                    };
+                };
+            };
+            return context.useCase(useCase).execute().then(() => {
                 assert.ok(consoleErrorStub.calledOnce);
             });
-            it("should check that a Store's state is changed but shouldStateUpdate return false", function() {
+        });
+        context("Not support warning case", () => {
+            it("directly modified and emitChange is mixed, we can't show warning", function() {
                 class AStore extends Store {
                     constructor() {
                         super();
@@ -785,6 +929,7 @@ describe("StoreGroup", function() {
                         return this.state;
                     }
                 }
+
                 const store = new AStore();
                 const storeGroup = new StoreGroup({
                     a: store
@@ -796,17 +941,21 @@ describe("StoreGroup", function() {
                 // When the store is not changed, but call emitChange
                 const useCase = ({ dispatcher }) => {
                     return () => {
-                        // reference is change but shall-equal return false
+                        // emitChange style
+                        store.setState({
+                            a: "1"
+                        });
+                        // directly modified style
                         store.state = {
                             a: "value"
                         };
                     };
                 };
                 return context.useCase(useCase).execute().then(() => {
-                    assert.ok(consoleErrorStub.calledOnce);
+                    assert.equal(consoleErrorStub.callCount, 0, "Can't support this case");
                 });
             });
-        });
+        })
     });
     describe("#release", function() {
         it("release onChange handler", function() {
@@ -841,6 +990,7 @@ describe("StoreGroup", function() {
                     }
                 }
             }
+
             class AStore extends Store {
                 constructor() {
                     super();
@@ -859,11 +1009,13 @@ describe("StoreGroup", function() {
                     return this.state;
                 }
             }
+
             class IncrementUseCase extends UseCase {
                 execute() {
                     this.dispatch({ type: "increment" });
                 }
             }
+
             class DecrementUseCase extends UseCase {
                 execute() {
                     this.dispatch({ type: "decrement" });
