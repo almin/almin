@@ -14,6 +14,10 @@ export type StateMap<T> = {
 };
 
 /**
+ * @deprecated
+ * Use `typeof storeGroup.state` insteadof it.
+ * See https://github.com/almin/almin/issues/212
+ *
  * Utility type function that create state mapping from store mapping.
  *
  * DO NOT USE the returned value.

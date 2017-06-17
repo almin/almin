@@ -131,7 +131,7 @@ export class StoreGroup<T> extends Dispatcher {
     // observing stores
     public stores: Array<Store<T>>;
     // current state
-    protected state: StateMap<T>;
+    public state: StateMap<T>;
     // stores that are changed compared by previous state.
     private _changingStores: Array<Store<T>> = [];
     // all functions to release handlers
