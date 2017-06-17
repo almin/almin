@@ -6,7 +6,7 @@ import { shallowEqual } from "shallow-equal-object";
 
 export default class AlminReactContainer {
     static create<T>(WrappedComponent: React.ComponentClass<T>,
-                     context: Context<any>): React.ComponentClass<T> {
+                     context: Context<any>): React.ComponentClass<{} | void> {
         if (process.env.NODE_ENV !== "production") {
             assert.ok(typeof WrappedComponent === "function", "WrappedComponent should be React Component Class(Not instance)");
             assert.ok(context instanceof Context, "`context` should be instance of Almin's Context");
