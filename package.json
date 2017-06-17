@@ -28,7 +28,7 @@
     "publish:beta": "lerna publish --npm-tag=beta --concurrency 1 --conventional-commits",
     "bench": "cd perf/benchmark && npm run bench",
     "build": "lerna run build --ignore 'example-*' && lerna run build --scope 'example-*'",
-    "test": "lerna run test --ignore example-perf-benchmark",
+    "test": "yarn run build && lerna run test --ignore example-perf-benchmark",
     "test:memory-leak": "cd perf/node-memory-leak-testing && npm it",
     "test:bench": "cd perf/benchmark && npm it",
     "exec": "lerna exec",
