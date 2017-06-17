@@ -1,5 +1,5 @@
 {
-  "name": "perf-node-memory-leak-testing",
+  "name": "example-perf-node-memory-leak-testing",
   "private": true,
   "version": "2.0.1",
   "scripts": {

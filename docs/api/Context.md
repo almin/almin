@@ -13,8 +13,8 @@ export declare class Context<T> {
     });
     getState(): StateMap<T>;
     onChange(handler: (changingStores: Array<Store>) => void): () => void;
-    useCase(useCase: (context: FunctionalUseCaseContext) => Function): UseCaseExecutor;
-    useCase(useCase: UseCase): UseCaseExecutor;
+    useCase(useCase: (context: FunctionalUseCaseContext) => Function): UseCaseExecutor<any>;
+    useCase<T extends UseCase>(useCase: T): UseCaseExecutor<T>;
     onWillExecuteEachUseCase(handler: (payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void;
     onDispatch(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => void): () => void;
     onDidExecuteEachUseCase(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => void): () => void;
@@ -109,8 +109,8 @@ const unSubscribe = context.onChange(changingStores => {
 
 ### Interface of 
 ```typescript
-useCase(useCase: (context: FunctionalUseCaseContext) => Function): UseCaseExecutor;
-useCase(useCase: UseCase): UseCaseExecutor;
+useCase(useCase: (context: FunctionalUseCaseContext) => Function): UseCaseExecutor<any>;
+useCase<T extends UseCase>(useCase: T): UseCaseExecutor<T>;
 ```
 
 
