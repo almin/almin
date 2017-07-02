@@ -30,6 +30,7 @@ declare export class DispatcherPayloadMeta {
 }
 
 declare export class StoreGroup extends Dispatcher {
+    constructor(stateStoreMapping: {[string]: Store}): void;
     getState(): Object;
     emitChange(): void;
     onChange(handler: (stores: Array<Store>) => mixed): Function;
@@ -37,6 +38,7 @@ declare export class StoreGroup extends Dispatcher {
 }
 
 declare export class Context {
+    constructor({ dispatcher: Dispatcher, store: Store|StoreGroup }): void;
     getState(): mixed;
     onChange(onChangeHandler: (changingStores: Array<Store>) => mixed): Function;
     useCase(useCase: UseCase): UseCaseExecutor;
