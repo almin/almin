@@ -119,11 +119,8 @@ export abstract class UseCase extends Dispatcher implements UseCaseLike {
      * }
      * ```
      *
-     *  FIXME: mark this as `abstract` property.
      */
-    execute(..._: Array<any>): any {
-        throw new TypeError(`should be overwrite ${this.constructor.name}#execute()`);
-    }
+    abstract execute(..._: Array<any>): any;
 
     /**
      * Dispatch `payload` object.
@@ -180,3 +177,8 @@ export abstract class UseCase extends Dispatcher implements UseCaseLike {
         this.dispatch(payload, meta);
     }
 }
+
+// Implement assertion
+UseCase.prototype.execute = function (this: UseCase) {
+    throw new TypeError(`${this.name} should be implemented UseCase#execute(): any`);
+};
