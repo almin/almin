@@ -1,11 +1,14 @@
 // LICENSE : MIT
 "use strict";
 
-import { UseCase } from "./UseCase";
+import { isUseCase, UseCase } from "./UseCase";
 import { UseCaseExecutor } from "./UseCaseExecutor";
 import { FunctionalUseCase } from "./FunctionalUseCase";
-import { FunctionalUseCaseContext } from "./FunctionalUseCaseContext";
+import { UseCaseFunction } from "./FunctionalUseCaseContext";
+import { UseCaseLike } from "./UseCaseLike";
+
 const assert = require("assert");
+
 /**
  * Maybe, `UseCaseContext` is invisible from Public API.
  *
@@ -67,16 +70,16 @@ export class UseCaseContext {
      * }
      * ```
      */
-    useCase(useCase: (context: FunctionalUseCaseContext) => Function): UseCaseExecutor<any>;
-    useCase<T extends UseCase>(useCase: T): UseCaseExecutor<T>;
+    useCase(useCase: UseCaseFunction): UseCaseExecutor<FunctionalUseCase>;
+    useCase<T extends UseCaseLike>(useCase: T): UseCaseExecutor<T>;
     useCase(useCase: any): UseCaseExecutor<any> {
         if (process.env.NODE_ENV !== "production") {
             assert(useCase !== this._dispatcher, `the useCase(${useCase}) should not equal this useCase(${this._dispatcher})`);
         }
-        if (UseCase.isUseCase(useCase)) {
+        if (isUseCase(useCase)) {
             return new UseCaseExecutor({
                 useCase,
-                parent: UseCase.isUseCase(this._dispatcher) ? this._dispatcher : null,
+                parent: isUseCase(this._dispatcher) ? this._dispatcher : null,
                 dispatcher: this._dispatcher
             });
         } else if (typeof useCase === "function") {
@@ -91,7 +94,7 @@ The argument is UseCase constructor itself: ${useCase}`
             const functionalUseCase = new FunctionalUseCase(useCase, this._dispatcher);
             return new UseCaseExecutor({
                 useCase: functionalUseCase,
-                parent: UseCase.isUseCase(this._dispatcher) ? this._dispatcher : null,
+                parent: isUseCase(this._dispatcher) ? this._dispatcher : null,
                 dispatcher: this._dispatcher
             });
         }
