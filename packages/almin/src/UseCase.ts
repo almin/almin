@@ -10,6 +10,16 @@ import { generateNewId } from "./UseCaseIdGenerator";
 
 export const defaultUseCaseName = "<Anonymous-UseCase>";
 
+
+export const isUseCase = (v: any): v is UseCase => {
+    if (v instanceof UseCase) {
+        return true;
+    } else if (typeof v === "object" && typeof v.execute === "function") {
+        return true;
+    }
+    return false;
+};
+
 /**
  * A `UseCase` class is inherited Dispatcher.
  * The user implement own user-case that is inherited UseCase class
@@ -38,12 +48,7 @@ export abstract class UseCase extends Dispatcher implements UseCaseLike {
      * Return true if the `v` is a UseCase-like.
      */
     static isUseCase(v: any): v is UseCase {
-        if (v instanceof UseCase) {
-            return true;
-        } else if (typeof v === "object" && typeof v.execute === "function") {
-            return true;
-        }
-        return false;
+        return isUseCase(v);
     }
 
 

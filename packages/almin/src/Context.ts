@@ -4,7 +4,7 @@ import * as assert from "assert";
 import { Dispatcher } from "./Dispatcher";
 import { DispatchedPayload } from "./Dispatcher";
 import { DispatcherPayloadMeta } from "./DispatcherPayloadMeta";
-import { UseCase } from "./UseCase";
+import { isUseCase, UseCase } from "./UseCase";
 import { Store } from "./Store";
 import { StoreLike } from "./StoreLike";
 import { UseCaseExecutor } from "./UseCaseExecutor";
@@ -14,9 +14,10 @@ import { CompletedPayload, isCompletedPayload } from "./payload/CompletedPayload
 import { isDidExecutedPayload } from "./payload/DidExecutedPayload";
 import { ErrorPayload, isErrorPayload } from "./payload/ErrorPayload";
 import { WillExecutedPayload, isWillExecutedPayload } from "./payload/WillExecutedPayload";
-import { FunctionalUseCaseContext } from "./FunctionalUseCaseContext";
+import { UseCaseFunction } from "./FunctionalUseCaseContext";
 import { FunctionalUseCase } from "./FunctionalUseCase";
 import { StateMap } from "./UILayer/StoreGroupTypes";
+import { UseCaseLike } from "./UseCaseLike";
 /**
  * Context class provide observing and communicating with **Store** and **UseCase**.
  */
@@ -157,11 +158,11 @@ export class Context<T> {
      * context.useCase(awesomeUseCase).execute([1, 2, 3]);
      * ```
      */
-    useCase(useCase: (context: FunctionalUseCaseContext) => Function): UseCaseExecutor<any>;
-    useCase<T extends UseCase>(useCase: T): UseCaseExecutor<T>;
+    useCase(useCase: UseCaseFunction): UseCaseExecutor<FunctionalUseCase>;
+    useCase<T extends UseCaseLike>(useCase: T): UseCaseExecutor<T>;
     useCase(useCase: any): UseCaseExecutor<any> {
         // instance of UseCase
-        if (UseCase.isUseCase(useCase)) {
+        if (isUseCase(useCase)) {
             return new UseCaseExecutor({
                 useCase,
                 parent: null,
