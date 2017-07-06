@@ -3,10 +3,9 @@
 
 import { Dispatcher } from "./Dispatcher";
 import { UseCase } from "./UseCase";
-import { UseCaseLike } from "./UseCaseLike";
 
 export interface DispatcherPayloadMetaArgs {
-    useCase?: UseCaseLike;
+    useCase?: UseCase;
     dispatcher?: Dispatcher | Dispatcher;
     isUseCaseFinished?: boolean;
     parentUseCase?: UseCase | null;
@@ -34,7 +33,7 @@ export interface DispatcherPayloadMeta {
     /**
      * A reference to the useCase/dispatcher to which the payload was originally dispatched.
      */
-    readonly useCase: UseCaseLike | null;
+    readonly useCase: UseCase | null;
 
     /**
      * A dispatcher of the payload
@@ -90,7 +89,7 @@ export interface DispatcherPayloadMeta {
  * @private
  */
 export class DispatcherPayloadMetaImpl implements DispatcherPayloadMeta {
-    readonly useCase: UseCaseLike | null;
+    readonly useCase: UseCase | null;
     readonly dispatcher: UseCase | Dispatcher | null;
     readonly parentUseCase: UseCase | Dispatcher | null;
     readonly timeStamp: number;
