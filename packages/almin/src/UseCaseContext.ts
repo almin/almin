@@ -91,7 +91,7 @@ The argument is UseCase constructor itself: ${useCase}`
                 );
             }
             // function to be FunctionalUseCase
-            const functionalUseCase = new FunctionalUseCase(useCase, this._dispatcher);
+            const functionalUseCase = new FunctionalUseCase(useCase);
             return new UseCaseExecutor({
                 useCase: functionalUseCase,
                 parent: isUseCase(this._dispatcher) ? this._dispatcher : null,

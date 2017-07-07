@@ -218,45 +218,41 @@ describe("StoreGroup", function() {
                 });
                 // then
                 const promise = context.useCase(asyncUseCase).execute().then(() => {
-                    assert(isCalled, "after");
+                    assert.ok(isCalled, "after");
                 });
                 // not yet change
-                assert(isCalled === false, "before");
+                assert.strictEqual(isCalled, false, "before");
                 return promise;
             });
         });
         context("when UseCase is nesting", function() {
-            context("{ asap: true }", function() {
-                it("should be called by all UseCases", function() {
-                    const aStore = createStore({ name: "AStore" });
-                    const bStore = createStore({ name: "BStore" });
-                    const storeGroup = new StoreGroup({ a: aStore, b: bStore }, {
-                        asap: true
-                    });
-                    let onChangeCounter = 0;
-                    storeGroup.onChange(() => {
-                        onChangeCounter += 1;
-                    });
-                    // when
-                    const changeBUseCase = createAsyncChangeStoreUseCase(bStore);
+            it("should be called by all UseCases", function() {
+                const aStore = createStore({ name: "AStore" });
+                const bStore = createStore({ name: "BStore" });
+                const storeGroup = new StoreGroup({ a: aStore, b: bStore });
+                let onChangeCounter = 0;
+                storeGroup.onChange(() => {
+                    onChangeCounter += 1;
+                });
+                // when
+                const changeBUseCase = createAsyncChangeStoreUseCase(bStore);
 
-                    class ChangeAAndBUseCase extends UseCase {
-                        execute() {
-                            return this.context.useCase(changeBUseCase).execute().then(() => {
-                                aStore.updateState({ a: 1 });
-                            });
-                        }
+                class ChangeAAndBUseCase extends UseCase {
+                    execute() {
+                        return this.context.useCase(changeBUseCase).execute().then(() => {
+                            aStore.updateState({ a: 1 });
+                        });
                     }
+                }
 
-                    const context = new Context({
-                        dispatcher: new Dispatcher(),
-                        store: storeGroup
-                    });
-                    // then
-                    const useCase = new ChangeAAndBUseCase();
-                    return context.useCase(useCase).execute().then(() => {
-                        assert.equal(onChangeCounter, 2);
-                    });
+                const context = new Context({
+                    dispatcher: new Dispatcher(),
+                    store: storeGroup
+                });
+                // then
+                const useCase = new ChangeAAndBUseCase();
+                return context.useCase(useCase).execute().then(() => {
+                    assert.equal(onChangeCounter, 2);
                 });
             });
             context("when UseCase#dispatch is called", function() {
@@ -654,7 +650,7 @@ describe("StoreGroup", function() {
                 return context.useCase(useCaseSync).execute().then(() => {
                     return context.useCase(useCaseASync).execute();
                 }).then(() => {
-                    assert.ok(aStore.receivedPayloadList.length === expectedReceivedPayloadList.length);
+                    assert.strictEqual(aStore.receivedPayloadList.length, expectedReceivedPayloadList.length, "should be equal receive payload length");
                     aStore.receivedPayloadList.forEach((payload, index) => {
                         const ExpectedPayloadClass = expectedReceivedPayloadList[index];
                         assert.ok(payload instanceof ExpectedPayloadClass, `${payload} instanceof ${ExpectedPayloadClass}`);

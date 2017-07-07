@@ -12,7 +12,6 @@ import { WillExecutedPayload, isWillExecutedPayload } from "./payload/WillExecut
 import { UseCaseLike } from "./UseCaseLike";
 import { Payload } from "./payload/Payload";
 
-
 interface onWillExecuteArgs {
     (...args: Array<any>): void;
 }
@@ -73,12 +72,12 @@ https://almin.js.org/docs/warnings/usecase-is-already-released.html
  *
  * @private
  */
-export class UseCaseExecutor<T extends UseCaseLike> {
+export class UseCaseExecutor<T extends UseCaseLike> extends Dispatcher {
 
     /**
      * A executable useCase
      */
-    private _useCase: T;
+    useCase: T;
 
     /**
      * A parent useCase
@@ -113,6 +112,7 @@ export class UseCaseExecutor<T extends UseCaseLike> {
         parent: UseCase | null;
         dispatcher: Dispatcher;
     }) {
+        super();
         if (process.env.NODE_ENV !== "production") {
             // execute and finish =>
             const useCaseName = useCase.name;
@@ -120,13 +120,14 @@ export class UseCaseExecutor<T extends UseCaseLike> {
             assert.ok(typeof useCase.execute === "function", `UseCase instance should have #execute function: ${useCaseName}`);
         }
 
-        this._useCase = useCase;
+        this.useCase = useCase;
         this._parentUseCase = parent;
         this._dispatcher = dispatcher;
         this._releaseHandlers = [];
         // delegate userCase#onDispatch to central dispatcher
-        const unListenHandler = this._useCase.pipe(this._dispatcher);
-        this._releaseHandlers.push(unListenHandler);
+        const unListenUseCaseToDispatcherHandler = this.useCase.pipe(this);
+        const unListenUseCaseExecutorToDispatcherHandler = this._parentUseCase ? this.pipe(this._parentUseCase) : this.pipe(this._dispatcher);
+        this._releaseHandlers.push(unListenUseCaseToDispatcherHandler, unListenUseCaseExecutorToDispatcherHandler);
     }
 
     /**
@@ -135,22 +136,22 @@ export class UseCaseExecutor<T extends UseCaseLike> {
     private _willExecute(args?: any[]): void {
         // Add instance to manager
         // It should be removed when it will be completed.
-        UseCaseInstanceMap.set(this._useCase, this);
+        UseCaseInstanceMap.set(this.useCase, this);
         const payload = new WillExecutedPayload({
             args
         });
         const meta = new DispatcherPayloadMetaImpl({
-            useCase: this._useCase,
+            useCase: this.useCase,
             dispatcher: this._dispatcher,
             parentUseCase: this._parentUseCase,
             isTrusted: true,
             isUseCaseFinished: false
         });
-        this._dispatcher.dispatch(payload, meta);
+        this.dispatch(payload, meta);
         // Warning: parentUseCase is already released
         if (process.env.NODE_ENV !== "production") {
             if (this._parentUseCase && !UseCaseInstanceMap.has(this._parentUseCase)) {
-                warningUseCaseIsAlreadyReleased(this._parentUseCase, this._useCase, payload, meta);
+                warningUseCaseIsAlreadyReleased(this._parentUseCase, this.useCase, payload, meta);
             }
         }
     }
@@ -167,13 +168,13 @@ export class UseCaseExecutor<T extends UseCaseLike> {
             value
         });
         const meta = new DispatcherPayloadMetaImpl({
-            useCase: this._useCase,
+            useCase: this.useCase,
             dispatcher: this._dispatcher,
             parentUseCase: this._parentUseCase,
             isTrusted: true,
             isUseCaseFinished
         });
-        this._dispatcher.dispatch(payload, meta);
+        this.dispatch(payload, meta);
     }
 
     /**
@@ -185,22 +186,23 @@ export class UseCaseExecutor<T extends UseCaseLike> {
             value
         });
         const meta = new DispatcherPayloadMetaImpl({
-            useCase: this._useCase,
+            useCase: this.useCase,
             dispatcher: this._dispatcher,
             parentUseCase: this._parentUseCase,
             isTrusted: true,
             isUseCaseFinished: true
         });
-        this._dispatcher.dispatch(payload, meta);
+        this.dispatch(payload, meta);
         // Warning: parentUseCase is already released
         if (process.env.NODE_ENV !== "production") {
             if (this._parentUseCase && !UseCaseInstanceMap.has(this._parentUseCase)) {
-                warningUseCaseIsAlreadyReleased(this._parentUseCase, this._useCase, payload, meta);
+                warningUseCaseIsAlreadyReleased(this._parentUseCase, this.useCase, payload, meta);
             }
         }
         // Delete the reference from instance manager
         // It prevent leaking of instance.
-        UseCaseInstanceMap.delete(this._useCase);
+        UseCaseInstanceMap.delete(this.useCase);
+        this.emit("COMPLETE");
     }
 
     /**
@@ -244,6 +246,10 @@ export class UseCaseExecutor<T extends UseCaseLike> {
         });
         this._releaseHandlers.push(releaseHandler);
         return releaseHandler;
+    }
+
+    onComplete(handler: () => void): void {
+        this.on("COMPLETE", handler);
     }
 
     /**
@@ -293,7 +299,7 @@ export class UseCaseExecutor<T extends UseCaseLike> {
             }
             // Notes: proxyfiedUseCase has not timeout
             // proxiedUseCase will resolve by UseCaseWrapper#execute
-            const proxyfiedUseCase = proxifyUseCase<T>(this._useCase, (args) => {
+            const proxyfiedUseCase = proxifyUseCase<T>(this.useCase, (args) => {
                 this._willExecute(args);
             }, (value) => {
                 this._didExecute(value);
@@ -306,7 +312,7 @@ export class UseCaseExecutor<T extends UseCaseLike> {
             this._complete(result);
             this.release();
         }).catch(error => {
-            this._useCase.throwError(error);
+            this.useCase.throwError(error);
             this._complete();
             this.release();
             return Promise.reject(error);
