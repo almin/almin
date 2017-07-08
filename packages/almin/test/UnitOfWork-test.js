@@ -65,5 +65,16 @@ describe("UnitOfWork", () => {
             assert.deepStrictEqual(committedPayloads, [payloadA, payloadB]);
         });
     });
-
+    describe("#release", () => {
+        it("released UnitOfWork can not commit", () => {
+            const { mockStoreGroup } = createMockStoreGroup();
+            const unitOfWork = new UnitOfWork(mockStoreGroup);
+            unitOfWork.addPayload(new Payload({ type: "Example" }));
+            unitOfWork.release();
+            assert.strictEqual(unitOfWork.size, 0);
+            assert.throws(() => {
+                unitOfWork.commit();
+            });
+        });
+    });
 });
