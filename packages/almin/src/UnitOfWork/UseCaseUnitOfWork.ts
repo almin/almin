@@ -13,6 +13,10 @@ export interface UseCaseUnitOfWorkOptions {
     autoCommit: boolean;
 }
 
+/**
+ * UseCaseUnitOfWork is a Unit of Work between UseCase and StoreGroup.
+ * It aim to manager updating of StoreGroup via UseCase.
+ */
 export class UseCaseUnitOfWork {
     private unitOfWork: UnitOfWork;
     private finishedUseCaseMap: MapLike<string, boolean>;
@@ -31,6 +35,9 @@ export class UseCaseUnitOfWork {
         }
     }
 
+    /**
+     * Begin transaction of the useCaseExecutor/UseCase
+     */
     open(useCaseExecutor: UseCaseExecutor<any>) {
         const onDispatchOnUnitOfWork = (payload: Payload, meta: DispatcherPayloadMeta) => {
             if (!meta.isTrusted) {
@@ -56,10 +63,17 @@ export class UseCaseUnitOfWork {
         this.unsubscribeMap.set(useCaseExecutor, unsubscribe);
     }
 
+    /**
+     * Commit current queued payload to Committable StoreGroup.
+     * After commit, prune current queue.
+     */
     commit() {
         this.unitOfWork.commit();
     }
 
+    /**
+     * End transaction of the useCaseExecutor/UseCase
+     */
     close(useCaseExecutor: UseCaseExecutor<any>) {
         const unsubscribe = this.unsubscribeMap.get(useCaseExecutor);
         if (typeof unsubscribe !== "function") {
@@ -72,6 +86,10 @@ export class UseCaseUnitOfWork {
         this.unsubscribeMap.delete(useCaseExecutor);
     }
 
+    /**
+     * Release this Unit of Work.
+     * After released, can't commit this Unit of Work.
+     */
     release() {
         this.unsubscribeMap.values().forEach(unsubscribe => {
             unsubscribe();
