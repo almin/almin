@@ -4,7 +4,8 @@ import * as assert from "assert";
 import { Store, StoreGroup, Context, Dispatcher, Payload, DidExecutedPayload, CompletedPayload } from "../lib/index";
 import { InitializedPayload } from "../lib/UILayer/StoreGroup";
 
-context("Unit of work", function() {
+context("UseCaseUnitOfWork", function() {
+
     context("Integration with Store#onDispatch", () => {
         it("should not dispatch unnecessary payload to each store", function() {
             class TestStore extends Store {

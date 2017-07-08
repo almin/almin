@@ -1,19 +1,28 @@
 // MIT © 2017 azu
-import { StoreGroup } from "../UILayer/StoreGroup";
 import { EventEmitter } from "events";
 import { Payload } from "../payload/Payload";
 
+export interface Committable {
+    commit(payload: Payload): void;
+}
 
 export class UnitOfWork extends EventEmitter {
     private transactionalEvents: Payload[];
-    private storeGroup: StoreGroup<any>;
+    private committable: Committable;
     private isDisposed: boolean;
 
-    constructor(storeGroup: StoreGroup<any>) {
+    /**
+     * @param {Committable} committable it is often StoreGroup
+     */
+    constructor(committable: Committable) {
         super();
         this.transactionalEvents = [];
-        this.storeGroup = storeGroup;
+        this.committable = committable;
         this.isDisposed = false;
+    }
+
+    get size() {
+        return this.transactionalEvents.length;
     }
 
     addPayload(payload: Payload) {
@@ -30,7 +39,7 @@ export class UnitOfWork extends EventEmitter {
             throw new Error("already closed this transaction");
         }
         this.transactionalEvents.forEach((event) => {
-            this.storeGroup.commit(event);
+            this.committable.commit(event);
         });
         this.prune();
     };
@@ -39,7 +48,7 @@ export class UnitOfWork extends EventEmitter {
         this.transactionalEvents.length = 0;
     }
 
-    close() {
+    release() {
         this.transactionalEvents.length = 0;
         this.isDisposed = true;
         this.removeAllListeners();

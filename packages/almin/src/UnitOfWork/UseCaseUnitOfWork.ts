@@ -76,6 +76,6 @@ export class UseCaseUnitOfWork {
         this.unsubscribeMap.values().forEach(unsubscribe => {
             unsubscribe();
         });
-        this.unitOfWork.close();
+        this.unitOfWork.release();
     }
 }
