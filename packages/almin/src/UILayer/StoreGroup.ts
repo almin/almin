@@ -191,9 +191,6 @@ export class StoreGroup<T> extends Dispatcher {
             // observe Store
             const unRegisterHandler = this._registerStore(store);
             this._releaseHandlers.push(unRegisterHandler);
-            // delegate dispatching
-            const pipeHandler = this.pipe(store);
-            this._releaseHandlers.push(pipeHandler);
         });
         // after dispatching, and then emitChange
         const unObserveHandler = this._observeDispatchedPayload();
@@ -232,6 +229,10 @@ export class StoreGroup<T> extends Dispatcher {
     private writePhaseInRead(stores: Array<Store<T>>, payload: Payload): void {
         for (let i = 0; i < stores.length; i++) {
             const store = stores[i];
+            // Deprecated: it is compatible behavior
+            // Please a store should implement `receivePayload` insteadof of using `Store#onDispatch`
+            // Warning: Manually catch some event like Repository#onChange in a Store, It would be broken manually transaction mode
+            store.dispatch(payload);
             // reduce state by prevSate with payload if it is implemented
             if (typeof store.receivePayload === "function") {
                 store.receivePayload(payload);
@@ -304,7 +305,6 @@ But, ${store.name}#getState() was called.`);
         this.writePhaseInRead(this.stores, payload);
         this.tryToUpdateStoreGroupState();
     }
-
 
     // read -> emitChange if needed
     private tryToUpdateStoreGroupState(): void {

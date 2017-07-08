@@ -11,6 +11,7 @@ const STATE_CHANGE_EVENT = "STATE_CHANGE_EVENT";
  * @private
  */
 export const defaultStoreName = "<Anonymous-Store>";
+
 /**
  * Store hold the state of your application.
  *
@@ -39,6 +40,10 @@ export const defaultStoreName = "<Anonymous-Store>";
  *  });
  * ```
  *
+ * We recommenced that implement `Store#receivePayload` insteadof using `Store#onDispatch`.
+ * `Store#receivePayload` is almost same with `Store#onDispatch`.
+ * But, `Store#receivePayload` is more match with Almin's life cycle.
+ *
  * ### Example
  *
  * To implement store, you have to inherit `Store` class.
@@ -51,6 +56,11 @@ export const defaultStoreName = "<Anonymous-Store>";
  *          foo : "bar"
  *       };
  *    }
+ *
+ *    receivePayload(payload){
+ *      this.setState(this.state.reduce(payload));
+ *    }
+ *
  *    getState(){
  *      return {
  *          yourStore: this.state
