@@ -124,8 +124,15 @@ export class UseCaseExecutor<T extends UseCaseLike> extends Dispatcher {
         this._parentUseCase = parent;
         this._dispatcher = dispatcher;
         this._releaseHandlers = [];
-        // delegate userCase#onDispatch to central dispatcher
+        /**
+         * ## Delegating Payload
+         *
+         * UseCase -> UseCaseExecutor -> Dispatcher
+         */
+        // UseCase -> UseCaseExecutor
         const unListenUseCaseToDispatcherHandler = this.useCase.pipe(this);
+        // If this is child UseCase, Child UseCase -> Parent UseCase
+        // If this is parent UseCase, Parent UseCase -> Dispatcher
         const unListenUseCaseExecutorToDispatcherHandler = this._parentUseCase ? this.pipe(this._parentUseCase) : this.pipe(this._dispatcher);
         this._releaseHandlers.push(unListenUseCaseToDispatcherHandler, unListenUseCaseExecutorToDispatcherHandler);
     }
