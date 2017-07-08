@@ -19,6 +19,7 @@ import { UseCaseLike } from "./UseCaseLike";
 import { UseCaseUnitOfWork } from "./UnitOfWork/UseCaseUnitOfWork";
 import { StoreGroup } from "./UILayer/StoreGroup";
 import { createUseCaseExecutor } from "./UseCaseExecutorFactory";
+import { TransactionContext } from "./UnitOfWork/TransactionContext";
 
 /**
  * Context class provide observing and communicating with **Store** and **UseCase**.
@@ -176,6 +177,33 @@ export class Context<T> {
             });
         }
         return useCaseExecutor;
+    }
+
+
+    /**
+     * @todo documentation
+     */
+    transaction(committer: (context: TransactionContext) => Promise<any>) {
+        // TODO: toStoreGroup
+        const unitOfWork = new UseCaseUnitOfWork(this._storeGroup as StoreGroup<any>, { autoCommit: false });
+        const createUseCaseExecutorAndOpenUoW = <T extends UseCaseLike>(useCase: T): UseCaseExecutor<T> => {
+            const useCaseExecutor = createUseCaseExecutor(useCase, this._dispatcher);
+            unitOfWork.open(useCaseExecutor);
+            return useCaseExecutor;
+        };
+        const context: TransactionContext = {
+            useCase: createUseCaseExecutorAndOpenUoW,
+            commit() {
+                unitOfWork.commit();
+            }
+        };
+        // committer resolve with void by design.
+        return committer(context).then(() => {
+            unitOfWork.release();
+        }, (error) => {
+            unitOfWork.release();
+            return Promise.reject(error);
+        });
     }
 
     /**
