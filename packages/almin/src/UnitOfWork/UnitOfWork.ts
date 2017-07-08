@@ -1,15 +1,11 @@
 // MIT © 2017 azu
 import { StoreGroup } from "../UILayer/StoreGroup";
-import { Payload } from "../payload/Payload";
 import { EventEmitter } from "events";
+import { Payload } from "../payload/Payload";
 
-// already done Payload
-export class Event extends Payload {
-
-}
 
 export class UnitOfWork extends EventEmitter {
-    private transactionalEvents: Event[];
+    private transactionalEvents: Payload[];
     private storeGroup: StoreGroup<any>;
     private isDisposed: boolean;
 
@@ -20,12 +16,12 @@ export class UnitOfWork extends EventEmitter {
         this.isDisposed = false;
     }
 
-    addEvent(event: Event) {
-        this.transactionalEvents.push(event);
-        this.emit("ON_ADD_NEW_EVENT", event);
+    addPayload(payload: Payload) {
+        this.transactionalEvents.push(payload);
+        this.emit("ON_ADD_NEW_EVENT", payload);
     };
 
-    onNewEvent(handler: (event: Event) => void) {
+    onNewPayload(handler: (event: Event) => void) {
         this.on("ON_ADD_NEW_EVENT", handler);
     }
 
@@ -34,11 +30,7 @@ export class UnitOfWork extends EventEmitter {
             throw new Error("already closed this transaction");
         }
         this.transactionalEvents.forEach((event) => {
-            try {
-                this.storeGroup.commit(event);
-            } catch (error) {
-                this.close();
-            }
+            this.storeGroup.commit(event);
         });
         this.prune();
     };
