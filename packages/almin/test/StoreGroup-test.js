@@ -3,7 +3,6 @@
 const assert = require("power-assert");
 const sinon = require("sinon");
 import { Payload } from "../lib/payload/Payload";
-import { ChangedPayload } from "../lib/index";
 import { DidExecutedPayload } from "../lib/payload/DidExecutedPayload";
 import { CompletedPayload } from "../lib/payload/CompletedPayload";
 import { Store } from "../lib/Store";

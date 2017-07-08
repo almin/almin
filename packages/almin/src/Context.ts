@@ -167,12 +167,12 @@ export class Context<T> {
     useCase(useCase: any): UseCaseExecutor<any> {
         const useCaseExecutor = createUseCaseExecutor(useCase, this._dispatcher);
         if (this._storeGroup instanceof StoreGroup) {
-            const unitOfWork = new UseCaseUnitOfWork(useCaseExecutor, this._storeGroup, {
+            const unitOfWork = new UseCaseUnitOfWork(this._storeGroup, {
                 autoCommit: true
             });
-            unitOfWork.open();
+            unitOfWork.open(useCaseExecutor);
             useCaseExecutor.onComplete(() => {
-                unitOfWork.close();
+                unitOfWork.close(useCaseExecutor);
             });
         }
         return useCaseExecutor;

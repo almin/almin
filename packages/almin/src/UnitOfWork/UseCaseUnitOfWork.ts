@@ -1,5 +1,4 @@
 // MIT © 2017 azu
-import { UseCaseLike } from "../UseCaseLike";
 import { Payload } from "../payload/Payload";
 import { DispatcherPayloadMeta } from "../DispatcherPayloadMeta";
 import { isErrorPayload } from "../payload/ErrorPayload";
@@ -14,26 +13,25 @@ export interface UseCaseUnitOfWorkOptions {
     autoCommit: boolean;
 }
 
-export class UseCaseUnitOfWork<T extends UseCaseLike> {
-    private useCaseExecutor: UseCaseExecutor<T>;
+export class UseCaseUnitOfWork {
     private unitOfWork: UnitOfWork;
     private finishedUseCaseMap: MapLike<string, boolean>;
-    private unDispatch: Function | undefined;
     private options: UseCaseUnitOfWorkOptions;
+    private unsubscribeMap: MapLike<UseCaseExecutor<any>, () => void>;
 
-    constructor(useCaseExecutor: UseCaseExecutor<T>, storeGroup: StoreGroup<any>, options: UseCaseUnitOfWorkOptions) {
-        this.useCaseExecutor = useCaseExecutor;
+    constructor(storeGroup: StoreGroup<any>, options: UseCaseUnitOfWorkOptions) {
         this.unitOfWork = new UnitOfWork(storeGroup);
         this.finishedUseCaseMap = new MapLike<string, boolean>();
         this.options = options;
-    }
-
-    open() {
+        this.unsubscribeMap = new MapLike<UseCaseExecutor<any>, () => void>();
         if (this.options.autoCommit) {
             this.unitOfWork.onNewEvent(() => {
                 this.commit();
             });
         }
+    }
+
+    open(useCaseExecutor: UseCaseExecutor<any>) {
         const onDispatchOnUnitOfWork = (payload: Payload, meta: DispatcherPayloadMeta) => {
             if (!meta.isTrusted) {
                 this.unitOfWork.addEvent(payload);
@@ -54,17 +52,30 @@ export class UseCaseUnitOfWork<T extends UseCaseLike> {
                 this.unitOfWork.addEvent(payload);
             }
         };
-        this.unDispatch = this.useCaseExecutor.onDispatch(onDispatchOnUnitOfWork);
+        const unsubscribe = useCaseExecutor.onDispatch(onDispatchOnUnitOfWork);
+        this.unsubscribeMap.set(useCaseExecutor, unsubscribe);
     }
 
     commit() {
         this.unitOfWork.commit();
     }
 
-    close() {
-        if (typeof this.unDispatch === "function") {
-            this.unDispatch();
+    close(useCaseExecutor: UseCaseExecutor<any>) {
+        const unsubsribe = this.unsubscribeMap.get(useCaseExecutor);
+        if (typeof unsubsribe !== "function") {
+            if (process.env.NODE_ENV !== "production") {
+                console.warn("Warning: This UseCaseExecutor is not opened or already closed.", useCaseExecutor);
+            }
+            return;
         }
+        unsubsribe();
+        this.unsubscribeMap.delete(useCaseExecutor);
+    }
+
+    release() {
+        this.unsubscribeMap.values().forEach(unsubsrcibe => {
+            unsubsrcibe();
+        });
         this.unitOfWork.close();
     }
 }
