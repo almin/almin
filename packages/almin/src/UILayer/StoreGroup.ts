@@ -4,9 +4,7 @@ import * as assert from "assert";
 import MapLike from "map-like";
 import { Payload } from "../payload/Payload";
 import { DispatcherPayloadMeta } from "../DispatcherPayloadMeta";
-import { isErrorPayload } from "../payload/ErrorPayload";
 import { isWillExecutedPayload } from "../payload/WillExecutedPayload";
-import { isDidExecutedPayload } from "../payload/DidExecutedPayload";
 import { isCompletedPayload } from "../payload/CompletedPayload";
 import { shallowEqual } from "shallow-equal-object";
 import { Dispatcher } from "../Dispatcher";
@@ -136,8 +134,6 @@ export class StoreGroup<T> extends Dispatcher {
     private _changingStores: Array<Store<T>> = [];
     // all functions to release handlers
     private _releaseHandlers: Array<Function> = [];
-    // already finished UseCase Map
-    private _finishedUseCaseMap: MapLike<string, boolean>;
     // current working useCase
     private _workingUseCaseMap: MapLike<string, boolean>;
     // store/state cache map
@@ -146,6 +142,7 @@ export class StoreGroup<T> extends Dispatcher {
     private _storeStateMap: StoreStateMap;
 
     private storeGroupEmitChangeChecker = new StoreGroupEmitChangeChecker();
+
     /**
      * Initialize this StoreGroup with a stateName-store mapping object.
      *
@@ -185,7 +182,6 @@ export class StoreGroup<T> extends Dispatcher {
         // pull stores from mapping if arguments is mapping.
         this.stores = this._storeStateMap.stores;
         this._workingUseCaseMap = new MapLike<string, boolean>();
-        this._finishedUseCaseMap = new MapLike<string, boolean>();
         this._stateCacheMap = new MapLike<Store<T>, any>();
         // Implementation Note:
         // Dispatch -> pipe -> Store#emitChange() if it is needed
@@ -195,9 +191,6 @@ export class StoreGroup<T> extends Dispatcher {
             // observe Store
             const unRegisterHandler = this._registerStore(store);
             this._releaseHandlers.push(unRegisterHandler);
-            // delegate dispatching
-            const pipeHandler = this.pipe(store);
-            this._releaseHandlers.push(pipeHandler);
         });
         // after dispatching, and then emitChange
         const unObserveHandler = this._observeDispatchedPayload();
@@ -236,6 +229,10 @@ export class StoreGroup<T> extends Dispatcher {
     private writePhaseInRead(stores: Array<Store<T>>, payload: Payload): void {
         for (let i = 0; i < stores.length; i++) {
             const store = stores[i];
+            // Deprecated: it is compatible behavior
+            // Please a store should implement `receivePayload` insteadof of using `Store#onDispatch`
+            // Warning: Manually catch some event like Repository#onChange in a Store, It would be broken manually transaction mode
+            store.dispatch(payload);
             // reduce state by prevSate with payload if it is implemented
             if (typeof store.receivePayload === "function") {
                 store.receivePayload(payload);
@@ -304,7 +301,7 @@ But, ${store.name}#getState() was called.`);
     }
 
     // write and read -> emitChange if needed
-    private sendPayloadAndTryEmit(payload: Payload): void {
+    commit(payload: Payload): void {
         this.writePhaseInRead(this.stores, payload);
         this.tryToUpdateStoreGroupState();
     }
@@ -373,26 +370,10 @@ But, ${store.name}#getState() was called.`);
      */
     private _observeDispatchedPayload(): () => void {
         const observeChangeHandler = (payload: Payload, meta: DispatcherPayloadMeta) => {
-            if (!meta.isTrusted) {
-                this.sendPayloadAndTryEmit(payload);
-            } else if (isErrorPayload(payload)) {
-                this.sendPayloadAndTryEmit(payload);
-            } else if (isWillExecutedPayload(payload) && meta.useCase) {
+            if (isWillExecutedPayload(payload) && meta.useCase) {
                 this._workingUseCaseMap.set(meta.useCase.id, true);
-            } else if (isDidExecutedPayload(payload) && meta.useCase) {
-                if (meta.isUseCaseFinished) {
-                    this._finishedUseCaseMap.set(meta.useCase.id, true);
-                }
-                this.sendPayloadAndTryEmit(payload);
             } else if (isCompletedPayload(payload) && meta.useCase && meta.isUseCaseFinished) {
                 this._workingUseCaseMap.delete(meta.useCase.id);
-                // if the useCase is already finished, doesn't emitChange in CompletedPayload
-                // In other word, If the UseCase that return non-promise value, doesn't emitChange in CompletedPayload
-                if (this._finishedUseCaseMap.has(meta.useCase.id)) {
-                    this._finishedUseCaseMap.delete(meta.useCase.id);
-                    return;
-                }
-                this.sendPayloadAndTryEmit(payload);
             }
         };
         return this.onDispatch(observeChangeHandler);

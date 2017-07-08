@@ -1,10 +1,8 @@
 // LICENSE : MIT
 "use strict";
-import * as assert from "assert";
 import { Dispatcher } from "./Dispatcher";
 import { DispatchedPayload } from "./Dispatcher";
 import { DispatcherPayloadMeta } from "./DispatcherPayloadMeta";
-import { isUseCase, UseCase } from "./UseCase";
 import { Store } from "./Store";
 import { StoreLike } from "./StoreLike";
 import { UseCaseExecutor } from "./UseCaseExecutor";
@@ -18,6 +16,10 @@ import { UseCaseFunction } from "./FunctionalUseCaseContext";
 import { FunctionalUseCase } from "./FunctionalUseCase";
 import { StateMap } from "./UILayer/StoreGroupTypes";
 import { UseCaseLike } from "./UseCaseLike";
+import { UseCaseUnitOfWork } from "./UnitOfWork/UseCaseUnitOfWork";
+import { StoreGroup } from "./UILayer/StoreGroup";
+import { createUseCaseExecutor } from "./UseCaseExecutorFactory";
+
 /**
  * Context class provide observing and communicating with **Store** and **UseCase**.
  */
@@ -73,15 +75,17 @@ export class Context<T> {
         // StoreGroup call each Store#receivePayload, but pass directly Store is not.
         // So, Context check the store instance has implementation of `Store#receivePayload` and pass payload to it.
         // See https://github.com/almin/almin/issues/190
+
         if (this._storeGroup instanceof Store) {
+            const store = this._storeGroup;
             // Dispatch Flow: Dispatcher -> Store(and receivePayload fallback)
             // Notes: You should not depended on this implementation in production.
-            const hasReceivePayload = typeof this._storeGroup.receivePayload === "function";
+            const hasReceivePayload = typeof store.receivePayload === "function";
             const releaseHandler = this._dispatcher.onDispatch((payload: DispatchedPayload, meta: DispatcherPayloadMeta) => {
-                this._storeGroup.dispatch(payload, meta);
+                store.dispatch(payload, meta);
                 if (hasReceivePayload) {
                     // StoreLike has not receivePayload, but Store may has receivePayload
-                    (this._storeGroup as Store).receivePayload!(payload);
+                    (store as Store).receivePayload!(payload);
                 }
             });
             this._releaseHandlers.push(releaseHandler);
@@ -161,28 +165,17 @@ export class Context<T> {
     useCase(useCase: UseCaseFunction): UseCaseExecutor<FunctionalUseCase>;
     useCase<T extends UseCaseLike>(useCase: T): UseCaseExecutor<T>;
     useCase(useCase: any): UseCaseExecutor<any> {
-        // instance of UseCase
-        if (isUseCase(useCase)) {
-            return new UseCaseExecutor({
-                useCase,
-                parent: null,
-                dispatcher: this._dispatcher
+        const useCaseExecutor = createUseCaseExecutor(useCase, this._dispatcher);
+        if (this._storeGroup instanceof StoreGroup) {
+            const unitOfWork = new UseCaseUnitOfWork(this._storeGroup, {
+                autoCommit: true
             });
-        } else if (typeof useCase === "function") {
-            // When pass UseCase constructor itself, throw assertion error
-            assert.ok(Object.getPrototypeOf && Object.getPrototypeOf(useCase) !== UseCase,
-                `Context#useCase argument should be instance of UseCase.
-The argument is UseCase constructor itself: ${useCase}`
-            );
-            // function to be FunctionalUseCase
-            const functionalUseCase = new FunctionalUseCase(useCase, this._dispatcher);
-            return new UseCaseExecutor({
-                useCase: functionalUseCase,
-                parent: null,
-                dispatcher: this._dispatcher
+            unitOfWork.open(useCaseExecutor);
+            useCaseExecutor.onComplete(() => {
+                unitOfWork.close(useCaseExecutor);
             });
         }
-        throw new Error(`Context#useCase argument should be UseCase: ${useCase}`);
+        return useCaseExecutor;
     }
 
     /**

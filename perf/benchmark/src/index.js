@@ -17,6 +17,7 @@ if (typeof window == 'object') {
  * @param {function(benchmark: Object}} done
  */
 module.exports = function(AlminVersions, done) {
+    Benchmark.options.minSamples = 30;
     const suite = new Suite();
     // randomize for equality
     _.shuffle(Object.keys(AlminVersions)).forEach(version => {

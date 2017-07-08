@@ -1,11 +1,12 @@
 // LICENSE : MIT
 "use strict";
 
-import { isUseCase, UseCase } from "./UseCase";
+import { UseCase } from "./UseCase";
 import { UseCaseExecutor } from "./UseCaseExecutor";
 import { FunctionalUseCase } from "./FunctionalUseCase";
 import { UseCaseFunction } from "./FunctionalUseCaseContext";
 import { UseCaseLike } from "./UseCaseLike";
+import { createUseCaseExecutor } from "./UseCaseExecutorFactory";
 
 const assert = require("assert");
 
@@ -76,28 +77,6 @@ export class UseCaseContext {
         if (process.env.NODE_ENV !== "production") {
             assert(useCase !== this._dispatcher, `the useCase(${useCase}) should not equal this useCase(${this._dispatcher})`);
         }
-        if (isUseCase(useCase)) {
-            return new UseCaseExecutor({
-                useCase,
-                parent: isUseCase(this._dispatcher) ? this._dispatcher : null,
-                dispatcher: this._dispatcher
-            });
-        } else if (typeof useCase === "function") {
-            if (process.env.NODE_ENV !== "production") {
-                // When pass UseCase constructor itself, throw assertion error
-                assert.ok(Object.getPrototypeOf && Object.getPrototypeOf(useCase) !== UseCase,
-                    `Context#useCase argument should be instance of UseCase.
-The argument is UseCase constructor itself: ${useCase}`
-                );
-            }
-            // function to be FunctionalUseCase
-            const functionalUseCase = new FunctionalUseCase(useCase, this._dispatcher);
-            return new UseCaseExecutor({
-                useCase: functionalUseCase,
-                parent: isUseCase(this._dispatcher) ? this._dispatcher : null,
-                dispatcher: this._dispatcher
-            });
-        }
-        throw new Error(`UseCaseContext#useCase argument should be UseCase: ${useCase}`);
+        return createUseCaseExecutor(useCase, this._dispatcher);
     }
 }

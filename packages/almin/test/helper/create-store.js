@@ -5,6 +5,7 @@ import { Store } from "../../lib/Store";
  * @param {string} name
  * @param {*} state
  * @returns {TestStore}
+ * @deprecated This store is old style
  */
 export function createStore({
     name,
