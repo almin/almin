@@ -14,7 +14,7 @@ import { Store } from "../Store";
  */
 export class StoreGroupChangingStoreStrictChecker {
     // white list for allowing to update
-    private allowedChangingStoreMap = new MapLike<Store<any>, any>();
+    private allowedChangingStoreMap = new MapLike<Store<any>, boolean>();
 
     /**
      * allow `store` to update
