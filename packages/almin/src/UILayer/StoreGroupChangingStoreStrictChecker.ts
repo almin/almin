@@ -12,13 +12,6 @@ import { Store } from "../Store";
  *
  * https://github.com/almin/almin/issues/201
  */
-
-/**
- * Check the usage of Store#emitChange.
- * If the store call `Store#emitChange()` but the state of store is not changed, show warning.
- * https://github.com/almin/almin/issues/151
- * https://github.com/almin/almin/pull/205
- */
 export class StoreGroupChangingStoreStrictChecker {
     // white list for allowing to update
     private allowedChangingStoreMap = new MapLike<Store<any>, any>();
