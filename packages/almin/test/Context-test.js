@@ -1,6 +1,6 @@
 // LICENSE : MIT
 "use strict";
-const assert = require("power-assert");
+import * as assert from "assert";
 import { Context } from "../lib/Context";
 import { Dispatcher } from "../lib/Dispatcher";
 import { Store } from "../lib/Store";
@@ -72,7 +72,6 @@ describe("Context", function() {
             return appContext.useCase(useCase).execute().then(() => {
                 const [payload, meta] = dispatchedPayload[0];
                 assert.deepEqual(payload, DISPATCHED_EVENT);
-                console.log(meta);
                 assert.strictEqual(meta.useCase, useCase);
                 assert.strictEqual(meta.dispatcher, useCase);
                 assert.strictEqual(meta.parentUseCase, null);
@@ -146,8 +145,8 @@ describe("Context", function() {
             const testUseCase = new TestUseCase();
             // then
             appContext.onWillExecuteEachUseCase((payload, meta) => {
-                assert(Array.isArray(payload.args));
-                assert(typeof meta.timeStamp === "number");
+                assert.ok(Array.isArray(payload.args));
+                assert.ok(typeof meta.timeStamp === "number");
                 assert.equal(meta.useCase, testUseCase);
                 assert.equal(meta.dispatcher, dispatcher);
                 assert.equal(meta.parentUseCase, null);
@@ -166,9 +165,9 @@ describe("Context", function() {
             const expectedArguments = "param";
             // then
             appContext.onWillExecuteEachUseCase((payload, meta) => {
-                assert(payload.args.length === 1);
+                assert.ok(payload.args.length === 1);
                 const [arg] = payload.args;
-                assert(arg === expectedArguments);
+                assert.ok(arg === expectedArguments);
                 done();
             });
             // when
@@ -202,7 +201,7 @@ describe("Context", function() {
             // then
             appContext.onWillExecuteEachUseCase((payload, meta) => {
                 isCalled.will = true;
-                assert(payload instanceof WillExecutedPayload);
+                assert.ok(payload instanceof WillExecutedPayload);
                 assert.equal(meta.useCase, eventUseCase);
                 assert.equal(meta.dispatcher, dispatcher);
                 assert.equal(meta.parentUseCase, null);
@@ -210,19 +209,19 @@ describe("Context", function() {
             // onDispatch should not called when UseCase will/did execute.
             appContext.onDispatch((payload, meta) => {
                 isCalled.dispatch = true;
-                assert(typeof payload === "object");
+                assert.ok(typeof payload === "object");
                 assert.equal(payload, expectedPayload);
             });
             appContext.onDidExecuteEachUseCase((payload, meta) => {
                 isCalled.did = true;
-                assert(payload instanceof DidExecutedPayload);
+                assert.ok(payload instanceof DidExecutedPayload);
                 assert.equal(meta.useCase, eventUseCase);
                 assert.equal(meta.dispatcher, dispatcher);
                 assert.equal(meta.parentUseCase, null);
             });
             appContext.onCompleteEachUseCase((payload, meta) => {
                 isCalled.complete = true;
-                assert(payload instanceof CompletedPayload);
+                assert.ok(payload instanceof CompletedPayload);
                 assert.equal(meta.useCase, eventUseCase);
                 assert.equal(meta.dispatcher, dispatcher);
                 assert.equal(meta.parentUseCase, null);
@@ -230,7 +229,7 @@ describe("Context", function() {
             // when
             return appContext.useCase(eventUseCase).execute().then(() => {
                 Object.keys(isCalled).forEach((key) => {
-                    assert(isCalled[key] === true, `${key} should be called`);
+                    assert.ok(isCalled[key] === true, `${key} should be called`);
                 });
             });
         });
@@ -268,9 +267,9 @@ describe("Context", function() {
             // when
             const promise = appContext.useCase(testUseCase).execute();
             // should not be called at time
-            assert(isCalled === false);
+            assert.ok(isCalled === false);
             return promise.then(() => {
-                assert(isCalled);
+                assert.ok(isCalled);
             });
         });
     });
@@ -284,7 +283,7 @@ describe("Context", function() {
             const throwUseCase = new ThrowUseCase();
             // then
             appContext.onErrorDispatch((payload, meta) => {
-                assert(payload.error instanceof Error);
+                assert.ok(payload.error instanceof Error);
                 assert.equal(typeof meta.timeStamp, "number");
                 assert.equal(meta.useCase, throwUseCase);
                 assert.equal(meta.dispatcher, throwUseCase);
@@ -303,7 +302,7 @@ describe("Context", function() {
                 store: createEchoStore({ echo: { "1": 1 } })
             });
             const useCaseExecutor = appContext.useCase(new ThrowUseCase());
-            assert(useCaseExecutor instanceof UseCaseExecutor);
+            assert.ok(useCaseExecutor instanceof UseCaseExecutor);
             useCaseExecutor.execute();
         });
     });
@@ -387,7 +386,7 @@ describe("Context", function() {
                 assert.equal(callStack.length, expectedCallStackOfAUseCase.length);
                 expectedCallStackOfAUseCase.forEach((payload, index) => {
                     const ExpectedPayloadConstructor = expectedCallStackOfAUseCase[index];
-                    assert(callStack[index] instanceof ExpectedPayloadConstructor);
+                    assert.ok(callStack[index] instanceof ExpectedPayloadConstructor);
                 });
             });
         });
