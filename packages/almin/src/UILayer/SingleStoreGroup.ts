@@ -2,15 +2,16 @@
 import { StoreGroup } from "./StoreGroup";
 import { Store } from "../Store";
 import { Dispatcher } from "../Dispatcher";
-import { Commitment, Committable } from "../UnitOfWork/UnitOfWork";
+import { Commitment } from "../UnitOfWork/UnitOfWork";
 import { StoreLike } from "../StoreLike";
+import { StoreGroupLike } from "./StoreGroupLike";
 
 /**
  * SingleStoreGroup is wrapper of a single Store.
  * It not aim to use in production.
  * It would be used in test or development.
  */
-export class SingleStoreGroup<T extends Store> extends Dispatcher implements StoreLike<T["state"]>, Committable {
+export class SingleStoreGroup<T extends Store> extends Dispatcher implements StoreGroupLike {
     private storeGroup: StoreGroup<{ target: T }>;
 
     constructor(store: T) {
@@ -27,6 +28,10 @@ export class SingleStoreGroup<T extends Store> extends Dispatcher implements Sto
 
     commit(commitment: Commitment): void {
         return this.storeGroup.commit(commitment);
+    }
+
+    useStrict() {
+        return this.storeGroup.useStrict();
     }
 
     getState(): T["state"] {

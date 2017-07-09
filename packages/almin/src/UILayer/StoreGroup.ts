@@ -13,8 +13,10 @@ import { createStoreStateMap, StoreStateMap } from "./StoreStateMap";
 import { Store } from "../Store";
 import { StoreGroupEmitChangeChecker } from "./StoreGroupEmitChangeChecker";
 import { shouldStateUpdate } from "./StoreGroupUtils";
-import { Commitment, Committable } from "../UnitOfWork/UnitOfWork";
+import { Commitment } from "../UnitOfWork/UnitOfWork";
 import { InitializedPayload } from "../payload/InitializedPayload";
+import { StoreGroupChangingStoreStrictChecker } from "./StoreGroupChangingStoreStrictChecker";
+import { StoreGroupLike } from "./StoreGroupLike";
 
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
 
@@ -113,7 +115,7 @@ console.log(storeGroup.getState());
  * It is similar with cache system.
  *
  */
-export class StoreGroup<T> extends Dispatcher implements Committable {
+export class StoreGroup<T> extends Dispatcher implements StoreGroupLike {
     // observing stores
     public stores: Array<Store<T>>;
     // current state
@@ -128,8 +130,11 @@ export class StoreGroup<T> extends Dispatcher implements Committable {
     private _stateCacheMap: MapLike<Store<T>, any>;
     // store/state map
     private _storeStateMap: StoreStateMap;
-
+    // is strict mode
+    private isStrictMode = false;
+    // checker
     private storeGroupEmitChangeChecker = new StoreGroupEmitChangeChecker();
+    private storeGroupChangingStoreStrictChecker = new StoreGroupChangingStoreStrictChecker();
 
     /**
      * Initialize this StoreGroup with a stateName-store mapping object.
@@ -231,6 +236,9 @@ export class StoreGroup<T> extends Dispatcher implements Committable {
     private writePhaseInRead(stores: Array<Store<T>>, payload: Payload, meta: DispatcherPayloadMetaImpl): void {
         for (let i = 0; i < stores.length; i++) {
             const store = stores[i];
+            if (process.env.NODE_ENV !== "production") {
+                this.storeGroupChangingStoreStrictChecker.mark(store);
+            }
             // Deprecated: it is compatible behavior
             // Please a store should implement `receivePayload` insteadof of using `Store#onDispatch`
             // Warning: Manually catch some event like Repository#onChange in a Store, It would be broken manually transaction mode
@@ -238,6 +246,9 @@ export class StoreGroup<T> extends Dispatcher implements Committable {
             // reduce state by prevSate with payload if it is implemented
             if (typeof store.receivePayload === "function") {
                 store.receivePayload(payload);
+            }
+            if (process.env.NODE_ENV !== "production") {
+                this.storeGroupChangingStoreStrictChecker.unMark(store);
             }
         }
     }
@@ -310,6 +321,11 @@ But, ${store.name}#getState() was called.`);
         this.tryToUpdateStoreGroupState();
     }
 
+
+    useStrict() {
+        this.isStrictMode = true;
+    }
+
     // read -> emitChange if needed
     private tryToUpdateStoreGroupState(): void {
         this._pruneChangingStateOfStores();
@@ -351,15 +367,18 @@ But, ${store.name}#getState() was called.`);
      */
     private _registerStore(store: Store<T>): () => void {
         const onChangeHandler = () => {
-            if (this.existWorkingUseCase) {
-                if (process.env.NODE_ENV !== "production") {
-                    const prevState = this._stateCacheMap.get(store);
-                    const nextState = store.getState();
-                    this.storeGroupEmitChangeChecker.mark(store, prevState, nextState);
+            if (process.env.NODE_ENV !== "production") {
+                const prevState = this._stateCacheMap.get(store);
+                const nextState = store.getState();
+                // mark `store` as `emitChange`ed store in a UseCase life-cycle
+                this.storeGroupEmitChangeChecker.mark(store, prevState, nextState);
+                if (this.isStrictMode) {
+                    // warning if this store is not allowed update at the time
+                    this.storeGroupChangingStoreStrictChecker.warningIfStoreIsNotAllowedUpdate(store);
                 }
-                // DO NOT tryEmitChange in transaction UseCase
-            } else {
-                // if not exist working UseCases, immediate invoke emitChange.
+            }
+            // if not exist working UseCases, immediate invoke emitChange.
+            if (!this.existWorkingUseCase) {
                 this.tryToUpdateStoreGroupState();
             }
         };

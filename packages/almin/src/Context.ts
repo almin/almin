@@ -21,7 +21,15 @@ import { StoreGroup } from "./UILayer/StoreGroup";
 import { createUseCaseExecutor } from "./UseCaseExecutorFactory";
 import { TransactionContext } from "./UnitOfWork/TransactionContext";
 import { createSingleStoreGroup } from "./UILayer/SingleStoreGroup";
-import { Committable } from "./UnitOfWork/UnitOfWork";
+import { StoreGroupLike } from "./UILayer/StoreGroupLike";
+
+export interface ContextArgs<T> {
+    dispatcher: Dispatcher;
+    store: StoreLike<T>;
+    options?: {
+        strict?: boolean
+    };
+}
 
 /**
  * Context class provide observing and communicating with **Store** and **UseCase**.
@@ -31,8 +39,9 @@ export class Context<T> {
      * @private
      */
     private _dispatcher: Dispatcher;
-    private _storeGroup: StoreLike<T> & Committable;
+    private _storeGroup: StoreGroupLike;
     private _releaseHandlers: Array<() => void>;
+    private isStrictMode = false;
 
     /**
      * `dispatcher` is an instance of `Dispatcher`.
@@ -61,10 +70,11 @@ export class Context<T> {
      * });
      * ```
      */
-    constructor({ dispatcher, store }: { dispatcher: Dispatcher; store: StoreLike<T>; }) {
+    constructor(args: ContextArgs<T>) {
+        const store = args.store;
         StoreGroupValidator.validateInstance(store);
         // central dispatcher
-        this._dispatcher = dispatcher;
+        this._dispatcher = args.dispatcher;
         // Implementation Note:
         // Delegate dispatch event to Store|StoreGroup from Dispatcher
         // StoreGroup call each Store#receivePayload, but pass directly Store is not.
@@ -79,6 +89,10 @@ export class Context<T> {
             throw new Error("{ store } should be instanceof StoreGroup or Store.");
         }
 
+        this.isStrictMode = args.options !== undefined && args.options.strict === true;
+        if (this.isStrictMode) {
+            this._storeGroup.useStrict()
+        }
         /**
          * callable release handlers
          * @type {Function[]}
@@ -176,7 +190,7 @@ export class Context<T> {
      * Create new Transaction(Unit of Work).
      * You can prevent heavy updating of StoreGroup
      *
-     * TODO: This feature work on Store which is strict mode.
+     * This feature only work in strict mode.
      *
      * Difference with `Context#useCase`:
      *
@@ -198,6 +212,14 @@ export class Context<T> {
      * ```
      */
     transaction(committer: (context: TransactionContext) => Promise<any>) {
+        if (process.env.NODE_ENV !== "production") {
+            if (!this.isStrictMode) {
+                console.error(`Warning(Context): Context#transaction only use in strict mode.
+Because, the transaction should have reliability of updating stores. strict mode promise it.
+Please enable strict mode via \`new Context({ dispatcher, store, options: { strict: true });\`
+`);
+            }
+        }
         const unitOfWork = new UseCaseUnitOfWork(this._storeGroup, { autoCommit: false });
         const createUseCaseExecutorAndOpenUoW = <T extends UseCaseLike>(useCase: T): UseCaseExecutor<T> => {
             const useCaseExecutor = createUseCaseExecutor(useCase, this._dispatcher);

@@ -1,6 +1,5 @@
 // LICENSE : MIT
 "use strict";
-const assert = require("power-assert");
 const sinon = require("sinon");
 import { Payload } from "../lib/payload/Payload";
 import { InitializedPayload } from "../lib/payload/InitializedPayload";
@@ -12,6 +11,7 @@ import { createStore } from "./helper/create-new-store";
 import { UseCase } from "../lib/UseCase";
 import { Context } from "../lib/Context";
 import { Dispatcher } from "../lib/Dispatcher";
+import * as assert from "assert";
 
 const createAsyncChangeStoreUseCase = (store) => {
     class ChangeTheStoreUseCase extends UseCase {
@@ -94,7 +94,7 @@ describe("StoreGroup", function() {
                 // when
                 storeGroup.emitChange();
                 // But any store is not changed
-                assert(isCalled === false);
+                assert.ok(isCalled === false);
             });
         });
     });
@@ -113,7 +113,7 @@ describe("StoreGroup", function() {
                 });
                 // when
                 store.updateState(2);
-                assert(isCalled);
+                assert.ok(isCalled);
             });
         });
         context("when UseCase never change any store", function() {
@@ -138,7 +138,7 @@ describe("StoreGroup", function() {
                     store: storeGroup
                 });
                 return context.useCase(useCase).execute().then(() => {
-                    assert(isCalled === false);
+                    assert.ok(isCalled === false);
                 });
             });
         });
@@ -196,7 +196,7 @@ describe("StoreGroup", function() {
                 });
                 context.useCase(useCase).execute();
                 // sync change!!!
-                assert(isCalled);
+                assert.ok(isCalled);
             });
         });
         // async
@@ -289,7 +289,7 @@ describe("StoreGroup", function() {
                     const useCase = new DispatchAndFinishAsyncUseCase();
                     const resultPromise = context.useCase(useCase).execute();
                     // then - should not be changed, but it is dispatched
-                    assert(isChanged === false);
+                    assert.ok(isChanged === false);
                     assert.deepEqual(dispatchedPayload, {
                         type: "DispatchAndFinishAsyncUseCase"
                     });
@@ -326,7 +326,7 @@ describe("StoreGroup", function() {
                     const useCase = new DispatchAndFinishAsyncUseCase();
                     const resultPromise = context.useCase(useCase).execute();
                     // then - should be called by sync
-                    assert(isCalled);
+                    assert.ok(isCalled);
                     return resultPromise
                 });
                 it("should be called each dispatch", function() {
@@ -415,7 +415,7 @@ describe("StoreGroup", function() {
                     store: storeGroup
                 });
                 return context.useCase(useCase).execute().then(() => {
-                    assert(isCalled);
+                    assert.ok(isCalled);
                 });
             });
         });
@@ -783,9 +783,9 @@ describe("StoreGroup", function() {
                 const state = storeGroup.getState();
                 // then - return a single state object that contain each store and merge
                 const keys = Object.keys(state);
-                assert(keys.indexOf("a") !== -1);
-                assert(state["a"] instanceof AState);
-                assert(state["b"] instanceof BState);
+                assert.ok(keys.indexOf("a") !== -1);
+                assert.ok(state["a"] instanceof AState);
+                assert.ok(state["b"] instanceof BState);
             });
         });
     });
@@ -911,6 +911,45 @@ Something wrong implementation of calling Store#emitChange at multiple`);
                 assert.ok(consoleErrorStub.calledOnce);
             });
         });
+        context("when strict mode", () => {
+            it("show warning if update store outside of receivePayload", function() {
+                class AStore extends Store {
+                    constructor() {
+                        super();
+                        this.state = {
+                            a: "value"
+                        };
+                    }
+
+                    getState() {
+                        return this.state;
+                    }
+                }
+
+                const store = new AStore();
+                const storeGroup = new StoreGroup({
+                    a: store
+                });
+                const context = new Context({
+                    dispatcher: new Dispatcher(),
+                    store: storeGroup,
+                    options: {
+                        strict: true
+                    }
+                });
+                const useCase = ({ dispatcher }) => {
+                    return () => {
+                        // Warning: update state outside of receivePayload
+                        store.setState({
+                            a: "new value"
+                        });
+                    };
+                };
+                return context.useCase(useCase).execute().then(() => {
+                    assert.strictEqual(consoleErrorStub.callCount, 1, "should not update state in a UseCase");
+                });
+            });
+        });
         context("Not support warning case", () => {
             it("directly modified and emitChange is mixed, we can't show warning", function() {
                 class AStore extends Store {
@@ -951,7 +990,7 @@ Something wrong implementation of calling Store#emitChange at multiple`);
                     assert.equal(consoleErrorStub.callCount, 0, "Can't support this case");
                 });
             });
-        })
+        });
     });
     describe("#release", function() {
         it("release onChange handler", function() {
@@ -965,7 +1004,7 @@ Something wrong implementation of calling Store#emitChange at multiple`);
             });
             storeGroup.release();
             storeGroup.emitChange();
-            assert(!isCalled);
+            assert.ok(!isCalled);
         });
     });
     describe("#receivePayload", () => {

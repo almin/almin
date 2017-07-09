@@ -54,7 +54,10 @@ describe("Context#transaction", () => {
 
         const context = new Context({
             dispatcher: new Dispatcher(),
-            store: storeGroup
+            store: storeGroup,
+            options: {
+                strict: true
+            }
         });
         // then - called change handler a one-time
         let calledCount = 0;
@@ -92,7 +95,10 @@ describe("Context#transaction", () => {
         const storeGroup = new StoreGroup({ a: aStore });
         const context = new Context({
             dispatcher: new Dispatcher(),
-            store: storeGroup
+            store: storeGroup,
+            options: {
+                strict: true
+            }
         });
         // reset initialized
         receivedPayloadList.length = 0;
@@ -124,7 +130,10 @@ describe("Context#transaction", () => {
         const storeGroup = new StoreGroup({ a: aStore });
         const context = new Context({
             dispatcher: new Dispatcher(),
-            store: storeGroup
+            store: storeGroup,
+            options: {
+                strict: true
+            }
         });
         // reset initialized
         receivedCommitments.length = 0;
