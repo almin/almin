@@ -28,7 +28,7 @@ export class UseCaseUnitOfWork {
         this.options = options;
         this.unsubscribeMap = new MapLike<UseCaseExecutor<any>, () => void>();
         if (this.options.autoCommit) {
-            this.unitOfWork.onNewPayload(() => {
+            this.unitOfWork.onAddedCommitment(() => {
                 this.commit();
             });
         }
@@ -40,14 +40,14 @@ export class UseCaseUnitOfWork {
     open(useCaseExecutor: UseCaseExecutor<any>) {
         const onDispatchOnUnitOfWork = (payload: Payload, meta: DispatcherPayloadMeta) => {
             if (!meta.isTrusted) {
-                this.unitOfWork.addPayload(payload, meta);
+                this.unitOfWork.addCommitment([payload, meta]);
             } else if (isErrorPayload(payload)) {
-                this.unitOfWork.addPayload(payload, meta);
+                this.unitOfWork.addCommitment([payload, meta]);
             } else if (isDidExecutedPayload(payload) && meta.useCase) {
                 if (meta.isUseCaseFinished) {
                     this.finishedUseCaseMap.set(meta.useCase.id, true);
                 }
-                this.unitOfWork.addPayload(payload, meta);
+                this.unitOfWork.addCommitment([payload, meta]);
             } else if (isCompletedPayload(payload) && meta.useCase && meta.isUseCaseFinished) {
                 // if the useCase is already finished, doesn't emitChange in CompletedPayload
                 // In other word, If the UseCase that return non-promise value, doesn't emitChange in CompletedPayload
@@ -55,7 +55,7 @@ export class UseCaseUnitOfWork {
                     this.finishedUseCaseMap.delete(meta.useCase.id);
                     return;
                 }
-                this.unitOfWork.addPayload(payload, meta);
+                this.unitOfWork.addCommitment([payload, meta]);
             }
         };
         const unsubscribe = useCaseExecutor.onDispatch(onDispatchOnUnitOfWork);

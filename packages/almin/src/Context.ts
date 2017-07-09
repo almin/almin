@@ -45,7 +45,7 @@ export class Context<T> {
      * ```js
      * const context = new Context({
      *   dispatcher: new Dispatcher(),
-     *   store: new Store()
+     *   store: new MyStore()
      * });
      * ```
      *
@@ -57,7 +57,7 @@ export class Context<T> {
      * ]);
      * const context = new Context({
      *   dispatcher: new Dispatcher(),
-     *   store: new Store()
+     *   store: storeGroup
      * });
      * ```
      */

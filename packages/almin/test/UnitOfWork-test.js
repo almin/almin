@@ -3,41 +3,46 @@
 import { UnitOfWork } from "../lib/UnitOfWork/UnitOfWork";
 import { Payload } from "../lib/index";
 import * as assert from "assert";
+import { DispatcherPayloadMetaImpl } from "../lib/DispatcherPayloadMeta";
 
 const createMockStoreGroup = () => {
-    const committedPayloads = [];
+    const commitments = [];
     return {
-        committedPayloads,
+        commitments,
         mockStoreGroup: {
             commit(payload) {
-                committedPayloads.push(payload);
+                commitments.push(payload);
             }
         }
     };
 };
-
+let commitmentId = 0;
+const createCommitment = () => {
+    return [new Payload({ type: `Example ${commitmentId++}` }), new DispatcherPayloadMetaImpl({})];
+};
 describe("UnitOfWork", () => {
-    describe("#addPayload", () => {
-        it("can add new Payload", () => {
+    describe("#addCommitment", () => {
+        it("can add new commitment", () => {
             const { mockStoreGroup } = createMockStoreGroup();
             const unitOfWork = new UnitOfWork(mockStoreGroup);
             assert.equal(unitOfWork.size, 0);
-            unitOfWork.addPayload(new Payload({ type: "Example" }));
+            unitOfWork.addCommitment(createCommitment());
             assert.equal(unitOfWork.size, 1);
-            unitOfWork.addPayload(new Payload({ type: "Example" }));
+            unitOfWork.addCommitment(createCommitment());
             assert.equal(unitOfWork.size, 2);
         });
     });
-    describe("#onNewPayload", () => {
-        it("this handler should called when add new Payload", (done) => {
+    describe("#onAddedCommitment", () => {
+        it("this handler should called when add new commitment", (done) => {
             const { mockStoreGroup } = createMockStoreGroup();
             const unitOfWork = new UnitOfWork(mockStoreGroup);
-            const newPayload = new Payload({ type: "Example" });
-            unitOfWork.onNewPayload((payload) => {
-                assert.strictEqual(payload, newPayload, "added payload");
+            const newCommitment = createCommitment();
+            unitOfWork.onAddedCommitment((commitment) => {
+                assert.strictEqual(commitment, newCommitment, "added commitment");
+                assert.strictEqual(commitment, newCommitment, "added commitment");
                 done();
             });
-            unitOfWork.addPayload(newPayload);
+            unitOfWork.addCommitment(newCommitment);
         });
     });
     describe("#commit", () => {
@@ -50,26 +55,26 @@ describe("UnitOfWork", () => {
         it("size should be 0 after commit", () => {
             const { mockStoreGroup } = createMockStoreGroup();
             const unitOfWork = new UnitOfWork(mockStoreGroup);
-            unitOfWork.addPayload(new Payload({ type: "Example" }));
+            unitOfWork.addCommitment(createCommitment());
             unitOfWork.commit();
             assert.strictEqual(unitOfWork.size, 0);
         });
         it("commitable should be committed by UnitOfWork", () => {
-            const { mockStoreGroup, committedPayloads } = createMockStoreGroup();
+            const { mockStoreGroup, commitments } = createMockStoreGroup();
             const unitOfWork = new UnitOfWork(mockStoreGroup);
-            const payloadA = new Payload({ type: "Example" });
-            const payloadB = new Payload({ type: "Example" });
-            unitOfWork.addPayload(payloadA);
-            unitOfWork.addPayload(payloadB);
+            const commitmentA = createCommitment();
+            const commitmentB = createCommitment();
+            unitOfWork.addCommitment(commitmentA);
+            unitOfWork.addCommitment(commitmentB);
             unitOfWork.commit();
-            assert.deepStrictEqual(committedPayloads, [payloadA, payloadB]);
+            assert.deepStrictEqual(commitments, [commitmentA, commitmentB]);
         });
     });
     describe("#release", () => {
         it("released UnitOfWork can not commit", () => {
             const { mockStoreGroup } = createMockStoreGroup();
             const unitOfWork = new UnitOfWork(mockStoreGroup);
-            unitOfWork.addPayload(new Payload({ type: "Example" }));
+            unitOfWork.addCommitment(createCommitment());
             unitOfWork.release();
             assert.strictEqual(unitOfWork.size, 0);
             assert.throws(() => {

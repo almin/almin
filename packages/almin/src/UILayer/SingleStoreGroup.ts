@@ -2,10 +2,8 @@
 import { StoreGroup } from "./StoreGroup";
 import { Store } from "../Store";
 import { Dispatcher } from "../Dispatcher";
-import { Committable } from "../UnitOfWork/UnitOfWork";
-import { Payload } from "../payload/Payload";
+import { Commitment, Committable } from "../UnitOfWork/UnitOfWork";
 import { StoreLike } from "../StoreLike";
-import { DispatcherPayloadMeta } from "../DispatcherPayloadMeta";
 
 export class SingleStoreGroup<T extends Store> extends Dispatcher implements StoreLike<T["state"]>, Committable {
     private storeGroup: StoreGroup<{ target: T }>;
@@ -22,8 +20,8 @@ export class SingleStoreGroup<T extends Store> extends Dispatcher implements Sto
         return this.storeGroup.onChange(handler);
     }
 
-    commit(payload: Payload, meta: DispatcherPayloadMeta): void {
-        return this.storeGroup.commit(payload, meta);
+    commit(commitment: Commitment): void {
+        return this.storeGroup.commit(commitment);
     }
 
     getState(): T["state"] {

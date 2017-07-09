@@ -13,7 +13,7 @@ import { createStoreStateMap, StoreStateMap } from "./StoreStateMap";
 import { Store } from "../Store";
 import { StoreGroupEmitChangeChecker } from "./StoreGroupEmitChangeChecker";
 import { shouldStateUpdate } from "./StoreGroupUtils";
-import { Committable } from "../UnitOfWork/UnitOfWork";
+import { Commitment, Committable } from "../UnitOfWork/UnitOfWork";
 import { InitializedPayload } from "../payload/InitializedPayload";
 
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
@@ -31,7 +31,7 @@ const assertConstructorArguments = (arg: any): void => {
 const aStore = new AStore();
 const bStore = new BStore();
 // A arguments is stateName-store mapping object like { stateName: store }
-const storeGroup = new CQRSStoreGroup({
+const storeGroup = new StoreGroup({
     a: aStore,
     b: bStore
 });
@@ -303,7 +303,9 @@ But, ${store.name}#getState() was called.`);
     }
 
     // write and read -> emitChange if needed
-    commit(payload: Payload, meta: DispatcherPayloadMetaImpl): void {
+    commit(commitment: Commitment): void {
+        const payload = commitment[0];
+        const meta = commitment[1];
         this.writePhaseInRead(this.stores, payload, meta);
         this.tryToUpdateStoreGroupState();
     }
