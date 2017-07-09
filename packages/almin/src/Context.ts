@@ -173,11 +173,32 @@ export class Context<T> {
 
 
     /**
-     * @todo documentation
+     * Create new Transaction(Unit of Work).
+     * You can prevent heavy updating of StoreGroup
+     *
+     * TODO: This feature work on Store which is strict mode.
+     *
+     * Difference with `Context#useCase`:
+     *
+     * - Do not update StoreGroup automatically
+     * - You should call `committer.commit()` to update StoreGroup at any time
+     *
+     * ```js
+     * context.transaction(committer => {
+     *      return committer.useCase(new ChangeAUseCase()).execute() // no update store
+     *          .then(() => {
+     *              return committer.useCase(new ChangeBUseCase()).execute(); // no update store
+     *          }).then(() => {
+     *              return committer.useCase(new ChangeCUseCase()).execute(); // no update store
+     *          }).then(() => {
+     *              committer.commit(); // update store
+     *              // replay: ChangeAUseCase -> ChangeBUseCase -> ChangeCUseCase
+     *          });
+     *  })
+     * ```
      */
     transaction(committer: (context: TransactionContext) => Promise<any>) {
-        // TODO: toStoreGroup
-        const unitOfWork = new UseCaseUnitOfWork(this._storeGroup as StoreGroup<any>, { autoCommit: false });
+        const unitOfWork = new UseCaseUnitOfWork(this._storeGroup, { autoCommit: false });
         const createUseCaseExecutorAndOpenUoW = <T extends UseCaseLike>(useCase: T): UseCaseExecutor<T> => {
             const useCaseExecutor = createUseCaseExecutor(useCase, this._dispatcher);
             unitOfWork.open(useCaseExecutor);
@@ -189,7 +210,9 @@ export class Context<T> {
                 unitOfWork.commit();
             }
         };
-        // committer resolve with void by design.
+        // committer resolve with void
+        // unitOfWork automatically close when committer exit
+        // by design.
         return committer(context).then(() => {
             unitOfWork.release();
         }, (error) => {
