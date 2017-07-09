@@ -5,6 +5,11 @@ import { Dispatcher } from "../Dispatcher";
 import { Commitment, Committable } from "../UnitOfWork/UnitOfWork";
 import { StoreLike } from "../StoreLike";
 
+/**
+ * SingleStoreGroup is wrapper of a single Store.
+ * It not aim to use in production.
+ * It would be used in test or development.
+ */
 export class SingleStoreGroup<T extends Store> extends Dispatcher implements StoreLike<T["state"]>, Committable {
     private storeGroup: StoreGroup<{ target: T }>;
 
@@ -31,7 +36,6 @@ export class SingleStoreGroup<T extends Store> extends Dispatcher implements Sto
     emitChange(): void {
         return this.storeGroup.emitChange();
     }
-
 
     release(): void {
         return this.storeGroup.release();
