@@ -2,11 +2,31 @@
 "use strict";
 import * as assert from "assert";
 import { createStore } from "./helper/create-new-store";
-import { StoreGroup } from "../lib/UILayer/StoreGroup";
-import { UseCase } from "../lib/UseCase";
-import { Context } from "../lib/Context";
-import { Dispatcher } from "../lib/Dispatcher";
+import { Context, UseCase, Store, StoreGroup, Dispatcher, Payload } from "../lib/";
+import { DispatcherPayloadMetaImpl } from "../lib/DispatcherPayloadMeta";
+import { NoDispatchUseCase } from "./use-case/NoDispatchUseCase";
 
+/**
+ * create a Store that can handle receivePayload
+ */
+const createReceivePayloadStore = (receivePayloadHandler) => {
+    class MockStore extends Store {
+        constructor() {
+            super();
+            this.state = {};
+        }
+
+        receivePayload(payload) {
+            receivePayloadHandler(payload);
+        }
+
+        getState() {
+            return this.state;
+        }
+    }
+
+    return new MockStore();
+};
 describe("Context#transaction", () => {
     it("should collect up StoreGroup commit", function() {
         const aStore = createStore({ name: "AStore" });
@@ -62,6 +82,71 @@ describe("Context#transaction", () => {
                 b: 1,
                 c: 1
             });
+        });
+    });
+    it("commit and each store#receivePayload is called", function() {
+        const receivedPayloadList = [];
+        const aStore = createReceivePayloadStore((payload) => {
+            receivedPayloadList.push(payload);
+        });
+        const storeGroup = new StoreGroup({ a: aStore });
+        const context = new Context({
+            dispatcher: new Dispatcher(),
+            store: storeGroup
+        });
+        // reset initialized
+        receivedPayloadList.length = 0;
+        return context.transaction(committer => {
+            assert.strictEqual(receivedPayloadList.length, 0, "no commitment");
+            return committer.useCase(new NoDispatchUseCase()).execute()
+                .then(() => {
+                    assert.strictEqual(receivedPayloadList.length, 0, "no commitment");
+                    committer.commit();
+                    assert.strictEqual(receivedPayloadList.length, 1, "1 UseCase executed commitment");
+                })
+                .then(() => {
+                    return committer.useCase(new NoDispatchUseCase()).execute();
+                })
+                .then(() => {
+                    assert.strictEqual(receivedPayloadList.length, 1, "before: 1 UseCase executed commitment");
+                    committer.commit();
+                    assert.strictEqual(receivedPayloadList.length, 2, "after: 2 UseCase executed commitment");
+                });
+        });
+    });
+
+    it("commit and each store#onDispatch is called", function() {
+        const receivedCommitments = [];
+        const aStore = createStore({ name: "test" });
+        aStore.onDispatch((payload, meta) => {
+            receivedCommitments.push([payload, meta]);
+        });
+        const storeGroup = new StoreGroup({ a: aStore });
+        const context = new Context({
+            dispatcher: new Dispatcher(),
+            store: storeGroup
+        });
+        // reset initialized
+        receivedCommitments.length = 0;
+        return context.transaction(committer => {
+            assert.strictEqual(receivedCommitments.length, 0, "no commitment");
+            return committer.useCase(new NoDispatchUseCase()).execute()
+                .then(() => {
+                    assert.strictEqual(receivedCommitments.length, 0, "no commitment");
+                    committer.commit();
+                    assert.strictEqual(receivedCommitments.length, 1, "1 UseCase executed commitment");
+                })
+                .then(() => {
+                    return committer.useCase(new NoDispatchUseCase()).execute();
+                })
+                .then(() => {
+                    assert.strictEqual(receivedCommitments.length, 1, "before: 1 UseCase executed commitment");
+                    committer.commit();
+                    assert.strictEqual(receivedCommitments.length, 2, "after: 2 UseCase executed commitment");
+                    const [payload, meta] = receivedCommitments[0];
+                    assert.ok(payload instanceof Payload);
+                    assert.ok(meta instanceof DispatcherPayloadMetaImpl);
+                });
         });
     });
 });
