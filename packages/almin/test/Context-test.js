@@ -12,11 +12,13 @@ import { createStore } from "./helper/create-new-store";
 // payload
 
 import { Payload, WillExecutedPayload, DidExecutedPayload, CompletedPayload, ErrorPayload } from "../lib/index";
+
 class TestUseCase extends UseCase {
     execute() {
 
     }
 }
+
 class ThrowUseCase extends UseCase {
     execute() {
         this.dispatch({
@@ -26,35 +28,40 @@ class ThrowUseCase extends UseCase {
         this.throwError(new Error("test"));
     }
 }
+
 describe("Context", function() {
     context("UseCase can dispatch in Context", function() {
-        it("should dispatch Store", function(done) {
+        it("should dispatch Store", function() {
             const dispatcher = new Dispatcher();
             const DISPATCHED_EVENT = {
                 type: "update",
                 value: "value"
             };
+
             // then
             class DispatchUseCase extends UseCase {
                 execute() {
                     this.dispatch(DISPATCHED_EVENT);
                 }
             }
+
+            const dispatchedPayload = [];
+
             class ReceiveStore extends Store {
                 constructor() {
                     super();
                     this.onDispatch((payload, meta) => {
                         if (payload.type === DISPATCHED_EVENT.type) {
-                            assert.deepEqual(payload, DISPATCHED_EVENT);
-                            assert(meta.useCase === useCase);
-                            assert(meta.dispatcher === useCase);
-                            assert(meta.parentUseCase === null);
-                            assert(typeof meta.timeStamp === "number");
-                            done();
+                            dispatchedPayload.push([payload, meta]);
                         }
                     });
                 }
+
+                getState() {
+                    return {};
+                }
             }
+
             // when
             const store = new ReceiveStore();
             const appContext = new Context({
@@ -62,7 +69,15 @@ describe("Context", function() {
                 store
             });
             const useCase = new DispatchUseCase();
-            appContext.useCase(useCase).execute();
+            return appContext.useCase(useCase).execute().then(() => {
+                const [payload, meta] = dispatchedPayload[0];
+                assert.deepEqual(payload, DISPATCHED_EVENT);
+                console.log(meta);
+                assert.strictEqual(meta.useCase, useCase);
+                assert.strictEqual(meta.dispatcher, useCase);
+                assert.strictEqual(meta.parentUseCase, null);
+                assert.strictEqual(typeof meta.timeStamp, "number");
+            });
         });
     });
     describe("#getStates", function() {
@@ -126,7 +141,7 @@ describe("Context", function() {
             const dispatcher = new Dispatcher();
             const appContext = new Context({
                 dispatcher,
-                store: new Store()
+                store: createStore({ name: "test" })
             });
             const testUseCase = new TestUseCase();
             // then
@@ -145,7 +160,7 @@ describe("Context", function() {
             const dispatcher = new Dispatcher();
             const appContext = new Context({
                 dispatcher,
-                store: new Store()
+                store: createStore({ name: "test" })
             });
             const testUseCase = new TestUseCase();
             const expectedArguments = "param";
@@ -165,16 +180,18 @@ describe("Context", function() {
             const dispatcher = new Dispatcher();
             const appContext = new Context({
                 dispatcher,
-                store: new Store()
+                store: createStore({ name: "test" })
             });
             const expectedPayload = {
                 type: "event"
             };
+
             class EventUseCase extends UseCase {
                 execute() {
                     this.dispatch(expectedPayload);
                 }
             }
+
             const eventUseCase = new EventUseCase();
             const isCalled = {
                 will: false,
@@ -223,7 +240,7 @@ describe("Context", function() {
             const dispatcher = new Dispatcher();
             const appContext = new Context({
                 dispatcher,
-                store: new Store()
+                store: createStore({ name: "test" })
             });
             const testUseCase = new TestUseCase();
             // then
@@ -240,7 +257,7 @@ describe("Context", function() {
             const dispatcher = new Dispatcher();
             const appContext = new Context({
                 dispatcher,
-                store: new Store()
+                store: createStore({ name: "test" })
             });
             const testUseCase = new TestUseCase();
             // then
@@ -262,7 +279,7 @@ describe("Context", function() {
             const dispatcher = new Dispatcher();
             const appContext = new Context({
                 dispatcher,
-                store: new Store()
+                store: createStore({ name: "test" })
             });
             const throwUseCase = new ThrowUseCase();
             // then
@@ -392,6 +409,7 @@ describe("Context", function() {
                     return {};
                 }
             }
+
             // UseCase
             class IncrementUseCase extends UseCase {
                 execute() {
@@ -400,6 +418,7 @@ describe("Context", function() {
                     });
                 }
             }
+
             // Context class provide observing and communicating with **Store** and **UseCase**
             const counterStore = new CounterStore();
             const context = new Context({

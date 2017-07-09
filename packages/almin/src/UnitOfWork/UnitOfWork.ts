@@ -1,13 +1,17 @@
 // MIT © 2017 azu
 import { EventEmitter } from "events";
 import { Payload } from "../payload/Payload";
+import { DispatcherPayloadMeta, DispatcherPayloadMetaImpl } from "../DispatcherPayloadMeta";
 
+/**
+ * Unit of work committing target
+ */
 export interface Committable {
-    commit(payload: Payload): void;
+    commit(payload: Payload, meta: DispatcherPayloadMetaImpl): void;
 }
 
 export class UnitOfWork extends EventEmitter {
-    private transactionalEvents: Payload[];
+    private transactionalEvents: [Payload, DispatcherPayloadMetaImpl][];
     private committable: Committable;
     private isDisposed: boolean;
 
@@ -25,12 +29,12 @@ export class UnitOfWork extends EventEmitter {
         return this.transactionalEvents.length;
     }
 
-    addPayload(payload: Payload) {
-        this.transactionalEvents.push(payload);
+    addPayload(payload: Payload, meta: DispatcherPayloadMeta) {
+        this.transactionalEvents.push([payload, meta]);
         this.emit("ON_ADD_NEW_EVENT", payload);
     };
 
-    onNewPayload(handler: (event: Event) => void) {
+    onNewPayload(handler: (event: [Payload, DispatcherPayloadMetaImpl]) => void) {
         this.on("ON_ADD_NEW_EVENT", handler);
     }
 
@@ -38,8 +42,8 @@ export class UnitOfWork extends EventEmitter {
         if (this.isDisposed) {
             throw new Error("already closed this transaction");
         }
-        this.transactionalEvents.forEach((event) => {
-            this.committable.commit(event);
+        this.transactionalEvents.forEach(([payload, meta]) => {
+            this.committable.commit(payload, meta);
         });
         this.prune();
     };

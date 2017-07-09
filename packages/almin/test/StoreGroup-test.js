@@ -3,10 +3,11 @@
 const assert = require("power-assert");
 const sinon = require("sinon");
 import { Payload } from "../lib/payload/Payload";
+import { InitializedPayload } from "../lib/payload/InitializedPayload";
 import { DidExecutedPayload } from "../lib/payload/DidExecutedPayload";
 import { CompletedPayload } from "../lib/payload/CompletedPayload";
 import { Store } from "../lib/Store";
-import { StoreGroup, InitializedPayload } from "../lib/UILayer/StoreGroup";
+import { StoreGroup } from "../lib/UILayer/StoreGroup";
 import { createStore } from "./helper/create-new-store";
 import { UseCase } from "../lib/UseCase";
 import { Context } from "../lib/Context";

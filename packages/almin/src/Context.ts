@@ -20,6 +20,8 @@ import { UseCaseUnitOfWork } from "./UnitOfWork/UseCaseUnitOfWork";
 import { StoreGroup } from "./UILayer/StoreGroup";
 import { createUseCaseExecutor } from "./UseCaseExecutorFactory";
 import { TransactionContext } from "./UnitOfWork/TransactionContext";
+import { createSingleStoreGroup } from "./UILayer/SingleStoreGroup";
+import { Committable } from "./UnitOfWork/UnitOfWork";
 
 /**
  * Context class provide observing and communicating with **Store** and **UseCase**.
@@ -29,7 +31,7 @@ export class Context<T> {
      * @private
      */
     private _dispatcher: Dispatcher;
-    private _storeGroup: StoreLike<T>;
+    private _storeGroup: StoreLike<T> & Committable;
     private _releaseHandlers: Array<() => void>;
 
     /**
@@ -63,7 +65,19 @@ export class Context<T> {
         StoreGroupValidator.validateInstance(store);
         // central dispatcher
         this._dispatcher = dispatcher;
-        this._storeGroup = store;
+        // Implementation Note:
+        // Delegate dispatch event to Store|StoreGroup from Dispatcher
+        // StoreGroup call each Store#receivePayload, but pass directly Store is not.
+        // So, Context check the store instance has implementation of `Store#receivePayload` and pass payload to it.
+        // See https://github.com/almin/almin/issues/190
+        // createSingleStoreGroup is wrapper of store for creating StoreGroup.
+        if (store instanceof StoreGroup) {
+            this._storeGroup = store
+        } else if (store instanceof Store) {
+            this._storeGroup = createSingleStoreGroup(store);
+        } else {
+            throw new Error("{ store } should be instanceof StoreGroup or Store.");
+        }
 
         /**
          * callable release handlers
@@ -71,31 +85,11 @@ export class Context<T> {
          * @private
          */
         this._releaseHandlers = [];
-        // Implementation Note:
-        // Delegate dispatch event to Store|StoreGroup from Dispatcher
-        // StoreGroup call each Store#receivePayload, but pass directly Store is not.
-        // So, Context check the store instance has implementation of `Store#receivePayload` and pass payload to it.
-        // See https://github.com/almin/almin/issues/190
 
-        if (this._storeGroup instanceof Store) {
-            const store = this._storeGroup;
-            // Dispatch Flow: Dispatcher -> Store(and receivePayload fallback)
-            // Notes: You should not depended on this implementation in production.
-            const hasReceivePayload = typeof store.receivePayload === "function";
-            const releaseHandler = this._dispatcher.onDispatch((payload: DispatchedPayload, meta: DispatcherPayloadMeta) => {
-                store.dispatch(payload, meta);
-                if (hasReceivePayload) {
-                    // StoreLike has not receivePayload, but Store may has receivePayload
-                    (store as Store).receivePayload!(payload);
-                }
-            });
-            this._releaseHandlers.push(releaseHandler);
-        } else {
-            // Dispatch Flow: Dispatcher -> StoreGroup
-            // StoreGroup should have implement that StoreGroup -> Stores
-            const releaseHandler = this._dispatcher.pipe(this._storeGroup);
-            this._releaseHandlers.push(releaseHandler);
-        }
+        // Dispatch Flow: Dispatcher -> StoreGroup
+        // StoreGroup should have implement that StoreGroup -> Stores
+        const releaseHandler = this._dispatcher.pipe(this._storeGroup);
+        this._releaseHandlers.push(releaseHandler);
     }
 
     /**
@@ -167,15 +161,13 @@ export class Context<T> {
     useCase<T extends UseCaseLike>(useCase: T): UseCaseExecutor<T>;
     useCase(useCase: any): UseCaseExecutor<any> {
         const useCaseExecutor = createUseCaseExecutor(useCase, this._dispatcher);
-        if (this._storeGroup instanceof StoreGroup) {
-            const unitOfWork = new UseCaseUnitOfWork(this._storeGroup, {
-                autoCommit: true
-            });
-            unitOfWork.open(useCaseExecutor);
-            useCaseExecutor.onComplete(() => {
-                unitOfWork.close(useCaseExecutor);
-            });
-        }
+        const unitOfWork = new UseCaseUnitOfWork(this._storeGroup, {
+            autoCommit: true
+        });
+        unitOfWork.open(useCaseExecutor);
+        useCaseExecutor.onComplete(() => {
+            unitOfWork.close(useCaseExecutor);
+        });
         return useCaseExecutor;
     }
 

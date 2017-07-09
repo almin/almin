@@ -3,6 +3,7 @@
 const assert = require("assert");
 import { UseCase, Dispatcher, Context, Store } from "../lib/";
 import { functionalUseCase } from "./use-case/FunctionalUseCase";
+import { createStore } from "./helper/create-new-store";
 describe("UseCaseContext", () => {
     context("useCase", () => {
         it("should execute functional useCase", () => {
@@ -18,7 +19,7 @@ describe("UseCaseContext", () => {
             const dispatcher = new Dispatcher();
             const context = new Context({
                 dispatcher,
-                store: new Store()
+                store: createStore({ name: "test" })
             });
             context.onDispatch((payload) => {
                 dispatched.push(payload);

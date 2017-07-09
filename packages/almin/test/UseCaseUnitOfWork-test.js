@@ -2,7 +2,7 @@
 "use strict";
 import * as assert from "assert";
 import { Store, StoreGroup, Context, Dispatcher, Payload, DidExecutedPayload, CompletedPayload } from "../lib/index";
-import { InitializedPayload } from "../lib/UILayer/StoreGroup";
+import { InitializedPayload } from "../lib/payload/InitializedPayload";
 
 context("UseCaseUnitOfWork", function() {
 

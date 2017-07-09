@@ -10,6 +10,7 @@ import { TYPE as CompletedPayloadType } from '../lib/payload/CompletedPayload';
 import { TYPE as DidExecutedPayloadType } from '../lib/payload/DidExecutedPayload';
 import { TYPE as WillExecutedPayloadType } from '../lib/payload/WillExecutedPayload';
 import { UseCaseContext } from "../lib/UseCaseContext";
+import { createStore } from "./helper/create-new-store";
 
 describe("UseCase", function() {
     describe("id", () => {
@@ -93,7 +94,7 @@ describe("UseCase", function() {
             const dispatcher = new Dispatcher();
             const context = new Context({
                 dispatcher,
-                store: new Store()
+                store: createStore({ name: "test" })
             });
             // then
             aUseCase.onDispatch(payload => {
@@ -123,7 +124,7 @@ describe("UseCase", function() {
             const dispatcher = new Dispatcher();
             const context = new Context({
                 dispatcher,
-                store: new Store()
+                store: createStore({ name: "test" })
             });
             const useCase = new TestUseCase();
             // when
@@ -172,7 +173,7 @@ describe("UseCase", function() {
                 const dispatcher = new Dispatcher();
                 const context = new Context({
                     dispatcher,
-                    store: new Store()
+                    store: createStore({ name: "test" })
                 });
                 const dispatchedPayloads = [];
                 dispatcher.onDispatch(payload => {
@@ -239,7 +240,7 @@ describe("UseCase", function() {
                 const dispatcher = new Dispatcher();
                 const context = new Context({
                     dispatcher,
-                    store: new Store()
+                    store: createStore({ name: "test" })
                 });
                 dispatcher.onDispatch(payload => {
                     dispatchedPayloads.push(payload);
