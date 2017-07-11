@@ -5,16 +5,20 @@
   "env": {
     "browser": true,
     "es6": true,
-    "node": true
+    "node": true,
+    "mocha": true
   },
+  "plugins":[
+    "prettier"
+  ],
   "extends": [
     "eslint:recommended",
     "prettier"
   ],
   "rules": {
     "no-console": "warn",
-    "no-undef": "error",
-    "no-unused-vars": "error",
+    "no-undef": "off",
+    "no-unused-vars": "off",
     "no-var": "error",
     "object-shorthand": "error",
     "prefer-const": "error",
