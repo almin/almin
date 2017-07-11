@@ -9,13 +9,14 @@ import { NoDispatchUseCase } from "./use-case/NoDispatchUseCase";
 import { DispatchUseCase } from "./use-case/DispatchUseCase";
 import { ErrorUseCase } from "./use-case/ErrorUseCase";
 import { ParentUseCase, ChildUseCase } from "./use-case/NestingUseCase";
+import { createStore } from "./helper/create-new-store";
 describe("DispatcherPayloadMeta", () => {
     context("onWillExecuteEachUseCase", () => {
         it("meta has {useCase, dispatcher, timeStamp}", () => {
             const dispatcher = new Dispatcher();
             const context = new Context({
                 dispatcher,
-                store: new Store()
+                store: createStore({ name: "test" })
             });
             const useCase = new NoDispatchUseCase();
             let actualMeta = null;
@@ -35,7 +36,7 @@ describe("DispatcherPayloadMeta", () => {
             const dispatcher = new Dispatcher();
             const context = new Context({
                 dispatcher,
-                store: new Store()
+                store: createStore({ name: "test" })
             });
             const useCase = new DispatchUseCase();
             let actualMeta = null;
@@ -55,7 +56,7 @@ describe("DispatcherPayloadMeta", () => {
             const dispatcher = new Dispatcher();
             const context = new Context({
                 dispatcher,
-                store: new Store()
+                store: createStore({ name: "test" })
             });
             const useCase = new NoDispatchUseCase();
             let actualMeta = null;
@@ -74,7 +75,7 @@ describe("DispatcherPayloadMeta", () => {
             const dispatcher = new Dispatcher();
             const context = new Context({
                 dispatcher,
-                store: new Store()
+                store: createStore({ name: "test" })
             });
             const useCase = new ReturnPromiseUseCase();
             let actualMeta = null;
@@ -95,7 +96,7 @@ describe("DispatcherPayloadMeta", () => {
             const dispatcher = new Dispatcher();
             const context = new Context({
                 dispatcher,
-                store: new Store()
+                store: createStore({ name: "test" })
             });
             const useCase = new NoDispatchUseCase();
             let actualMeta = null;
@@ -116,7 +117,7 @@ describe("DispatcherPayloadMeta", () => {
             const dispatcher = new Dispatcher();
             const context = new Context({
                 dispatcher,
-                store: new Store()
+                store: createStore({ name: "test" })
             });
             const useCase = new ErrorUseCase();
             let actualMeta = null;
@@ -138,7 +139,7 @@ describe("DispatcherPayloadMeta", () => {
             const dispatcher = new Dispatcher();
             const context = new Context({
                 dispatcher,
-                store: new Store()
+                store: createStore({ name: "test" })
             });
             const parentUseCase = new ParentUseCase();
             const childUseCase = parentUseCase.childUseCase;
@@ -193,7 +194,7 @@ describe("DispatcherPayloadMeta", () => {
             const dispatcher = new Dispatcher();
             const context = new Context({
                 dispatcher,
-                store: new Store()
+                store: createStore({ name: "test" })
             });
             const useCase = new DispatchUseCase();
             let callCount = 0;

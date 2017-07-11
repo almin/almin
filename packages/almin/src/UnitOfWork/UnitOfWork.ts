@@ -1,13 +1,30 @@
 // MIT © 2017 azu
 import { EventEmitter } from "events";
 import { Payload } from "../payload/Payload";
+import { DispatcherPayloadMeta } from "../DispatcherPayloadMeta";
 
+/**
+ * Commitment is a tuple of payload and meta.
+ * It is a minimal unit of transaction.
+ *
+ * Notes: Why commitment is array?
+ * commitment is collect as array at once.
+ * Pass it StoreGroup directly.
+ * If use ...arguments, it has spread cost by transpiler.
+ *
+ * It is similar reason to why use Dispatcher insteadof EventEmitter.
+ */
+export type Commitment = [Payload, DispatcherPayloadMeta]
+
+/**
+ * Unit of work committing target
+ */
 export interface Committable {
-    commit(payload: Payload): void;
+    commit(commitment: Commitment): void;
 }
 
 export class UnitOfWork extends EventEmitter {
-    private transactionalEvents: Payload[];
+    private commitments: Commitment[];
     private committable: Committable;
     private isDisposed: boolean;
 
@@ -16,21 +33,21 @@ export class UnitOfWork extends EventEmitter {
      */
     constructor(committable: Committable) {
         super();
-        this.transactionalEvents = [];
+        this.commitments = [];
         this.committable = committable;
         this.isDisposed = false;
     }
 
     get size() {
-        return this.transactionalEvents.length;
+        return this.commitments.length;
     }
 
-    addPayload(payload: Payload) {
-        this.transactionalEvents.push(payload);
-        this.emit("ON_ADD_NEW_EVENT", payload);
+    addCommitment(commitment: Commitment) {
+        this.commitments.push(commitment);
+        this.emit("ON_ADD_NEW_EVENT", commitment);
     };
 
-    onNewPayload(handler: (event: Event) => void) {
+    onAddedCommitment(handler: (commitment: Commitment) => void) {
         this.on("ON_ADD_NEW_EVENT", handler);
     }
 
@@ -38,18 +55,18 @@ export class UnitOfWork extends EventEmitter {
         if (this.isDisposed) {
             throw new Error("already closed this transaction");
         }
-        this.transactionalEvents.forEach((event) => {
-            this.committable.commit(event);
+        this.commitments.forEach(commitment => {
+            this.committable.commit(commitment);
         });
         this.prune();
     };
 
     prune() {
-        this.transactionalEvents.length = 0;
+        this.commitments.length = 0;
     }
 
     release() {
-        this.transactionalEvents.length = 0;
+        this.commitments.length = 0;
         this.isDisposed = true;
         this.removeAllListeners();
     }

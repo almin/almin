@@ -90,7 +90,7 @@ describe("Store", function() {
     });
     describe("#onDispatch", function() {
         it("should called when dispatched", function(done) {
-            const store = new Store();
+            const store = createStore({ name: "test" });
             const expectedPayload = {
                 type: "test",
                 value: "value"
@@ -138,7 +138,7 @@ describe("Store", function() {
     });
     describe("#onChange", function() {
         it("should called when changed", function(done) {
-            const store = new Store();
+            const store = createStore({ name: "test" });
             let isCalled = false;
             // then
             store.onChange(() => {
@@ -181,7 +181,7 @@ describe("Store", function() {
     describe("#onDispatch", function() {
         context("when useCaseName is minified", function() {
             it("can receive error from UseCase", function(done) {
-                const store = new Store();
+                const store = createStore({ name: "test" });
                 class TestUseCase extends UseCase {
                     execute() {
                         const domainError = new Error("domain error");
@@ -206,7 +206,7 @@ describe("Store", function() {
             });
         });
         it("should receive error from UseCase", function(done) {
-            const store = new Store();
+            const store = createStore({ name: "test" });
             class TestUseCase extends UseCase {
                 execute() {
                     const domainError = new Error("domain error");

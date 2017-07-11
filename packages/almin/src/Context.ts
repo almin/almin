@@ -19,6 +19,17 @@ import { UseCaseLike } from "./UseCaseLike";
 import { UseCaseUnitOfWork } from "./UnitOfWork/UseCaseUnitOfWork";
 import { StoreGroup } from "./UILayer/StoreGroup";
 import { createUseCaseExecutor } from "./UseCaseExecutorFactory";
+import { TransactionContext } from "./UnitOfWork/TransactionContext";
+import { createSingleStoreGroup } from "./UILayer/SingleStoreGroup";
+import { StoreGroupLike } from "./UILayer/StoreGroupLike";
+
+export interface ContextArgs<T> {
+    dispatcher: Dispatcher;
+    store: StoreLike<T>;
+    options?: {
+        strict?: boolean
+    };
+}
 
 /**
  * Context class provide observing and communicating with **Store** and **UseCase**.
@@ -28,8 +39,9 @@ export class Context<T> {
      * @private
      */
     private _dispatcher: Dispatcher;
-    private _storeGroup: StoreLike<T>;
+    private _storeGroup: StoreGroupLike;
     private _releaseHandlers: Array<() => void>;
+    private isStrictMode = false;
 
     /**
      * `dispatcher` is an instance of `Dispatcher`.
@@ -42,7 +54,7 @@ export class Context<T> {
      * ```js
      * const context = new Context({
      *   dispatcher: new Dispatcher(),
-     *   store: new Store()
+     *   store: new MyStore()
      * });
      * ```
      *
@@ -54,47 +66,44 @@ export class Context<T> {
      * ]);
      * const context = new Context({
      *   dispatcher: new Dispatcher(),
-     *   store: new Store()
+     *   store: storeGroup
      * });
      * ```
      */
-    constructor({ dispatcher, store }: { dispatcher: Dispatcher; store: StoreLike<T>; }) {
+    constructor(args: ContextArgs<T>) {
+        const store = args.store;
         StoreGroupValidator.validateInstance(store);
         // central dispatcher
-        this._dispatcher = dispatcher;
-        this._storeGroup = store;
+        this._dispatcher = args.dispatcher;
+        // Implementation Note:
+        // Delegate dispatch event to Store|StoreGroup from Dispatcher
+        // StoreGroup call each Store#receivePayload, but pass directly Store is not.
+        // So, Context check the store instance has implementation of `Store#receivePayload` and pass payload to it.
+        // See https://github.com/almin/almin/issues/190
+        // createSingleStoreGroup is wrapper of store for creating StoreGroup.
+        if (store instanceof StoreGroup) {
+            this._storeGroup = store
+        } else if (store instanceof Store) {
+            this._storeGroup = createSingleStoreGroup(store);
+        } else {
+            throw new Error("{ store } should be instanceof StoreGroup or Store.");
+        }
 
+        this.isStrictMode = args.options !== undefined && args.options.strict === true;
+        if (this.isStrictMode) {
+            this._storeGroup.useStrict()
+        }
         /**
          * callable release handlers
          * @type {Function[]}
          * @private
          */
         this._releaseHandlers = [];
-        // Implementation Note:
-        // Delegate dispatch event to Store|StoreGroup from Dispatcher
-        // StoreGroup call each Store#receivePayload, but pass directly Store is not.
-        // So, Context check the store instance has implementation of `Store#receivePayload` and pass payload to it.
-        // See https://github.com/almin/almin/issues/190
 
-        if (this._storeGroup instanceof Store) {
-            const store = this._storeGroup;
-            // Dispatch Flow: Dispatcher -> Store(and receivePayload fallback)
-            // Notes: You should not depended on this implementation in production.
-            const hasReceivePayload = typeof store.receivePayload === "function";
-            const releaseHandler = this._dispatcher.onDispatch((payload: DispatchedPayload, meta: DispatcherPayloadMeta) => {
-                store.dispatch(payload, meta);
-                if (hasReceivePayload) {
-                    // StoreLike has not receivePayload, but Store may has receivePayload
-                    (store as Store).receivePayload!(payload);
-                }
-            });
-            this._releaseHandlers.push(releaseHandler);
-        } else {
-            // Dispatch Flow: Dispatcher -> StoreGroup
-            // StoreGroup should have implement that StoreGroup -> Stores
-            const releaseHandler = this._dispatcher.pipe(this._storeGroup);
-            this._releaseHandlers.push(releaseHandler);
-        }
+        // Dispatch Flow: Dispatcher -> StoreGroup
+        // StoreGroup should have implement that StoreGroup -> Stores
+        const releaseHandler = this._dispatcher.pipe(this._storeGroup);
+        this._releaseHandlers.push(releaseHandler);
     }
 
     /**
@@ -166,16 +175,72 @@ export class Context<T> {
     useCase<T extends UseCaseLike>(useCase: T): UseCaseExecutor<T>;
     useCase(useCase: any): UseCaseExecutor<any> {
         const useCaseExecutor = createUseCaseExecutor(useCase, this._dispatcher);
-        if (this._storeGroup instanceof StoreGroup) {
-            const unitOfWork = new UseCaseUnitOfWork(this._storeGroup, {
-                autoCommit: true
-            });
-            unitOfWork.open(useCaseExecutor);
-            useCaseExecutor.onComplete(() => {
-                unitOfWork.close(useCaseExecutor);
-            });
-        }
+        const unitOfWork = new UseCaseUnitOfWork(this._storeGroup, {
+            autoCommit: true
+        });
+        unitOfWork.open(useCaseExecutor);
+        useCaseExecutor.onComplete(() => {
+            unitOfWork.close(useCaseExecutor);
+        });
         return useCaseExecutor;
+    }
+
+
+    /**
+     * Create new Transaction(Unit of Work).
+     * You can prevent heavy updating of StoreGroup
+     *
+     * This feature only work in strict mode.
+     *
+     * Difference with `Context#useCase`:
+     *
+     * - Do not update StoreGroup automatically
+     * - You should call `committer.commit()` to update StoreGroup at any time
+     *
+     * ```js
+     * context.transaction(committer => {
+     *      return committer.useCase(new ChangeAUseCase()).execute() // no update store
+     *          .then(() => {
+     *              return committer.useCase(new ChangeBUseCase()).execute(); // no update store
+     *          }).then(() => {
+     *              return committer.useCase(new ChangeCUseCase()).execute(); // no update store
+     *          }).then(() => {
+     *              committer.commit(); // update store
+     *              // replay: ChangeAUseCase -> ChangeBUseCase -> ChangeCUseCase
+     *          });
+     *  })
+     * ```
+     */
+    transaction(committer: (context: TransactionContext) => Promise<any>) {
+        if (process.env.NODE_ENV !== "production") {
+            if (!this.isStrictMode) {
+                console.error(`Warning(Context): Context#transaction only use in strict mode.
+Because, the transaction should have reliability of updating stores. strict mode promise it.
+Please enable strict mode via \`new Context({ dispatcher, store, options: { strict: true });\`
+`);
+            }
+        }
+        const unitOfWork = new UseCaseUnitOfWork(this._storeGroup, { autoCommit: false });
+        const createUseCaseExecutorAndOpenUoW = <T extends UseCaseLike>(useCase: T): UseCaseExecutor<T> => {
+            const useCaseExecutor = createUseCaseExecutor(useCase, this._dispatcher);
+            unitOfWork.open(useCaseExecutor);
+            return useCaseExecutor;
+        };
+        const context: TransactionContext = {
+            useCase: createUseCaseExecutorAndOpenUoW,
+            commit() {
+                unitOfWork.commit();
+            }
+        };
+        // committer resolve with void
+        // unitOfWork automatically close when committer exit
+        // by design.
+        return committer(context).then(() => {
+            unitOfWork.release();
+        }, (error) => {
+            unitOfWork.release();
+            return Promise.reject(error);
+        });
     }
 
     /**

@@ -146,3 +146,11 @@ context.useCase(new MyUseCase())
     .then(() => {
         console.log("test");
     });
+
+context.transaction(async context => {
+    await context.useCase(new MyUseCase()).execute();
+    await context.useCase(new ParentUseCase()).execute();
+    context.commit();
+}).then(() => {
+    console.log("Finish");
+});
