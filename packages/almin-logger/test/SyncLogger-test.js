@@ -1,13 +1,13 @@
 // LICENSE : MIT
 "use strict";
 const assert = require("power-assert");
-import {Context, Store, Dispatcher} from "almin";
+import { Context, Store, Dispatcher } from "almin";
 import SyncLogger from "../src/SyncLogger";
 import AlminLogger from "../src/AlminLogger";
 import ConsoleMock from "./helper/ConsoleMock";
 import NoDispatchUseCase from "./usecase/NoDispatchUseCase";
 describe("SyncLogger", function() {
-    it("should output", function (done) {
+    it("should output", function(done) {
         const consoleMock = ConsoleMock.create();
         const logger = new SyncLogger({
             console: consoleMock

@@ -14,9 +14,7 @@ import { createStore } from "./helper/create-new-store";
 import { Payload, WillExecutedPayload, DidExecutedPayload, CompletedPayload, ErrorPayload } from "../lib/index";
 
 class TestUseCase extends UseCase {
-    execute() {
-
-    }
+    execute() {}
 }
 
 class ThrowUseCase extends UseCase {
@@ -105,7 +103,7 @@ describe("Context", function() {
                 dispatcher,
                 store: storeGroup
             });
-            appContext.onChange((stores) => {
+            appContext.onChange(stores => {
                 assert.equal(stores.length, 1);
                 assert.equal(stores[0], aStore);
                 done();
@@ -125,7 +123,7 @@ describe("Context", function() {
                 dispatcher,
                 store: storeGroup
             });
-            appContext.onChange((stores) => {
+            appContext.onChange(stores => {
                 assert.equal(stores.length, 2);
                 done();
             });
@@ -228,7 +226,7 @@ describe("Context", function() {
             });
             // when
             return appContext.useCase(eventUseCase).execute().then(() => {
-                Object.keys(isCalled).forEach((key) => {
+                Object.keys(isCalled).forEach(key => {
                     assert.ok(isCalled[key] === true, `${key} should be called`);
                 });
             });
@@ -314,9 +312,13 @@ describe("Context", function() {
                     dispatcher,
                     store: createEchoStore({ echo: { "1": 1 } })
                 });
-                assert.throws(function() {
-                    appContext.useCase(TestUseCase);
-                }, Error, /Context#useCase argument should be instance of UseCase./);
+                assert.throws(
+                    function() {
+                        appContext.useCase(TestUseCase);
+                    },
+                    Error,
+                    /Context#useCase argument should be instance of UseCase./
+                );
             });
         });
         it("should execute functional UseCase", function() {
@@ -330,7 +332,7 @@ describe("Context", function() {
                 callStack.push(payload);
             });
             const useCase = ({ dispatcher }) => {
-                return (value) => {
+                return value => {
                     dispatcher.dispatch({
                         type: "Example",
                         value
@@ -366,7 +368,7 @@ describe("Context", function() {
                 callStack.push(payload);
             });
             const useCase = ({ dispatcher }) => {
-                return (value) => {
+                return value => {
                     dispatcher.dispatch({
                         type: "Example",
                         value
@@ -376,7 +378,7 @@ describe("Context", function() {
             return appContext.useCase(useCase).execute("value").then(() => {
                 const expectedCallStackOfAUseCase = [
                     WillExecutedPayload,
-                    Object/* {
+                    Object /* {
                         type: "Example",
                         value: "value"
                     }*/,

@@ -9,7 +9,7 @@ import { NoDispatchUseCase } from "./use-case/NoDispatchUseCase";
 /**
  * create a Store that can handle receivePayload
  */
-const createReceivePayloadStore = (receivePayloadHandler) => {
+const createReceivePayloadStore = receivePayloadHandler => {
     class MockStore extends Store {
         constructor() {
             super();
@@ -62,34 +62,40 @@ describe("Context#transaction", () => {
         // then - called change handler a one-time
         let calledCount = 0;
         let changedStores = [];
-        storeGroup.onChange((stores) => {
+        storeGroup.onChange(stores => {
             calledCount++;
             changedStores = changedStores.concat(stores);
         });
         // when
-        return context.transaction(committer => {
-            return committer.useCase(new ChangeAUseCase()).execute()
-                .then(() => {
-                    return committer.useCase(new ChangeBUseCase()).execute();
-                }).then(() => {
-                    return committer.useCase(new ChangeCUseCase()).execute();
-                }).then(() => {
-                    // 1st commit
-                    committer.commit();
+        return context
+            .transaction(committer => {
+                return committer
+                    .useCase(new ChangeAUseCase())
+                    .execute()
+                    .then(() => {
+                        return committer.useCase(new ChangeBUseCase()).execute();
+                    })
+                    .then(() => {
+                        return committer.useCase(new ChangeCUseCase()).execute();
+                    })
+                    .then(() => {
+                        // 1st commit
+                        committer.commit();
+                    });
+            })
+            .then(() => {
+                assert.equal(calledCount, 1);
+                assert.equal(changedStores.length, 3);
+                assert.deepEqual(context.getState(), {
+                    a: 1,
+                    b: 1,
+                    c: 1
                 });
-        }).then(() => {
-            assert.equal(calledCount, 1);
-            assert.equal(changedStores.length, 3);
-            assert.deepEqual(context.getState(), {
-                a: 1,
-                b: 1,
-                c: 1
             });
-        });
     });
     it("commit and each store#receivePayload is called", function() {
         const receivedPayloadList = [];
-        const aStore = createReceivePayloadStore((payload) => {
+        const aStore = createReceivePayloadStore(payload => {
             receivedPayloadList.push(payload);
         });
         const storeGroup = new StoreGroup({ a: aStore });
@@ -104,7 +110,9 @@ describe("Context#transaction", () => {
         receivedPayloadList.length = 0;
         return context.transaction(committer => {
             assert.strictEqual(receivedPayloadList.length, 0, "no commitment");
-            return committer.useCase(new NoDispatchUseCase()).execute()
+            return committer
+                .useCase(new NoDispatchUseCase())
+                .execute()
                 .then(() => {
                     assert.strictEqual(receivedPayloadList.length, 0, "no commitment");
                     committer.commit();
@@ -139,7 +147,9 @@ describe("Context#transaction", () => {
         receivedCommitments.length = 0;
         return context.transaction(committer => {
             assert.strictEqual(receivedCommitments.length, 0, "no commitment");
-            return committer.useCase(new NoDispatchUseCase()).execute()
+            return committer
+                .useCase(new NoDispatchUseCase())
+                .execute()
                 .then(() => {
                     assert.strictEqual(receivedCommitments.length, 0, "no commitment");
                     committer.commit();

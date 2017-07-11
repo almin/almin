@@ -11,7 +11,6 @@ import { Dispatcher } from "../Dispatcher";
 
  */
 export class StoreGroupValidator {
-
     /**
      * validate the instance is StoreGroup-like object
      * Context treat StoreGroup like object as StoreGroup.
@@ -22,8 +21,9 @@ export class StoreGroupValidator {
         assert.ok(typeof storeGroup.onChange === "function", "StoreGroup should have #onChange method");
         assert.ok(typeof storeGroup.getState === "function", "StoreGroup should have #getState method");
         // #release is optional
-        assert.ok(typeof storeGroup.release === "undefined" || typeof storeGroup.release === "function",
-            "StoreGroup may have #release method");
+        assert.ok(
+            typeof storeGroup.release === "undefined" || typeof storeGroup.release === "function",
+            "StoreGroup may have #release method"
+        );
     }
-
 }

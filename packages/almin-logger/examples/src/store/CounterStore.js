@@ -1,6 +1,6 @@
 // LICENSE : MIT
 "use strict";
-import {Store} from "almin";
+import { Store } from "almin";
 import CounterState from "./CounterState";
 export class CounterStore extends Store {
     constructor() {
@@ -16,12 +16,12 @@ export class CounterStore extends Store {
                 this.state = newState;
                 this.emitChange();
             }
-        })
+        });
     }
 
     getState() {
         return {
             counterState: this.state
-        }
+        };
     }
 }

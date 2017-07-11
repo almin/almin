@@ -24,11 +24,14 @@ describe("UseCaseExecutor", function() {
                 useCase: new ThrowUseCase(),
                 dispatcher
             });
-            return executor.executor((useCase) => useCase.execute()).then(() => {
-                throw new Error("SHOULD NOT CALLED");
-            }, (error) => {
-                assert(error instanceof Error, "should be caught error");
-            });
+            return executor.executor(useCase => useCase.execute()).then(
+                () => {
+                    throw new Error("SHOULD NOT CALLED");
+                },
+                error => {
+                    assert(error instanceof Error, "should be caught error");
+                }
+            );
         });
         it("should throw error when pass non-executor function and output console.error", () => {
             const dispatcher = new Dispatcher();
@@ -36,14 +39,20 @@ describe("UseCaseExecutor", function() {
                 useCase: new NoDispatchUseCase(),
                 dispatcher
             });
-            return executor.executor(" THIS IS WRONG ").then(() => {
-                throw new Error("SHOULD NOT CALLED");
-            }, (error) => {
-                assert(consoleErrorStub.called);
-                const warningMessage = consoleErrorStub.getCalls()[0].args[0];
-                assert(error instanceof Error, "should be rejected");
-                assert.equal(warningMessage, "Warning(UseCase): executor argument should be function. But this argument is not function: ");
-            });
+            return executor.executor(" THIS IS WRONG ").then(
+                () => {
+                    throw new Error("SHOULD NOT CALLED");
+                },
+                error => {
+                    assert(consoleErrorStub.called);
+                    const warningMessage = consoleErrorStub.getCalls()[0].args[0];
+                    assert(error instanceof Error, "should be rejected");
+                    assert.equal(
+                        warningMessage,
+                        "Warning(UseCase): executor argument should be function. But this argument is not function: "
+                    );
+                }
+            );
         });
         it("should accept executor(useCase => {}) function arguments", () => {
             const dispatcher = new Dispatcher();
@@ -52,13 +61,20 @@ describe("UseCaseExecutor", function() {
                 useCase: callableUseCase,
                 dispatcher
             });
-            return executor.executor(useCase => useCase.execute({
-                type: "type"
-            })).then(() => {
-                assert(callableUseCase.isExecuted, "UseCase#execute should be called");
-            }, (error) => {
-                throw new error;
-            });
+            return executor
+                .executor(useCase =>
+                    useCase.execute({
+                        type: "type"
+                    })
+                )
+                .then(
+                    () => {
+                        assert(callableUseCase.isExecuted, "UseCase#execute should be called");
+                    },
+                    error => {
+                        throw new error();
+                    }
+                );
         });
         it("executor(useCase => {}) useCase is actual wrapper object", () => {
             const dispatcher = new Dispatcher();
@@ -72,21 +88,23 @@ describe("UseCaseExecutor", function() {
                 return useCase.execute();
             });
         });
-        it("can call useCase.execute() by async", (done) => {
+        it("can call useCase.execute() by async", done => {
             const dispatcher = new Dispatcher();
             const callableUseCase = new CallableUseCase();
             const executor = new UseCaseExecutor({
                 useCase: callableUseCase,
                 dispatcher
             });
-            executor.executor(useCase => {
-                Promise.resolve().then(() => {
-                    useCase.execute();
+            executor
+                .executor(useCase => {
+                    Promise.resolve().then(() => {
+                        useCase.execute();
+                    });
+                })
+                .then(() => {
+                    assert(callableUseCase.isExecuted, "UseCase#execute is called");
+                    done();
                 });
-            }).then(() => {
-                assert(callableUseCase.isExecuted, "UseCase#execute is called");
-                done();
-            });
             // sync check
             assert(callableUseCase.isExecuted === false, "UseCase#execute is not called yet.");
         });
@@ -97,14 +115,19 @@ describe("UseCaseExecutor", function() {
                     useCase: new NoDispatchUseCase(),
                     dispatcher
                 });
-                return executor.executor(useCase => {
-                    useCase.execute();
-                    useCase.execute();
-                }).then(() => {
-                    assert(consoleErrorStub.called);
-                    const warningMessage = consoleErrorStub.getCalls()[0].args[0];
-                    assert(/Warning\(UseCase\): \w+#execute was called more than once./.test(warningMessage), warningMessage);
-                });
+                return executor
+                    .executor(useCase => {
+                        useCase.execute();
+                        useCase.execute();
+                    })
+                    .then(() => {
+                        assert(consoleErrorStub.called);
+                        const warningMessage = consoleErrorStub.getCalls()[0].args[0];
+                        assert(
+                            /Warning\(UseCase\): \w+#execute was called more than once./.test(warningMessage),
+                            warningMessage
+                        );
+                    });
             });
         });
     });
@@ -154,11 +177,14 @@ describe("UseCaseExecutor", function() {
                 useCase: new ThrowUseCase(),
                 dispatcher
             });
-            return executor.execute().then(() => {
-                throw new Error("SHOULD NOT CALLED");
-            }, (error) => {
-                assert(error instanceof Error, "should be caught error");
-            });
+            return executor.execute().then(
+                () => {
+                    throw new Error("SHOULD NOT CALLED");
+                },
+                error => {
+                    assert(error instanceof Error, "should be caught error");
+                }
+            );
         });
         context("when UseCase is sync", function() {
             it("execute is called", function(done) {
@@ -190,7 +216,7 @@ describe("UseCaseExecutor", function() {
                     useCase: new SyncUseCase(),
                     dispatcher
                 });
-                executor.execute(expectedPayload);// 1
+                executor.execute(expectedPayload); // 1
             });
         });
         context("when UseCase is async", function() {
@@ -217,7 +243,7 @@ describe("UseCaseExecutor", function() {
                 let isCalledDidExecuted = false;
                 let isCalledCompleted = false;
                 // 4
-                dispatcher.onDispatch((payload) => {
+                dispatcher.onDispatch(payload => {
                     if (payload.type === expectedPayload.type) {
                         assert.equal(payload.value, expectedPayload.value);
                         isCalledUseCase = true;

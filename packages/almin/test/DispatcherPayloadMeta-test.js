@@ -150,7 +150,7 @@ describe("DispatcherPayloadMeta", () => {
             context.onWillExecuteEachUseCase((payload, meta) => willMeta.push(meta));
             context.onDidExecuteEachUseCase((payload, meta) => didMeta.push(meta));
             context.onCompleteEachUseCase((payload, meta) => completeMeta.push(meta));
-            context.onDispatch((payload, meta) => childDispatchMeta = meta);
+            context.onDispatch((payload, meta) => (childDispatchMeta = meta));
             return context.useCase(parentUseCase).execute().then(() => {
                 const [parentWillMeta, childWillMeta] = willMeta;
                 const [childDidMeta, parentDidMeta] = didMeta;

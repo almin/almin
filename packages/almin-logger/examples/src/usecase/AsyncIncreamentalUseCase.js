@@ -1,6 +1,6 @@
 // LICENSE : MIT
 "use strict";
-import {UseCase} from "almin"
+import { UseCase } from "almin";
 import IncrementalCounterUseCase from "./IncrementalCounterUseCase";
 export default class AsyncIncreamentalUseCase extends UseCase {
     // IncrementalCounterUseCase dispatch event ----> Store

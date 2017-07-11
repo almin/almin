@@ -22,7 +22,7 @@ const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
 
 // { stateName: state }
 export interface StoreGroupState {
-    [key: string]: any
+    [key: string]: any;
 }
 
 /**
@@ -180,7 +180,7 @@ export class StoreGroup<T> extends Dispatcher implements StoreGroupLike {
         // Dispatch -> pipe -> Store#emitChange() if it is needed
         //          -> this.onDispatch -> If anyone store is changed, this.emitChange()
         // each pipe to dispatching
-        this.stores.forEach((store) => {
+        this.stores.forEach(store => {
             // observe Store
             const unRegisterHandler = this._registerStore(store);
             this._releaseHandlers.push(unRegisterHandler);
@@ -264,8 +264,11 @@ export class StoreGroup<T> extends Dispatcher implements StoreGroupLike {
             // if the prev/next state is same, not update the state.
             const stateName = this._storeStateMap.get(store);
             if (process.env.NODE_ENV !== "production") {
-                assert.ok(stateName !== undefined, `Store:${store.name} is not registered in constructor.
-But, ${store.name}#getState() was called.`);
+                assert.ok(
+                    stateName !== undefined,
+                    `Store:${store.name} is not registered in constructor.
+But, ${store.name}#getState() was called.`
+                );
                 this.storeGroupEmitChangeChecker.warningIfStatePropertyIsModifiedDirectly(store, prevState, nextState);
                 // nextState has confirmed and release the `store` from the checker
                 this.storeGroupEmitChangeChecker.unMark(store);
@@ -320,7 +323,6 @@ But, ${store.name}#getState() was called.`);
         this.writePhaseInRead(this.stores, payload, meta);
         this.tryToUpdateStoreGroupState();
     }
-
 
     useStrict() {
         this.isStrictMode = true;

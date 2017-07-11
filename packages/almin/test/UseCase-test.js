@@ -6,9 +6,9 @@ import { UseCase } from "../lib/UseCase";
 import { Dispatcher } from "../lib/Dispatcher";
 import { Store } from "../lib/Store";
 import { Context } from "../lib/Context";
-import { TYPE as CompletedPayloadType } from '../lib/payload/CompletedPayload';
-import { TYPE as DidExecutedPayloadType } from '../lib/payload/DidExecutedPayload';
-import { TYPE as WillExecutedPayloadType } from '../lib/payload/WillExecutedPayload';
+import { TYPE as CompletedPayloadType } from "../lib/payload/CompletedPayload";
+import { TYPE as DidExecutedPayloadType } from "../lib/payload/DidExecutedPayload";
+import { TYPE as WillExecutedPayloadType } from "../lib/payload/WillExecutedPayload";
 import { UseCaseContext } from "../lib/UseCaseContext";
 import { createStore } from "./helper/create-new-store";
 
@@ -26,17 +26,14 @@ describe("UseCase", function() {
         // IE9, 10 not have Function.name
         xit("should have name that same with UseCase.name by default", () => {
             class ExampleUseCase extends UseCase {
-                execute() {
-
-                }
+                execute() {}
             }
             const useCase = new ExampleUseCase();
             assert(useCase.name === "ExampleUseCase");
         });
         context("when define displayName", () => {
             it("#name is same with displayName", () => {
-                class MyUseCase extends UseCase {
-                }
+                class MyUseCase extends UseCase {}
                 const expectedName = "Expected UseCase";
                 MyUseCase.displayName = expectedName;
                 const store = new MyUseCase();
@@ -53,7 +50,7 @@ describe("UseCase", function() {
             }
             const testUseCase = new TestUseCase();
             // then
-            testUseCase.onDispatch(({type, error}) => {
+            testUseCase.onDispatch(({ type, error }) => {
                 assert(error instanceof Error);
                 done();
             });
@@ -66,7 +63,7 @@ describe("UseCase", function() {
         it("should execute A:will -> B:will -> B:did -> A:did", function() {
             class BUseCase extends UseCase {
                 execute() {
-                    return "b"
+                    return "b";
                 }
             }
             class AUseCase extends UseCase {
@@ -80,11 +77,7 @@ describe("UseCase", function() {
             // for reference fn.name
             const bUseCase = new BUseCase();
             const callStack = [];
-            const expectedCallStackOfAUseCase = [
-                WillExecutedPayloadType,
-                DidExecutedPayloadType,
-                CompletedPayloadType
-            ];
+            const expectedCallStackOfAUseCase = [WillExecutedPayloadType, DidExecutedPayloadType, CompletedPayloadType];
             const expectedCallStack = [
                 `${aUseCase.name}:will`,
                 `${bUseCase.name}:will`,
@@ -133,8 +126,7 @@ describe("UseCase", function() {
     });
     context("when not implemented execute()", function() {
         it("should assert error on constructor", function() {
-            class TestUseCase extends UseCase {
-            }
+            class TestUseCase extends UseCase {}
             try {
                 const useCase = new TestUseCase();
                 useCase.execute();

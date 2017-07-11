@@ -18,10 +18,14 @@ const warningIfChangingStoreIsNotImmutable = (store: Store, prevState: any, next
     if (isStateChanged) {
         return;
     }
-    console.error(`Warning(Store): ${store.name} does call emitChange(). 
+    console.error(
+        `Warning(Store): ${store.name} does call emitChange(). 
 But, this store's state is not changed.
 Store's state should be immutable value.
-Prev State:`, prevState, `Next State:`, nextState
+Prev State:`,
+        prevState,
+        `Next State:`,
+        nextState
     );
 };
 /**
@@ -45,7 +49,8 @@ const warningIfStatePropertyIsModifiedDirectly = (store: Store, prevState: any, 
     const isStateUpdated = shouldStateUpdate(store, prevState, nextState);
     const isStateChangedButShouldNotUpdate = isStateReferenceReplaced && !isStateUpdated;
     if (isStateChangedButShouldNotUpdate) {
-        console.error(`Warning(Store): ${store.name}#state property is replace by difference value, but this change **does not** reflect to view.
+        console.error(
+            `Warning(Store): ${store.name}#state property is replace by difference value, but this change **does not** reflect to view.
 Because, ${store.name}#shouldStateUpdate(prevState, store.state) has returned **false**.
 
 It means that the variance is present between ${store.name}#state property and shouldStateUpdate.
@@ -60,7 +65,12 @@ For example, you should update the state by following:
     if(this.shouldStateUpdate(this.state, newState)){
         this.state = newState;
     }
-`, "prevState", prevState, "nextState", nextState);
+`,
+            "prevState",
+            prevState,
+            "nextState",
+            nextState
+        );
     }
 };
 

@@ -10,12 +10,7 @@ export default class LogChunk {
      * @param {UseCase} [useCase]
      * @param {number} timeStamp
      */
-    constructor({
-        log,
-        payload,
-        useCase,
-        timeStamp
-    }) {
+    constructor({ log, payload, useCase, timeStamp }) {
         this.log = log;
         this.payload = payload;
         this.useCase = useCase;

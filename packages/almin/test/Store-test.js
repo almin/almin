@@ -11,8 +11,7 @@ describe("Store", function() {
     describe("#name", () => {
         context("when define displayName", () => {
             it("#name is same with displayName", () => {
-                class MyStore extends Store {
-                }
+                class MyStore extends Store {}
                 const expectedName = "Expected Store";
                 MyStore.displayName = expectedName;
                 const store = new MyStore();
@@ -23,8 +22,7 @@ describe("Store", function() {
     describe("#getState", () => {
         context("when has not implemented", () => {
             it("throw error", () => {
-                class MyStore extends Store {
-                }
+                class MyStore extends Store {}
                 const store = new MyStore();
                 assert.throws(() => {
                     store.getState();
@@ -33,7 +31,7 @@ describe("Store", function() {
         });
     });
     describe("#setState", () => {
-        context('when newState tha is not updatable state', () => {
+        context("when newState tha is not updatable state", () => {
             it("should not update with newState", () => {
                 class MyStore extends Store {
                     constructor() {
@@ -85,7 +83,7 @@ describe("Store", function() {
                 });
                 const newState = store.getState();
                 assert(currentState !== newState);
-            })
+            });
         });
     });
     describe("#onDispatch", function() {
@@ -151,7 +149,7 @@ describe("Store", function() {
         });
         // Related https://github.com/almin/almin/issues/190
         context("when call Store#setState out of UseCase", () => {
-            it("should be called Store#onChange", (done) => {
+            it("should be called Store#onChange", done => {
                 class AStore extends Store {
                     constructor() {
                         super();

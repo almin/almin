@@ -16,8 +16,9 @@ export default class PrintLogger {
     printLogGroup(logGroup) {
         const childrenLogGroup = logGroup.children.filter(logItem => logItem instanceof LogGroup);
         const includesUseCaseName = childrenLogGroup
-        .filter(logGroup => logGroup !== undefined)
-        .map(logGroup => logGroup.useCaseName).join(", ");
+            .filter(logGroup => logGroup !== undefined)
+            .map(logGroup => logGroup.useCaseName)
+            .join(", ");
         const groupTitleSuffix = childrenLogGroup.length > 0 ? `(includes "${includesUseCaseName}")` : "";
         const isIncludedErrorChunk = this._includeErrorChunk(logGroup);
         // x or flag
@@ -32,12 +33,12 @@ export default class PrintLogger {
             }
         });
         if (logGroup.children.length > 1) {
-            const takenTime = logGroup.children[logGroup.children.length - 1].timeStamp - logGroup.children[0].timeStamp;
+            const takenTime =
+                logGroup.children[logGroup.children.length - 1].timeStamp - logGroup.children[0].timeStamp;
             this.logger.log(`Taken time: ${takenTime}ms`);
         }
         this.logger.groupEnd(groupTitle);
     }
-
 
     /**
      * @param {LogChunk} chunk
@@ -61,7 +62,6 @@ export default class PrintLogger {
         }
     }
 
-
     /**
      * Is include Error chunk
      * @param {LogGroup} logGroup
@@ -71,7 +71,7 @@ export default class PrintLogger {
     _includeErrorChunk(logGroup) {
         return logGroup.children.some(chunk => {
             if (chunk instanceof LogGroup) {
-                return this._includeErrorChunk(chunk)
+                return this._includeErrorChunk(chunk);
             } else {
                 return this._includeErrorChunkLogs(chunk.log);
             }

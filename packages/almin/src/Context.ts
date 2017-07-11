@@ -27,7 +27,7 @@ export interface ContextArgs<T> {
     dispatcher: Dispatcher;
     store: StoreLike<T>;
     options?: {
-        strict?: boolean
+        strict?: boolean;
     };
 }
 
@@ -82,7 +82,7 @@ export class Context<T> {
         // See https://github.com/almin/almin/issues/190
         // createSingleStoreGroup is wrapper of store for creating StoreGroup.
         if (store instanceof StoreGroup) {
-            this._storeGroup = store
+            this._storeGroup = store;
         } else if (store instanceof Store) {
             this._storeGroup = createSingleStoreGroup(store);
         } else {
@@ -91,7 +91,7 @@ export class Context<T> {
 
         this.isStrictMode = args.options !== undefined && args.options.strict === true;
         if (this.isStrictMode) {
-            this._storeGroup.useStrict()
+            this._storeGroup.useStrict();
         }
         /**
          * callable release handlers
@@ -185,7 +185,6 @@ export class Context<T> {
         return useCaseExecutor;
     }
 
-
     /**
      * Create new Transaction(Unit of Work).
      * You can prevent heavy updating of StoreGroup
@@ -235,12 +234,15 @@ Please enable strict mode via \`new Context({ dispatcher, store, options: { stri
         // committer resolve with void
         // unitOfWork automatically close when committer exit
         // by design.
-        return committer(context).then(() => {
-            unitOfWork.release();
-        }, (error) => {
-            unitOfWork.release();
-            return Promise.reject(error);
-        });
+        return committer(context).then(
+            () => {
+                unitOfWork.release();
+            },
+            error => {
+                unitOfWork.release();
+                return Promise.reject(error);
+            }
+        );
     }
 
     /**

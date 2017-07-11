@@ -8,7 +8,7 @@ describe("UseCaseContext", () => {
     context("useCase", () => {
         it("should execute functional useCase", () => {
             const expectedPayload = {
-                "type": "expected"
+                type: "expected"
             };
             const dispatched = [];
             class ParentUseCase extends UseCase {
@@ -21,7 +21,7 @@ describe("UseCaseContext", () => {
                 dispatcher,
                 store: createStore({ name: "test" })
             });
-            context.onDispatch((payload) => {
+            context.onDispatch(payload => {
                 dispatched.push(payload);
             });
             return context.useCase(new ParentUseCase()).execute().then(() => {

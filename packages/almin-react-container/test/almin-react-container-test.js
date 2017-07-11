@@ -2,13 +2,13 @@ import assert from "assert";
 import { Context, Dispatcher, Store } from "almin";
 import AlminReactContainer from "../lib/almin-react-container";
 import React, { Component } from "react";
-import TestUtils from 'react-dom/test-utils'
+import TestUtils from "react-dom/test-utils";
 
-const createTestStore = (initialState) => {
+const createTestStore = initialState => {
     class TestStore extends Store {
         constructor() {
             super();
-            this.state = initialState
+            this.state = initialState;
         }
 
         updateState(newState) {
@@ -28,11 +28,11 @@ describe("almin-react-container", () => {
             let updatedCount = 0;
             class Passthrough extends Component {
                 componentWillUpdate() {
-                    updatedCount++
+                    updatedCount++;
                 }
 
                 render() {
-                    return <div />
+                    return <div />;
                 }
             }
             // initial state
@@ -45,9 +45,7 @@ describe("almin-react-container", () => {
                 store: testStore
             });
             const Container = AlminReactContainer.create(Passthrough, context);
-            const tree = TestUtils.renderIntoDocument(
-                <Container />
-            );
+            const tree = TestUtils.renderIntoDocument(<Container />);
             const container = TestUtils.findRenderedComponentWithType(tree, Container);
             const stub = TestUtils.findRenderedComponentWithType(tree, Passthrough);
             // Initial state
@@ -69,11 +67,11 @@ describe("almin-react-container", () => {
             let updatedCount = 0;
             class Passthrough extends Component {
                 componentWillUpdate() {
-                    updatedCount++
+                    updatedCount++;
                 }
 
                 render() {
-                    return <div />
+                    return <div />;
                 }
             }
             // initial state
@@ -86,9 +84,7 @@ describe("almin-react-container", () => {
                 store: testStore
             });
             const Container = AlminReactContainer.create(Passthrough, context);
-            const tree = TestUtils.renderIntoDocument(
-                <Container />
-            );
+            const tree = TestUtils.renderIntoDocument(<Container />);
             const container = TestUtils.findRenderedComponentWithType(tree, Container);
             const stub = TestUtils.findRenderedComponentWithType(tree, Passthrough);
             // Initial state
@@ -102,5 +98,5 @@ describe("almin-react-container", () => {
             assert.deepEqual(container.state, newState, "should update state");
             assert.deepEqual(stub.props, newState, "should not update props");
         });
-    })
+    });
 });

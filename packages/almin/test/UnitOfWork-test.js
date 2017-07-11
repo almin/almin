@@ -33,11 +33,11 @@ describe("UnitOfWork", () => {
         });
     });
     describe("#onAddedCommitment", () => {
-        it("this handler should called when add new commitment", (done) => {
+        it("this handler should called when add new commitment", done => {
             const { mockStoreGroup } = createMockStoreGroup();
             const unitOfWork = new UnitOfWork(mockStoreGroup);
             const newCommitment = createCommitment();
-            unitOfWork.onAddedCommitment((commitment) => {
+            unitOfWork.onAddedCommitment(commitment => {
                 assert.strictEqual(commitment, newCommitment, "added commitment");
                 assert.strictEqual(commitment, newCommitment, "added commitment");
                 done();

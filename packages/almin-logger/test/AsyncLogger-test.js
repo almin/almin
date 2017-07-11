@@ -18,7 +18,7 @@ import NoDispatchUseCase from "./usecase/NoDispatchUseCase";
 import ErrorUseCase from "./usecase/ErrorUseCase";
 import WrapUseCase from "./usecase/WrapUseCase";
 import DispatchUseCase from "./usecase/DispatchUseCase";
-import {ParentUseCase, ChildUseCase} from "./usecase/NestingUseCase";
+import { ParentUseCase, ChildUseCase } from "./usecase/NestingUseCase";
 describe("AsyncLogger", function() {
     describe("#addLog", () => {
         it("should add current LogGroups", () => {
@@ -77,30 +77,34 @@ describe("AsyncLogger", function() {
             type: "test"
         };
         // Dispatch UseCase -> Error UseCase
-        return context.useCase(useCase).execute(dispatchedPayload).then(() => {
-            assert(results.length === 1);
-            const logGroup = results.shift();
-            assert(logGroup.title === "DispatchUseCase");
-            assert(logGroup.children.length === 4);
-            const [first, second, third, last] = logGroup.children;
-            assert(first.payload instanceof WillExecutedPayload);
-            assert.deepEqual(second.payload, dispatchedPayload);
-            assert(third.payload instanceof DidExecutedPayload);
-            assert(last.payload instanceof CompletedPayload);
-        }).then(() => {
-            const useCase = new ErrorUseCase();
-            return context.useCase(useCase).execute().catch(error => {
+        return context
+            .useCase(useCase)
+            .execute(dispatchedPayload)
+            .then(() => {
                 assert(results.length === 1);
                 const logGroup = results.shift();
-                assert(logGroup.title === "ErrorUseCase");
+                assert(logGroup.title === "DispatchUseCase");
                 assert(logGroup.children.length === 4);
                 const [first, second, third, last] = logGroup.children;
                 assert(first.payload instanceof WillExecutedPayload);
-                assert(second.payload instanceof DidExecutedPayload);
-                assert(third.payload instanceof ErrorPayload);
+                assert.deepEqual(second.payload, dispatchedPayload);
+                assert(third.payload instanceof DidExecutedPayload);
                 assert(last.payload instanceof CompletedPayload);
+            })
+            .then(() => {
+                const useCase = new ErrorUseCase();
+                return context.useCase(useCase).execute().catch(error => {
+                    assert(results.length === 1);
+                    const logGroup = results.shift();
+                    assert(logGroup.title === "ErrorUseCase");
+                    assert(logGroup.children.length === 4);
+                    const [first, second, third, last] = logGroup.children;
+                    assert(first.payload instanceof WillExecutedPayload);
+                    assert(second.payload instanceof DidExecutedPayload);
+                    assert(third.payload instanceof ErrorPayload);
+                    assert(last.payload instanceof CompletedPayload);
+                });
             });
-        });
     });
     context("when nest useCase", () => {
         it("should nest of logGroup ", () => {
@@ -162,16 +166,19 @@ describe("AsyncLogger", function() {
             actualLogGroup = logGroup;
         });
         // When
-        return context.useCase(useCase).execute({
-            type: "example"
-        }).then(() => {
-            assert(consoleMock.groupCollapsed.called);
-            const expectOutput = `dispatch:example`;
-            const isContain = consoleMock.log.calls.some(call => {
-                return call.arg && call.arg.indexOf(expectOutput) !== -1;
+        return context
+            .useCase(useCase)
+            .execute({
+                type: "example"
+            })
+            .then(() => {
+                assert(consoleMock.groupCollapsed.called);
+                const expectOutput = `dispatch:example`;
+                const isContain = consoleMock.log.calls.some(call => {
+                    return call.arg && call.arg.indexOf(expectOutput) !== -1;
+                });
+                assert(isContain, `${expectOutput} is not found.`);
             });
-            assert(isContain, `${expectOutput} is not found.`);
-        });
     });
     it("should output as async", function(done) {
         const consoleMock = ConsoleMock.create();

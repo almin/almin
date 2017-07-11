@@ -7,7 +7,7 @@ export default class CounterState {
     /**
      * @param {Number} count
      */
-    constructor({count}) {
+    constructor({ count }) {
         this.count = count;
     }
 
@@ -21,7 +21,7 @@ export default class CounterState {
             case DecrementalCounterUseCase.name:
                 return new CounterState({
                     count: this.count - 1
-                })
+                });
             default:
                 return this;
         }

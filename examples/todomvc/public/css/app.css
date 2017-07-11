@@ -14,5 +14,5 @@
  * Therefore this needs to be displayed normally by default.
  */
 #todo-list li .edit {
-  display: inline;
+    display: inline;
 }

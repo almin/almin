@@ -191,6 +191,6 @@ export abstract class Store<State = any> extends Dispatcher implements StoreLike
 }
 
 // Implement assertion
-Store.prototype.getState = function (this: Store) {
+Store.prototype.getState = function(this: Store) {
     throw new Error(`${this.name} should be implemented Store#getState(): Object`);
 };

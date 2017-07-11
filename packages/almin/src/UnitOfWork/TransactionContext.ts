@@ -5,7 +5,6 @@ import { FunctionalUseCase } from "../FunctionalUseCase";
 import { UseCaseFunction } from "../FunctionalUseCaseContext";
 
 export interface TransactionContext {
-
     useCase<T extends UseCaseLike>(useCase: T): UseCaseExecutor<T>;
 
     useCase(useCase: UseCaseFunction): UseCaseExecutor<FunctionalUseCase>;

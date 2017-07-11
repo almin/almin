@@ -1,5 +1,0 @@
-{
-  "parser": "babel-eslint",
-  "extends": "./.eslintrc.base.json",
-  "rules": {}
-}

@@ -13,7 +13,7 @@ import { Context } from "../lib/Context";
 import { Dispatcher } from "../lib/Dispatcher";
 import * as assert from "assert";
 
-const createAsyncChangeStoreUseCase = (store) => {
+const createAsyncChangeStoreUseCase = store => {
     class ChangeTheStoreUseCase extends UseCase {
         execute() {
             return Promise.resolve().then(() => {
@@ -23,9 +23,9 @@ const createAsyncChangeStoreUseCase = (store) => {
         }
     }
 
-    return new ChangeTheStoreUseCase()
+    return new ChangeTheStoreUseCase();
 };
-const createChangeStoreUseCase = (store) => {
+const createChangeStoreUseCase = store => {
     class ChangeTheStoreUseCase extends UseCase {
         execute() {
             const newState = { a: {} };
@@ -38,15 +38,27 @@ const createChangeStoreUseCase = (store) => {
 describe("StoreGroup", function() {
     describe("constructor(map)", () => {
         it("throw error when invalid arguments", () => {
-            assert.throws(() => {
-                new StoreGroup(null);
-            }, Error, "arguments should be object");
-            assert.throws(() => {
-                new StoreGroup();
-            }, Error, "arguments should be object");
-            assert.throws(() => {
-                new StoreGroup([]);
-            }, Error, "arguments should be object");
+            assert.throws(
+                () => {
+                    new StoreGroup(null);
+                },
+                Error,
+                "arguments should be object"
+            );
+            assert.throws(
+                () => {
+                    new StoreGroup();
+                },
+                Error,
+                "arguments should be object"
+            );
+            assert.throws(
+                () => {
+                    new StoreGroup([]);
+                },
+                Error,
+                "arguments should be object"
+            );
             assert.throws(() => {
                 new StoreGroup({
                     a: 1,
@@ -132,7 +144,7 @@ describe("StoreGroup", function() {
                     execute() {
                         // not change any store
                     }
-                };
+                }();
                 const context = new Context({
                     dispatcher: new Dispatcher(),
                     store: storeGroup
@@ -151,7 +163,7 @@ describe("StoreGroup", function() {
                     BStore: storeB
                 });
                 let changedStores = [];
-                storeGroup.onChange((changingStores) => {
+                storeGroup.onChange(changingStores => {
                     changedStores = changingStores;
                 });
 
@@ -272,7 +284,7 @@ describe("StoreGroup", function() {
                             this.dispatch({
                                 type: "DispatchAndFinishAsyncUseCase"
                             });
-                            return new Promise((resolve) => {
+                            return new Promise(resolve => {
                                 setTimeout(resolve, 100);
                             });
                         }
@@ -293,7 +305,7 @@ describe("StoreGroup", function() {
                     assert.deepEqual(dispatchedPayload, {
                         type: "DispatchAndFinishAsyncUseCase"
                     });
-                    return resultPromise
+                    return resultPromise;
                 });
                 it("should be called by sync", function() {
                     const store = createStore({ name: "AStore" });
@@ -312,7 +324,7 @@ describe("StoreGroup", function() {
                             this.dispatch({
                                 type: "DispatchAndFinishAsyncUseCase"
                             });
-                            return new Promise((resolve) => {
+                            return new Promise(resolve => {
                                 setTimeout(resolve, 100);
                             });
                         }
@@ -327,7 +339,7 @@ describe("StoreGroup", function() {
                     const resultPromise = context.useCase(useCase).execute();
                     // then - should be called by sync
                     assert.ok(isCalled);
-                    return resultPromise
+                    return resultPromise;
                 });
                 it("should be called each dispatch", function() {
                     const store = createStore({ name: "AStore" });
@@ -360,7 +372,7 @@ describe("StoreGroup", function() {
                     // when
                     const useCase = new DispatchAndFinishAsyncUseCase();
                     return context.useCase(useCase).execute().then(() => {
-                        assert.equal(calledCount, 2)
+                        assert.equal(calledCount, 2);
                     });
                 });
             });
@@ -409,7 +421,7 @@ describe("StoreGroup", function() {
                         // dispatch event
                         this.throwError(new Error("error message"));
                     }
-                };
+                }();
                 const context = new Context({
                     dispatcher: new Dispatcher(),
                     store: storeGroup
@@ -441,7 +453,7 @@ describe("StoreGroup", function() {
                 });
                 // then - called change handler a one-time
                 let calledCount = 0;
-                storeGroup.onChange((changedStores) => {
+                storeGroup.onChange(changedStores => {
                     calledCount++;
                     assert.equal(changedStores.length, 2);
                 });
@@ -478,7 +490,7 @@ describe("StoreGroup", function() {
                     return context.useCase(useCase).execute().then(() => {
                         assert.equal(calledCount, 1, "StoreGroup#emitChange is called just once");
                     });
-                })
+                });
             });
         });
         context("Sync Change and Async Change in Edge case", function() {
@@ -549,7 +561,7 @@ describe("StoreGroup", function() {
 
                 class ChildAUseCase extends UseCase {
                     execute() {
-                        return new Promise((resolve) => {
+                        return new Promise(resolve => {
                             aStore.updateState({ a: 1 });
                             aStore.emitChange();
                             resolve();
@@ -559,7 +571,7 @@ describe("StoreGroup", function() {
 
                 class ChildBUseCase extends UseCase {
                     execute() {
-                        return new Promise((resolve) => {
+                        return new Promise(resolve => {
                             bStore.updateState({ b: 1 });
                             bStore.emitChange();
                             resolve();
@@ -574,17 +586,13 @@ describe("StoreGroup", function() {
                 });
                 // then - called change handler a one-time
                 let actualChangedStores = [];
-                storeGroup.onChange((changedStores) => {
+                storeGroup.onChange(changedStores => {
                     actualChangedStores = actualChangedStores.concat(changedStores);
                 });
                 // when
                 return context.useCase(useCase).execute().then(() => {
                     assert.equal(actualChangedStores.length, 3);
-                    assert.deepEqual(actualChangedStores, [
-                        aStore,
-                        bStore,
-                        cStore
-                    ]);
+                    assert.deepEqual(actualChangedStores, [aStore, bStore, cStore]);
                 });
             });
         });
@@ -644,18 +652,29 @@ describe("StoreGroup", function() {
                     // Async UseCase,
                     ExamplePayload,
                     DidExecutedPayload,
-                    CompletedPayload,
+                    CompletedPayload
                 ];
                 // then
-                return context.useCase(useCaseSync).execute().then(() => {
-                    return context.useCase(useCaseASync).execute();
-                }).then(() => {
-                    assert.strictEqual(aStore.receivedPayloadList.length, expectedReceivedPayloadList.length, "should be equal receive payload length");
-                    aStore.receivedPayloadList.forEach((payload, index) => {
-                        const ExpectedPayloadClass = expectedReceivedPayloadList[index];
-                        assert.ok(payload instanceof ExpectedPayloadClass, `${payload} instanceof ${ExpectedPayloadClass}`);
+                return context
+                    .useCase(useCaseSync)
+                    .execute()
+                    .then(() => {
+                        return context.useCase(useCaseASync).execute();
+                    })
+                    .then(() => {
+                        assert.strictEqual(
+                            aStore.receivedPayloadList.length,
+                            expectedReceivedPayloadList.length,
+                            "should be equal receive payload length"
+                        );
+                        aStore.receivedPayloadList.forEach((payload, index) => {
+                            const ExpectedPayloadClass = expectedReceivedPayloadList[index];
+                            assert.ok(
+                                payload instanceof ExpectedPayloadClass,
+                                `${payload} instanceof ${ExpectedPayloadClass}`
+                            );
+                        });
                     });
-                });
             });
         });
         context("when Store#emitChange before receivePayload", function() {
@@ -663,7 +682,7 @@ describe("StoreGroup", function() {
                 const aStore = createStore({ name: "AStore" });
                 const storeGroup = new StoreGroup({ a: aStore });
                 let actualStores = [];
-                storeGroup.onChange((stores) => {
+                storeGroup.onChange(stores => {
                     actualStores = actualStores.concat(stores);
                 });
                 // when
@@ -709,7 +728,7 @@ describe("StoreGroup", function() {
                 const aStore = new AStore();
                 const storeGroup = new StoreGroup({ a: aStore });
                 let actualStores = [];
-                storeGroup.onChange((stores) => {
+                storeGroup.onChange(stores => {
                     actualStores = actualStores.concat(stores);
                 });
                 // when
@@ -758,8 +777,7 @@ describe("StoreGroup", function() {
         });
         context("when getState() return State object", function() {
             it("should return a single state has {<key>: state} of return Store#getState", function() {
-                class AState {
-                }
+                class AState {}
 
                 class AStore extends Store {
                     getState() {
@@ -767,8 +785,7 @@ describe("StoreGroup", function() {
                     }
                 }
 
-                class BState {
-                }
+                class BState {}
 
                 class BStore extends Store {
                     getState() {
@@ -868,13 +885,21 @@ describe("StoreGroup", function() {
                 store: storeGroup
             });
             // init -> next -> init
-            return context.useCase(new TransactionUseCase()).execute().then(() => {
-                return context.useCase(new TransactionUseCase()).execute();
-            }).then(() => {
-                assert.equal(consoleErrorStub.callCount, 0, `It should not warn .
+            return context
+                .useCase(new TransactionUseCase())
+                .execute()
+                .then(() => {
+                    return context.useCase(new TransactionUseCase()).execute();
+                })
+                .then(() => {
+                    assert.equal(
+                        consoleErrorStub.callCount,
+                        0,
+                        `It should not warn .
 init -> next -> init in a execution of UseCase should be valid.
-Something wrong implementation of calling Store#emitChange at multiple`);
-            });
+Something wrong implementation of calling Store#emitChange at multiple`
+                    );
+                });
         });
         it("should check that a Store's state is changed but shouldStateUpdate return false", function() {
             class AStore extends Store {
@@ -1067,17 +1092,22 @@ Something wrong implementation of calling Store#emitChange at multiple`);
             const initialState = context.getState();
             assert.ok(initialState.a instanceof AState);
             assert.deepEqual(initialState.a.count, 0);
-            return context.useCase(new IncrementUseCase()).execute().then(() => {
-                const state = context.getState();
-                assert.ok(state.a instanceof AState);
-                assert.deepEqual(state.a.count, 1);
-            }).then(() => {
-                return context.useCase(new DecrementUseCase()).execute();
-            }).then(() => {
-                const state = context.getState();
-                assert.ok(state.a instanceof AState);
-                assert.deepEqual(state.a.count, 0);
-            });
+            return context
+                .useCase(new IncrementUseCase())
+                .execute()
+                .then(() => {
+                    const state = context.getState();
+                    assert.ok(state.a instanceof AState);
+                    assert.deepEqual(state.a.count, 1);
+                })
+                .then(() => {
+                    return context.useCase(new DecrementUseCase()).execute();
+                })
+                .then(() => {
+                    const state = context.getState();
+                    assert.ok(state.a instanceof AState);
+                    assert.deepEqual(state.a.count, 0);
+                });
         });
     });
 });

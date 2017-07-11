@@ -17,7 +17,7 @@ export class ErrorPayload extends Payload {
      */
     error: Error | any;
 
-    constructor({ error }: { error?: Error | any; }) {
+    constructor({ error }: { error?: Error | any }) {
         super({ type: TYPE });
         this.error = error;
     }

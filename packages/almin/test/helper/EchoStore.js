@@ -1,10 +1,7 @@
 // LICENSE : MIT
 "use strict";
 import { Store } from "../../lib/Store";
-export function createEchoStore({
-    name,
-    echo
-}) {
+export function createEchoStore({ name, echo }) {
     class TestStore extends Store {
         constructor() {
             super();

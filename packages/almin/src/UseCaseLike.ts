@@ -7,4 +7,3 @@ export interface UseCaseLike extends Dispatcher {
     execute(...args: Array<any>): any;
     throwError(error: Error): void;
 }
-

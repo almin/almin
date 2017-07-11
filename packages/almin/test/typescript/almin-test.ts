@@ -16,7 +16,7 @@ import {
 const dispatcher = new Dispatcher();
 // Store
 interface AState {
-    a: number
+    a: number;
 }
 class AStore extends Store<AState> {
     state: AState;
@@ -25,7 +25,7 @@ class AStore extends Store<AState> {
         super();
         this.state = {
             a: 1
-        }
+        };
     }
 
     getState() {
@@ -106,7 +106,7 @@ const functionalUseCase = (context: FunctionalUseCaseContext) => {
         context.dispatcher.dispatch({
             type: value
         });
-    }
+    };
 };
 // execute - functional execute with ArgT
 context.useCase(functionalUseCase).execute<functionUseCaseArgs>("1").then(() => {
@@ -120,13 +120,17 @@ context.useCase(functionalUseCase).execute("value").then(() => {
 });
 
 // execute: usecase with T
-context.useCase(parentUseCase).execute<ParentUseCaseArgs>("value").then(() => {
-    const state = context.getState();
-    console.log(state.aState.a);
-    console.log(state.bState.b);
-}).catch((error: Error) => {
-    console.error(error);
-});
+context
+    .useCase(parentUseCase)
+    .execute<ParentUseCaseArgs>("value")
+    .then(() => {
+        const state = context.getState();
+        console.log(state.aState.a);
+        console.log(state.bState.b);
+    })
+    .catch((error: Error) => {
+        console.error(error);
+    });
 // execute - usecase without T
 context.useCase(parentUseCase).execute("value").then(() => {
     // nope
@@ -141,16 +145,16 @@ class MyUseCase extends UseCase {
         });
     }
 }
-context.useCase(new MyUseCase())
-    .executor(useCase => useCase.execute("value"))
-    .then(() => {
-        console.log("test");
-    });
-
-context.transaction(async context => {
-    await context.useCase(new MyUseCase()).execute();
-    await context.useCase(new ParentUseCase()).execute();
-    context.commit();
-}).then(() => {
-    console.log("Finish");
+context.useCase(new MyUseCase()).executor(useCase => useCase.execute("value")).then(() => {
+    console.log("test");
 });
+
+context
+    .transaction(async context => {
+        await context.useCase(new MyUseCase()).execute();
+        await context.useCase(new ParentUseCase()).execute();
+        context.commit();
+    })
+    .then(() => {
+        console.log("Finish");
+    });

@@ -6,11 +6,11 @@ const EventEmitter = require("events");
 // https://github.com/almin/almin/pull/154
 // Some Store must to have prevState arguments.
 // Call ths Store without argument, throw error
-const tryGetState = (store) => {
+const tryGetState = store => {
     try {
         return store.getState();
     } catch (error) {
-        return null;// not get
+        return null; // not get
     }
 };
 
@@ -40,9 +40,9 @@ export default class SyncLogger extends EventEmitter {
             this.logger.log(`${meta.useCase.name} will execute`);
         };
         const onDispatch = payload => {
-            this.logger.info(`\u{1F525} Dispatch:${String(payload.type)}`, payload)
+            this.logger.info(`\u{1F525} Dispatch:${String(payload.type)}`, payload);
         };
-        const onChange = (stores) => {
+        const onChange = stores => {
             stores.forEach(store => {
                 const state = tryGetState(store);
                 this.logger.groupCollapsed(`\u{1F4BE} Store:${state.name} is Changed`);
@@ -89,10 +89,7 @@ export default class SyncLogger extends EventEmitter {
         // if has useCase and group by useCase
         const error = payload.error || "something wrong";
         if (meta.useCase) {
-            this.logger.error(
-                meta.useCase.name,
-                error
-            );
+            this.logger.error(meta.useCase.name, error);
         } else {
             this.logger.error(error);
         }
