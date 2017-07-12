@@ -6,7 +6,10 @@ import { isUseCase, UseCase } from "./UseCase";
 import * as assert from "assert";
 import { Dispatcher } from "./Dispatcher";
 
-export function createUseCaseExecutor(useCase: UseCaseFunction, dispatcher: Dispatcher): UseCaseExecutor<FunctionalUseCase>;
+export function createUseCaseExecutor(
+    useCase: UseCaseFunction,
+    dispatcher: Dispatcher
+): UseCaseExecutor<FunctionalUseCase>;
 export function createUseCaseExecutor<T extends UseCaseLike>(useCase: T, dispatcher: Dispatcher): UseCaseExecutor<T>;
 export function createUseCaseExecutor(useCase: any, dispatcher: Dispatcher): UseCaseExecutor<any> {
     // instance of UseCase
@@ -18,7 +21,8 @@ export function createUseCaseExecutor(useCase: any, dispatcher: Dispatcher): Use
         });
     } else if (typeof useCase === "function") {
         // When pass UseCase constructor itself, throw assertion error
-        assert.ok(Object.getPrototypeOf && Object.getPrototypeOf(useCase) !== UseCase,
+        assert.ok(
+            Object.getPrototypeOf && Object.getPrototypeOf(useCase) !== UseCase,
             `Context#useCase argument should be instance of UseCase.
 The argument is UseCase constructor itself: ${useCase}`
         );
@@ -31,5 +35,4 @@ The argument is UseCase constructor itself: ${useCase}`
         });
     }
     throw new Error(`Context#useCase argument should be UseCase: ${useCase}`);
-
 }

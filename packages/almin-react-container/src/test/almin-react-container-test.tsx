@@ -7,7 +7,7 @@ import { Dispatcher, Context, Store } from "almin";
 class MyState {
     value: string;
 
-    constructor({value}: {value: string}) {
+    constructor({ value }: { value: string }) {
         this.value = value;
     }
 }
@@ -36,11 +36,15 @@ const context = new Context({
 // View
 class App extends React.Component<AppState, {}> {
     render() {
-        return <div>{this.props.myState.value}</div>
+        return (
+            <div>
+                {this.props.myState.value}
+            </div>
+        );
     }
 }
 interface AppState {
-    myState: MyState
+    myState: MyState;
 }
 // Create Container
 const RootContainer = AlminReactContainer.create<AppState>(App, context);

@@ -7,10 +7,7 @@ import { Store } from "../../lib/Store";
  * @param {*} state
  * @returns {TestStore}
  */
-export function createStore({
-    name,
-    state
-}) {
+export function createStore({ name, state }) {
     class MockStore extends Store {
         constructor() {
             super();

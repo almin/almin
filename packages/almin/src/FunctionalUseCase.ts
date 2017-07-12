@@ -49,7 +49,6 @@ Example:
  *
  */
 export class FunctionalUseCase extends Dispatcher implements UseCaseLike {
-
     /**
      * unique id in each UseCase instances.
      */

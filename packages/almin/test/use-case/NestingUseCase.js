@@ -5,7 +5,7 @@ import { UseCase } from "../../lib/UseCase";
 export class ParentUseCase extends UseCase {
     constructor() {
         super();
-        this.childUseCase = new ChildUseCase;
+        this.childUseCase = new ChildUseCase();
     }
 
     execute() {
@@ -18,4 +18,4 @@ export class ChildUseCase extends UseCase {
             type: "ChildUseCase"
         });
     }
-} 
+}

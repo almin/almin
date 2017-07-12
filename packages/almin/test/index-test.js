@@ -11,7 +11,7 @@ describe("index", () => {
         assert.ok(Store !== undefined);
     });
     it("could required with destructuring", () => {
-        const {Store} = require("../lib/index");
+        const { Store } = require("../lib/index");
         assert.ok(Store !== undefined);
     });
 });

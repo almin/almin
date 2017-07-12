@@ -5,7 +5,6 @@ import { Store, StoreGroup, Context, Dispatcher, Payload, DidExecutedPayload, Co
 import { InitializedPayload } from "../lib/payload/InitializedPayload";
 
 context("UseCaseUnitOfWork", function() {
-
     context("Integration with Store#onDispatch", () => {
         it("should not dispatch unnecessary payload to each store", function() {
             class TestStore extends Store {
@@ -51,15 +50,13 @@ context("UseCaseUnitOfWork", function() {
             // then
             return context.useCase(useCase).execute().then(() => {
                 assert.deepStrictEqual(aStore.state.receive, aStore.state.direct);
-                const expectedPayload = [
-                    InitializedPayload,
-                    MyPayload,
-                    DidExecutedPayload,
-                    CompletedPayload
-                ];
+                const expectedPayload = [InitializedPayload, MyPayload, DidExecutedPayload, CompletedPayload];
                 aStore.state.receive.forEach((payload, index) => {
                     const ConstructorPayload = expectedPayload[index];
-                    assert.ok(payload instanceof ConstructorPayload, `${JSON.stringify(payload)} should be instance of ${ConstructorPayload.name}`);
+                    assert.ok(
+                        payload instanceof ConstructorPayload,
+                        `${JSON.stringify(payload)} should be instance of ${ConstructorPayload.name}`
+                    );
                 });
             });
         });

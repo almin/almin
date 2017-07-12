@@ -2,7 +2,7 @@
 "use strict";
 const assert = require("assert");
 
-import{ Dispatcher } from "../lib/Dispatcher";
+import { Dispatcher } from "../lib/Dispatcher";
 
 describe("Dispatcher", function() {
     describe("#onDispatch", function() {
@@ -31,7 +31,9 @@ describe("Dispatcher", function() {
         it("should dispatch with payload object that has type propery", function(done) {
             const dispatcher = new Dispatcher();
             const expectedPayload = {
-                type: { /* string Symbol anything */ }
+                type: {
+                    /* string Symbol anything */
+                }
             };
             dispatcher.onDispatch(payload => {
                 assert.deepEqual(payload, expectedPayload);

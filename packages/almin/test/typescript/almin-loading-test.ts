@@ -1,11 +1,5 @@
 // Loading UseCase & Store Example
-import {
-    Context,
-    Store,
-    Dispatcher,
-    UseCase,
-    Payload
-} from "../../src/index";
+import { Context, Store, Dispatcher, UseCase, Payload } from "../../src/index";
 // custom payload
 class LoadingPayload extends Payload {
     constructor(public isLoading: boolean) {
@@ -19,8 +13,7 @@ class UpdateLoadingUseCase extends UseCase {
     }
 }
 class LoadingState {
-    constructor(public isLoading: boolean) {
-    }
+    constructor(public isLoading: boolean) {}
 
     update(isLoading: boolean) {
         return new LoadingState(isLoading);

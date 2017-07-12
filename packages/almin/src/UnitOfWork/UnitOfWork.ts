@@ -14,7 +14,7 @@ import { DispatcherPayloadMeta } from "../DispatcherPayloadMeta";
  *
  * It is similar reason to why use Dispatcher insteadof EventEmitter.
  */
-export type Commitment = [Payload, DispatcherPayloadMeta]
+export type Commitment = [Payload, DispatcherPayloadMeta];
 
 /**
  * Unit of work committing target
@@ -45,7 +45,7 @@ export class UnitOfWork extends EventEmitter {
     addCommitment(commitment: Commitment) {
         this.commitments.push(commitment);
         this.emit("ON_ADD_NEW_EVENT", commitment);
-    };
+    }
 
     onAddedCommitment(handler: (commitment: Commitment) => void) {
         this.on("ON_ADD_NEW_EVENT", handler);
@@ -59,7 +59,7 @@ export class UnitOfWork extends EventEmitter {
             this.committable.commit(commitment);
         });
         this.prune();
-    };
+    }
 
     prune() {
         this.commitments.length = 0;

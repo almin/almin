@@ -5,12 +5,19 @@
   "env": {
     "browser": true,
     "es6": true,
-    "node": true
+    "node": true,
+    "mocha": true
   },
-  "extends": "eslint:recommended",
+  "plugins":[
+    "prettier"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "prettier"
+  ],
   "rules": {
     "no-console": "warn",
-    "no-undef": "off",
+    "no-undef": "error",
     "no-unused-vars": "off",
     "no-var": "error",
     "object-shorthand": "error",
@@ -18,20 +25,15 @@
     "prefer-rest-params": "error",
     "prefer-spread": "error",
     "prefer-template": "error",
-    "rest-spread-spacing": "error",
-    "template-curly-spacing": "error",
-    "yield-star-spacing": "error",
-    "indent": [
-      "error",
-      4,
-      {
-        "SwitchCase": 1
-      }
-    ],
     "semi": "error",
-    "quotes": [
+    "no-extra-semi": "off",
+    "no-mixed-spaces-and-tabs": "off",
+    "prettier/prettier": [
       "error",
-      "double"
+      {
+        "printWidth": 120,
+        "tabWidth": 4
+      }
     ]
   }
 }

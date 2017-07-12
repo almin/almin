@@ -18,7 +18,7 @@ export class CompletedPayload extends Payload {
      */
     value: any | undefined;
 
-    constructor({ value }: { value?: any; }) {
+    constructor({ value }: { value?: any }) {
         super({ type: TYPE });
         this.value = value;
     }

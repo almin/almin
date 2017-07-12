@@ -10,11 +10,11 @@ const Map = require("map-like");
 // https://github.com/almin/almin/pull/154
 // Some Store must to have prevState arguments.
 // Call ths Store without argument, throw error
-const tryGetState = (store) => {
+const tryGetState = store => {
     try {
         return store.getState();
     } catch (error) {
-        return null;// not get
+        return null; // not get
     }
 };
 /**
@@ -75,12 +75,14 @@ export default class AsyncLogger extends EventEmitter {
             const logGroup = new LogGroup({ title, useCaseName: useCase.name });
             const args = payload.args.length && payload.args.length > 0 ? payload.args : undefined;
             const log = [`${useCase.name} execute:`].concat(args);
-            logGroup.addChunk(new LogChunk({
-                useCase,
-                payload,
-                log,
-                timeStamp: meta.timeStamp
-            }));
+            logGroup.addChunk(
+                new LogChunk({
+                    useCase,
+                    payload,
+                    log,
+                    timeStamp: meta.timeStamp
+                })
+            );
             if (parentUseCase) {
                 const parentLogMap = this._logMap.get(parentUseCase);
                 parentLogMap.addGroup(logGroup);
@@ -99,21 +101,21 @@ export default class AsyncLogger extends EventEmitter {
         const onDispatch = (payload, meta) => {
             const useCase = meta.useCase;
             if (!useCase) {
-                this.addLog([
-                    `\u{1F525} Dispatch:${String(payload.type)}`, payload
-                ]);
+                this.addLog([`\u{1F525} Dispatch:${String(payload.type)}`, payload]);
                 return;
             }
             const logGroup = this._logMap.get(useCase);
             // http://emojipedia.org/fire/
-            logGroup.addChunk(new LogChunk({
-                useCase,
-                payload,
-                log: [`${useCase.name} dispatch:${String(payload.type)}`, payload],
-                timeStamp: meta.timeStamp
-            }));
+            logGroup.addChunk(
+                new LogChunk({
+                    useCase,
+                    payload,
+                    log: [`${useCase.name} dispatch:${String(payload.type)}`, payload],
+                    timeStamp: meta.timeStamp
+                })
+            );
         };
-        const onChangeStores = (changeStores) => {
+        const onChangeStores = changeStores => {
             // one, or more stores
             const stores = [].concat(changeStores);
             const useCases = this._logMap.keys();
@@ -126,10 +128,7 @@ export default class AsyncLogger extends EventEmitter {
                 // It support Almin's QueuedStoreGroup implementation
                 stores.forEach(store => {
                     const state = tryGetState(store);
-                    this.addLog([
-                        `\u{1F4BE} Store:${store.name}`,
-                        state !== null ? state : store
-                    ]);
+                    this.addLog([`\u{1F4BE} Store:${store.name}`, state !== null ? state : store]);
                     if (workingUseCaseNames.length >= 2) {
                         this.addLog(`\u{2139}\u{FE0F} Currently executing UseCases: ${workingUseCaseNames.join(", ")}`);
                     }
@@ -143,13 +142,12 @@ export default class AsyncLogger extends EventEmitter {
                 const timeStamp = Date.now();
                 stores.forEach(store => {
                     const state = tryGetState(store);
-                    storeLogGroup.addChunk(new LogChunk({
-                        log: [
-                            `\u{1F4BE} Store:${store.name}`,
-                            state !== null ? state : store
-                        ],
-                        timeStamp
-                    }))
+                    storeLogGroup.addChunk(
+                        new LogChunk({
+                            log: [`\u{1F4BE} Store:${store.name}`, state !== null ? state : store],
+                            timeStamp
+                        })
+                    );
                 });
                 this.printLogger.printLogGroup(storeLogGroup);
             }
@@ -163,15 +161,14 @@ export default class AsyncLogger extends EventEmitter {
             const error = payload.error || "Something wrong";
             const useCase = meta.useCase;
             const logGroup = this._logMap.get(useCase);
-            logGroup.addChunk(new LogChunk({
-                log: [
-                    `${useCase.name} throw Error:`,
-                    error
-                ],
-                payload,
-                useCase,
-                timeStamp: meta.timeStamp
-            }));
+            logGroup.addChunk(
+                new LogChunk({
+                    log: [`${useCase.name} throw Error:`, error],
+                    payload,
+                    useCase,
+                    timeStamp: meta.timeStamp
+                })
+            );
         };
         /**
          * @param {DidExecutedPayload} payload
@@ -181,12 +178,14 @@ export default class AsyncLogger extends EventEmitter {
             const useCase = meta.useCase;
             const resultValue = meta.value;
             const logGroup = this._logMap.get(useCase);
-            logGroup.addChunk(new LogChunk({
-                useCase,
-                payload,
-                log: [`${useCase.name} did executed:`, resultValue],
-                timeStamp: meta.timeStamp
-            }));
+            logGroup.addChunk(
+                new LogChunk({
+                    useCase,
+                    payload,
+                    log: [`${useCase.name} did executed:`, resultValue],
+                    timeStamp: meta.timeStamp
+                })
+            );
         };
         /**
          * @param {CompletedPayload} payload
@@ -196,12 +195,14 @@ export default class AsyncLogger extends EventEmitter {
             const useCase = meta.useCase;
             const resultValue = meta.value;
             const logGroup = this._logMap.get(useCase);
-            logGroup.addChunk(new LogChunk({
-                useCase,
-                payload,
-                log: [`${useCase.name} is completed:`, resultValue],
-                timeStamp: meta.timeStamp
-            }));
+            logGroup.addChunk(
+                new LogChunk({
+                    useCase,
+                    payload,
+                    log: [`${useCase.name} is completed:`, resultValue],
+                    timeStamp: meta.timeStamp
+                })
+            );
             const index = this._currentLogBuffer.indexOf(logGroup);
             if (index !== -1) {
                 this._currentLogBuffer.splice(index, 1);
@@ -229,10 +230,12 @@ export default class AsyncLogger extends EventEmitter {
         const useCases = this._logMap.keys();
         useCases.forEach(useCase => {
             const logGroup = this._logMap.get(useCase);
-            logGroup.addChunk(new LogChunk({
-                log: log,
-                timeStamp: Date.now()
-            }));
+            logGroup.addChunk(
+                new LogChunk({
+                    log: log,
+                    timeStamp: Date.now()
+                })
+            );
         });
     }
 
@@ -242,7 +245,6 @@ export default class AsyncLogger extends EventEmitter {
     flushBuffer() {
         this._logMap.clear();
     }
-
 
     /**
      * release event handlers

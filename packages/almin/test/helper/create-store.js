@@ -7,10 +7,7 @@ import { Store } from "../../lib/Store";
  * @returns {TestStore}
  * @deprecated This store is old style
  */
-export function createStore({
-    name,
-    state
-}) {
+export function createStore({ name, state }) {
     class TestStore extends Store {
         constructor() {
             super();

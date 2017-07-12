@@ -26,13 +26,12 @@ describe("FunctionalUseCase", function() {
                     super();
                 }
 
-                execute() {
-                }
+                execute() {}
             }
             const dispatcher = new Dispatcher();
             const context = new Context({
                 dispatcher,
-                store: createEchoStore({ echo: { "a": "a" } })
+                store: createEchoStore({ echo: { a: "a" } })
             });
             assert.throws(() => {
                 context.useCase(WriteToTextlintrcUseCase.create).execute();
@@ -42,7 +41,10 @@ describe("FunctionalUseCase", function() {
             // assert warning message
             assert(consoleErrorStub.called);
             const warningMessage = consoleErrorStub.getCalls()[0].args[0];
-            assert(warningMessage.indexOf("Warning(UseCase): This is wrong Functional UseCase.") !== -1, warningMessage);
+            assert(
+                warningMessage.indexOf("Warning(UseCase): This is wrong Functional UseCase.") !== -1,
+                warningMessage
+            );
         });
     });
 });

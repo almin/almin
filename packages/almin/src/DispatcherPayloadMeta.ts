@@ -99,7 +99,7 @@ export class DispatcherPayloadMetaImpl implements DispatcherPayloadMeta {
 
     constructor(args: DispatcherPayloadMetaArgs) {
         this.useCase = args.useCase || null;
-        this.dispatcher = (args.dispatcher === undefined) ? null : args.dispatcher;
+        this.dispatcher = args.dispatcher === undefined ? null : args.dispatcher;
         this.parentUseCase = args.parentUseCase || null;
         this.timeStamp = Date.now();
         this.isTrusted = args.isTrusted;

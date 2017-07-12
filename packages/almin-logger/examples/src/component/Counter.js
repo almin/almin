@@ -1,14 +1,14 @@
 // LICENSE : MIT
 "use strict";
-import React from "react"
-import AsyncIncreamentalUseCase from "../usecase/AsyncIncreamentalUseCase"
-import IncrementalCounterUseCase from "../usecase/IncrementalCounterUseCase"
-import DecrementalCounterUseCase from "../usecase/DecrementalCounterUseCase"
-import UpDownCounterUseCase from "../usecase/UpDownCounterUseCase"
-import ManuallLoggingUseCase from "../usecase/ManuallLoggingUseCase"
-import ThrowErrorUseCase from "../usecase/ThrowErrorUseCase"
-import {Context} from "almin"
-import CounterState from "../store/CounterState"
+import React from "react";
+import AsyncIncreamentalUseCase from "../usecase/AsyncIncreamentalUseCase";
+import IncrementalCounterUseCase from "../usecase/IncrementalCounterUseCase";
+import DecrementalCounterUseCase from "../usecase/DecrementalCounterUseCase";
+import UpDownCounterUseCase from "../usecase/UpDownCounterUseCase";
+import ManuallLoggingUseCase from "../usecase/ManuallLoggingUseCase";
+import ThrowErrorUseCase from "../usecase/ThrowErrorUseCase";
+import { Context } from "almin";
+import CounterState from "../store/CounterState";
 export default class CounterComponent extends React.Component {
     constructor(props) {
         super(props);

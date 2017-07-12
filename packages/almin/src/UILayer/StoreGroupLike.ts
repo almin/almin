@@ -7,4 +7,4 @@ export interface StoreGroupExtension {
     useStrict(): void;
 }
 
-export type StoreGroupLike = StoreGroupExtension & Dispatcher & StoreLike<any> & Committable
+export type StoreGroupLike = StoreGroupExtension & Dispatcher & StoreLike<any> & Committable;

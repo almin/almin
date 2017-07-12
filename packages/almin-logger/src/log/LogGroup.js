@@ -5,7 +5,7 @@ export default class LogGroup {
      * @type {string} title
      * @type {string} [useCaseName]
      */
-    constructor({title, useCaseName}) {
+    constructor({ title, useCaseName }) {
         this.title = title;
         this.useCaseName = useCaseName;
         /**

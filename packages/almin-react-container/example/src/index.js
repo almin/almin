@@ -32,7 +32,11 @@ const context = new Context({
 // View
 class App extends React.Component {
     render() {
-        return <div>{this.props.myState.value}</div>
+        return (
+            <div>
+                {this.props.myState.value}
+            </div>
+        );
     }
 }
 App.propTypes = {

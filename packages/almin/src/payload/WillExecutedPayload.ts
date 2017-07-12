@@ -14,7 +14,7 @@ export class WillExecutedPayload extends Payload {
      */
     args: Array<any>;
 
-    constructor({ args = [] }: { args?: Array<any>; }) {
+    constructor({ args = [] }: { args?: Array<any> }) {
         super({ type: TYPE });
         this.args = args;
     }

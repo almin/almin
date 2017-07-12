@@ -1,17 +1,14 @@
 // MIT © 2017 azu
 import { Store } from "../Store";
+// Apply: StoreMap -> StateMap
 // { stateName: Store }
-export type StoreMap<T> = {
-    // T[P] as Store<State>
-    // Now, State is T[P}
-    [P in keyof T]: Store<T[P]>
-};
+// T[P] as Store<State>
+// Now, State is T[P}
+export type StoreMap<T> = { [P in keyof T]: Store<T[P]> };
 // { stateName: State }
-export type StateMap<T> = {
-    // StoreMap define T[P]
-    // Now, T[P] is State
-    [P in keyof T]: T[P]
-};
+// StoreMap define T[P]
+// Now, T[P] is State
+export type StateMap<T> = { [P in keyof T]: T[P] };
 
 /**
  * @deprecated

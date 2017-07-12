@@ -28,7 +28,12 @@ interface onCompleteArgs {
  * Create wrapper object of a UseCase.
  * This wrapper object only has `execute()` method.
  */
-const proxifyUseCase = <T extends UseCaseLike>(useCase: T, onWillExecute: onWillExecuteArgs, onDidExecute: onDidExecuteArgs, onComplete: onCompleteArgs): T => {
+const proxifyUseCase = <T extends UseCaseLike>(
+    useCase: T,
+    onWillExecute: onWillExecuteArgs,
+    onDidExecute: onDidExecuteArgs,
+    onComplete: onCompleteArgs
+): T => {
     let isExecuted = false;
     const execute = (...args: Array<any>) => {
         if (process.env.NODE_ENV !== "production") {
@@ -57,11 +62,20 @@ const proxifyUseCase = <T extends UseCaseLike>(useCase: T, onWillExecute: onWill
  * When child is completed after parent did completed, display warning warning message
  * @private
  */
-const warningUseCaseIsAlreadyReleased = (parentUseCase: UseCaseLike, useCase: UseCaseLike, payload: Payload, meta: DispatcherPayloadMeta) => {
-    console.error(`Warning(UseCase): ${useCase.name}'s parent UseCase(${parentUseCase.name}) is already released.
+const warningUseCaseIsAlreadyReleased = (
+    parentUseCase: UseCaseLike,
+    useCase: UseCaseLike,
+    payload: Payload,
+    meta: DispatcherPayloadMeta
+) => {
+    console.error(
+        `Warning(UseCase): ${useCase.name}'s parent UseCase(${parentUseCase.name}) is already released.
 This UseCase(${useCase.name}) will not work correctly.
 https://almin.js.org/docs/warnings/usecase-is-already-released.html
-`, payload, meta);
+`,
+        payload,
+        meta
+    );
 };
 
 /**
@@ -73,7 +87,6 @@ https://almin.js.org/docs/warnings/usecase-is-already-released.html
  * @private
  */
 export class UseCaseExecutor<T extends UseCaseLike> extends Dispatcher {
-
     /**
      * A executable useCase
      */
@@ -103,21 +116,16 @@ export class UseCaseExecutor<T extends UseCaseLike> extends Dispatcher {
      *
      * **internal** documentation
      */
-    constructor({
-                    useCase,
-                    parent,
-                    dispatcher
-                }: {
-        useCase: T;
-        parent: UseCase | null;
-        dispatcher: Dispatcher;
-    }) {
+    constructor({ useCase, parent, dispatcher }: { useCase: T; parent: UseCase | null; dispatcher: Dispatcher }) {
         super();
         if (process.env.NODE_ENV !== "production") {
             // execute and finish =>
             const useCaseName = useCase.name;
             assert.ok(typeof useCaseName === "string", `UseCase instance should have constructor.name ${useCase}`);
-            assert.ok(typeof useCase.execute === "function", `UseCase instance should have #execute function: ${useCaseName}`);
+            assert.ok(
+                typeof useCase.execute === "function",
+                `UseCase instance should have #execute function: ${useCaseName}`
+            );
         }
 
         this.useCase = useCase;
@@ -133,7 +141,9 @@ export class UseCaseExecutor<T extends UseCaseLike> extends Dispatcher {
         const unListenUseCaseToDispatcherHandler = this.useCase.pipe(this);
         // If this is child UseCase, Child UseCase -> Parent UseCase
         // If this is parent UseCase, Parent UseCase -> Dispatcher
-        const unListenUseCaseExecutorToDispatcherHandler = this._parentUseCase ? this.pipe(this._parentUseCase) : this.pipe(this._dispatcher);
+        const unListenUseCaseExecutorToDispatcherHandler = this._parentUseCase
+            ? this.pipe(this._parentUseCase)
+            : this.pipe(this._dispatcher);
         this._releaseHandlers.push(unListenUseCaseToDispatcherHandler, unListenUseCaseExecutorToDispatcherHandler);
     }
 
@@ -245,7 +255,9 @@ export class UseCaseExecutor<T extends UseCaseLike> extends Dispatcher {
      * @param   handler
      * @returns
      */
-    onCompleteExecuteEachUseCase(handler: (payload: CompletedPayload, meta: DispatcherPayloadMeta) => void): () => void {
+    onCompleteExecuteEachUseCase(
+        handler: (payload: CompletedPayload, meta: DispatcherPayloadMeta) => void
+    ): () => void {
         const releaseHandler = this._dispatcher.onDispatch(function onCompleted(payload, meta) {
             if (isCompletedPayload(payload)) {
                 handler(payload, meta);
@@ -301,29 +313,39 @@ export class UseCaseExecutor<T extends UseCaseLike> extends Dispatcher {
     executor(executor: (useCase: Pick<T, "execute">) => any): any {
         const startingExecutor = (resolve: Function, reject: Function): void => {
             if (typeof executor !== "function") {
-                console.error("Warning(UseCase): executor argument should be function. But this argument is not function: ", executor);
+                console.error(
+                    "Warning(UseCase): executor argument should be function. But this argument is not function: ",
+                    executor
+                );
                 return reject(new Error("executor(fn) arguments should function"));
             }
             // Notes: proxyfiedUseCase has not timeout
             // proxiedUseCase will resolve by UseCaseWrapper#execute
-            const proxyfiedUseCase = proxifyUseCase<T>(this.useCase, (args) => {
-                this._willExecute(args);
-            }, (value) => {
-                this._didExecute(value);
-            }, (value) => {
-                resolve(value);
-            });
+            const proxyfiedUseCase = proxifyUseCase<T>(
+                this.useCase,
+                args => {
+                    this._willExecute(args);
+                },
+                value => {
+                    this._didExecute(value);
+                },
+                value => {
+                    resolve(value);
+                }
+            );
             return executor(proxyfiedUseCase);
         };
-        return new Promise(startingExecutor).then(result => {
-            this._complete(result);
-            this.release();
-        }).catch(error => {
-            this.useCase.throwError(error);
-            this._complete();
-            this.release();
-            return Promise.reject(error);
-        });
+        return new Promise(startingExecutor)
+            .then(result => {
+                this._complete(result);
+                this.release();
+            })
+            .catch(error => {
+                this.useCase.throwError(error);
+                this._complete();
+                this.release();
+                return Promise.reject(error);
+            });
     }
 
     /**
@@ -334,7 +356,7 @@ export class UseCaseExecutor<T extends UseCaseLike> extends Dispatcher {
     execute(): Promise<void>;
     execute<T>(args: T): Promise<void>;
     execute(...args: Array<any>): Promise<void> {
-        return this.executor((useCase) => useCase.execute(...args));
+        return this.executor(useCase => useCase.execute(...args));
     }
 
     /**

@@ -7,19 +7,19 @@ const usePluginList = [
     "postcss-reporter"
 ];
 module.exports = {
-    "root": "./src/",
-    "use": usePluginList,
-    "input": "./src/index.css",
-    "output": "./public/build/bundle.css",
+    root: "./src/",
+    use: usePluginList,
+    input: "./src/index.css",
+    output: "./public/build/bundle.css",
     "local-plugins": true,
     "postcss-easy-import": {
         root: "./src/",
         glob: true,
-        onImport (sources) {
+        onImport(sources) {
             global.watchCSS(sources, this.from);
         }
     },
-    "autoprefixer": {
-        "browsers": "> 5%"
+    autoprefixer: {
+        browsers: "> 5%"
     }
 };

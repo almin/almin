@@ -1,5 +1,0 @@
-{
-  "parser": "typescript-eslint-parser",
-  "extends": "./.eslintrc.base.json",
-  "rules": {}
-}

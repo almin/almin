@@ -1,6 +1,6 @@
 // LICENSE : MIT
 "use strict";
-import {UseCase} from "almin";
+import { UseCase } from "almin";
 // Parent -> ChildUseCase
 export class ParentUseCase extends UseCase {
     constructor() {
@@ -9,7 +9,7 @@ export class ParentUseCase extends UseCase {
     }
 
     execute() {
-        return this.context.useCase(new ChildUseCase).execute();
+        return this.context.useCase(new ChildUseCase()).execute();
     }
 }
 export class ChildUseCase extends UseCase {
@@ -18,6 +18,5 @@ export class ChildUseCase extends UseCase {
         this.name = "ChildUseCase";
     }
 
-    execute() {
-    }
-} 
+    execute() {}
+}
