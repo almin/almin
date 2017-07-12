@@ -135,16 +135,17 @@ export class UseCaseExecutor<T extends UseCaseLike> extends Dispatcher {
         /**
          * ## Delegating Payload
          *
-         * UseCase -> UseCaseExecutor -> Dispatcher
+         * UseCase -> UseCaseExecutor -> UnitOfWork -> Dispatcher
+         *
          */
-        // UseCase -> UseCaseExecutor
         const unListenUseCaseToDispatcherHandler = this.useCase.pipe(this);
-        // If this is child UseCase, Child UseCase -> Parent UseCase
-        // If this is parent UseCase, Parent UseCase -> Dispatcher
-        const unListenUseCaseExecutorToDispatcherHandler = this._parentUseCase
-            ? this.pipe(this._parentUseCase)
-            : this.pipe(this._dispatcher);
-        this._releaseHandlers.push(unListenUseCaseToDispatcherHandler, unListenUseCaseExecutorToDispatcherHandler);
+        this._releaseHandlers.push(unListenUseCaseToDispatcherHandler);
+        // If this is parent UseCase, Parent UseCase -> UnitOfWork
+        if (this._parentUseCase) {
+            // Child -> Parent
+            const unListenUseCaseExecutorToDispatcherHandler = this.pipe(this._parentUseCase);
+            this._releaseHandlers.push(unListenUseCaseExecutorToDispatcherHandler);
+        }
     }
 
     /**
@@ -227,7 +228,7 @@ export class UseCaseExecutor<T extends UseCaseLike> extends Dispatcher {
      * @param   handler
      */
     onWillExecuteEachUseCase(handler: (payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void {
-        const releaseHandler = this._dispatcher.onDispatch(function onWillExecute(payload, meta) {
+        const releaseHandler = this.onDispatch(function onWillExecute(payload, meta) {
             if (isWillExecutedPayload(payload)) {
                 handler(payload, meta);
             }
@@ -241,7 +242,7 @@ export class UseCaseExecutor<T extends UseCaseLike> extends Dispatcher {
      * @param   handler
      */
     onDidExecuteEachUseCase(handler: (payload: DidExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void {
-        const releaseHandler = this._dispatcher.onDispatch(function onDidExecuted(payload, meta) {
+        const releaseHandler = this.onDispatch(function onDidExecuted(payload, meta) {
             if (isDidExecutedPayload(payload)) {
                 handler(payload, meta);
             }
@@ -258,7 +259,7 @@ export class UseCaseExecutor<T extends UseCaseLike> extends Dispatcher {
     onCompleteExecuteEachUseCase(
         handler: (payload: CompletedPayload, meta: DispatcherPayloadMeta) => void
     ): () => void {
-        const releaseHandler = this._dispatcher.onDispatch(function onCompleted(payload, meta) {
+        const releaseHandler = this.onDispatch(function onCompleted(payload, meta) {
             if (isCompletedPayload(payload)) {
                 handler(payload, meta);
             }
@@ -366,5 +367,6 @@ export class UseCaseExecutor<T extends UseCaseLike> extends Dispatcher {
     release(): void {
         this._releaseHandlers.forEach(releaseHandler => releaseHandler());
         this._releaseHandlers.length = 0;
+        this.removeAllListeners();
     }
 }

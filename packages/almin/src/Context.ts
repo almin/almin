@@ -179,6 +179,7 @@ export class Context<T> {
             autoCommit: true
         });
         unitOfWork.open(useCaseExecutor);
+        useCaseExecutor.pipe(this._dispatcher);
         useCaseExecutor.onComplete(() => {
             unitOfWork.close(useCaseExecutor);
         });
@@ -223,6 +224,7 @@ Please enable strict mode via \`new Context({ dispatcher, store, options: { stri
         const createUseCaseExecutorAndOpenUoW = <T extends UseCaseLike>(useCase: T): UseCaseExecutor<T> => {
             const useCaseExecutor = createUseCaseExecutor(useCase, this._dispatcher);
             unitOfWork.open(useCaseExecutor);
+            useCaseExecutor.pipe(this._dispatcher);
             return useCaseExecutor;
         };
         const context: TransactionContext = {

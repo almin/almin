@@ -1,9 +1,6 @@
 // MIT © 2017 azu
 import { Payload } from "../payload/Payload";
 import { DispatcherPayloadMeta } from "../DispatcherPayloadMeta";
-import { isErrorPayload } from "../payload/ErrorPayload";
-import { isDidExecutedPayload } from "../payload/DidExecutedPayload";
-import { isCompletedPayload } from "../payload/CompletedPayload";
 import { Committable, UnitOfWork } from "./UnitOfWork";
 import MapLike from "map-like";
 import { UseCaseExecutor } from "../UseCaseExecutor";
@@ -39,24 +36,7 @@ export class UseCaseUnitOfWork {
      */
     open(useCaseExecutor: UseCaseExecutor<any>) {
         const onDispatchOnUnitOfWork = (payload: Payload, meta: DispatcherPayloadMeta) => {
-            if (!meta.isTrusted) {
-                this.unitOfWork.addCommitment([payload, meta]);
-            } else if (isErrorPayload(payload)) {
-                this.unitOfWork.addCommitment([payload, meta]);
-            } else if (isDidExecutedPayload(payload) && meta.useCase) {
-                if (meta.isUseCaseFinished) {
-                    this.finishedUseCaseMap.set(meta.useCase.id, true);
-                }
-                this.unitOfWork.addCommitment([payload, meta]);
-            } else if (isCompletedPayload(payload) && meta.useCase && meta.isUseCaseFinished) {
-                // if the useCase is already finished, doesn't emitChange in CompletedPayload
-                // In other word, If the UseCase that return non-promise value, doesn't emitChange in CompletedPayload
-                if (this.finishedUseCaseMap.has(meta.useCase.id)) {
-                    this.finishedUseCaseMap.delete(meta.useCase.id);
-                    return;
-                }
-                this.unitOfWork.addCommitment([payload, meta]);
-            }
+            this.unitOfWork.addCommitment([payload, meta]);
         };
         const unsubscribe = useCaseExecutor.onDispatch(onDispatchOnUnitOfWork);
         this.unsubscribeMap.set(useCaseExecutor, unsubscribe);
