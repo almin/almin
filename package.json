@@ -30,6 +30,7 @@
     "precommit": "lint-staged",
     "postinstall": "yarn run bootstrap",
     "bootstrap": "lerna bootstrap",
+    "prepublishOnly": "npm run build",
     "publish": "lerna publish --concurrency 1 --conventional-commits",
     "publish:beta": "lerna publish --npm-tag=beta --concurrency 1 --conventional-commits",
     "bench": "cd perf/benchmark && npm run bench",
