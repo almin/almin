@@ -3,7 +3,7 @@
 import { UseCase } from "../../lib/UseCase";
 export class ThrowUseCase extends UseCase {
     execute() {
-        // throw Error insteadof returing rejected promise
+        // throw Error insteadof returning rejected promise
         throw new Error("error");
     }
 }
