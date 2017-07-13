@@ -1,4 +1,3 @@
-///<reference path="UnitOfWork/UseCaseUnitOfWork.ts"/>
 // LICENSE : MIT
 "use strict";
 import { Dispatcher } from "./Dispatcher";
