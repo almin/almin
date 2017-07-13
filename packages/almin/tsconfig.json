@@ -4,14 +4,12 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "newLine": "LF",
+    "rootDir": "./",
     "outDir": "./lib/",
     "target": "ES5",
     "declaration": true,
     "jsx": "preserve",
     // Transform jsx syntax in babels phase
-    "types": [
-      "node"
-    ],
     "lib": [
       "es2017",
       "dom"
@@ -37,7 +35,7 @@
     /* Report errors on unused parameters. */
     "noImplicitReturns": true,
     /* Report error when not all code paths in function return a value. */
-    "noFallthroughCasesInSwitch": true,
+    "noFallthroughCasesInSwitch": true
     /* Report errors for fallthrough cases in switch statement. */
 
     /* Module Resolution Options */
@@ -47,8 +45,7 @@
     // "rootDirs": [],                        /* List of root folders whose combined content represents the structure of the project at runtime. */
     // "typeRoots": [],                       /* List of folders to include type definitions from. */
     // "types": [],                           /* Type declaration files to be included in compilation. */
-    // Enable for map-like
-    "allowSyntheticDefaultImports": true
+    // "allowSyntheticDefaultImports": true
     /* Allow default imports from modules with no default export. This does not affect code emit, just typechecking. */
 
     /* Source Map Options */

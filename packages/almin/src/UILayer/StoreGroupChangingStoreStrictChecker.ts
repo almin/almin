@@ -1,5 +1,5 @@
 // MIT © 2017 azu
-import MapLike from "map-like";
+import { MapLike } from "map-like";
 import { Store } from "../Store";
 
 // ====

@@ -1,7 +1,7 @@
 // MIT © 2017 azu
 "use strict";
 const assert = require("assert");
-import MapLike from "map-like";
+import { MapLike } from "map-like";
 import { CompletedPayload, Context, DidExecutedPayload } from "../src/";
 import { Dispatcher } from "../src/Dispatcher";
 import { createStore } from "./helper/create-new-store";

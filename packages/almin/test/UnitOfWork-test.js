@@ -67,7 +67,7 @@ describe("UnitOfWork", () => {
             unitOfWork.addCommitment(commitmentA);
             unitOfWork.addCommitment(commitmentB);
             unitOfWork.commit();
-            assert.deepStrictEqual(commitments, [commitmentA, commitmentB]);
+            assert.deepEqual(commitments, [commitmentA, commitmentB]);
         });
     });
     describe("#release", () => {

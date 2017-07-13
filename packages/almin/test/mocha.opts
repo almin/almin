@@ -1,3 +1,2 @@
 --recursive
 --require env-development
---compilers ts:ts-node/register

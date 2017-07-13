@@ -318,7 +318,7 @@ export class UseCaseExecutor<T extends UseCaseLike> extends Dispatcher {
                     "Warning(UseCase): executor argument should be function. But this argument is not function: ",
                     executor
                 );
-                return reject(new Error("executor(fn) arguments should function"));
+                return reject(new Error("executor(fn) arguments should be function"));
             }
             // Notes: proxyfiedUseCase has not timeout
             // proxiedUseCase will resolve by UseCaseWrapper#execute

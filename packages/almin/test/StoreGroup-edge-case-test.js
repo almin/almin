@@ -83,7 +83,7 @@ describe("StoreGroup edge case", function() {
                 callStack.push("complete");
             });
             return context.useCase(new ReturnPromiseUseCase()).execute().then(() => {
-                assert.deepStrictEqual(
+                assert.deepEqual(
                     callStack,
                     [
                         "change", // didExecute - receivePayload

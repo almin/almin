@@ -49,7 +49,7 @@ describe("UseCaseUnitOfWork", function() {
             };
             // then
             return context.useCase(useCase).execute().then(() => {
-                assert.deepStrictEqual(aStore.state.receive, aStore.state.direct);
+                assert.deepEqual(aStore.state.receive, aStore.state.direct);
                 const expectedPayload = [InitializedPayload, MyPayload, DidExecutedPayload, CompletedPayload];
                 aStore.state.receive.forEach((payload, index) => {
                     const ConstructorPayload = expectedPayload[index];
@@ -99,10 +99,10 @@ describe("UseCaseUnitOfWork", function() {
             };
             // then
             return context.useCase(useCase).execute().then(() => {
-                assert.deepStrictEqual(aStore.state.receive, aStore.state.direct);
-                assert.deepStrictEqual(bStore.state.receive, bStore.state.direct);
-                assert.deepStrictEqual(aStore.state.receive, bStore.state.receive);
-                assert.deepStrictEqual(aStore.state.direct, bStore.state.direct);
+                assert.deepEqual(aStore.state.receive, aStore.state.direct);
+                assert.deepEqual(bStore.state.receive, bStore.state.direct);
+                assert.deepEqual(aStore.state.receive, bStore.state.receive);
+                assert.deepEqual(aStore.state.direct, bStore.state.direct);
             });
         });
     });
