@@ -48,7 +48,6 @@
     "aluminium"
   ],
   "devDependencies": {
-    "@types/jest": "^20.0.2",
     "@types/node": "^8.0.12",
     "@types/object-assign": "^4.0.30",
     "babel-cli": "^6.7.5",
@@ -63,40 +62,17 @@
     "env-development": "^1.0.2",
     "eslint": "^4.2.0",
     "function.name": "^1.0.2",
-    "jest": "^20.0.4",
     "mocha": "^3.4.2",
     "npm-run-all": "^4.0.2",
     "power-assert": "^1.4.4",
     "rimraf": "^2.6.0",
     "sinon": "^2.3.8",
-    "ts-jest": "^20.0.7",
-    "ts-node": "^3.2.0",
+    "source-map-support": "^0.4.15",
     "typescript": "~2.3.1",
     "zuul": "^3.10.1"
   },
   "dependencies": {
     "map-like": "^2.0.0",
     "shallow-equal-object": "^1.0.1"
-  },
-  "jest": {
-    "transform": {
-      "^.+\\.js$": "<rootDir>/node_modules/babel-jest",
-      "^.+\\.(ts|tsx)?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
-    },
-    "testEnvironment": "node",
-    "testMatch": [
-      "**/test/**/*-test\\.(ts|tsx|js)"
-    ],
-    "testPathIgnorePatterns": [
-      "__obj",
-      "node_modules",
-      "lib"
-    ],
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "json"
-    ]
   }
 }

@@ -1,2 +1,3 @@
 --recursive
 --require env-development
+--require source-map-support/register

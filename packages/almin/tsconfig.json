@@ -35,7 +35,7 @@
     /* Report errors on unused parameters. */
     "noImplicitReturns": true,
     /* Report error when not all code paths in function return a value. */
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
     /* Report errors for fallthrough cases in switch statement. */
 
     /* Module Resolution Options */
@@ -49,6 +49,7 @@
     /* Allow default imports from modules with no default export. This does not affect code emit, just typechecking. */
 
     /* Source Map Options */
+    "sourceMap": true
     // "sourceRoot": "./",                    /* Specify the location where debugger should locate TypeScript files instead of source locations. */
     // "mapRoot": "./",                       /* Specify the location where debugger should locate map files instead of generated locations. */
     // "inlineSourceMap": true,               /* Emit a single file with source maps instead of having a separate file. */

@@ -5,7 +5,7 @@ import LogGroup from "./log/LogGroup";
 import LogChunk from "./log/LogChunk";
 import PrintLogger from "./log/PrintLogger";
 const EventEmitter = require("events");
-const Map = require("map-like");
+const { MapLike } = require("map-like");
 // FIXME: Almin 0.12 support pull-based Store
 // https://github.com/almin/almin/pull/154
 // Some Store must to have prevState arguments.
@@ -49,7 +49,7 @@ export default class AsyncLogger extends EventEmitter {
         /**
          * @type {MapLike}
          */
-        this._logMap = new Map();
+        this._logMap = new MapLike();
         this._releaseHandlers = [];
         /**
          * @type {Console|Object|*}
@@ -232,7 +232,7 @@ export default class AsyncLogger extends EventEmitter {
             const logGroup = this._logMap.get(useCase);
             logGroup.addChunk(
                 new LogChunk({
-                    log: log,
+                    log,
                     timeStamp: Date.now()
                 })
             );
