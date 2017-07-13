@@ -17,6 +17,8 @@ import { Commitment } from "../UnitOfWork/UnitOfWork";
 import { InitializedPayload } from "../payload/InitializedPayload";
 import { StoreGroupChangingStoreStrictChecker } from "./StoreGroupChangingStoreStrictChecker";
 import { StoreGroupLike } from "./StoreGroupLike";
+import { isDidExecutedPayload } from "../payload/DidExecutedPayload";
+import { isErrorPayload } from "../payload/ErrorPayload";
 
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
 
@@ -126,6 +128,8 @@ export class StoreGroup<T> extends Dispatcher implements StoreGroupLike {
     private _releaseHandlers: Array<Function> = [];
     // current working useCase
     private _workingUseCaseMap: MapLike<string, boolean>;
+    // manage finished usecase
+    private _finishedUseCaseMap: MapLike<string, boolean>;
     // store/state cache map
     private _stateCacheMap: MapLike<Store<T>, any>;
     // store/state map
@@ -175,6 +179,7 @@ export class StoreGroup<T> extends Dispatcher implements StoreGroupLike {
         // pull stores from mapping if arguments is mapping.
         this.stores = this._storeStateMap.stores;
         this._workingUseCaseMap = new MapLike<string, boolean>();
+        this._finishedUseCaseMap = new MapLike<string, boolean>();
         this._stateCacheMap = new MapLike<Store<T>, any>();
         // Implementation Note:
         // Dispatch -> pipe -> Store#emitChange() if it is needed
@@ -185,9 +190,6 @@ export class StoreGroup<T> extends Dispatcher implements StoreGroupLike {
             const unRegisterHandler = this._registerStore(store);
             this._releaseHandlers.push(unRegisterHandler);
         });
-        // after dispatching, and then emitChange
-        const unObserveHandler = this._observeDispatchedPayload();
-        this._releaseHandlers.push(unObserveHandler);
         // default state
         this.state = this.initializeGroupState(this.stores);
     }
@@ -316,12 +318,46 @@ But, ${store.name}#getState() was called.`
         this.tryToUpdateStoreGroupState();
     }
 
-    // write and read -> emitChange if needed
+    private update(payload: Payload, meta: DispatcherPayloadMeta) {
+        this.writePhaseInRead(this.stores, payload, meta);
+        this.tryToUpdateStoreGroupState();
+    }
+
+    /**
+     * **internal**
+     *
+     * ## Implementation Notes:
+     *
+     * StoreGroup should be push-model.
+     * Almin can control all transaction to StoreGroup.
+     *
+     * It means that StoreGroup doesn't use `this.onDispatch`.
+     * It use `commit` insteadof receive data vis `this.onDispatch`.
+     */
     commit(commitment: Commitment): void {
         const payload = commitment[0];
         const meta = commitment[1];
-        this.writePhaseInRead(this.stores, payload, meta);
-        this.tryToUpdateStoreGroupState();
+        if (!meta.isTrusted) {
+            this.update(payload, meta);
+        } else if (isErrorPayload(payload)) {
+            this.update(payload, meta);
+        } else if (isWillExecutedPayload(payload) && meta.useCase) {
+            this._workingUseCaseMap.set(meta.useCase.id, true);
+        } else if (isDidExecutedPayload(payload) && meta.useCase) {
+            if (meta.isUseCaseFinished) {
+                this._finishedUseCaseMap.set(meta.useCase.id, true);
+            }
+            this.update(payload, meta);
+        } else if (isCompletedPayload(payload) && meta.useCase && meta.isUseCaseFinished) {
+            this._workingUseCaseMap.delete(meta.useCase.id);
+            // if the useCase is already finished, doesn't emitChange in CompletedPayload
+            // In other word, If the UseCase that return non-promise value, doesn't emitChange in CompletedPayload
+            if (this._finishedUseCaseMap.has(meta.useCase.id)) {
+                this._finishedUseCaseMap.delete(meta.useCase.id);
+                return;
+            }
+            this.update(payload, meta);
+        }
     }
 
     useStrict() {
@@ -388,20 +424,6 @@ But, ${store.name}#getState() was called.`
             (onChangeHandler as any).displayName = `${store.name}#onChange->handler`;
         }
         return store.onChange(onChangeHandler);
-    }
-
-    /**
-     * Observe all payload.
-     */
-    private _observeDispatchedPayload(): () => void {
-        const observeChangeHandler = (payload: Payload, meta: DispatcherPayloadMeta) => {
-            if (isWillExecutedPayload(payload) && meta.useCase) {
-                this._workingUseCaseMap.set(meta.useCase.id, true);
-            } else if (isCompletedPayload(payload) && meta.useCase && meta.isUseCaseFinished) {
-                this._workingUseCaseMap.delete(meta.useCase.id);
-            }
-        };
-        return this.onDispatch(observeChangeHandler);
     }
 
     private _addChangingStateOfStores(store: Store<T>) {

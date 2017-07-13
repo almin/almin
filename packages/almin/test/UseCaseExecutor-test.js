@@ -156,7 +156,7 @@ describe("UseCaseExecutor", function() {
             executor.onWillExecuteEachUseCase(() => {
                 callStack.push(1);
             });
-            dispatcher.onDispatch(({ type, value }) => {
+            executor.onDispatch(({ type, value }) => {
                 if (type === expectedPayload.type) {
                     callStack.push(2);
                 }
@@ -203,19 +203,19 @@ describe("UseCaseExecutor", function() {
                     }
                 }
 
-                // then
-                // 4
-                dispatcher.onDispatch(({ type, value }) => {
-                    if (type === expectedPayload.type) {
-                        assert.equal(value, expectedPayload.value);
-                        done();
-                    }
-                });
                 // when
                 const executor = new UseCaseExecutor({
                     useCase: new SyncUseCase(),
                     dispatcher
                 });
+                // 4
+                executor.onDispatch(({ type, value }) => {
+                    if (type === expectedPayload.type) {
+                        assert.equal(value, expectedPayload.value);
+                        done();
+                    }
+                });
+                // then
                 executor.execute(expectedPayload); // 1
             });
         });
@@ -242,13 +242,6 @@ describe("UseCaseExecutor", function() {
                 let isCalledUseCase = false;
                 let isCalledDidExecuted = false;
                 let isCalledCompleted = false;
-                // 4
-                dispatcher.onDispatch(payload => {
-                    if (payload.type === expectedPayload.type) {
-                        assert.equal(payload.value, expectedPayload.value);
-                        isCalledUseCase = true;
-                    }
-                });
                 // when
                 const executor = new UseCaseExecutor({
                     useCase: new AsyncUseCase(),
@@ -262,6 +255,13 @@ describe("UseCaseExecutor", function() {
                 executor.onCompleteExecuteEachUseCase((payload, meta) => {
                     if (meta.useCase instanceof AsyncUseCase) {
                         isCalledCompleted = true;
+                    }
+                });
+                // 4
+                executor.onDispatch(payload => {
+                    if (payload.type === expectedPayload.type) {
+                        assert.equal(payload.value, expectedPayload.value);
+                        isCalledUseCase = true;
                     }
                 });
                 // 1
