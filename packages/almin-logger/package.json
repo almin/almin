@@ -9,7 +9,7 @@
   "homepage": "https://github.com/almin/almin/tree/master/packages/almin-logger",
   "license": "MIT",
   "files": [
-    "src/",
+    "src/lib",
     "lib/"
   ],
   "bugs": {
