@@ -9,8 +9,8 @@
   "homepage": "https://github.com/almin/almin",
   "license": "MIT",
   "files": [
-    "src/lib",
-    "lib/"
+    "src/",
+    "lib/src"
   ],
   "bugs": {
     "url": "https://github.com/almin/almin/issues"
