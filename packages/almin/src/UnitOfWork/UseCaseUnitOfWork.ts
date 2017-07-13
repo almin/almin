@@ -4,6 +4,7 @@ import { DispatcherPayloadMeta } from "../DispatcherPayloadMeta";
 import { Committable, UnitOfWork } from "./UnitOfWork";
 import MapLike from "map-like";
 import { UseCaseExecutor } from "../UseCaseExecutor";
+import { Dispatcher } from "../Dispatcher";
 
 export interface UseCaseUnitOfWorkOptions {
     autoCommit: boolean;
@@ -15,12 +16,14 @@ export interface UseCaseUnitOfWorkOptions {
  */
 export class UseCaseUnitOfWork {
     private unitOfWork: UnitOfWork;
+    private dispatcher: Dispatcher;
     private finishedUseCaseMap: MapLike<string, boolean>;
     private options: UseCaseUnitOfWorkOptions;
     private unsubscribeMap: MapLike<UseCaseExecutor<any>, () => void>;
 
-    constructor(storeGroup: Committable, options: UseCaseUnitOfWorkOptions) {
+    constructor(storeGroup: Committable, dispatcher: Dispatcher, options: UseCaseUnitOfWorkOptions) {
         this.unitOfWork = new UnitOfWork(storeGroup);
+        this.dispatcher = dispatcher;
         this.finishedUseCaseMap = new MapLike<string, boolean>();
         this.options = options;
         this.unsubscribeMap = new MapLike<UseCaseExecutor<any>, () => void>();
@@ -40,6 +43,10 @@ export class UseCaseUnitOfWork {
         };
         const unsubscribe = useCaseExecutor.onDispatch(onDispatchOnUnitOfWork);
         this.unsubscribeMap.set(useCaseExecutor, unsubscribe);
+        // Notes: It must be specific order
+        // Commit -> Dispatch to Dispatcher
+        // UseCaseExecutor -> Dispatcher
+        useCaseExecutor.pipe(this.dispatcher);
     }
 
     /**

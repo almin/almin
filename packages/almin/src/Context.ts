@@ -1,3 +1,4 @@
+///<reference path="UnitOfWork/UseCaseUnitOfWork.ts"/>
 // LICENSE : MIT
 "use strict";
 import { Dispatcher } from "./Dispatcher";
@@ -99,11 +100,6 @@ export class Context<T> {
          * @private
          */
         this._releaseHandlers = [];
-
-        // Dispatch Flow: Dispatcher -> StoreGroup
-        // StoreGroup should have implement that StoreGroup -> Stores
-        const releaseHandler = this._dispatcher.pipe(this._storeGroup);
-        this._releaseHandlers.push(releaseHandler);
     }
 
     /**
@@ -175,11 +171,10 @@ export class Context<T> {
     useCase<T extends UseCaseLike>(useCase: T): UseCaseExecutor<T>;
     useCase(useCase: any): UseCaseExecutor<any> {
         const useCaseExecutor = createUseCaseExecutor(useCase, this._dispatcher);
-        const unitOfWork = new UseCaseUnitOfWork(this._storeGroup, {
+        const unitOfWork = new UseCaseUnitOfWork(this._storeGroup, this._dispatcher, {
             autoCommit: true
         });
         unitOfWork.open(useCaseExecutor);
-        useCaseExecutor.pipe(this._dispatcher);
         useCaseExecutor.onComplete(() => {
             unitOfWork.close(useCaseExecutor);
         });
@@ -220,11 +215,10 @@ Please enable strict mode via \`new Context({ dispatcher, store, options: { stri
 `);
             }
         }
-        const unitOfWork = new UseCaseUnitOfWork(this._storeGroup, { autoCommit: false });
+        const unitOfWork = new UseCaseUnitOfWork(this._storeGroup, this._dispatcher, { autoCommit: false });
         const createUseCaseExecutorAndOpenUoW = <T extends UseCaseLike>(useCase: T): UseCaseExecutor<T> => {
             const useCaseExecutor = createUseCaseExecutor(useCase, this._dispatcher);
             unitOfWork.open(useCaseExecutor);
-            useCaseExecutor.pipe(this._dispatcher);
             return useCaseExecutor;
         };
         const context: TransactionContext = {
