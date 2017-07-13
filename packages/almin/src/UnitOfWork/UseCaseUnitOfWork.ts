@@ -39,14 +39,14 @@ export class UseCaseUnitOfWork {
      */
     open(useCaseExecutor: UseCaseExecutor<any>) {
         const onDispatchOnUnitOfWork = (payload: Payload, meta: DispatcherPayloadMeta) => {
+            // Notes: It is specific order
+            // 1. Commit
             this.unitOfWork.addCommitment([payload, meta]);
+            // 2. Dispatch to Dispatcher
+            this.dispatcher.dispatch(payload, meta);
         };
         const unsubscribe = useCaseExecutor.onDispatch(onDispatchOnUnitOfWork);
         this.unsubscribeMap.set(useCaseExecutor, unsubscribe);
-        // Notes: It must be specific order
-        // Commit -> Dispatch to Dispatcher
-        // UseCaseExecutor -> Dispatcher
-        useCaseExecutor.pipe(this.dispatcher);
     }
 
     /**

@@ -150,10 +150,10 @@ context.useCase(new MyUseCase()).executor(useCase => useCase.execute("value")).t
 });
 
 context
-    .transaction(async context => {
-        await context.useCase(new MyUseCase()).execute();
-        await context.useCase(new ParentUseCase()).execute();
-        context.commit();
+    .transaction(async committer => {
+        await committer.useCase(new MyUseCase()).execute();
+        await committer.useCase(new ParentUseCase()).execute();
+        committer.commit();
     })
     .then(() => {
         console.log("Finish");
