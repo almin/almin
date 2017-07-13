@@ -1,11 +1,11 @@
 // MIT © 2017 azu
 "use strict";
 import * as assert from "assert";
-import { Store, StoreGroup, Context, Dispatcher, Payload, DidExecutedPayload, CompletedPayload } from "../lib/index";
-import { InitializedPayload } from "../lib/payload/InitializedPayload";
+import { CompletedPayload, Context, DidExecutedPayload, Dispatcher, Payload, Store, StoreGroup } from "../src/index";
+import { InitializedPayload } from "../src/payload/InitializedPayload";
 
-context("UseCaseUnitOfWork", function() {
-    context("Integration with Store#onDispatch", () => {
+describe("UseCaseUnitOfWork", function() {
+    describe("Integration with Store#onDispatch", () => {
         it("should not dispatch unnecessary payload to each store", function() {
             class TestStore extends Store {
                 constructor() {

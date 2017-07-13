@@ -1,11 +1,12 @@
 // MIT © 2017 azu
 "use strict";
 const assert = require("assert");
-import { UseCase, Dispatcher, Context, Store } from "../lib/";
-import { functionalUseCase } from "./use-case/FunctionalUseCase";
+import { Context, Dispatcher, UseCase } from "../src/";
 import { createStore } from "./helper/create-new-store";
+import { functionalUseCase } from "./use-case/FunctionalUseCase";
+
 describe("UseCaseContext", () => {
-    context("useCase", () => {
+    describe("useCase", () => {
         it("should execute functional useCase", () => {
             const expectedPayload = {
                 type: "expected"

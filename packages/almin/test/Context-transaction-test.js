@@ -1,9 +1,9 @@
 // MIT © 2017 azu
 "use strict";
 import * as assert from "assert";
+import { Context, Dispatcher, Payload, Store, StoreGroup, UseCase } from "../src/";
+import { DispatcherPayloadMetaImpl } from "../src/DispatcherPayloadMeta";
 import { createStore } from "./helper/create-new-store";
-import { Context, UseCase, Store, StoreGroup, Dispatcher, Payload } from "../lib/";
-import { DispatcherPayloadMetaImpl } from "../lib/DispatcherPayloadMeta";
 import { NoDispatchUseCase } from "./use-case/NoDispatchUseCase";
 
 /**

@@ -1,17 +1,17 @@
 // LICENSE : MIT
 "use strict";
 const sinon = require("sinon");
-import { Payload } from "../lib/payload/Payload";
-import { InitializedPayload } from "../lib/payload/InitializedPayload";
-import { DidExecutedPayload } from "../lib/payload/DidExecutedPayload";
-import { CompletedPayload } from "../lib/payload/CompletedPayload";
-import { Store } from "../lib/Store";
-import { StoreGroup } from "../lib/UILayer/StoreGroup";
-import { createStore } from "./helper/create-new-store";
-import { UseCase } from "../lib/UseCase";
-import { Context } from "../lib/Context";
-import { Dispatcher } from "../lib/Dispatcher";
 import * as assert from "assert";
+import { Context } from "../src/Context";
+import { Dispatcher } from "../src/Dispatcher";
+import { CompletedPayload } from "../src/payload/CompletedPayload";
+import { DidExecutedPayload } from "../src/payload/DidExecutedPayload";
+import { InitializedPayload } from "../src/payload/InitializedPayload";
+import { Payload } from "../src/payload/Payload";
+import { Store } from "../src/Store";
+import { StoreGroup } from "../src/UILayer/StoreGroup";
+import { UseCase } from "../src/UseCase";
+import { createStore } from "./helper/create-new-store";
 
 const createAsyncChangeStoreUseCase = store => {
     class ChangeTheStoreUseCase extends UseCase {
@@ -38,33 +38,21 @@ const createChangeStoreUseCase = store => {
 describe("StoreGroup", function() {
     describe("constructor(map)", () => {
         it("throw error when invalid arguments", () => {
-            assert.throws(
-                () => {
-                    new StoreGroup(null);
-                },
-                Error,
-                "arguments should be object"
-            );
-            assert.throws(
-                () => {
-                    new StoreGroup();
-                },
-                Error,
-                "arguments should be object"
-            );
-            assert.throws(
-                () => {
-                    new StoreGroup([]);
-                },
-                Error,
-                "arguments should be object"
-            );
+            assert.throws(() => {
+                new StoreGroup(null);
+            });
+            assert.throws(() => {
+                new StoreGroup();
+            });
+            assert.throws(() => {
+                new StoreGroup([]);
+            });
             assert.throws(() => {
                 new StoreGroup({
                     a: 1,
                     b: 2
                 });
-            }, /should be instance of Store/);
+            });
         });
         it("support stateName and store mapping ", () => {
             class AStateStore extends Store {
@@ -92,7 +80,7 @@ describe("StoreGroup", function() {
         });
     });
     describe("#emitChange", function() {
-        context("when any store is not changed", function() {
+        describe("when any store is not changed", function() {
             it("should not call onChange", function() {
                 const store = createStore({ name: "AStore" });
                 const storeGroup = new StoreGroup({
@@ -128,7 +116,7 @@ describe("StoreGroup", function() {
                 assert.ok(isCalled);
             });
         });
-        context("when UseCase never change any store", function() {
+        describe("when UseCase never change any store", function() {
             it("should not be called", function() {
                 const store = createStore({ name: "AStore" });
                 const storeGroup = new StoreGroup({
@@ -154,7 +142,7 @@ describe("StoreGroup", function() {
                 });
             });
         });
-        context("onChange(changingStores)", () => {
+        describe("onChange(changingStores)", () => {
             it("should changingStores are changed own state", () => {
                 const storeA = createStore({ name: "AStore" });
                 const storeB = createStore({ name: "BStore" });
@@ -189,7 +177,7 @@ describe("StoreGroup", function() {
             });
         });
         // sync
-        context("when SyncUseCase change the store", function() {
+        describe("when SyncUseCase change the store", function() {
             it("should be called by sync", function() {
                 const store = createStore({ name: "AStore" });
                 const storeGroup = new StoreGroup({
@@ -212,7 +200,7 @@ describe("StoreGroup", function() {
             });
         });
         // async
-        context("when ASyncUseCase change the store", function() {
+        describe("when ASyncUseCase change the store", function() {
             it("should be called by async", function() {
                 const store = createStore({ name: "" });
                 const storeGroup = new StoreGroup({
@@ -237,7 +225,7 @@ describe("StoreGroup", function() {
                 return promise;
             });
         });
-        context("when UseCase is nesting", function() {
+        describe("when UseCase is nesting", function() {
             it("should be called by all UseCases", function() {
                 const aStore = createStore({ name: "AStore" });
                 const bStore = createStore({ name: "BStore" });
@@ -267,7 +255,7 @@ describe("StoreGroup", function() {
                     assert.equal(onChangeCounter, 2);
                 });
             });
-            context("when UseCase#dispatch is called", function() {
+            describe("when UseCase#dispatch is called", function() {
                 it("should not be called - no changing store", function() {
                     const store = createStore({ name: "AStore" });
                     const storeGroup = new StoreGroup({ a: store });
@@ -377,7 +365,7 @@ describe("StoreGroup", function() {
                 });
             });
         });
-        context("when UseCase throwing Error", function() {
+        describe("when UseCase throwing Error", function() {
             it("should be called", function() {
                 const aStore = createStore({ name: "AStore" });
                 const storeGroup = new StoreGroup({ a: aStore });
@@ -405,7 +393,7 @@ describe("StoreGroup", function() {
                 });
             });
         });
-        context("when UseCase call `throwError()", function() {
+        describe("when UseCase call `throwError()", function() {
             it("should be called", function() {
                 const store = createStore({ name: "AStore" });
                 const storeGroup = new StoreGroup({ a: store });
@@ -431,7 +419,7 @@ describe("StoreGroup", function() {
                 });
             });
         });
-        context("WhiteBox testing", function() {
+        describe("WhiteBox testing", function() {
             it("should thin out change events at once", function() {
                 const aStore = createStore({ name: "AStore" });
                 const bStore = createStore({ name: "BStore" });
@@ -464,7 +452,7 @@ describe("StoreGroup", function() {
                     assert.equal(calledCount, 1, "onChange is called just once");
                 });
             });
-            context("when the UseCase don't return a promise", () => {
+            describe("when the UseCase don't return a promise", () => {
                 it("StoreGroup#emitChange is called just one time", function() {
                     const aStore = createStore({ name: "AStore" });
                     const storeGroup = new StoreGroup({ a: aStore });
@@ -493,7 +481,7 @@ describe("StoreGroup", function() {
                 });
             });
         });
-        context("Sync Change and Async Change in Edge case", function() {
+        describe("Sync Change and Async Change in Edge case", function() {
             /*
             This useCase should update twice
                 execute(){
@@ -534,7 +522,7 @@ describe("StoreGroup", function() {
                 });
             });
         });
-        context("onChange calling flow example", function() {
+        describe("onChange calling flow example", function() {
             it("should call onChange in order", function() {
                 const aStore = createStore({ name: "AStore" });
                 const bStore = createStore({ name: "BStore" });
@@ -596,7 +584,7 @@ describe("StoreGroup", function() {
                 });
             });
         });
-        context("When StoreGroup calling Store#receivePayload", function() {
+        describe("When StoreGroup calling Store#receivePayload", function() {
             it("should call count is necessary and sufficient for performance", function() {
                 class AStore extends Store {
                     constructor() {
@@ -677,7 +665,7 @@ describe("StoreGroup", function() {
                     });
             });
         });
-        context("when Store#emitChange before receivePayload", function() {
+        describe("when Store#emitChange before receivePayload", function() {
             it("arguments includes the store", function() {
                 const aStore = createStore({ name: "AStore" });
                 const storeGroup = new StoreGroup({ a: aStore });
@@ -705,7 +693,7 @@ describe("StoreGroup", function() {
                 });
             });
         });
-        context("when Store is changed in receivePayload", function() {
+        describe("when Store is changed in receivePayload", function() {
             it("arguments includes the store", function() {
                 class AStore extends Store {
                     constructor() {
@@ -775,7 +763,7 @@ describe("StoreGroup", function() {
                 b: "b value"
             });
         });
-        context("when getState() return State object", function() {
+        describe("when getState() return State object", function() {
             it("should return a single state has {<key>: state} of return Store#getState", function() {
                 class AState {}
 
@@ -806,7 +794,7 @@ describe("StoreGroup", function() {
             });
         });
     });
-    context("Warning", () => {
+    describe("Warning", () => {
         let consoleErrorStub = null;
         beforeEach(() => {
             consoleErrorStub = sinon.stub(console, "error");
@@ -936,7 +924,7 @@ Something wrong implementation of calling Store#emitChange at multiple`
                 assert.ok(consoleErrorStub.calledOnce);
             });
         });
-        context("when strict mode", () => {
+        describe("when strict mode", () => {
             it("show warning if update store outside of receivePayload", function() {
                 class AStore extends Store {
                     constructor() {
@@ -975,7 +963,7 @@ Something wrong implementation of calling Store#emitChange at multiple`
                 });
             });
         });
-        context("Not support warning case", () => {
+        describe("Not support warning case", () => {
             it("directly modified and emitChange is mixed, we can't show warning", function() {
                 class AStore extends Store {
                     constructor() {

@@ -1,12 +1,11 @@
 {
   "compilerOptions": {
     /* Basic Options */
-    "module": "es2015",
+    "module": "commonjs",
     "moduleResolution": "node",
     "newLine": "LF",
-    "rootDir": "./",
-    "outDir": "./__obj/",
-    "target": "esnext",
+    "outDir": "./lib/",
+    "target": "ES5",
     "declaration": true,
     "jsx": "preserve",
     // Transform jsx syntax in babels phase
@@ -14,7 +13,7 @@
       "node"
     ],
     "lib": [
-      "es2016",
+      "es2017",
       "dom"
     ],
     // "removeComments": true,                /* Do not emit comments to output. */
@@ -38,7 +37,7 @@
     /* Report errors on unused parameters. */
     "noImplicitReturns": true,
     /* Report error when not all code paths in function return a value. */
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
     /* Report errors for fallthrough cases in switch statement. */
 
     /* Module Resolution Options */
@@ -48,7 +47,9 @@
     // "rootDirs": [],                        /* List of root folders whose combined content represents the structure of the project at runtime. */
     // "typeRoots": [],                       /* List of folders to include type definitions from. */
     // "types": [],                           /* Type declaration files to be included in compilation. */
-    // "allowSyntheticDefaultImports": true,  /* Allow default imports from modules with no default export. This does not affect code emit, just typechecking. */
+    // Enable for map-like
+    "allowSyntheticDefaultImports": true
+    /* Allow default imports from modules with no default export. This does not affect code emit, just typechecking. */
 
     /* Source Map Options */
     // "sourceRoot": "./",                    /* Specify the location where debugger should locate TypeScript files instead of source locations. */
@@ -61,8 +62,7 @@
     // "emitDecoratorMetadata": true,         /* Enables experimental support for emitting type metadata for decorators. */
   },
   "include": [
-    "src/**/*",
-    "test/**/*"
+    "src/**/*"
   ],
   "exclude": [
     ".git",

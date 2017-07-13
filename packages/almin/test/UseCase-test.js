@@ -1,15 +1,14 @@
 // LICENSE : MIT
 "use strict";
-const assert = require("power-assert");
+const assert = require("assert");
 const sinon = require("sinon");
-import { UseCase } from "../lib/UseCase";
-import { Dispatcher } from "../lib/Dispatcher";
-import { Store } from "../lib/Store";
-import { Context } from "../lib/Context";
-import { TYPE as CompletedPayloadType } from "../lib/payload/CompletedPayload";
-import { TYPE as DidExecutedPayloadType } from "../lib/payload/DidExecutedPayload";
-import { TYPE as WillExecutedPayloadType } from "../lib/payload/WillExecutedPayload";
-import { UseCaseContext } from "../lib/UseCaseContext";
+import { Context } from "../src/Context";
+import { Dispatcher } from "../src/Dispatcher";
+import { TYPE as CompletedPayloadType } from "../src/payload/CompletedPayload";
+import { TYPE as DidExecutedPayloadType } from "../src/payload/DidExecutedPayload";
+import { TYPE as WillExecutedPayloadType } from "../src/payload/WillExecutedPayload";
+import { UseCase } from "../src/UseCase";
+import { UseCaseContext } from "../src/UseCaseContext";
 import { createStore } from "./helper/create-new-store";
 
 describe("UseCase", function() {
@@ -31,7 +30,7 @@ describe("UseCase", function() {
             const useCase = new ExampleUseCase();
             assert(useCase.name === "ExampleUseCase");
         });
-        context("when define displayName", () => {
+        describe("when define displayName", () => {
             it("#name is same with displayName", () => {
                 class MyUseCase extends UseCase {}
                 const expectedName = "Expected UseCase";
@@ -59,7 +58,7 @@ describe("UseCase", function() {
         });
     });
     // scenario
-    context("when execute B UseCase in A UseCase", function() {
+    describe("when execute B UseCase in A UseCase", function() {
         it("should execute A:will -> B:will -> B:did -> A:did", function() {
             class BUseCase extends UseCase {
                 execute() {
@@ -124,7 +123,7 @@ describe("UseCase", function() {
             context.useCase(useCase).execute();
         });
     });
-    context("when not implemented execute()", function() {
+    describe("when not implemented execute()", function() {
         it("should assert error on constructor", function() {
             class TestUseCase extends UseCase {}
             try {
@@ -136,7 +135,7 @@ describe("UseCase", function() {
             }
         });
     });
-    context("UseCase is nesting", function() {
+    describe("UseCase is nesting", function() {
         /*
             P: Parent UseCase
             C: Child UseCase
@@ -147,7 +146,7 @@ describe("UseCase", function() {
                  C----------
 
          */
-        context("when child did completed before parent is completed", function() {
+        describe("when child did completed before parent is completed", function() {
             const childPayload = {
                 type: "ChildUseCase"
             };
@@ -189,7 +188,7 @@ describe("UseCase", function() {
                               C call dispatch()
 
          */
-        context("when child is completed after parent did completed", function() {
+        describe("when child is completed after parent did completed", function() {
             let consoleErrorStub = null;
             beforeEach(() => {
                 consoleErrorStub = sinon.stub(console, "error");
