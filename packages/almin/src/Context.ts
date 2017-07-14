@@ -22,7 +22,6 @@ import { TransactionContext } from "./UnitOfWork/TransactionContext";
 import { createSingleStoreGroup } from "./UILayer/SingleStoreGroup";
 import { StoreGroupLike } from "./UILayer/StoreGroupLike";
 import { LifeCycleEventHub } from "./LifeCycleEventHub";
-import { TransactionUseCaseUnitOfWork } from "./UnitOfWork/TransactionUseCaseUnitOfWork";
 import { TransactionBeganPayload } from "./payload/TransactionBeganPayload";
 import { TransactionEndedPayload } from "./payload/TransactionEndedPayload";
 
@@ -263,7 +262,7 @@ Please enable strict mode via \`new Context({ dispatcher, store, options: { stri
 `);
             }
         }
-        const unitOfWork = new TransactionUseCaseUnitOfWork({
+        const unitOfWork = new UseCaseUnitOfWork({
             name,
             dispatcher: this.dispatcher,
             storeGroup: this.storeGroup,

@@ -5,6 +5,8 @@ import { Context, Dispatcher, Payload, Store, StoreGroup, UseCase } from "../src
 import { DispatcherPayloadMetaImpl } from "../src/DispatcherPayloadMeta";
 import { createStore } from "./helper/create-new-store";
 import { NoDispatchUseCase } from "./use-case/NoDispatchUseCase";
+import { DispatchUseCase } from "./use-case/DispatchUseCase";
+import { ThrowUseCase } from "./use-case/ThrowUseCase";
 
 /**
  * create a Store that can handle receivePayload
@@ -148,6 +150,8 @@ describe("Context#transaction", () => {
             assert.strictEqual(meta.dispatcher, dispatcher, "meta.dispatcher should be dispatcher");
             assert.strictEqual(meta.parentUseCase, null, "meta.parentUseCase should be null");
             assert.strictEqual(typeof meta.timeStamp, "number");
+            assert.strictEqual(typeof meta.transaction, "object", "transaction object");
+            assert.strictEqual(typeof meta.transaction.name, "string", "transaction object");
         });
         context.onEndTransaction((payload, meta) => {
             endTransaction.push(payload);
@@ -156,8 +160,9 @@ describe("Context#transaction", () => {
             assert.strictEqual(meta.dispatcher, dispatcher, "meta.dispatcher should be dispatcher");
             assert.strictEqual(meta.parentUseCase, null, "meta.parentUseCase should be null");
             assert.strictEqual(typeof meta.timeStamp, "number");
+            assert.strictEqual(typeof meta.transaction, "object", "transaction object");
+            assert.strictEqual(typeof meta.transaction.name, "string", "transaction object");
         });
-        context.onEndTransaction((payload, meta) => {});
         // 1st transaction
         return context
             .transaction("1st transaction", transactionContext => {
@@ -203,6 +208,46 @@ describe("Context#transaction", () => {
                 const [, endPayload] = endTransaction;
                 assert.strictEqual(endPayload.name, "2nd transaction");
             });
+    });
+
+    it("should meta.transaction is current transaction", function() {
+        const aStore = createStore({ name: "test" });
+        const storeGroup = new StoreGroup({ a: aStore });
+        const dispatcher = new Dispatcher();
+        const context = new Context({
+            dispatcher,
+            store: storeGroup,
+            options: {
+                strict: true
+            }
+        });
+
+        class ChangeAUseCase extends UseCase {
+            execute() {
+                aStore.updateState(1);
+            }
+        }
+        const transactionName = "My Transaction";
+        dispatcher.onDispatch((payload, meta) => {
+            assert.strictEqual(meta.transaction.name, transactionName);
+        });
+        // 1st transaction
+        return context.transaction(transactionName, transactionContext => {
+            return transactionContext
+                .useCase(new NoDispatchUseCase())
+                .execute()
+                .then(() => {
+                    return transactionContext.useCase(new DispatchUseCase()).execute({
+                        type: "test"
+                    });
+                })
+                .then(() => {
+                    return transactionContext.useCase(new ChangeAUseCase()).execute();
+                })
+                .then(() => {
+                    transactionContext.commit();
+                });
+        });
     });
     it("commit and each store#onDispatch is called", function() {
         const receivedCommitments = [];
