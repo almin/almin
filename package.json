@@ -50,6 +50,9 @@
     "*.{js,ts,tsx,css}": [
       "prettier --tab-width 4 --print-width 120 --write",
       "git add"
+    ],
+    "*.md": [
+      "textlint --cache -f pretty-error"
     ]
   }
 }
