@@ -23,8 +23,8 @@ import { createSingleStoreGroup } from "./UILayer/SingleStoreGroup";
 import { StoreGroupLike } from "./UILayer/StoreGroupLike";
 import { LifeCycleEventHub } from "./LifeCycleEventHub";
 import { TransactionUseCaseUnitOfWork } from "./UnitOfWork/TransactionUseCaseUnitOfWork";
-import { BeginTransactionPayload } from "./payload/BeginTransactionPayload";
-import { EndTransactionPayload } from "./payload/EndTransactionPayload";
+import { TransactionBeganPayload } from "./payload/TransactionBeganPayload";
+import { TransactionEndedPayload } from "./payload/TransactionEndedPayload";
 
 export interface ContextArgs<T> {
     dispatcher: Dispatcher;
@@ -42,8 +42,7 @@ export class Context<T> {
      * @private
      */
     private dispatcher: Dispatcher;
-    // make @private
-    lifeCycleEventHub: LifeCycleEventHub;
+    private lifeCycleEventHub: LifeCycleEventHub;
     private storeGroup: StoreGroupLike;
     private isStrictMode = false;
     private defaultUnitOfWork: UseCaseUnitOfWork;
@@ -255,7 +254,7 @@ export class Context<T> {
      * We want to know actual use case of rollback before implementing this.
      *
      */
-    transaction(name: string, committer: (context: TransactionContext) => Promise<any>) {
+    transaction(name: string, transactionHandler: (transactionContext: TransactionContext) => Promise<any>) {
         if (process.env.NODE_ENV !== "production") {
             if (!this.isStrictMode) {
                 console.error(`Warning(Context): Context#transaction only use in strict mode.
@@ -285,7 +284,7 @@ Please enable strict mode via \`new Context({ dispatcher, store, options: { stri
         // committer resolve with void
         // unitOfWork automatically close when committer exit
         // by design.
-        return committer(context).then(
+        return transactionHandler(context).then(
             () => {
                 unitOfWork.endTransaction();
                 unitOfWork.release();
@@ -301,14 +300,14 @@ Please enable strict mode via \`new Context({ dispatcher, store, options: { stri
     /**
      * Register `handler` function that is called when begin `Context.transaction`.
      */
-    onBeginTransaction(handler: (payload: BeginTransactionPayload, meta: DispatcherPayloadMeta) => void) {
+    onBeginTransaction(handler: (payload: TransactionBeganPayload, meta: DispatcherPayloadMeta) => void) {
         return this.lifeCycleEventHub.onBeginTransaction(handler);
     }
 
     /**
      * Register `handler` function that is called when `Context.transaction` is ended.
      */
-    onEndedTransaction(handler: (payload: EndTransactionPayload, meta: DispatcherPayloadMeta) => void) {
+    onEndTransaction(handler: (payload: TransactionEndedPayload, meta: DispatcherPayloadMeta) => void) {
         return this.lifeCycleEventHub.onEndTransaction(handler);
     }
 

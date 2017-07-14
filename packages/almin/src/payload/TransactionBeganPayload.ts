@@ -5,12 +5,12 @@ import { Payload } from "./Payload";
  *  XXX: This is exported for an unit testing.
  *  DO NOT USE THIS in your application.
  */
-export const TYPE = "ALMIN_BEGIN_OF_TRANSACTION__";
+export const TYPE = "ALMIN_BEGAN_OF_TRANSACTION__";
 
 /**
- * BeginTransactionPayload is begin of transaction
+ * TransactionBeganPayload is begin of transaction
  */
-export class BeginTransactionPayload extends Payload {
+export class TransactionBeganPayload extends Payload {
     // transaction name
     name: string;
 
@@ -20,6 +20,6 @@ export class BeginTransactionPayload extends Payload {
     }
 }
 
-export function isBeginTransactionPayload(v: Payload): v is BeginTransactionPayload {
+export function isTransactionBeganPayload(v: Payload): v is TransactionBeganPayload {
     return v.type === TYPE;
 }

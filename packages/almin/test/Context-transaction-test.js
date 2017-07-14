@@ -140,13 +140,13 @@ describe("Context#transaction", () => {
         });
         const beginTransactions = [];
         const endTransaction = [];
-        context.lifeCycleEventHub.onBeginTransaction((payload, meta) => {
+        context.onBeginTransaction((payload, meta) => {
             beginTransactions.push(payload);
         });
-        context.lifeCycleEventHub.onEndTransaction((payload, meta) => {
+        context.onEndTransaction((payload, meta) => {
             endTransaction.push(payload);
         });
-        context.lifeCycleEventHub.onEndTransaction((payload, meta) => {});
+        context.onEndTransaction((payload, meta) => {});
         // 1st transaction
         return context
             .transaction("1st transaction", committer => {

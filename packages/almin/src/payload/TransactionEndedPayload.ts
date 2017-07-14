@@ -8,9 +8,9 @@ import { Payload } from "./Payload";
 export const TYPE = "ALMIN_ENF_OF_TRANSACTION__";
 
 /**
- * EndTransactionPayload is end of transaction
+ * TransactionEndedPayload is end of transaction
  */
-export class EndTransactionPayload extends Payload {
+export class TransactionEndedPayload extends Payload {
     // transaction name
     name: string;
 
@@ -20,6 +20,6 @@ export class EndTransactionPayload extends Payload {
     }
 }
 
-export function isEndTransactionPayload(v: Payload): v is EndTransactionPayload {
+export function isTransactionEndedPayload(v: Payload): v is TransactionEndedPayload {
     return v.type === TYPE;
 }

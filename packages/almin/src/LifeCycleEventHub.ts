@@ -7,8 +7,8 @@ import { CompletedPayload, isCompletedPayload } from "./payload/CompletedPayload
 import { ErrorPayload, isErrorPayload } from "./payload/ErrorPayload";
 import { StoreGroupLike } from "./UILayer/StoreGroupLike";
 import { Store } from "./Store";
-import { BeginTransactionPayload, isBeginTransactionPayload } from "./payload/BeginTransactionPayload";
-import { EndTransactionPayload, isEndTransactionPayload } from "./payload/EndTransactionPayload";
+import { TransactionBeganPayload, isTransactionBeganPayload } from "./payload/TransactionBeganPayload";
+import { TransactionEndedPayload, isTransactionEndedPayload } from "./payload/TransactionEndedPayload";
 
 export interface LifeCycleEventHubArgs {
     dispatcher: Dispatcher;
@@ -38,9 +38,9 @@ export class LifeCycleEventHub {
         return releaseHandler;
     }
 
-    onBeginTransaction(handler: (payload: BeginTransactionPayload, meta: DispatcherPayloadMeta) => void) {
+    onBeginTransaction(handler: (payload: TransactionBeganPayload, meta: DispatcherPayloadMeta) => void) {
         const releaseHandler = this.dispatcher.onDispatch(function onBeginTransaction(payload, meta) {
-            if (isBeginTransactionPayload(payload)) {
+            if (isTransactionBeganPayload(payload)) {
                 handler(payload, meta);
             }
         });
@@ -48,9 +48,9 @@ export class LifeCycleEventHub {
         return releaseHandler;
     }
 
-    onEndTransaction(handler: (payload: EndTransactionPayload, meta: DispatcherPayloadMeta) => void) {
+    onEndTransaction(handler: (payload: TransactionEndedPayload, meta: DispatcherPayloadMeta) => void) {
         const releaseHandler = this.dispatcher.onDispatch(function onEndTransaction(payload, meta) {
-            if (isEndTransactionPayload(payload)) {
+            if (isTransactionEndedPayload(payload)) {
                 handler(payload, meta);
             }
         });
