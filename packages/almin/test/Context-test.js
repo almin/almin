@@ -389,42 +389,42 @@ describe("Context", function() {
             });
         });
     });
-});
 
-describe("Constructor with Store instance", () => {
-    it("should Context delegate payload to Store#receivePayload", () => {
-        class CounterStore extends Store {
-            constructor() {
-                super();
-                this.receivePayloadList = [];
+    describe("Constructor with Store instance", () => {
+        it("should Context delegate payload to Store#receivePayload", () => {
+            class CounterStore extends Store {
+                constructor() {
+                    super();
+                    this.receivePayloadList = [];
+                }
+
+                receivePayload(payload) {
+                    this.receivePayloadList.push(payload);
+                }
+
+                getState() {
+                    return {};
+                }
             }
 
-            receivePayload(payload) {
-                this.receivePayloadList.push(payload);
+            // UseCase
+            class IncrementUseCase extends UseCase {
+                execute() {
+                    this.dispatch({
+                        type: "INCREMENT"
+                    });
+                }
             }
 
-            getState() {
-                return {};
-            }
-        }
-
-        // UseCase
-        class IncrementUseCase extends UseCase {
-            execute() {
-                this.dispatch({
-                    type: "INCREMENT"
-                });
-            }
-        }
-
-        // Context class provide observing and communicating with **Store** and **UseCase**
-        const counterStore = new CounterStore();
-        const context = new Context({
-            dispatcher: new Dispatcher(),
-            store: counterStore
-        });
-        return context.useCase(new IncrementUseCase()).execute().then(() => {
-            assert.ok(counterStore.receivePayloadList.length > 0);
+            // Context class provide observing and communicating with **Store** and **UseCase**
+            const counterStore = new CounterStore();
+            const context = new Context({
+                dispatcher: new Dispatcher(),
+                store: counterStore
+            });
+            return context.useCase(new IncrementUseCase()).execute().then(() => {
+                assert.ok(counterStore.receivePayloadList.length > 0);
+            });
         });
     });
 });

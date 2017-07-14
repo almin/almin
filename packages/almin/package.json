@@ -64,6 +64,7 @@
     "zuul": "^3.10.1"
   },
   "dependencies": {
+    "@types/mocha": "^2.2.41",
     "map-like": "^2.0.0",
     "shallow-equal-object": "^1.0.1"
   }
