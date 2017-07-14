@@ -22,6 +22,7 @@ import { TransactionContext } from "./UnitOfWork/TransactionContext";
 import { createSingleStoreGroup } from "./UILayer/SingleStoreGroup";
 import { StoreGroupLike } from "./UILayer/StoreGroupLike";
 import { LifeCycleEventHub } from "./LifeCycleEventHub";
+import { TransactionUseCaseUnitOfWork } from "./UnitOfWork/TransactionUseCaseUnitOfWork";
 
 export interface ContextArgs<T> {
     dispatcher: Dispatcher;
@@ -39,9 +40,11 @@ export class Context<T> {
      * @private
      */
     private dispatcher: Dispatcher;
-    private lifeCycleEventHub: LifeCycleEventHub;
+    // make @private
+    lifeCycleEventHub: LifeCycleEventHub;
     private storeGroup: StoreGroupLike;
     private isStrictMode = false;
+    private defaultUnitOfWork: UseCaseUnitOfWork;
 
     /**
      * `dispatcher` is an instance of `Dispatcher`.
@@ -99,6 +102,12 @@ export class Context<T> {
         if (this.isStrictMode) {
             this.storeGroup.useStrict();
         }
+        this.defaultUnitOfWork = new UseCaseUnitOfWork({
+            name: "Default",
+            dispatcher: this.dispatcher,
+            storeGroup: this.storeGroup,
+            options: { autoCommit: true }
+        });
     }
 
     /**
@@ -170,19 +179,16 @@ export class Context<T> {
     useCase<T extends UseCaseLike>(useCase: T): UseCaseExecutor<T>;
     useCase(useCase: any): UseCaseExecutor<any> {
         const useCaseExecutor = createUseCaseExecutor(useCase, this.dispatcher);
-        const unitOfWork = new UseCaseUnitOfWork(this.storeGroup, this.dispatcher, {
-            autoCommit: true
-        });
-        unitOfWork.open(useCaseExecutor);
+        this.defaultUnitOfWork.open(useCaseExecutor);
         useCaseExecutor.onComplete(() => {
-            unitOfWork.close(useCaseExecutor);
+            this.defaultUnitOfWork.close(useCaseExecutor);
         });
         return useCaseExecutor;
     }
 
     /**
-     * Create new Transaction(Unit of Work).
-     * You can prevent heavy updating of StoreGroup
+     * Create new Unit of Work and execute UseCase.
+     * You can prevent heavy updating of StoreGroup.
      *
      * This feature only work in strict mode.
      *
@@ -192,7 +198,7 @@ export class Context<T> {
      * - You should call `committer.commit()` to update StoreGroup at any time
      *
      * ```js
-     * context.transaction(committer => {
+     * context.transaction("A->B->C transaction", committer => {
      *      return committer.useCase(new ChangeAUseCase()).execute() // no update store
      *          .then(() => {
      *              return committer.useCase(new ChangeBUseCase()).execute(); // no update store
@@ -204,8 +210,9 @@ export class Context<T> {
      *          });
      *  })
      * ```
+     *
      */
-    transaction(committer: (context: TransactionContext) => Promise<any>) {
+    transaction(name: string, committer: (context: TransactionContext) => Promise<any>) {
         if (process.env.NODE_ENV !== "production") {
             if (!this.isStrictMode) {
                 console.error(`Warning(Context): Context#transaction only use in strict mode.
@@ -214,7 +221,12 @@ Please enable strict mode via \`new Context({ dispatcher, store, options: { stri
 `);
             }
         }
-        const unitOfWork = new UseCaseUnitOfWork(this.storeGroup, this.dispatcher, { autoCommit: false });
+        const unitOfWork = new TransactionUseCaseUnitOfWork({
+            name,
+            dispatcher: this.dispatcher,
+            storeGroup: this.storeGroup,
+            options: { autoCommit: false }
+        });
         const createUseCaseExecutorAndOpenUoW = <T extends UseCaseLike>(useCase: T): UseCaseExecutor<T> => {
             const useCaseExecutor = createUseCaseExecutor(useCase, this.dispatcher);
             unitOfWork.open(useCaseExecutor);
@@ -226,14 +238,17 @@ Please enable strict mode via \`new Context({ dispatcher, store, options: { stri
                 unitOfWork.commit();
             }
         };
+        unitOfWork.beginTransaction();
         // committer resolve with void
         // unitOfWork automatically close when committer exit
         // by design.
         return committer(context).then(
             () => {
+                unitOfWork.endTransaction();
                 unitOfWork.release();
             },
             error => {
+                unitOfWork.endTransaction();
                 unitOfWork.release();
                 return Promise.reject(error);
             }

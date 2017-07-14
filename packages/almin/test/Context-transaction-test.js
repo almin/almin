@@ -68,7 +68,7 @@ describe("Context#transaction", () => {
         });
         // when
         return context
-            .transaction(committer => {
+            .transaction("transaction name", committer => {
                 return committer
                     .useCase(new ChangeAUseCase())
                     .execute()
@@ -108,7 +108,7 @@ describe("Context#transaction", () => {
         });
         // reset initialized
         receivedPayloadList.length = 0;
-        return context.transaction(committer => {
+        return context.transaction("transaction name", committer => {
             assert.strictEqual(receivedPayloadList.length, 0, "no commitment");
             return committer
                 .useCase(new NoDispatchUseCase())
@@ -128,7 +128,71 @@ describe("Context#transaction", () => {
                 });
         });
     });
-
+    it("can receive begin/end payload of transaction via Context", function() {
+        const aStore = createStore({ name: "test" });
+        const storeGroup = new StoreGroup({ a: aStore });
+        const context = new Context({
+            dispatcher: new Dispatcher(),
+            store: storeGroup,
+            options: {
+                strict: true
+            }
+        });
+        const beginTransactions = [];
+        const endTransaction = [];
+        context.lifeCycleEventHub.onBeginTransaction((payload, meta) => {
+            beginTransactions.push(payload);
+        });
+        context.lifeCycleEventHub.onEndTransaction((payload, meta) => {
+            endTransaction.push(payload);
+        });
+        context.lifeCycleEventHub.onEndTransaction((payload, meta) => {});
+        // 1st transaction
+        return context
+            .transaction("1st transaction", committer => {
+                return committer
+                    .useCase(new NoDispatchUseCase())
+                    .execute()
+                    .then(() => {
+                        committer.commit();
+                    })
+                    .then(() => {
+                        assert.strictEqual(beginTransactions.length, 1);
+                        assert.strictEqual(endTransaction.length, 0);
+                    });
+            })
+            .then(() => {
+                // assert 1st
+                assert.strictEqual(beginTransactions.length, 1);
+                const [beginPayload] = beginTransactions;
+                assert.strictEqual(beginPayload.name, "1st transaction");
+                assert.strictEqual(endTransaction.length, 1);
+                const [endPayload] = endTransaction;
+                assert.strictEqual(endPayload.name, "1st transaction");
+                // 2nd transaction
+                return context.transaction("2nd transaction", committer => {
+                    return committer
+                        .useCase(new NoDispatchUseCase())
+                        .execute()
+                        .then(() => {
+                            committer.commit();
+                        })
+                        .then(() => {
+                            assert.strictEqual(beginTransactions.length, 2);
+                            assert.strictEqual(endTransaction.length, 1);
+                        });
+                });
+            })
+            .then(() => {
+                // assert 2nd
+                assert.strictEqual(beginTransactions.length, 2);
+                const [, beginPayload] = beginTransactions;
+                assert.strictEqual(beginPayload.name, "2nd transaction");
+                assert.strictEqual(endTransaction.length, 2);
+                const [, endPayload] = endTransaction;
+                assert.strictEqual(endPayload.name, "2nd transaction");
+            });
+    });
     it("commit and each store#onDispatch is called", function() {
         const receivedCommitments = [];
         const aStore = createStore({ name: "test" });
@@ -145,7 +209,7 @@ describe("Context#transaction", () => {
         });
         // reset initialized
         receivedCommitments.length = 0;
-        return context.transaction(committer => {
+        return context.transaction("transaction name", committer => {
             assert.strictEqual(receivedCommitments.length, 0, "no commitment");
             return committer
                 .useCase(new NoDispatchUseCase())

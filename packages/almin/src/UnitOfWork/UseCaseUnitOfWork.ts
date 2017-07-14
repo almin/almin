@@ -1,13 +1,21 @@
 // MIT © 2017 azu
 import { Payload } from "../payload/Payload";
 import { DispatcherPayloadMeta } from "../DispatcherPayloadMeta";
-import { Committable, UnitOfWork } from "./UnitOfWork";
+import { UnitOfWork } from "./UnitOfWork";
 import { MapLike } from "map-like";
 import { UseCaseExecutor } from "../UseCaseExecutor";
 import { Dispatcher } from "../Dispatcher";
+import { StoreGroupLike } from "../UILayer/StoreGroupLike";
 
 export interface UseCaseUnitOfWorkOptions {
     autoCommit: boolean;
+}
+
+export interface UseCaseUnitOfWorkArgs {
+    name: string;
+    dispatcher: Dispatcher;
+    storeGroup: StoreGroupLike;
+    options: UseCaseUnitOfWorkOptions;
 }
 
 /**
@@ -15,17 +23,17 @@ export interface UseCaseUnitOfWorkOptions {
  * It aim to manager updating of StoreGroup via UseCase.
  */
 export class UseCaseUnitOfWork {
+    name: string;
     private unitOfWork: UnitOfWork;
     private dispatcher: Dispatcher;
-    private finishedUseCaseMap: MapLike<string, boolean>;
     private options: UseCaseUnitOfWorkOptions;
     private unsubscribeMap: MapLike<UseCaseExecutor<any>, () => void>;
 
-    constructor(storeGroup: Committable, dispatcher: Dispatcher, options: UseCaseUnitOfWorkOptions) {
-        this.unitOfWork = new UnitOfWork(storeGroup);
-        this.dispatcher = dispatcher;
-        this.finishedUseCaseMap = new MapLike<string, boolean>();
-        this.options = options;
+    constructor(args: UseCaseUnitOfWorkArgs) {
+        this.name = args.name;
+        this.unitOfWork = new UnitOfWork(args.storeGroup);
+        this.dispatcher = args.dispatcher;
+        this.options = args.options;
         this.unsubscribeMap = new MapLike<UseCaseExecutor<any>, () => void>();
         if (this.options.autoCommit) {
             this.unitOfWork.onAddedCommitment(() => {
@@ -77,8 +85,8 @@ export class UseCaseUnitOfWork {
      * After released, can't commit this Unit of Work.
      */
     release() {
-        this.unsubscribeMap.values().forEach(unsubscribe => {
-            unsubscribe();
+        this.unsubscribeMap.keys().forEach(useCaseExecutor => {
+            this.close(useCaseExecutor);
         });
         this.unitOfWork.release();
     }

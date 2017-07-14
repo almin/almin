@@ -14,10 +14,12 @@ import {
 } from "../../src/index";
 // Dispatcher
 const dispatcher = new Dispatcher();
+
 // Store
 interface AState {
     a: number;
 }
+
 class AStore extends Store<AState> {
     state: AState;
 
@@ -32,9 +34,11 @@ class AStore extends Store<AState> {
         return this.state;
     }
 }
+
 interface BState {
     b: number;
 }
+
 class BStore extends Store<BState> {
     state: BState;
 
@@ -55,6 +59,7 @@ class BStore extends Store<BState> {
         return this.state;
     }
 }
+
 // Type hacking
 const storeGroup = new StoreGroup({
     aState: new AStore(),
@@ -81,6 +86,7 @@ context.onErrorDispatch((payload: ErrorPayload, meta: DispatcherPayloadMeta) => 
 context.onDispatch((payload: Payload, meta: DispatcherPayloadMeta) => {
     console.log(payload.type, meta);
 });
+
 // UseCase
 class ChildUseCase extends UseCase {
     execute(value: string) {
@@ -90,7 +96,9 @@ class ChildUseCase extends UseCase {
         });
     }
 }
+
 type ParentUseCaseArgs = string;
+
 class ParentUseCase extends UseCase {
     execute(value: ParentUseCaseArgs) {
         // TODO: improve `execute` signature - https://github.com/almin/almin/issues/107
@@ -135,6 +143,7 @@ context
 context.useCase(parentUseCase).execute("value").then(() => {
     // nope
 });
+
 // executor
 
 class MyUseCase extends UseCase {
@@ -145,12 +154,13 @@ class MyUseCase extends UseCase {
         });
     }
 }
+
 context.useCase(new MyUseCase()).executor(useCase => useCase.execute("value")).then(() => {
     console.log("test");
 });
 
 context
-    .transaction(async committer => {
+    .transaction("my work", async committer => {
         await committer.useCase(new MyUseCase()).execute();
         await committer.useCase(new ParentUseCase()).execute();
         committer.commit();
