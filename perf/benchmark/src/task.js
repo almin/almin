@@ -7,9 +7,9 @@
 module.exports = function(Almin, done) {
     const { createContext, createStore, createUseCase } = Almin;
     let viewState = null;
-    const updateView = (state) => {
+    const updateView = state => {
         viewState = state;
-    }
+    };
     // use-case
     const stores = Array.from(new Array(500), (_, i) => i).map(index => {
         return createStore(`Store${index}`);
@@ -17,7 +17,7 @@ module.exports = function(Almin, done) {
     const context = createContext(stores);
     const log = () => {
         // nope
-    }
+    };
     context.onDispatch(log);
     context.onWillExecuteEachUseCase(log);
     context.onDidExecuteEachUseCase(log);
@@ -25,8 +25,10 @@ module.exports = function(Almin, done) {
     context.onErrorDispatch(log);
     context.onChange(() => {
         const state = context.getState();
-        done();
+        log(state);
     });
     const useCase = createUseCase({ newState: { a: 1 } });
-    context.useCase(useCase).execute();
+    context.useCase(useCase).execute().then(() => {
+        done();
+    });
 };
