@@ -1,17 +1,16 @@
 // LICENSE : MIT
 "use strict";
-import { Dispatcher } from "./Dispatcher";
-import { DispatchedPayload } from "./Dispatcher";
+import { DispatchedPayload, Dispatcher } from "./Dispatcher";
 import { DispatcherPayloadMeta } from "./DispatcherPayloadMeta";
 import { Store } from "./Store";
 import { StoreLike } from "./StoreLike";
 import { UseCaseExecutor } from "./UseCaseExecutor";
 import { StoreGroupValidator } from "./UILayer/StoreGroupValidator";
 // payloads
-import { CompletedPayload, isCompletedPayload } from "./payload/CompletedPayload";
-import { isDidExecutedPayload } from "./payload/DidExecutedPayload";
-import { ErrorPayload, isErrorPayload } from "./payload/ErrorPayload";
-import { WillExecutedPayload, isWillExecutedPayload } from "./payload/WillExecutedPayload";
+import { CompletedPayload } from "./payload/CompletedPayload";
+import { DidExecutedPayload } from "./payload/DidExecutedPayload";
+import { ErrorPayload } from "./payload/ErrorPayload";
+import { WillExecutedPayload } from "./payload/WillExecutedPayload";
 import { UseCaseFunction } from "./FunctionalUseCaseContext";
 import { FunctionalUseCase } from "./FunctionalUseCase";
 import { StateMap } from "./UILayer/StoreGroupTypes";
@@ -22,6 +21,7 @@ import { createUseCaseExecutor } from "./UseCaseExecutorFactory";
 import { TransactionContext } from "./UnitOfWork/TransactionContext";
 import { createSingleStoreGroup } from "./UILayer/SingleStoreGroup";
 import { StoreGroupLike } from "./UILayer/StoreGroupLike";
+import { LifeCycleEventHub } from "./LifeCycleEventHub";
 
 export interface ContextArgs<T> {
     dispatcher: Dispatcher;
@@ -38,9 +38,9 @@ export class Context<T> {
     /**
      * @private
      */
-    private _dispatcher: Dispatcher;
-    private _storeGroup: StoreGroupLike;
-    private _releaseHandlers: Array<() => void>;
+    private dispatcher: Dispatcher;
+    private lifeCycleEventHub: LifeCycleEventHub;
+    private storeGroup: StoreGroupLike;
     private isStrictMode = false;
 
     /**
@@ -74,7 +74,9 @@ export class Context<T> {
         const store = args.store;
         StoreGroupValidator.validateInstance(store);
         // central dispatcher
-        this._dispatcher = args.dispatcher;
+        this.dispatcher = args.dispatcher;
+        // life-cycle event hub
+        this.lifeCycleEventHub = new LifeCycleEventHub(this.dispatcher);
         // Implementation Note:
         // Delegate dispatch event to Store|StoreGroup from Dispatcher
         // StoreGroup call each Store#receivePayload, but pass directly Store is not.
@@ -82,23 +84,17 @@ export class Context<T> {
         // See https://github.com/almin/almin/issues/190
         // createSingleStoreGroup is wrapper of store for creating StoreGroup.
         if (store instanceof StoreGroup) {
-            this._storeGroup = store;
+            this.storeGroup = store;
         } else if (store instanceof Store) {
-            this._storeGroup = createSingleStoreGroup(store);
+            this.storeGroup = createSingleStoreGroup(store);
         } else {
             throw new Error("{ store } should be instanceof StoreGroup or Store.");
         }
 
         this.isStrictMode = args.options !== undefined && args.options.strict === true;
         if (this.isStrictMode) {
-            this._storeGroup.useStrict();
+            this.storeGroup.useStrict();
         }
-        /**
-         * callable release handlers
-         * @type {Function[]}
-         * @private
-         */
-        this._releaseHandlers = [];
     }
 
     /**
@@ -116,7 +112,7 @@ export class Context<T> {
      * ```
      */
     getState(): StateMap<T> {
-        return this._storeGroup.getState();
+        return this.storeGroup.getState();
     }
 
     /**
@@ -135,7 +131,7 @@ export class Context<T> {
      * ```
      */
     onChange(handler: (changingStores: Array<Store>) => void): () => void {
-        return this._storeGroup.onChange(handler);
+        return this.storeGroup.onChange(handler);
     }
 
     /**
@@ -169,8 +165,8 @@ export class Context<T> {
     useCase(useCase: UseCaseFunction): UseCaseExecutor<FunctionalUseCase>;
     useCase<T extends UseCaseLike>(useCase: T): UseCaseExecutor<T>;
     useCase(useCase: any): UseCaseExecutor<any> {
-        const useCaseExecutor = createUseCaseExecutor(useCase, this._dispatcher);
-        const unitOfWork = new UseCaseUnitOfWork(this._storeGroup, this._dispatcher, {
+        const useCaseExecutor = createUseCaseExecutor(useCase, this.dispatcher);
+        const unitOfWork = new UseCaseUnitOfWork(this.storeGroup, this.dispatcher, {
             autoCommit: true
         });
         unitOfWork.open(useCaseExecutor);
@@ -214,9 +210,9 @@ Please enable strict mode via \`new Context({ dispatcher, store, options: { stri
 `);
             }
         }
-        const unitOfWork = new UseCaseUnitOfWork(this._storeGroup, this._dispatcher, { autoCommit: false });
+        const unitOfWork = new UseCaseUnitOfWork(this.storeGroup, this.dispatcher, { autoCommit: false });
         const createUseCaseExecutorAndOpenUoW = <T extends UseCaseLike>(useCase: T): UseCaseExecutor<T> => {
-            const useCaseExecutor = createUseCaseExecutor(useCase, this._dispatcher);
+            const useCaseExecutor = createUseCaseExecutor(useCase, this.dispatcher);
             unitOfWork.open(useCaseExecutor);
             return useCaseExecutor;
         };
@@ -245,13 +241,7 @@ Please enable strict mode via \`new Context({ dispatcher, store, options: { stri
      * `handler` is called when each useCases will execute.
      */
     onWillExecuteEachUseCase(handler: (payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void {
-        const releaseHandler = this._dispatcher.onDispatch((payload, meta) => {
-            if (isWillExecutedPayload(payload)) {
-                handler(payload, meta);
-            }
-        });
-        this._releaseHandlers.push(releaseHandler);
-        return releaseHandler;
+        return this.lifeCycleEventHub.onWillExecuteEachUseCase(handler);
     }
 
     /**
@@ -275,28 +265,14 @@ Please enable strict mode via \`new Context({ dispatcher, store, options: { stri
      * ```
      */
     onDispatch(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => void): () => void {
-        const releaseHandler = this._dispatcher.onDispatch((payload, meta) => {
-            // call handler, if payload's type is not built-in event.
-            // It means that `onDispatch` is called when dispatching user event.
-            if (!meta.isTrusted) {
-                handler(payload, meta);
-            }
-        });
-        this._releaseHandlers.push(releaseHandler);
-        return releaseHandler;
+        return this.lifeCycleEventHub.onDispatch(handler);
     }
 
     /**
      * `handler` is called when each useCases are executed.
      */
-    onDidExecuteEachUseCase(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => void): () => void {
-        const releaseHandler = this._dispatcher.onDispatch((payload, meta) => {
-            if (isDidExecutedPayload(payload)) {
-                handler(payload, meta);
-            }
-        });
-        this._releaseHandlers.push(releaseHandler);
-        return releaseHandler;
+    onDidExecuteEachUseCase(handler: (payload: DidExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void {
+        return this.lifeCycleEventHub.onDidExecuteEachUseCase(handler);
     }
 
     /**
@@ -304,13 +280,7 @@ Please enable strict mode via \`new Context({ dispatcher, store, options: { stri
      * This `handler` is always called asynchronously.
      */
     onCompleteEachUseCase(handler: (payload: CompletedPayload, meta: DispatcherPayloadMeta) => void): () => void {
-        const releaseHandler = this._dispatcher.onDispatch((payload, meta) => {
-            if (isCompletedPayload(payload)) {
-                handler(payload, meta);
-            }
-        });
-        this._releaseHandlers.push(releaseHandler);
-        return releaseHandler;
+        return this.lifeCycleEventHub.onCompleteEachUseCase(handler);
     }
 
     /**
@@ -323,13 +293,7 @@ Please enable strict mode via \`new Context({ dispatcher, store, options: { stri
      * - Call `UseCase#throwError(error)`
      */
     onErrorDispatch(handler: (payload: ErrorPayload, meta: DispatcherPayloadMeta) => void): () => void {
-        const releaseHandler = this._dispatcher.onDispatch((payload, meta) => {
-            if (isErrorPayload(payload)) {
-                handler(payload, meta);
-            }
-        });
-        this._releaseHandlers.push(releaseHandler);
-        return releaseHandler;
+        return this.lifeCycleEventHub.onErrorDispatch(handler);
     }
 
     /**
@@ -337,11 +301,7 @@ Please enable strict mode via \`new Context({ dispatcher, store, options: { stri
      * You can call this when no more call event handler
      */
     release() {
-        const storeGroup = this._storeGroup;
-        if (storeGroup) {
-            storeGroup.release();
-        }
-        this._releaseHandlers.forEach(releaseHandler => releaseHandler());
-        this._releaseHandlers.length = 0;
+        this.storeGroup.release();
+        this.lifeCycleEventHub.release();
     }
 }
