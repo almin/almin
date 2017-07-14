@@ -30,7 +30,9 @@ export class LifeCycleEventHub {
     }
 
     onChange(handler: (stores: Array<Store>) => void) {
-        return this.storeGroup.onChange(handler);
+        const releaseHandler = this.storeGroup.onChange(handler);
+        this.releaseHandlers.push(releaseHandler);
+        return releaseHandler;
     }
 
     /**
