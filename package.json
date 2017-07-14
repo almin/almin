@@ -14,7 +14,7 @@
     "eslint-config-prettier": "^2.3.0",
     "eslint-plugin-prettier": "^2.1.2",
     "gitbook": "2.3.0",
-    "gitbook-cli": "^2.3.1",
+    "gitbook-cli": "2.3.0",
     "gitbook-plugin-advanced-emoji": "^0.2.2",
     "gitbook-plugin-forkmegithub": "^2.2.0",
     "gitbook-plugin-include-codeblock": "^3.1.1",
