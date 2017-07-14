@@ -196,19 +196,19 @@ export class Context<T> {
      * Difference with `Context#useCase`:
      *
      * - Do not update StoreGroup automatically
-     * - You should call `committer.commit()` to update StoreGroup at any time
+     * - You should call `transactionContext.commit()` to update StoreGroup at any time
      *
      * ## Example
      *
      * ```js
-     * context.transaction("A->B->C transaction", committer => {
-     *      return committer.useCase(new ChangeAUseCase()).execute() // no update store
+     * context.transaction("A->B->C transaction", transactionContext => {
+     *      return transactionContext.useCase(new ChangeAUseCase()).execute() // no update store
      *          .then(() => {
-     *              return committer.useCase(new ChangeBUseCase()).execute(); // no update store
+     *              return transactionContext.useCase(new ChangeBUseCase()).execute(); // no update store
      *          }).then(() => {
-     *              return committer.useCase(new ChangeCUseCase()).execute(); // no update store
+     *              return transactionContext.useCase(new ChangeCUseCase()).execute(); // no update store
      *          }).then(() => {
-     *              committer.commit(); // update store
+     *              transactionContext.commit(); // update store
      *              // replay: ChangeAUseCase -> ChangeBUseCase -> ChangeCUseCase
      *          });
      *  });
@@ -234,9 +234,9 @@ export class Context<T> {
      * This transaction add commitment to the unit of work, but does not `commit()`.
      *
      * ```js
-     * context.transaction("No commit transaction", committer => {
+     * context.transaction("No commit transaction", transactionContext => {
      *      // No commit
-     *      return committer.useCase(new LogUseCase()).execute();
+     *      return transactionContext.useCase(new LogUseCase()).execute();
      * });
      * ```
      *
@@ -281,8 +281,8 @@ Please enable strict mode via \`new Context({ dispatcher, store, options: { stri
             }
         };
         unitOfWork.beginTransaction();
-        // committer resolve with void
-        // unitOfWork automatically close when committer exit
+        // transactionContext resolve with void
+        // unitOfWork automatically close on transactionContext exited
         // by design.
         return transactionHandler(context).then(
             () => {
