@@ -75,8 +75,6 @@ export class Context<T> {
         StoreGroupValidator.validateInstance(store);
         // central dispatcher
         this.dispatcher = args.dispatcher;
-        // life-cycle event hub
-        this.lifeCycleEventHub = new LifeCycleEventHub(this.dispatcher);
         // Implementation Note:
         // Delegate dispatch event to Store|StoreGroup from Dispatcher
         // StoreGroup call each Store#receivePayload, but pass directly Store is not.
@@ -90,6 +88,12 @@ export class Context<T> {
         } else {
             throw new Error("{ store } should be instanceof StoreGroup or Store.");
         }
+
+        // life-cycle event hub
+        this.lifeCycleEventHub = new LifeCycleEventHub({
+            dispatcher: this.dispatcher,
+            storeGroup: this.storeGroup
+        });
 
         this.isStrictMode = args.options !== undefined && args.options.strict === true;
         if (this.isStrictMode) {
@@ -131,7 +135,7 @@ export class Context<T> {
      * ```
      */
     onChange(handler: (changingStores: Array<Store>) => void): () => void {
-        return this.storeGroup.onChange(handler);
+        return this.lifeCycleEventHub.onChange(handler);
     }
 
     /**

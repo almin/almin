@@ -5,6 +5,13 @@ import { DispatcherPayloadMeta } from "./DispatcherPayloadMeta";
 import { DidExecutedPayload, isDidExecutedPayload } from "./payload/DidExecutedPayload";
 import { CompletedPayload, isCompletedPayload } from "./payload/CompletedPayload";
 import { ErrorPayload, isErrorPayload } from "./payload/ErrorPayload";
+import { StoreGroupLike } from "./UILayer/StoreGroupLike";
+import { Store } from "./Store";
+
+export interface LifeCycleEventHubArgs {
+    dispatcher: Dispatcher;
+    storeGroup: StoreGroupLike;
+}
 
 /**
  * Wrapper of dispatcher that can observe all almin life-cycle events
@@ -13,9 +20,17 @@ import { ErrorPayload, isErrorPayload } from "./payload/ErrorPayload";
  */
 export class LifeCycleEventHub {
     private releaseHandlers: (() => void)[];
+    private dispatcher: Dispatcher;
+    private storeGroup: StoreGroupLike;
 
-    constructor(private dispatcher: Dispatcher) {
+    constructor(args: LifeCycleEventHubArgs) {
+        this.dispatcher = args.dispatcher;
+        this.storeGroup = args.storeGroup;
         this.releaseHandlers = [];
+    }
+
+    onChange(handler: (stores: Array<Store>) => void) {
+        return this.storeGroup.onChange(handler);
     }
 
     /**
