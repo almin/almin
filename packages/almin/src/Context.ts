@@ -225,6 +225,10 @@ export class Context<T> {
      * It means that the store may be updated by other unit of work during executing `context.transaction`.
      * `context.transaction` provide the way for bulk updating.
      *
+     * Current implementation is **READ COMMITTED** of Transaction Isolation Levels.
+     *
+     * - <https://en.wikipedia.org/wiki/Isolation_(database_systems)>
+     *
      * ### No commit transaction get cancelled
      *
      * You can write no `commit()` transaction.
