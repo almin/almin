@@ -108,27 +108,22 @@ describe("UseCaseExecutor", function() {
             // sync check
             assert(callableUseCase.isExecuted === false, "UseCase#execute is not called yet.");
         });
-        describe("when UseCase#execute twice", () => {
-            it("should show warning", () => {
-                const dispatcher = new Dispatcher();
-                const executor = new UseCaseExecutor({
-                    useCase: new NoDispatchUseCase(),
-                    dispatcher
-                });
-                return executor
-                    .executor(useCase => {
-                        useCase.execute();
-                        useCase.execute();
-                    })
-                    .then(() => {
-                        assert(consoleErrorStub.called);
-                        const warningMessage = consoleErrorStub.getCalls()[0].args[0];
-                        assert(
-                            /Warning\(UseCase\): \w+#execute was called more than once./.test(warningMessage),
-                            warningMessage
-                        );
-                    });
+        it("should show warning when UseCase#execute twice", () => {
+            const dispatcher = new Dispatcher();
+            const executor = new UseCaseExecutor({
+                useCase: new NoDispatchUseCase(),
+                dispatcher
             });
+            return executor
+                .executor(useCase => {
+                    useCase.execute();
+                    useCase.execute();
+                })
+                .then(() => {
+                    assert.ok(consoleErrorStub.called, "should be called console.error");
+                    const warningMessage = consoleErrorStub.getCalls()[0].args[0];
+                    assert.ok(/Warning\(UseCase\)/i.test(warningMessage), warningMessage);
+                });
         });
     });
     describe("when UseCase is successful completion", function() {
