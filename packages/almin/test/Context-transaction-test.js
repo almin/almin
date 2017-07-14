@@ -170,12 +170,12 @@ describe("Context#transaction", () => {
                 const [endPayload] = endTransaction;
                 assert.strictEqual(endPayload.name, "1st transaction");
                 // 2nd transaction
-                return context.transaction("2nd transaction", committer => {
-                    return committer
+                return context.transaction("2nd transaction", transactionContext => {
+                    return transactionContext
                         .useCase(new NoDispatchUseCase())
                         .execute()
                         .then(() => {
-                            committer.commit();
+                            transactionContext.commit();
                         })
                         .then(() => {
                             assert.strictEqual(beginTransactions.length, 2);
