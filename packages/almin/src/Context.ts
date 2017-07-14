@@ -22,6 +22,8 @@ import { TransactionContext } from "./UnitOfWork/TransactionContext";
 import { createSingleStoreGroup } from "./UILayer/SingleStoreGroup";
 import { StoreGroupLike } from "./UILayer/StoreGroupLike";
 import { LifeCycleEventHub } from "./LifeCycleEventHub";
+import { TransactionBeganPayload } from "./payload/TransactionBeganPayload";
+import { TransactionEndedPayload } from "./payload/TransactionEndedPayload";
 
 export interface ContextArgs<T> {
     dispatcher: Dispatcher;
@@ -42,6 +44,7 @@ export class Context<T> {
     private lifeCycleEventHub: LifeCycleEventHub;
     private storeGroup: StoreGroupLike;
     private isStrictMode = false;
+    private defaultUnitOfWork: UseCaseUnitOfWork;
 
     /**
      * `dispatcher` is an instance of `Dispatcher`.
@@ -99,6 +102,12 @@ export class Context<T> {
         if (this.isStrictMode) {
             this.storeGroup.useStrict();
         }
+        this.defaultUnitOfWork = new UseCaseUnitOfWork({
+            name: "Default",
+            dispatcher: this.dispatcher,
+            storeGroup: this.storeGroup,
+            options: { autoCommit: true }
+        });
     }
 
     /**
@@ -170,42 +179,81 @@ export class Context<T> {
     useCase<T extends UseCaseLike>(useCase: T): UseCaseExecutor<T>;
     useCase(useCase: any): UseCaseExecutor<any> {
         const useCaseExecutor = createUseCaseExecutor(useCase, this.dispatcher);
-        const unitOfWork = new UseCaseUnitOfWork(this.storeGroup, this.dispatcher, {
-            autoCommit: true
-        });
-        unitOfWork.open(useCaseExecutor);
+        this.defaultUnitOfWork.open(useCaseExecutor);
         useCaseExecutor.onComplete(() => {
-            unitOfWork.close(useCaseExecutor);
+            this.defaultUnitOfWork.close(useCaseExecutor);
         });
         return useCaseExecutor;
     }
 
     /**
-     * Create new Transaction(Unit of Work).
-     * You can prevent heavy updating of StoreGroup
+     * Create new Unit of Work and execute UseCase.
+     * You can prevent heavy updating of StoreGroup.
      *
      * This feature only work in strict mode.
      *
      * Difference with `Context#useCase`:
      *
      * - Do not update StoreGroup automatically
-     * - You should call `committer.commit()` to update StoreGroup at any time
+     * - You should call `transactionContext.commit()` to update StoreGroup at any time
+     *
+     * ## Example
      *
      * ```js
-     * context.transaction(committer => {
-     *      return committer.useCase(new ChangeAUseCase()).execute() // no update store
+     * context.transaction("A->B->C transaction", transactionContext => {
+     *      return transactionContext.useCase(new ChangeAUseCase()).execute() // no update store
      *          .then(() => {
-     *              return committer.useCase(new ChangeBUseCase()).execute(); // no update store
+     *              return transactionContext.useCase(new ChangeBUseCase()).execute(); // no update store
      *          }).then(() => {
-     *              return committer.useCase(new ChangeCUseCase()).execute(); // no update store
+     *              return transactionContext.useCase(new ChangeCUseCase()).execute(); // no update store
      *          }).then(() => {
-     *              committer.commit(); // update store
+     *              transactionContext.commit(); // update store
      *              // replay: ChangeAUseCase -> ChangeBUseCase -> ChangeCUseCase
      *          });
-     *  })
+     *  });
      * ```
+     *
+     * ## Notes
+     *
+     * ### Transaction is not lock system
+     *
+     * The **transaction** does not lock the store.
+     * The **transaction** is a unit of work.
+     *
+     * It means that the store may be updated by other unit of work during executing `context.transaction`.
+     * `context.transaction` provide the way for bulk updating.
+     *
+     * Current implementation is **READ COMMITTED** of Transaction Isolation Levels.
+     *
+     * - <https://en.wikipedia.org/wiki/Isolation_(database_systems)>
+     *
+     * ### No commit transaction get cancelled
+     *
+     * You can write no `commit()` transaction.
+     * This transaction add commitment to the unit of work, but does not `commit()`.
+     *
+     * ```js
+     * context.transaction("No commit transaction", transactionContext => {
+     *      // No commit
+     *      return transactionContext.useCase(new LogUseCase()).execute();
+     * });
+     * ```
+     *
+     * As a result, This transaction does not affect to Store.
+     * It means that Store can't received the payload of `LogUseCase`.
+     * Finally, that commitment get cancelled.
+     *
+     * It is useful for logging UseCase.
+     * Logging UseCase does not need to update store/view.
+     * It only does log/send data to console/server.
+     *
+     * ### TODO: rollback is not implemented
+     *
+     * Rollback feature is generality implemented in the unit of work.
+     * We want to know actual use case of rollback before implementing this.
+     *
      */
-    transaction(committer: (context: TransactionContext) => Promise<any>) {
+    transaction(name: string, transactionHandler: (transactionContext: TransactionContext) => Promise<any>) {
         if (process.env.NODE_ENV !== "production") {
             if (!this.isStrictMode) {
                 console.error(`Warning(Context): Context#transaction only use in strict mode.
@@ -214,7 +262,12 @@ Please enable strict mode via \`new Context({ dispatcher, store, options: { stri
 `);
             }
         }
-        const unitOfWork = new UseCaseUnitOfWork(this.storeGroup, this.dispatcher, { autoCommit: false });
+        const unitOfWork = new UseCaseUnitOfWork({
+            name,
+            dispatcher: this.dispatcher,
+            storeGroup: this.storeGroup,
+            options: { autoCommit: false }
+        });
         const createUseCaseExecutorAndOpenUoW = <T extends UseCaseLike>(useCase: T): UseCaseExecutor<T> => {
             const useCaseExecutor = createUseCaseExecutor(useCase, this.dispatcher);
             unitOfWork.open(useCaseExecutor);
@@ -226,18 +279,35 @@ Please enable strict mode via \`new Context({ dispatcher, store, options: { stri
                 unitOfWork.commit();
             }
         };
-        // committer resolve with void
-        // unitOfWork automatically close when committer exit
+        unitOfWork.beginTransaction();
+        // transactionContext resolve with void
+        // unitOfWork automatically close on transactionContext exited
         // by design.
-        return committer(context).then(
+        return transactionHandler(context).then(
             () => {
+                unitOfWork.endTransaction();
                 unitOfWork.release();
             },
             error => {
+                unitOfWork.endTransaction();
                 unitOfWork.release();
                 return Promise.reject(error);
             }
         );
+    }
+
+    /**
+     * Register `handler` function that is called when begin `Context.transaction`.
+     */
+    onBeginTransaction(handler: (payload: TransactionBeganPayload, meta: DispatcherPayloadMeta) => void) {
+        return this.lifeCycleEventHub.onBeginTransaction(handler);
+    }
+
+    /**
+     * Register `handler` function that is called when `Context.transaction` is ended.
+     */
+    onEndTransaction(handler: (payload: TransactionEndedPayload, meta: DispatcherPayloadMeta) => void) {
+        return this.lifeCycleEventHub.onEndTransaction(handler);
     }
 
     /**

@@ -5,12 +5,18 @@ import { Dispatcher } from "./Dispatcher";
 import { UseCase } from "./UseCase";
 import { UseCaseLike } from "./UseCaseLike";
 
+export interface Transaction {
+    // Transaction name
+    readonly name: string;
+}
+
 export interface DispatcherPayloadMetaArgs {
     useCase?: UseCaseLike;
     dispatcher?: Dispatcher | Dispatcher;
     isUseCaseFinished?: boolean;
     parentUseCase?: UseCase | null;
     isTrusted: boolean;
+    transaction?: false | Transaction;
 }
 
 /**
@@ -83,6 +89,12 @@ export interface DispatcherPayloadMeta {
      * See https://github.com/almin/almin/issues/149
      */
     readonly isUseCaseFinished: boolean;
+
+    /**
+     * If the payload object is dispatched in a transaction, to be transaction object
+     * otherwise, to be false.
+     */
+    transaction: false | Transaction;
 }
 
 /**
@@ -96,6 +108,7 @@ export class DispatcherPayloadMetaImpl implements DispatcherPayloadMeta {
     readonly timeStamp: number;
     readonly isTrusted: boolean;
     readonly isUseCaseFinished: boolean;
+    transaction: false | Transaction;
 
     constructor(args: DispatcherPayloadMetaArgs) {
         this.useCase = args.useCase || null;
@@ -104,5 +117,6 @@ export class DispatcherPayloadMetaImpl implements DispatcherPayloadMeta {
         this.timeStamp = Date.now();
         this.isTrusted = args.isTrusted;
         this.isUseCaseFinished = args.isUseCaseFinished !== undefined ? args.isUseCaseFinished : false;
+        this.transaction = args.transaction !== undefined ? args.transaction : false;
     }
 }

@@ -11,6 +11,8 @@ export { DidExecutedPayload } from "./payload/DidExecutedPayload";
 export { Payload } from "./payload/Payload";
 export { ChangedPayload } from "./payload/ChangedPayload";
 export { ErrorPayload } from "./payload/ErrorPayload";
+export { TransactionBeganPayload } from "./payload/TransactionBeganPayload";
+export { TransactionEndedPayload } from "./payload/TransactionEndedPayload";
 export { WillExecutedPayload } from "./payload/WillExecutedPayload";
 export { DispatcherPayloadMeta } from "./DispatcherPayloadMeta";
 // For TypeScript
