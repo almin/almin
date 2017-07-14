@@ -359,17 +359,17 @@ describe("Context", function() {
             context.release();
             // then - does not call any handler
             return context
-                .transaction("transaction name", committer => {
-                    return committer
+                .transaction("transaction name", transactionContext => {
+                    return transactionContext
                         .useCase(new DispatchUseCase())
                         .execute({
                             type: "test"
                         })
                         .then(() => {
-                            return committer.useCase(new ThrowUseCase()).execute();
+                            return transactionContext.useCase(new ThrowUseCase()).execute();
                         })
                         .then(() => {
-                            committer.commit();
+                            transactionContext.commit();
                         });
                 })
                 .then(() => {
