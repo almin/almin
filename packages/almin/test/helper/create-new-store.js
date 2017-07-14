@@ -1,6 +1,6 @@
 // MIT © 2017 azu
 "use strict";
-import { Store } from "../../lib/Store";
+import { Store } from "../../src/Store";
 /**
  * This helper is for creating Store
  * @param {string} name

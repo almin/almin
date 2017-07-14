@@ -1,7 +1,7 @@
 // MIT © 2017 azu
 "use strict";
 import * as assert from "assert";
-import MapLike from "map-like";
+import { MapLike } from "map-like";
 import { Payload } from "../payload/Payload";
 import { DispatcherPayloadMeta, DispatcherPayloadMetaImpl } from "../DispatcherPayloadMeta";
 import { isWillExecutedPayload } from "../payload/WillExecutedPayload";

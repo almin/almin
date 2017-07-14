@@ -2,11 +2,11 @@
 "use strict";
 const assert = require("assert");
 const sinon = require("sinon");
-import { Store } from "../lib/Store";
+import { Context } from "../src/Context";
+import { Dispatcher } from "../src/Dispatcher";
+import { Store } from "../src/Store";
+import { StoreGroup } from "../src/UILayer/StoreGroup";
 import { NoDispatchUseCase } from "./use-case/NoDispatchUseCase";
-import { StoreGroup } from "../lib/UILayer/StoreGroup";
-import { Context } from "../lib/Context";
-import { Dispatcher } from "../lib/Dispatcher";
 import ReturnPromiseUseCase from "./use-case/ReturnPromiseUseCase";
 
 describe("StoreGroup edge case", function() {
@@ -83,7 +83,7 @@ describe("StoreGroup edge case", function() {
                 callStack.push("complete");
             });
             return context.useCase(new ReturnPromiseUseCase()).execute().then(() => {
-                assert.deepStrictEqual(
+                assert.deepEqual(
                     callStack,
                     [
                         "change", // didExecute - receivePayload

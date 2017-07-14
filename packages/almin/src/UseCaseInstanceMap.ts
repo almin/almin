@@ -1,4 +1,4 @@
-import MapLike from "map-like";
+import { MapLike } from "map-like";
 import { UseCaseLike } from "./UseCaseLike";
 import { UseCaseExecutor } from "./UseCaseExecutor";
 /*

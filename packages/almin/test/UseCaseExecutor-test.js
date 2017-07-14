@@ -2,12 +2,12 @@
 "use strict";
 const sinon = require("sinon");
 const assert = require("assert");
-import { UseCaseExecutor } from "../lib/UseCaseExecutor";
+import { NoDispatchUseCase } from "./use-case/NoDispatchUseCase";
+import { Dispatcher } from "../src/Dispatcher";
+import { UseCase } from "../src/UseCase";
+import { UseCaseExecutor } from "../src/UseCaseExecutor";
 import { CallableUseCase } from "./use-case/CallableUseCase";
 import { ThrowUseCase } from "./use-case/ThrowUseCase";
-import NoDispatchUseCase from "../../almin-logger/test/usecase/NoDispatchUseCase";
-import { UseCase } from "../lib/UseCase";
-import { Dispatcher } from "../lib/Dispatcher";
 
 describe("UseCaseExecutor", function() {
     describe("#executor", () => {
@@ -44,9 +44,9 @@ describe("UseCaseExecutor", function() {
                     throw new Error("SHOULD NOT CALLED");
                 },
                 error => {
-                    assert(consoleErrorStub.called);
+                    assert.ok(consoleErrorStub.called, "should be called console.error");
                     const warningMessage = consoleErrorStub.getCalls()[0].args[0];
-                    assert(error instanceof Error, "should be rejected");
+                    assert.ok(/executor.*? arguments should be function/.test(error.message));
                     assert.equal(
                         warningMessage,
                         "Warning(UseCase): executor argument should be function. But this argument is not function: "
@@ -108,30 +108,25 @@ describe("UseCaseExecutor", function() {
             // sync check
             assert(callableUseCase.isExecuted === false, "UseCase#execute is not called yet.");
         });
-        context("when UseCase#execute twice", () => {
-            it("should show warning", () => {
-                const dispatcher = new Dispatcher();
-                const executor = new UseCaseExecutor({
-                    useCase: new NoDispatchUseCase(),
-                    dispatcher
-                });
-                return executor
-                    .executor(useCase => {
-                        useCase.execute();
-                        useCase.execute();
-                    })
-                    .then(() => {
-                        assert(consoleErrorStub.called);
-                        const warningMessage = consoleErrorStub.getCalls()[0].args[0];
-                        assert(
-                            /Warning\(UseCase\): \w+#execute was called more than once./.test(warningMessage),
-                            warningMessage
-                        );
-                    });
+        it("should show warning when UseCase#execute twice", () => {
+            const dispatcher = new Dispatcher();
+            const executor = new UseCaseExecutor({
+                useCase: new NoDispatchUseCase(),
+                dispatcher
             });
+            return executor
+                .executor(useCase => {
+                    useCase.execute();
+                    useCase.execute();
+                })
+                .then(() => {
+                    assert.ok(consoleErrorStub.called, "should be called console.error");
+                    const warningMessage = consoleErrorStub.getCalls()[0].args[0];
+                    assert.ok(/Warning\(UseCase\)/i.test(warningMessage), warningMessage);
+                });
         });
     });
-    context("when UseCase is successful completion", function() {
+    describe("when UseCase is successful completion", function() {
         it("dispatch will -> did", function() {
             // given
             const expectedPayload = {
@@ -186,7 +181,7 @@ describe("UseCaseExecutor", function() {
                 }
             );
         });
-        context("when UseCase is sync", function() {
+        describe("when UseCase is sync", function() {
             it("execute is called", function(done) {
                 // given
                 const expectedPayload = {
@@ -219,7 +214,7 @@ describe("UseCaseExecutor", function() {
                 executor.execute(expectedPayload); // 1
             });
         });
-        context("when UseCase is async", function() {
+        describe("when UseCase is async", function() {
             it("execute is called", function() {
                 // given
                 const expectedPayload = {

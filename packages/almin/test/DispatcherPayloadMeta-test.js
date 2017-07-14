@@ -1,17 +1,18 @@
 // MIT © 2017 azu
 "use strict";
 const assert = require("assert");
-import { Store, Context, DidExecutedPayload, CompletedPayload } from "../lib/";
-import MapLike from "map-like";
-import ReturnPromiseUseCase from "./use-case/ReturnPromiseUseCase";
-import { Dispatcher } from "../lib/Dispatcher";
-import { NoDispatchUseCase } from "./use-case/NoDispatchUseCase";
+import { MapLike } from "map-like";
+import { CompletedPayload, Context, DidExecutedPayload } from "../src/";
+import { Dispatcher } from "../src/Dispatcher";
+import { createStore } from "./helper/create-new-store";
 import { DispatchUseCase } from "./use-case/DispatchUseCase";
 import { ErrorUseCase } from "./use-case/ErrorUseCase";
-import { ParentUseCase, ChildUseCase } from "./use-case/NestingUseCase";
-import { createStore } from "./helper/create-new-store";
+import { ParentUseCase } from "./use-case/NestingUseCase";
+import { NoDispatchUseCase } from "./use-case/NoDispatchUseCase";
+import ReturnPromiseUseCase from "./use-case/ReturnPromiseUseCase";
+
 describe("DispatcherPayloadMeta", () => {
-    context("onWillExecuteEachUseCase", () => {
+    describe("onWillExecuteEachUseCase", () => {
         it("meta has {useCase, dispatcher, timeStamp}", () => {
             const dispatcher = new Dispatcher();
             const context = new Context({
@@ -31,7 +32,7 @@ describe("DispatcherPayloadMeta", () => {
             });
         });
     });
-    context("onDispatch", () => {
+    describe("onDispatch", () => {
         it("meta has {dispatcher, timeStamp}", () => {
             const dispatcher = new Dispatcher();
             const context = new Context({
@@ -51,7 +52,7 @@ describe("DispatcherPayloadMeta", () => {
             });
         });
     });
-    context("onDidExecuteEachUseCase", () => {
+    describe("onDidExecuteEachUseCase", () => {
         it("DispatchUseCase's meta has {useCase, dispatcher, timeStamp} and isUseCaseFinished=true", () => {
             const dispatcher = new Dispatcher();
             const context = new Context({
@@ -91,7 +92,7 @@ describe("DispatcherPayloadMeta", () => {
             });
         });
     });
-    context("onCompleteEachUseCase", () => {
+    describe("onCompleteEachUseCase", () => {
         it("meta has {useCase, dispatcher, timeStamp}", () => {
             const dispatcher = new Dispatcher();
             const context = new Context({
@@ -112,7 +113,7 @@ describe("DispatcherPayloadMeta", () => {
             });
         });
     });
-    context("onErrorDispatch", () => {
+    describe("onErrorDispatch", () => {
         it("meta has {useCase, dispatcher, timeStamp}", () => {
             const dispatcher = new Dispatcher();
             const context = new Context({
@@ -134,7 +135,7 @@ describe("DispatcherPayloadMeta", () => {
         });
     });
     // specific case
-    context("when nesting useCase", () => {
+    describe("when nesting useCase", () => {
         it("will/did/complete's meta has {useCase, dispatcher, parentUseCase, timeStamp}", () => {
             const dispatcher = new Dispatcher();
             const context = new Context({
@@ -189,7 +190,7 @@ describe("DispatcherPayloadMeta", () => {
             });
         });
     });
-    context("Scenario Case", () => {
+    describe("Scenario Case", () => {
         it("The user can know that the UseCase is just finished by isUseCaseFinished", () => {
             const dispatcher = new Dispatcher();
             const context = new Context({

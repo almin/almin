@@ -2,10 +2,10 @@
 "use strict";
 const assert = require("assert");
 const sinon = require("sinon");
-import { UseCase } from "../lib/UseCase";
+import { Context } from "../src/Context";
+import { Dispatcher } from "../src/Dispatcher";
+import { UseCase } from "../src/UseCase";
 import { createEchoStore } from "./helper/EchoStore";
-import { Dispatcher } from "../lib/Dispatcher";
-import { Context } from "../lib/Context";
 
 describe("FunctionalUseCase", function() {
     let consoleErrorStub = null;
@@ -15,7 +15,7 @@ describe("FunctionalUseCase", function() {
     afterEach(() => {
         consoleErrorStub.restore();
     });
-    context("When passing wrong functional UseCase", () => {
+    describe("When passing wrong functional UseCase", () => {
         it("should show warning and throw Error", () => {
             class WriteToTextlintrcUseCase extends UseCase {
                 static create() {

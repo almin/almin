@@ -1,17 +1,17 @@
 // LICENSE : MIT
 "use strict";
 import * as assert from "assert";
-import { Context } from "../lib/Context";
-import { Dispatcher } from "../lib/Dispatcher";
-import { Store } from "../lib/Store";
-import { UseCase } from "../lib/UseCase";
-import { UseCaseExecutor } from "../lib/UseCaseExecutor";
-import { StoreGroup } from "../lib/UILayer/StoreGroup";
-import { createEchoStore } from "./helper/EchoStore";
+import { Context } from "../src/Context";
+import { Dispatcher } from "../src/Dispatcher";
+import { CompletedPayload, DidExecutedPayload, WillExecutedPayload } from "../src/index";
+import { Store } from "../src/Store";
+import { StoreGroup } from "../src/UILayer/StoreGroup";
+import { UseCase } from "../src/UseCase";
+import { UseCaseExecutor } from "../src/UseCaseExecutor";
 import { createStore } from "./helper/create-new-store";
-// payload
+import { createEchoStore } from "./helper/EchoStore";
 
-import { Payload, WillExecutedPayload, DidExecutedPayload, CompletedPayload, ErrorPayload } from "../lib/index";
+// payload
 
 class TestUseCase extends UseCase {
     execute() {}
@@ -28,7 +28,7 @@ class ThrowUseCase extends UseCase {
 }
 
 describe("Context", function() {
-    context("UseCase can dispatch in Context", function() {
+    describe("UseCase can dispatch in Context", function() {
         it("should dispatch Store", function() {
             const dispatcher = new Dispatcher();
             const DISPATCHED_EVENT = {
@@ -305,96 +305,92 @@ describe("Context", function() {
         });
     });
     describe("#execute", function() {
-        context("when pass UseCase constructor", function() {
+        describe("when pass UseCase constructor", function() {
             it("should throw AssertionError", function() {
                 const dispatcher = new Dispatcher();
                 const appContext = new Context({
                     dispatcher,
                     store: createEchoStore({ echo: { "1": 1 } })
                 });
-                assert.throws(
-                    function() {
-                        appContext.useCase(TestUseCase);
-                    },
-                    Error,
-                    /Context#useCase argument should be instance of UseCase./
-                );
-            });
-        });
-        it("should execute functional UseCase", function() {
-            const dispatcher = new Dispatcher();
-            const appContext = new Context({
-                dispatcher,
-                store: createEchoStore({ echo: { "1": 1 } })
-            });
-            const callStack = [];
-            appContext.onDispatch((payload, meta) => {
-                callStack.push(payload);
-            });
-            const useCase = ({ dispatcher }) => {
-                return value => {
-                    dispatcher.dispatch({
-                        type: "Example",
-                        value
-                    });
-                };
-            };
-            return appContext.useCase(useCase).execute("value").then(() => {
-                assert.deepEqual(callStack, [
-                    {
-                        type: "Example",
-                        value: "value"
-                    }
-                ]);
-            });
-        });
-        it("should execute functional UseCase and lifecycle hook is called ", function() {
-            const dispatcher = new Dispatcher();
-            const appContext = new Context({
-                dispatcher,
-                store: createEchoStore({ echo: { "1": 1 } })
-            });
-            const callStack = [];
-            appContext.onDispatch((payload, meta) => {
-                callStack.push(payload);
-            });
-            appContext.onWillExecuteEachUseCase((payload, meta) => {
-                callStack.push(payload);
-            });
-            appContext.onDidExecuteEachUseCase((payload, meta) => {
-                callStack.push(payload);
-            });
-            appContext.onCompleteEachUseCase((payload, meta) => {
-                callStack.push(payload);
-            });
-            const useCase = ({ dispatcher }) => {
-                return value => {
-                    dispatcher.dispatch({
-                        type: "Example",
-                        value
-                    });
-                };
-            };
-            return appContext.useCase(useCase).execute("value").then(() => {
-                const expectedCallStackOfAUseCase = [
-                    WillExecutedPayload,
-                    Object /* {
-                        type: "Example",
-                        value: "value"
-                    }*/,
-                    DidExecutedPayload,
-                    CompletedPayload
-                ];
-                assert.equal(callStack.length, expectedCallStackOfAUseCase.length);
-                expectedCallStackOfAUseCase.forEach((payload, index) => {
-                    const ExpectedPayloadConstructor = expectedCallStackOfAUseCase[index];
-                    assert.ok(callStack[index] instanceof ExpectedPayloadConstructor);
+                assert.throws(() => {
+                    appContext.useCase(TestUseCase);
                 });
             });
         });
     });
+    it("should execute functional UseCase", function() {
+        const dispatcher = new Dispatcher();
+        const appContext = new Context({
+            dispatcher,
+            store: createEchoStore({ echo: { "1": 1 } })
+        });
+        const callStack = [];
+        appContext.onDispatch((payload, meta) => {
+            callStack.push(payload);
+        });
+        const useCase = ({ dispatcher }) => {
+            return value => {
+                dispatcher.dispatch({
+                    type: "Example",
+                    value
+                });
+            };
+        };
+        return appContext.useCase(useCase).execute("value").then(() => {
+            assert.deepEqual(callStack, [
+                {
+                    type: "Example",
+                    value: "value"
+                }
+            ]);
+        });
+    });
+    it("should execute functional UseCase and lifecycle hook is called ", function() {
+        const dispatcher = new Dispatcher();
+        const appContext = new Context({
+            dispatcher,
+            store: createEchoStore({ echo: { "1": 1 } })
+        });
+        const callStack = [];
+        appContext.onDispatch((payload, meta) => {
+            callStack.push(payload);
+        });
+        appContext.onWillExecuteEachUseCase((payload, meta) => {
+            callStack.push(payload);
+        });
+        appContext.onDidExecuteEachUseCase((payload, meta) => {
+            callStack.push(payload);
+        });
+        appContext.onCompleteEachUseCase((payload, meta) => {
+            callStack.push(payload);
+        });
+        const useCase = ({ dispatcher }) => {
+            return value => {
+                dispatcher.dispatch({
+                    type: "Example",
+                    value
+                });
+            };
+        };
+        return appContext.useCase(useCase).execute("value").then(() => {
+            const expectedCallStackOfAUseCase = [
+                WillExecutedPayload,
+                Object /* {
+                        type: "Example",
+                        value: "value"
+                    }*/,
+                DidExecutedPayload,
+                CompletedPayload
+            ];
+            assert.equal(callStack.length, expectedCallStackOfAUseCase.length);
+            expectedCallStackOfAUseCase.forEach((payload, index) => {
+                const ExpectedPayloadConstructor = expectedCallStackOfAUseCase[index];
+                assert.ok(callStack[index] instanceof ExpectedPayloadConstructor);
+            });
+        });
+    });
 
-    context("Constructor with Store instance", () => {
+    describe("Constructor with Store instance", () => {
         it("should Context delegate payload to Store#receivePayload", () => {
             class CounterStore extends Store {
                 constructor() {

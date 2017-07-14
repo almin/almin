@@ -1,6 +1,6 @@
 // MIT © 2017 azu
 "use strict";
-import { Store } from "../../lib/Store";
+import { Store } from "../../src/Store";
 /**
  * @param {string} name
  * @param {*} state

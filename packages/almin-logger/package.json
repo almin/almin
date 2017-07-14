@@ -55,6 +55,6 @@
     "almin": ">= 0.10.0"
   },
   "dependencies": {
-    "map-like": "^1.0.3"
+    "map-like": "^2.0.0"
   }
 }

@@ -2,14 +2,14 @@
 "use strict";
 const assert = require("assert");
 
-import { Store } from "../lib/Store";
+import { ErrorPayload } from "../src/payload/ErrorPayload";
+import { Store } from "../src/Store";
+import { UseCase } from "../src/UseCase";
 import { createStore } from "./helper/create-store";
-import { UseCase } from "../lib/UseCase";
-import { ErrorPayload } from "../lib/payload/ErrorPayload";
 
 describe("Store", function() {
     describe("#name", () => {
-        context("when define displayName", () => {
+        describe("when define displayName", () => {
             it("#name is same with displayName", () => {
                 class MyStore extends Store {}
                 const expectedName = "Expected Store";
@@ -20,7 +20,7 @@ describe("Store", function() {
         });
     });
     describe("#getState", () => {
-        context("when has not implemented", () => {
+        describe("when has not implemented", () => {
             it("throw error", () => {
                 class MyStore extends Store {}
                 const store = new MyStore();
@@ -31,7 +31,7 @@ describe("Store", function() {
         });
     });
     describe("#setState", () => {
-        context("when newState tha is not updatable state", () => {
+        describe("when newState tha is not updatable state", () => {
             it("should not update with newState", () => {
                 class MyStore extends Store {
                     constructor() {
@@ -58,7 +58,7 @@ describe("Store", function() {
                 assert(currentState === newState);
             });
         });
-        context("when newState that is updatable state", () => {
+        describe("when newState that is updatable state", () => {
             it("should not update with newState", () => {
                 class MyStore extends Store {
                     constructor() {
@@ -148,7 +148,7 @@ describe("Store", function() {
             store.emitChange();
         });
         // Related https://github.com/almin/almin/issues/190
-        context("when call Store#setState out of UseCase", () => {
+        describe("when call Store#setState out of UseCase", () => {
             it("should be called Store#onChange", done => {
                 class AStore extends Store {
                     constructor() {
@@ -177,7 +177,7 @@ describe("Store", function() {
         });
     });
     describe("#onDispatch", function() {
-        context("when useCaseName is minified", function() {
+        describe("when useCaseName is minified", function() {
             it("can receive error from UseCase", function(done) {
                 const store = createStore({ name: "test" });
                 class TestUseCase extends UseCase {

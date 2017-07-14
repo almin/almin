@@ -2,7 +2,7 @@
 import { Payload } from "../payload/Payload";
 import { DispatcherPayloadMeta } from "../DispatcherPayloadMeta";
 import { Committable, UnitOfWork } from "./UnitOfWork";
-import MapLike from "map-like";
+import { MapLike } from "map-like";
 import { UseCaseExecutor } from "../UseCaseExecutor";
 import { Dispatcher } from "../Dispatcher";
 

@@ -1,9 +1,9 @@
 // MIT © 2017 azu
 "use strict";
-import { UnitOfWork } from "../lib/UnitOfWork/UnitOfWork";
-import { Payload } from "../lib/index";
 import * as assert from "assert";
-import { DispatcherPayloadMetaImpl } from "../lib/DispatcherPayloadMeta";
+import { DispatcherPayloadMetaImpl } from "../src/DispatcherPayloadMeta";
+import { Payload } from "../src/index";
+import { UnitOfWork } from "../src/UnitOfWork/UnitOfWork";
 
 const createMockStoreGroup = () => {
     const commitments = [];
@@ -67,7 +67,7 @@ describe("UnitOfWork", () => {
             unitOfWork.addCommitment(commitmentA);
             unitOfWork.addCommitment(commitmentB);
             unitOfWork.commit();
-            assert.deepStrictEqual(commitments, [commitmentA, commitmentB]);
+            assert.deepEqual(commitments, [commitmentA, commitmentB]);
         });
     });
     describe("#release", () => {
