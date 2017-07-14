@@ -28,7 +28,7 @@ const context = new Context({
 });
 context.useCase(parentUseCase).execute().then(() => {
   /*
-These UseCases executed following order:  
+These UseCases are executed following order:  
 
 - ParentUseCase: will execute
 - ChildUseCase:  will execute
