@@ -68,19 +68,19 @@ describe("Context#transaction", () => {
         });
         // when
         return context
-            .transaction("transaction name", committer => {
-                return committer
+            .transaction("transaction name", transactionContext => {
+                return transactionContext
                     .useCase(new ChangeAUseCase())
                     .execute()
                     .then(() => {
-                        return committer.useCase(new ChangeBUseCase()).execute();
+                        return transactionContext.useCase(new ChangeBUseCase()).execute();
                     })
                     .then(() => {
-                        return committer.useCase(new ChangeCUseCase()).execute();
+                        return transactionContext.useCase(new ChangeCUseCase()).execute();
                     })
                     .then(() => {
                         // 1st commit
-                        committer.commit();
+                        transactionContext.commit();
                     });
             })
             .then(() => {
@@ -108,22 +108,22 @@ describe("Context#transaction", () => {
         });
         // reset initialized
         receivedPayloadList.length = 0;
-        return context.transaction("transaction name", committer => {
+        return context.transaction("transaction name", transactionContext => {
             assert.strictEqual(receivedPayloadList.length, 0, "no commitment");
-            return committer
+            return transactionContext
                 .useCase(new NoDispatchUseCase())
                 .execute()
                 .then(() => {
                     assert.strictEqual(receivedPayloadList.length, 0, "no commitment");
-                    committer.commit();
+                    transactionContext.commit();
                     assert.strictEqual(receivedPayloadList.length, 1, "1 UseCase executed commitment");
                 })
                 .then(() => {
-                    return committer.useCase(new NoDispatchUseCase()).execute();
+                    return transactionContext.useCase(new NoDispatchUseCase()).execute();
                 })
                 .then(() => {
                     assert.strictEqual(receivedPayloadList.length, 1, "before: 1 UseCase executed commitment");
-                    committer.commit();
+                    transactionContext.commit();
                     assert.strictEqual(receivedPayloadList.length, 2, "after: 2 UseCase executed commitment");
                 });
         });
@@ -149,12 +149,12 @@ describe("Context#transaction", () => {
         context.onEndTransaction((payload, meta) => {});
         // 1st transaction
         return context
-            .transaction("1st transaction", committer => {
-                return committer
+            .transaction("1st transaction", transactionContext => {
+                return transactionContext
                     .useCase(new NoDispatchUseCase())
                     .execute()
                     .then(() => {
-                        committer.commit();
+                        transactionContext.commit();
                     })
                     .then(() => {
                         assert.strictEqual(beginTransactions.length, 1);
@@ -209,22 +209,22 @@ describe("Context#transaction", () => {
         });
         // reset initialized
         receivedCommitments.length = 0;
-        return context.transaction("transaction name", committer => {
+        return context.transaction("transaction name", transactionContext => {
             assert.strictEqual(receivedCommitments.length, 0, "no commitment");
-            return committer
+            return transactionContext
                 .useCase(new NoDispatchUseCase())
                 .execute()
                 .then(() => {
                     assert.strictEqual(receivedCommitments.length, 0, "no commitment");
-                    committer.commit();
+                    transactionContext.commit();
                     assert.strictEqual(receivedCommitments.length, 1, "1 UseCase executed commitment");
                 })
                 .then(() => {
-                    return committer.useCase(new NoDispatchUseCase()).execute();
+                    return transactionContext.useCase(new NoDispatchUseCase()).execute();
                 })
                 .then(() => {
                     assert.strictEqual(receivedCommitments.length, 1, "before: 1 UseCase executed commitment");
-                    committer.commit();
+                    transactionContext.commit();
                     assert.strictEqual(receivedCommitments.length, 2, "after: 2 UseCase executed commitment");
                     const [payload, meta] = receivedCommitments[0];
                     assert.ok(payload instanceof Payload);
