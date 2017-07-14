@@ -318,7 +318,7 @@ But, ${store.name}#getState() was called.`
         this.tryToUpdateStoreGroupState();
     }
 
-    private update(payload: Payload, meta: DispatcherPayloadMeta) {
+    private tryUpdateState(payload: Payload, meta: DispatcherPayloadMeta) {
         this.writePhaseInRead(this.stores, payload, meta);
         this.tryToUpdateStoreGroupState();
     }
@@ -338,16 +338,16 @@ But, ${store.name}#getState() was called.`
         const payload = commitment[0];
         const meta = commitment[1];
         if (!meta.isTrusted) {
-            this.update(payload, meta);
+            this.tryUpdateState(payload, meta);
         } else if (isErrorPayload(payload)) {
-            this.update(payload, meta);
+            this.tryUpdateState(payload, meta);
         } else if (isWillExecutedPayload(payload) && meta.useCase) {
             this._workingUseCaseMap.set(meta.useCase.id, true);
         } else if (isDidExecutedPayload(payload) && meta.useCase) {
             if (meta.isUseCaseFinished) {
                 this._finishedUseCaseMap.set(meta.useCase.id, true);
             }
-            this.update(payload, meta);
+            this.tryUpdateState(payload, meta);
         } else if (isCompletedPayload(payload) && meta.useCase && meta.isUseCaseFinished) {
             this._workingUseCaseMap.delete(meta.useCase.id);
             // if the useCase is already finished, doesn't emitChange in CompletedPayload
@@ -356,7 +356,7 @@ But, ${store.name}#getState() was called.`
                 this._finishedUseCaseMap.delete(meta.useCase.id);
                 return;
             }
-            this.update(payload, meta);
+            this.tryUpdateState(payload, meta);
         }
     }
 

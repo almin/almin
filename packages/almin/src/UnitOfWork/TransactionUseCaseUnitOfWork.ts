@@ -8,6 +8,11 @@ import { EndTransactionPayload } from "../payload/EndTransactionPayload";
 
 /**
  * TransactionUseCaseUnitOfWork is a transactional Unit of Work.
+ *
+ * The difference with UseCaseUnitOfWork
+ *
+ * - Being Transaction
+ * - End Transaction
  */
 export class TransactionUseCaseUnitOfWork {
     private unitOfWork: UseCaseUnitOfWork;
