@@ -7,7 +7,6 @@ import { CompletedPayload, isCompletedPayload } from "./payload/CompletedPayload
 import { ErrorPayload, isErrorPayload } from "./payload/ErrorPayload";
 import { StoreGroupLike } from "./UILayer/StoreGroupLike";
 import { Store } from "./Store";
-import { EventEmitter } from "events";
 import { BeginTransactionPayload, isBeginTransactionPayload } from "./payload/BeginTransactionPayload";
 import { EndTransactionPayload, isEndTransactionPayload } from "./payload/EndTransactionPayload";
 
@@ -21,15 +20,12 @@ export interface LifeCycleEventHubArgs {
  *
  * @see https://almin.js.org/docs/tips/usecase-lifecycle.html
  */
-export class LifeCycleEventHub extends EventEmitter {
+export class LifeCycleEventHub {
     private releaseHandlers: (() => void)[];
     private dispatcher: Dispatcher;
     private storeGroup: StoreGroupLike;
 
     constructor(args: LifeCycleEventHubArgs) {
-        super();
-        // suppress: memory leak warning of EventEmitter
-        this.setMaxListeners(0);
         this.dispatcher = args.dispatcher;
         this.storeGroup = args.storeGroup;
         this.releaseHandlers = [];
