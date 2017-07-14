@@ -23,6 +23,8 @@ import { createSingleStoreGroup } from "./UILayer/SingleStoreGroup";
 import { StoreGroupLike } from "./UILayer/StoreGroupLike";
 import { LifeCycleEventHub } from "./LifeCycleEventHub";
 import { TransactionUseCaseUnitOfWork } from "./UnitOfWork/TransactionUseCaseUnitOfWork";
+import { BeginTransactionPayload } from "./payload/BeginTransactionPayload";
+import { EndTransactionPayload } from "./payload/EndTransactionPayload";
 
 export interface ContextArgs<T> {
     dispatcher: Dispatcher;
@@ -197,6 +199,8 @@ export class Context<T> {
      * - Do not update StoreGroup automatically
      * - You should call `committer.commit()` to update StoreGroup at any time
      *
+     * ## Example
+     *
      * ```js
      * context.transaction("A->B->C transaction", committer => {
      *      return committer.useCase(new ChangeAUseCase()).execute() // no update store
@@ -208,8 +212,43 @@ export class Context<T> {
      *              committer.commit(); // update store
      *              // replay: ChangeAUseCase -> ChangeBUseCase -> ChangeCUseCase
      *          });
-     *  })
+     *  });
      * ```
+     *
+     * ## Notes
+     *
+     * ### Transaction is not lock system
+     *
+     * The **transaction** does not lock the store.
+     * The **transaction** is a unit of work.
+     *
+     * It means that the store may be updated by other unit of work during executing `context.transaction`.
+     * `context.transaction` provide the way for bulk updating.
+     *
+     * ### No commit transaction get cancelled
+     *
+     * You can write no `commit()` transaction.
+     * This transaction add commitment to the unit of work, but does not `commit()`.
+     *
+     * ```js
+     * context.transaction("No commit transaction", committer => {
+     *      // No commit
+     *      return committer.useCase(new LogUseCase()).execute();
+     * });
+     * ```
+     *
+     * As a result, This transaction does not affect to Store.
+     * It means that Store can't received the payload of `LogUseCase`.
+     * Finally, that commitment get cancelled.
+     *
+     * It is useful for logging UseCase.
+     * Logging UseCase does not need to update store/view.
+     * It only does log/send data to console/server.
+     *
+     * ### TODO: rollback is not implemented
+     *
+     * Rollback feature is generality implemented in the unit of work.
+     * We want to know actual use case of rollback before implementing this.
      *
      */
     transaction(name: string, committer: (context: TransactionContext) => Promise<any>) {
@@ -253,6 +292,20 @@ Please enable strict mode via \`new Context({ dispatcher, store, options: { stri
                 return Promise.reject(error);
             }
         );
+    }
+
+    /**
+     * Register `handler` function that is called when begin `Context.transaction`.
+     */
+    onBeginTransaction(handler: (payload: BeginTransactionPayload, meta: DispatcherPayloadMeta) => void) {
+        return this.lifeCycleEventHub.onBeginTransaction(handler);
+    }
+
+    /**
+     * Register `handler` function that is called when `Context.transaction` is ended.
+     */
+    onEndedTransaction(handler: (payload: EndTransactionPayload, meta: DispatcherPayloadMeta) => void) {
+        return this.lifeCycleEventHub.onEndTransaction(handler);
     }
 
     /**
