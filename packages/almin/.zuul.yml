@@ -4,7 +4,7 @@ scripts:
   - https://unpkg.com/console-polyfill
 browsers:
   - name: internet explorer
-    version: 9..latest
+    version: 11..latest
   - name: microsoftedge
     version: latest
   - name: safari
