@@ -131,8 +131,9 @@ describe("Context#transaction", () => {
     it("can receive begin/end payload of transaction via Context", function() {
         const aStore = createStore({ name: "test" });
         const storeGroup = new StoreGroup({ a: aStore });
+        const dispatcher = new Dispatcher();
         const context = new Context({
-            dispatcher: new Dispatcher(),
+            dispatcher,
             store: storeGroup,
             options: {
                 strict: true
@@ -142,9 +143,19 @@ describe("Context#transaction", () => {
         const endTransaction = [];
         context.onBeginTransaction((payload, meta) => {
             beginTransactions.push(payload);
+            assert.strictEqual(meta.isTrusted, true, "meta.isTrusted should be true");
+            assert.strictEqual(meta.useCase, null, "meta.useCase should be null");
+            assert.strictEqual(meta.dispatcher, dispatcher, "meta.dispatcher should be dispatcher");
+            assert.strictEqual(meta.parentUseCase, null, "meta.parentUseCase should be null");
+            assert.strictEqual(typeof meta.timeStamp, "number");
         });
         context.onEndTransaction((payload, meta) => {
             endTransaction.push(payload);
+            assert.strictEqual(meta.isTrusted, true, "meta.isTrusted should be true");
+            assert.strictEqual(meta.useCase, null, "meta.useCase should be null");
+            assert.strictEqual(meta.dispatcher, dispatcher, "meta.dispatcher should be dispatcher");
+            assert.strictEqual(meta.parentUseCase, null, "meta.parentUseCase should be null");
+            assert.strictEqual(typeof meta.timeStamp, "number");
         });
         context.onEndTransaction((payload, meta) => {});
         // 1st transaction
