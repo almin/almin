@@ -10,6 +10,8 @@ import { UseCase } from "../src/UseCase";
 import { UseCaseExecutor } from "../src/UseCaseExecutor";
 import { createStore } from "./helper/create-new-store";
 import { createEchoStore } from "./helper/EchoStore";
+import { DispatchUseCase } from "./use-case/DispatchUseCase";
+import { ParentUseCase } from "./use-case/NestingUseCase";
 
 // payload
 
@@ -316,6 +318,64 @@ describe("Context", function() {
                     appContext.useCase(TestUseCase);
                 });
             });
+        });
+    });
+    describe("#release", () => {
+        it("should release all handlers", () => {
+            // add handler
+            const dispatcher = new Dispatcher();
+            const store = createStore({
+                name: "test"
+            });
+            const context = new Context({
+                dispatcher,
+                store,
+                options: {
+                    strict: true
+                }
+            });
+            const doneNotCall = () => {
+                throw new Error("It should not called");
+            };
+            context.onWillExecuteEachUseCase(() => {
+                doneNotCall();
+            });
+            context.onDidExecuteEachUseCase(() => {
+                doneNotCall();
+            });
+            context.onDispatch(() => {
+                doneNotCall();
+            });
+            context.onChange(() => {
+                doneNotCall();
+            });
+            context.onErrorDispatch(() => {
+                doneNotCall();
+            });
+            context.onCompleteEachUseCase(() => {
+                doneNotCall();
+            });
+            // when
+            context.release();
+            // then - does not call any handler
+            return context
+                .transaction(committer => {
+                    return committer
+                        .useCase(new DispatchUseCase())
+                        .execute({
+                            type: "test"
+                        })
+                        .then(() => {
+                            return committer.useCase(new ThrowUseCase()).execute();
+                        })
+                        .then(() => {
+                            committer.commit();
+                        });
+                })
+                .then(() => {
+                    store.emitChange();
+                    return context.useCase(new ParentUseCase()).execute();
+                });
         });
     });
     it("should execute functional UseCase", function() {
