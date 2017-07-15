@@ -1,7 +1,7 @@
 // LICENSE : MIT
 "use strict";
 import { DispatchedPayload, Dispatcher } from "./Dispatcher";
-import { DispatcherPayloadMeta } from "./DispatcherPayloadMeta";
+import { DispatcherPayloadMeta, DispatcherPayloadMetaImpl } from "./DispatcherPayloadMeta";
 import { Store } from "./Store";
 import { StoreLike } from "./StoreLike";
 import { UseCaseExecutor } from "./UseCaseExecutor";
@@ -22,9 +22,11 @@ import { TransactionContext } from "./UnitOfWork/TransactionContext";
 import { createSingleStoreGroup } from "./UILayer/SingleStoreGroup";
 import { StoreGroupLike } from "./UILayer/StoreGroupLike";
 import { LifeCycleEventHub } from "./LifeCycleEventHub";
-import { TransactionBeganPayload } from "./payload/TransactionBeganPayload";
-import { TransactionEndedPayload } from "./payload/TransactionEndedPayload";
+import { StoreChangedPayload } from "./payload/StoreChangedPayload";
 
+/**
+ * Context arguments
+ */
 export interface ContextArgs<T> {
     dispatcher: Dispatcher;
     store: StoreLike<T>;
@@ -108,6 +110,33 @@ export class Context<T> {
             storeGroup: this.storeGroup,
             options: { autoCommit: true }
         });
+
+        this.storeGroup.onChange((stores, details) => {
+            stores.forEach(store => {
+                const payload = new StoreChangedPayload(store);
+                const meta = details
+                    ? details.meta
+                    : new DispatcherPayloadMetaImpl({
+                          useCase: undefined,
+                          dispatcher: this.dispatcher,
+                          parentUseCase: null,
+                          isTrusted: true,
+                          isUseCaseFinished: false,
+                          transaction: undefined
+                      });
+                this.dispatcher.dispatch(payload, meta);
+            });
+        });
+    }
+
+    /**
+     * Return almin life cycle events hub.
+     * You can observe life cycle events on almin.
+     *
+     * See LifeCycleEventHub
+     */
+    get events() {
+        return this.lifeCycleEventHub;
     }
 
     /**
@@ -129,22 +158,33 @@ export class Context<T> {
     }
 
     /**
-     * If anyone store that is passed to constructor is changed, then call `onChange`.
-     * `onChange` arguments is an array of `Store` instances.
+     * If anyone store that is passed to constructor is changed, `handler` is called.
+     * `onChange` arguments is an array of `Store` instances that are changed.
      *
      * It returns unSubscribe function.
      * If you want to release handler, the returned function.
+     *
+     * It is useful for updating view in the `handler`.
      *
      * ### Example
      *
      * ```js
      * const unSubscribe = context.onChange(changingStores => {
      *   console.log(changingStores); // Array<Store>
+     *   // Update view
      * });
      * ```
+     *
+     *
+     * ## Notes
+     *
+     * If you want to know the change of registered store, please use `context.onChange`.
+     * `context.onChange` is optimized for updating View.
+     * By contrast, `context.events.*` is not optimized data. it is useful for logging.
+     *
      */
-    onChange(handler: (changingStores: Array<Store>) => void): () => void {
-        return this.lifeCycleEventHub.onChange(handler);
+    onChange(handler: (changingStores: Array<StoreLike<any>>) => void): () => void {
+        return this.storeGroup.onChange(handler);
     }
 
     /**
@@ -297,22 +337,10 @@ Please enable strict mode via \`new Context({ dispatcher, store, options: { stri
     }
 
     /**
-     * Register `handler` function that is called when begin `Context.transaction`.
-     */
-    onBeginTransaction(handler: (payload: TransactionBeganPayload, meta: DispatcherPayloadMeta) => void) {
-        return this.lifeCycleEventHub.onBeginTransaction(handler);
-    }
-
-    /**
-     * Register `handler` function that is called when `Context.transaction` is ended.
-     */
-    onEndTransaction(handler: (payload: TransactionEndedPayload, meta: DispatcherPayloadMeta) => void) {
-        return this.lifeCycleEventHub.onEndTransaction(handler);
-    }
-
-    /**
      * Register `handler` function to Context.
      * `handler` is called when each useCases will execute.
+     * @deprecated
+     * Use `context.events.onWillExecuteEachUseCase` insteadof it.
      */
     onWillExecuteEachUseCase(handler: (payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         return this.lifeCycleEventHub.onWillExecuteEachUseCase(handler);
@@ -337,6 +365,9 @@ Please enable strict mode via \`new Context({ dispatcher, store, options: { stri
      *
      * context.useCase(dispatchUseCase).execute();
      * ```
+     *
+     * @deprecated
+     * Use `context.events.onDispatch` insteadof it.
      */
     onDispatch(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         return this.lifeCycleEventHub.onDispatch(handler);
@@ -344,6 +375,8 @@ Please enable strict mode via \`new Context({ dispatcher, store, options: { stri
 
     /**
      * `handler` is called when each useCases are executed.
+     * @deprecated
+     * Use `context.events.onDidExecuteEachUseCase` insteadof it.
      */
     onDidExecuteEachUseCase(handler: (payload: DidExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         return this.lifeCycleEventHub.onDidExecuteEachUseCase(handler);
@@ -352,6 +385,8 @@ Please enable strict mode via \`new Context({ dispatcher, store, options: { stri
     /**
      * `handler` is called when each useCases are completed.
      * This `handler` is always called asynchronously.
+     * @deprecated
+     * Use `context.events.onCompleteEachUseCase` insteadof it.
      */
     onCompleteEachUseCase(handler: (payload: CompletedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         return this.lifeCycleEventHub.onCompleteEachUseCase(handler);
@@ -365,6 +400,8 @@ Please enable strict mode via \`new Context({ dispatcher, store, options: { stri
      * - Throw exception in a UseCase
      * - Return rejected promise in a UseCase
      * - Call `UseCase#throwError(error)`
+     * @deprecated
+     * Use `context.events.onErrorDispatch` insteadof it.
      */
     onErrorDispatch(handler: (payload: ErrorPayload, meta: DispatcherPayloadMeta) => void): () => void {
         return this.lifeCycleEventHub.onErrorDispatch(handler);

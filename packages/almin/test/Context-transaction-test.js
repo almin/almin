@@ -143,7 +143,7 @@ describe("Context#transaction", () => {
         });
         const beginTransactions = [];
         const endTransaction = [];
-        context.onBeginTransaction((payload, meta) => {
+        context.events.onBeginTransaction((payload, meta) => {
             beginTransactions.push(payload);
             assert.strictEqual(meta.isTrusted, true, "meta.isTrusted should be true");
             assert.strictEqual(meta.useCase, null, "meta.useCase should be null");
@@ -153,7 +153,7 @@ describe("Context#transaction", () => {
             assert.strictEqual(typeof meta.transaction, "object", "transaction object");
             assert.strictEqual(typeof meta.transaction.name, "string", "transaction object");
         });
-        context.onEndTransaction((payload, meta) => {
+        context.events.onEndTransaction((payload, meta) => {
             endTransaction.push(payload);
             assert.strictEqual(meta.isTrusted, true, "meta.isTrusted should be true");
             assert.strictEqual(meta.useCase, null, "meta.useCase should be null");
@@ -229,7 +229,9 @@ describe("Context#transaction", () => {
         }
         const transactionName = "My Transaction";
         dispatcher.onDispatch((payload, meta) => {
-            assert.strictEqual(meta.transaction.name, transactionName);
+            assert.deepEqual(meta.transaction, {
+                name: transactionName
+            });
         });
         // 1st transaction
         return context.transaction(transactionName, transactionContext => {

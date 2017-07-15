@@ -282,7 +282,7 @@ describe("StoreGroup", function() {
                         dispatcher: new Dispatcher(),
                         store: storeGroup
                     });
-                    context.onDispatch(payload => {
+                    context.events.onDispatch(payload => {
                         dispatchedPayload = payload;
                     });
                     // when

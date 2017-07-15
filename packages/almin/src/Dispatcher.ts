@@ -9,6 +9,9 @@ import { ErrorPayload } from "./payload/ErrorPayload";
 import { CompletedPayload } from "./payload/CompletedPayload";
 import { DidExecutedPayload } from "./payload/DidExecutedPayload";
 import { WillExecutedPayload } from "./payload/WillExecutedPayload";
+import { TransactionBeganPayload } from "./payload/TransactionBeganPayload";
+import { TransactionEndedPayload } from "./payload/TransactionEndedPayload";
+import { StoreChangedPayload } from "./payload/StoreChangedPayload";
 /**
  * @private
  */
@@ -20,7 +23,15 @@ export const ON_DISPATCH = "__ON_DISPATCH__";
  * Almin has some built-in Payload class like `ErrorPayload`.
  * @private
  */
-export type DispatchedPayload = Payload | ErrorPayload | CompletedPayload | DidExecutedPayload | WillExecutedPayload;
+export type DispatchedPayload =
+    | Payload
+    | ErrorPayload
+    | CompletedPayload
+    | DidExecutedPayload
+    | WillExecutedPayload
+    | TransactionBeganPayload
+    | TransactionEndedPayload
+    | StoreChangedPayload;
 
 /**
  * Dispatcher is the **central** event bus system.

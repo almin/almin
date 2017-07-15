@@ -3,8 +3,8 @@ import { StoreGroup } from "./StoreGroup";
 import { Store } from "../Store";
 import { Dispatcher } from "../Dispatcher";
 import { Commitment } from "../UnitOfWork/UnitOfWork";
+import { StoreGroupReasonForChange, StoreGroupLike } from "./StoreGroupLike";
 import { StoreLike } from "../StoreLike";
-import { StoreGroupLike } from "./StoreGroupLike";
 
 /**
  * SingleStoreGroup is wrapper of a single Store.
@@ -13,16 +13,18 @@ import { StoreGroupLike } from "./StoreGroupLike";
  */
 export class SingleStoreGroup<T extends Store> extends Dispatcher implements StoreGroupLike {
     private storeGroup: StoreGroup<{ target: T }>;
+    private store: T;
 
     constructor(store: T) {
         super();
+        this.store = store;
         this.storeGroup = new StoreGroup({
             target: store
         });
         this.pipe(this.storeGroup);
     }
 
-    onChange(handler: (stores: StoreLike<any>[]) => void): () => void {
+    onChange(handler: (stores: Array<StoreLike<any>>, details?: StoreGroupReasonForChange) => void): () => void {
         return this.storeGroup.onChange(handler);
     }
 

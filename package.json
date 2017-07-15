@@ -29,6 +29,7 @@
   },
   "scripts": {
     "precommit": "lint-staged",
+    "postcommit": "git reset",
     "postinstall": "yarn run bootstrap",
     "bootstrap": "lerna bootstrap",
     "prepublishOnly": "npm run build",

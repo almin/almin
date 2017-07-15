@@ -6,9 +6,9 @@ import { DidExecutedPayload, isDidExecutedPayload } from "./payload/DidExecutedP
 import { CompletedPayload, isCompletedPayload } from "./payload/CompletedPayload";
 import { ErrorPayload, isErrorPayload } from "./payload/ErrorPayload";
 import { StoreGroupLike } from "./UILayer/StoreGroupLike";
-import { Store } from "./Store";
 import { TransactionBeganPayload, isTransactionBeganPayload } from "./payload/TransactionBeganPayload";
 import { TransactionEndedPayload, isTransactionEndedPayload } from "./payload/TransactionEndedPayload";
+import { isStoreChangedPayload, StoreChangedPayload } from "./payload/StoreChangedPayload";
 
 export interface LifeCycleEventHubArgs {
     dispatcher: Dispatcher;
@@ -16,9 +16,12 @@ export interface LifeCycleEventHubArgs {
 }
 
 /**
- * Wrapper of dispatcher that can observe all almin life-cycle events
+ * LifeCycleEventHub provide the way for observing almin life-cycle events.
  *
- * @see https://almin.js.org/docs/tips/usecase-lifecycle.html
+ * ## See also
+ *
+ * - https://almin.js.org/docs/tips/usecase-lifecycle.html
+ * - almin-logger implementation
  */
 export class LifeCycleEventHub {
     private releaseHandlers: (() => void)[];
@@ -31,13 +34,48 @@ export class LifeCycleEventHub {
         this.releaseHandlers = [];
     }
 
-    // handlers
-    onChange(handler: (stores: Array<Store>) => void) {
-        const releaseHandler = this.storeGroup.onChange(handler);
+    /**
+     * Register `handler` function that is called when Store is changed.
+     *
+     * ## Notes
+     *
+     * This event should not use for updating view.
+     *
+     * ```js
+     * // BAD
+     * context.events.onChangeStore(() => {
+     *    updateView();
+     * })
+     * ```
+     *
+     * You should use `context.onChange` for updating view.
+     *
+     * ```
+     * // GOOD
+     * context.onChange(() => {
+     *    updateView();
+     * })
+     * ```
+     *
+     * Because, `context.onChange` is optimized for updating view.
+     * By contrast, `context.events.onChangeStore` is not optimized data.
+     * It is useful data for logging.
+     */
+    onChangeStore(handler: (payload: StoreChangedPayload, meta: DispatcherPayloadMeta) => void) {
+        const releaseHandler = this.dispatcher.onDispatch(function onChangeStore(payload, meta) {
+            if (isStoreChangedPayload(payload)) {
+                handler(payload, meta);
+            }
+        });
         this.releaseHandlers.push(releaseHandler);
         return releaseHandler;
     }
 
+    /**
+     * Register `handler` function that is called when begin `Context.transaction`.
+     *
+     * This `handler` will be not called when `Context.useCase` is executed.
+     */
     onBeginTransaction(handler: (payload: TransactionBeganPayload, meta: DispatcherPayloadMeta) => void) {
         const releaseHandler = this.dispatcher.onDispatch(function onBeginTransaction(payload, meta) {
             if (isTransactionBeganPayload(payload)) {
@@ -48,6 +86,11 @@ export class LifeCycleEventHub {
         return releaseHandler;
     }
 
+    /**
+     * Register `handler` function that is called when `Context.transaction` is ended.
+     *
+     * This `handler` will be not called when `Context.useCase` is executed.
+     */
     onEndTransaction(handler: (payload: TransactionEndedPayload, meta: DispatcherPayloadMeta) => void) {
         const releaseHandler = this.dispatcher.onDispatch(function onEndTransaction(payload, meta) {
             if (isTransactionEndedPayload(payload)) {

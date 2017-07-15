@@ -1,6 +1,7 @@
 #!/bin/bash
 declare projectDir=$(git rev-parse --show-toplevel)
-declare srcDir="${projectDir}/packages/almin/lib"
+declare alminDir="${projectDir}/packages/almin"
+declare srcDir="${projectDir}/packages/almin/lib/src"
 declare docDir="${projectDir}/docs"
 # add build result
 function addDoc(){
@@ -10,9 +11,12 @@ function addDoc(){
     mv ${projectDir}/__obj/docs/**${fileName}*.html ${projectDir}/docs/api/${fileName}md
     echo "Create: ${docDir}/api/${fileName}md"
 }
+cd "${alminDir}"
 npm run build
+cd "${projectDir}"
 # update
 addDoc "${srcDir}/Context.d.ts"
+addDoc "${srcDir}/LifeCycleEventHub.d.ts"
 addDoc "${srcDir}/Dispatcher.d.ts"
 addDoc "${srcDir}/DispatcherPayloadMeta.d.ts"
 addDoc "${srcDir}/Store.d.ts"

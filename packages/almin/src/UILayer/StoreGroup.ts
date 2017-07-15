@@ -16,7 +16,7 @@ import { shouldStateUpdate } from "./StoreGroupUtils";
 import { Commitment } from "../UnitOfWork/UnitOfWork";
 import { InitializedPayload } from "../payload/InitializedPayload";
 import { StoreGroupChangingStoreStrictChecker } from "./StoreGroupChangingStoreStrictChecker";
-import { StoreGroupLike } from "./StoreGroupLike";
+import { StoreGroupLike, StoreGroupReasonForChange } from "./StoreGroupLike";
 import { isDidExecutedPayload } from "../payload/DidExecutedPayload";
 import { isErrorPayload } from "../payload/ErrorPayload";
 
@@ -197,12 +197,8 @@ export class StoreGroup<T> extends Dispatcher implements StoreGroupLike {
     /**
      * If exist working UseCase, return true
      */
-    protected get existWorkingUseCase() {
+    private get existWorkingUseCase() {
         return this._workingUseCaseMap.size > 0;
-    }
-
-    protected get isInitializedWithStateNameMap() {
-        return this._storeStateMap.size > 0;
     }
 
     /**
@@ -320,7 +316,7 @@ But, ${store.name}#getState() was called.`
 
     private tryUpdateState(payload: Payload, meta: DispatcherPayloadMeta) {
         this.writePhaseInRead(this.stores, payload, meta);
-        this.tryToUpdateStoreGroupState();
+        this.tryToUpdateStoreGroupState(payload, meta);
     }
 
     /**
@@ -365,16 +361,24 @@ But, ${store.name}#getState() was called.`
     }
 
     // read -> emitChange if needed
-    private tryToUpdateStoreGroupState(): void {
+    private tryToUpdateStoreGroupState(payload?: Payload, meta?: DispatcherPayloadMeta): void {
         this._pruneChangingStateOfStores();
         const nextState = this.readPhaseInRead(this.stores);
         if (!this.shouldStateUpdate(this.state, nextState)) {
             return;
         }
         this.state = nextState;
-        // emit changes
         const changingStores = this._changingStores.slice();
-        this.emit(CHANGE_STORE_GROUP, changingStores);
+        // the reason details of this change
+        const details: StoreGroupReasonForChange | undefined =
+            payload && meta
+                ? {
+                      payload,
+                      meta
+                  }
+                : undefined;
+        // emit changes
+        this.emit(CHANGE_STORE_GROUP, changingStores, details);
     }
 
     /**
@@ -382,9 +386,11 @@ But, ${store.name}#getState() was called.`
      *
      * onChange workflow: https://code2flow.com/mHFviS
      */
-    onChange(handler: (stores: Array<Store<T>>) => void): () => void {
+    onChange(handler: (stores: Array<Store<T>>, details?: StoreGroupReasonForChange) => void): () => void {
         this.on(CHANGE_STORE_GROUP, handler);
-        const releaseHandler = this.removeListener.bind(this, CHANGE_STORE_GROUP, handler);
+        const releaseHandler = () => {
+            this.removeListener(CHANGE_STORE_GROUP, handler);
+        };
         this._releaseHandlers.push(releaseHandler);
         return releaseHandler;
     }

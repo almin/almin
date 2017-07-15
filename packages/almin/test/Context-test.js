@@ -337,22 +337,22 @@ describe("Context", function() {
             const doneNotCall = () => {
                 throw new Error("It should not called");
             };
-            context.onWillExecuteEachUseCase(() => {
+            context.events.onWillExecuteEachUseCase(() => {
                 doneNotCall();
             });
-            context.onDidExecuteEachUseCase(() => {
+            context.events.onDidExecuteEachUseCase(() => {
                 doneNotCall();
             });
-            context.onDispatch(() => {
+            context.events.onDispatch(() => {
                 doneNotCall();
             });
             context.onChange(() => {
                 doneNotCall();
             });
-            context.onErrorDispatch(() => {
+            context.events.onErrorDispatch(() => {
                 doneNotCall();
             });
-            context.onCompleteEachUseCase(() => {
+            context.events.onCompleteEachUseCase(() => {
                 doneNotCall();
             });
             // when
