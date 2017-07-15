@@ -16,9 +16,12 @@ export interface LifeCycleEventHubArgs {
 }
 
 /**
- * Wrapper of dispatcher that can observe all almin life-cycle events
+ * LifeCycleEventHub provide the way for observing almin life-cycle events.
  *
- * @see https://almin.js.org/docs/tips/usecase-lifecycle.html
+ * ## See also
+ *
+ * - https://almin.js.org/docs/tips/usecase-lifecycle.html
+ * - almin-logger implementation
  */
 export class LifeCycleEventHub {
     private releaseHandlers: (() => void)[];
@@ -31,7 +34,33 @@ export class LifeCycleEventHub {
         this.releaseHandlers = [];
     }
 
-    // handlers
+    /**
+     * Register `handler` function that is called when Store is changed.
+     *
+     * ## Notes
+     *
+     * This event should not use for updating view.
+     *
+     * ```js
+     * // BAD
+     * context.events.onChangeStore(() => {
+     *    updateView();
+     * })
+     * ```
+     *
+     * You should use `context.onChange` for updating view.
+     *
+     * ```
+     * // GOOD
+     * context.onChange(() => {
+     *    updateView();
+     * })
+     * ```
+     *
+     * Because, `context.onChange` is optimized for updating view.
+     * By contrast, `context.events.onChangeStore` is not optimized data.
+     * It is useful data for logging.
+     */
     onChangeStore(handler: (payload: StoreChangedPayload, meta: DispatcherPayloadMeta) => void) {
         const releaseHandler = this.dispatcher.onDispatch(function onChangeStore(payload, meta) {
             if (isStoreChangedPayload(payload)) {
@@ -44,6 +73,8 @@ export class LifeCycleEventHub {
 
     /**
      * Register `handler` function that is called when begin `Context.transaction`.
+     *
+     * This `handler` will be not called when `Context.useCase` is executed.
      */
     onBeginTransaction(handler: (payload: TransactionBeganPayload, meta: DispatcherPayloadMeta) => void) {
         const releaseHandler = this.dispatcher.onDispatch(function onBeginTransaction(payload, meta) {
@@ -57,6 +88,8 @@ export class LifeCycleEventHub {
 
     /**
      * Register `handler` function that is called when `Context.transaction` is ended.
+     *
+     * This `handler` will be not called when `Context.useCase` is executed.
      */
     onEndTransaction(handler: (payload: TransactionEndedPayload, meta: DispatcherPayloadMeta) => void) {
         const releaseHandler = this.dispatcher.onDispatch(function onEndTransaction(payload, meta) {

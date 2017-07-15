@@ -130,11 +130,7 @@ export class Context<T> {
      * Return almin life cycle events hub.
      * You can observe life cycle events on almin.
      *
-     * ## Notes
-     *
-     * If you want to know the change of registered store, please use `context.onChange`.
-     * `context.onChange` is optimized for updating View.
-     * By contrast, `context.events.*` is not optimized data. it is useful for logging.
+     * See LifeCycleEventHub
      */
     get events() {
         return this.lifeCycleEventHub;
@@ -159,19 +155,30 @@ export class Context<T> {
     }
 
     /**
-     * If anyone store that is passed to constructor is changed, then call `onChange`.
-     * `onChange` arguments is an array of `Store` instances.
+     * If anyone store that is passed to constructor is changed, `handler` is called.
+     * `onChange` arguments is an array of `Store` instances that are changed.
      *
      * It returns unSubscribe function.
      * If you want to release handler, the returned function.
+     *
+     * It is useful for updating view in the `handler`.
      *
      * ### Example
      *
      * ```js
      * const unSubscribe = context.onChange(changingStores => {
      *   console.log(changingStores); // Array<Store>
+     *   // Update view
      * });
      * ```
+     *
+     *
+     * ## Notes
+     *
+     * If you want to know the change of registered store, please use `context.onChange`.
+     * `context.onChange` is optimized for updating View.
+     * By contrast, `context.events.*` is not optimized data. it is useful for logging.
+     *
      */
     onChange(handler: (changingStores: Array<StoreLike<any>>) => void): () => void {
         return this.storeGroup.onChange(handler);
