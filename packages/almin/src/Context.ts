@@ -110,11 +110,11 @@ export class Context<T> {
             options: { autoCommit: true }
         });
 
-        this.storeGroup.onChangeDetails(reason => {
-            reason.stores.forEach(store => {
+        this.storeGroup.onChange((stores, details) => {
+            stores.forEach(store => {
                 const payload = new StoreChangedPayload(store);
-                const meta = reason.meta
-                    ? reason.meta
+                const meta = details
+                    ? details.meta
                     : new DispatcherPayloadMetaImpl({
                           useCase: undefined,
                           dispatcher: this.dispatcher,

@@ -4,9 +4,10 @@ import { StoreLike } from "../StoreLike";
 import { Committable } from "../UnitOfWork/UnitOfWork";
 import { DispatcherPayloadMeta } from "../DispatcherPayloadMeta";
 
-export interface StoreGroupChangeResult {
-    stores: Array<StoreLike<any>>;
-    // change reason;
+/**
+ * The details that describe the reason for change of the store group.
+ */
+export interface StoreGroupReasonForChange {
     payload?: DispatchedPayload;
     meta?: DispatcherPayloadMeta;
 }
@@ -14,7 +15,7 @@ export interface StoreGroupChangeResult {
 export interface StoreGroupExtension {
     useStrict(): void;
 
-    onChangeDetails(handler: (changeResult: StoreGroupChangeResult) => void): () => void;
+    onChange(handler: (stores: Array<StoreLike<any>>, details?: StoreGroupReasonForChange) => void): () => void;
 }
 
 export type StoreGroupLike = StoreGroupExtension & StoreLike<any> & Dispatcher & Committable;

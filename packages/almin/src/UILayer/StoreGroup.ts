@@ -16,12 +16,11 @@ import { shouldStateUpdate } from "./StoreGroupUtils";
 import { Commitment } from "../UnitOfWork/UnitOfWork";
 import { InitializedPayload } from "../payload/InitializedPayload";
 import { StoreGroupChangingStoreStrictChecker } from "./StoreGroupChangingStoreStrictChecker";
-import { StoreGroupChangeResult, StoreGroupLike } from "./StoreGroupLike";
+import { StoreGroupLike, StoreGroupReasonForChange } from "./StoreGroupLike";
 import { isDidExecutedPayload } from "../payload/DidExecutedPayload";
 import { isErrorPayload } from "../payload/ErrorPayload";
 
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
-const CHANGE_STORE_GROUP_DETAIL = "CHANGE_STORE_GROUP_DETAIL";
 
 // { stateName: state }
 export interface StoreGroupState {
@@ -373,16 +372,17 @@ But, ${store.name}#getState() was called.`
             return;
         }
         this.state = nextState;
-        // emit changes
         const changingStores = this._changingStores.slice();
-        this.emit(CHANGE_STORE_GROUP, changingStores);
-        // emit changes with details
-        // often it is used in logging tools
-        this.emit(CHANGE_STORE_GROUP_DETAIL, {
-            stores: changingStores,
-            payload,
-            meta
-        });
+        // the reason details of this change
+        const details: StoreGroupReasonForChange | undefined =
+            payload && meta
+                ? {
+                      payload,
+                      meta
+                  }
+                : undefined;
+        // emit changes
+        this.emit(CHANGE_STORE_GROUP, changingStores, details);
     }
 
     /**
@@ -390,7 +390,7 @@ But, ${store.name}#getState() was called.`
      *
      * onChange workflow: https://code2flow.com/mHFviS
      */
-    onChange(handler: (stores: Array<Store<T>>) => void): () => void {
+    onChange(handler: (stores: Array<Store<T>>, details?: StoreGroupReasonForChange) => void): () => void {
         this.on(CHANGE_STORE_GROUP, handler);
         const releaseHandler = () => {
             this.removeListener(CHANGE_STORE_GROUP, handler);
@@ -399,17 +399,6 @@ But, ${store.name}#getState() was called.`
         return releaseHandler;
     }
 
-    /**
-     * Observe changes with details
-     */
-    onChangeDetails(handler: (changeReason: StoreGroupChangeResult) => void): () => void {
-        this.on(CHANGE_STORE_GROUP_DETAIL, handler);
-        const releaseHandler = () => {
-            this.removeListener(CHANGE_STORE_GROUP_DETAIL, handler);
-        };
-        this._releaseHandlers.push(releaseHandler);
-        return releaseHandler;
-    }
     /**
      * Release all events handler.
      * You can call this when no more call event handler

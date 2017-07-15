@@ -3,7 +3,8 @@ import { StoreGroup } from "./StoreGroup";
 import { Store } from "../Store";
 import { Dispatcher } from "../Dispatcher";
 import { Commitment } from "../UnitOfWork/UnitOfWork";
-import { StoreGroupChangeResult, StoreGroupLike } from "./StoreGroupLike";
+import { StoreGroupReasonForChange, StoreGroupLike } from "./StoreGroupLike";
+import { StoreLike } from "../StoreLike";
 
 /**
  * SingleStoreGroup is wrapper of a single Store.
@@ -23,14 +24,8 @@ export class SingleStoreGroup<T extends Store> extends Dispatcher implements Sto
         this.pipe(this.storeGroup);
     }
 
-    onChange(handler: (stores: Array<Store<T>>) => void): () => void {
-        return this.storeGroup.onChange(() => {
-            handler([this.store]);
-        });
-    }
-
-    onChangeDetails(handler: (details: StoreGroupChangeResult) => void): () => void {
-        return this.storeGroup.onChangeDetails(handler);
+    onChange(handler: (stores: Array<StoreLike<any>>, details?: StoreGroupReasonForChange) => void): () => void {
+        return this.storeGroup.onChange(handler);
     }
 
     commit(commitment: Commitment): void {
