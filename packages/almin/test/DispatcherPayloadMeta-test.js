@@ -28,7 +28,7 @@ describe("DispatcherPayloadMeta", () => {
                 assert(actualMeta.useCase === useCase);
                 assert(actualMeta.dispatcher === dispatcher);
                 assert(actualMeta.parentUseCase === null);
-                assert(actualMeta.transaction === false);
+                assert(actualMeta.transaction === undefined);
                 assert(typeof actualMeta.timeStamp === "number");
             });
         });
@@ -49,7 +49,7 @@ describe("DispatcherPayloadMeta", () => {
                 assert(actualMeta.useCase === useCase);
                 assert(actualMeta.dispatcher === useCase);
                 assert(actualMeta.parentUseCase === null);
-                assert(actualMeta.transaction === false);
+                assert(actualMeta.transaction === undefined);
                 assert(typeof actualMeta.timeStamp === "number");
             });
         });
@@ -71,7 +71,7 @@ describe("DispatcherPayloadMeta", () => {
                 assert(actualMeta.dispatcher === dispatcher);
                 assert(actualMeta.parentUseCase === null);
                 assert(actualMeta.isUseCaseFinished === true);
-                assert(actualMeta.transaction === false);
+                assert(actualMeta.transaction === undefined);
                 assert(typeof actualMeta.timeStamp === "number");
             });
         });
@@ -91,7 +91,7 @@ describe("DispatcherPayloadMeta", () => {
                 assert(actualMeta.dispatcher === dispatcher);
                 assert(actualMeta.parentUseCase === null);
                 assert(actualMeta.isUseCaseFinished === false);
-                assert(actualMeta.transaction === false);
+                assert(actualMeta.transaction === undefined);
                 assert(typeof actualMeta.timeStamp === "number");
             });
         });
@@ -113,7 +113,7 @@ describe("DispatcherPayloadMeta", () => {
                 assert(actualMeta.dispatcher === dispatcher);
                 assert(actualMeta.parentUseCase === null);
                 assert(actualMeta.isUseCaseFinished === true);
-                assert(actualMeta.transaction === false);
+                assert(actualMeta.transaction === undefined);
                 assert(typeof actualMeta.timeStamp === "number");
             });
         });
@@ -135,7 +135,7 @@ describe("DispatcherPayloadMeta", () => {
                 assert(actualMeta.dispatcher === useCase);
                 assert(actualMeta.parentUseCase === null);
                 assert(actualMeta.isUseCaseFinished === false);
-                assert(actualMeta.transaction === false);
+                assert(actualMeta.transaction === undefined);
                 assert(typeof actualMeta.timeStamp === "number");
             });
         });

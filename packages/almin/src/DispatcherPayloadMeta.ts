@@ -16,7 +16,7 @@ export interface DispatcherPayloadMetaArgs {
     isUseCaseFinished?: boolean;
     parentUseCase?: UseCase | null;
     isTrusted: boolean;
-    transaction?: false | Transaction;
+    transaction?: Transaction;
 }
 
 /**
@@ -92,9 +92,9 @@ export interface DispatcherPayloadMeta {
 
     /**
      * If the payload object is dispatched in a transaction, to be transaction object
-     * otherwise, to be false.
+     * otherwise, to be undefined
      */
-    transaction: false | Transaction;
+    transaction?: Transaction;
 }
 
 /**
@@ -108,7 +108,7 @@ export class DispatcherPayloadMetaImpl implements DispatcherPayloadMeta {
     readonly timeStamp: number;
     readonly isTrusted: boolean;
     readonly isUseCaseFinished: boolean;
-    transaction: false | Transaction;
+    transaction?: Transaction;
 
     constructor(args: DispatcherPayloadMetaArgs) {
         this.useCase = args.useCase || null;
@@ -117,6 +117,6 @@ export class DispatcherPayloadMetaImpl implements DispatcherPayloadMeta {
         this.timeStamp = Date.now();
         this.isTrusted = args.isTrusted;
         this.isUseCaseFinished = args.isUseCaseFinished !== undefined ? args.isUseCaseFinished : false;
-        this.transaction = args.transaction !== undefined ? args.transaction : false;
+        this.transaction = args.transaction;
     }
 }

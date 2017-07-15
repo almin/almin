@@ -16,11 +16,12 @@ import { shouldStateUpdate } from "./StoreGroupUtils";
 import { Commitment } from "../UnitOfWork/UnitOfWork";
 import { InitializedPayload } from "../payload/InitializedPayload";
 import { StoreGroupChangingStoreStrictChecker } from "./StoreGroupChangingStoreStrictChecker";
-import { StoreGroupLike } from "./StoreGroupLike";
+import { StoreGroupChangeResult, StoreGroupLike } from "./StoreGroupLike";
 import { isDidExecutedPayload } from "../payload/DidExecutedPayload";
 import { isErrorPayload } from "../payload/ErrorPayload";
 
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
+const CHANGE_STORE_GROUP_DETAIL = "CHANGE_STORE_GROUP_DETAIL";
 
 // { stateName: state }
 export interface StoreGroupState {
@@ -320,7 +321,7 @@ But, ${store.name}#getState() was called.`
 
     private tryUpdateState(payload: Payload, meta: DispatcherPayloadMeta) {
         this.writePhaseInRead(this.stores, payload, meta);
-        this.tryToUpdateStoreGroupState();
+        this.tryToUpdateStoreGroupState(payload, meta);
     }
 
     /**
@@ -365,7 +366,7 @@ But, ${store.name}#getState() was called.`
     }
 
     // read -> emitChange if needed
-    private tryToUpdateStoreGroupState(): void {
+    private tryToUpdateStoreGroupState(payload?: Payload, meta?: DispatcherPayloadMeta): void {
         this._pruneChangingStateOfStores();
         const nextState = this.readPhaseInRead(this.stores);
         if (!this.shouldStateUpdate(this.state, nextState)) {
@@ -375,6 +376,13 @@ But, ${store.name}#getState() was called.`
         // emit changes
         const changingStores = this._changingStores.slice();
         this.emit(CHANGE_STORE_GROUP, changingStores);
+        // emit changes with details
+        // often it is used in logging tools
+        this.emit(CHANGE_STORE_GROUP_DETAIL, {
+            stores: changingStores,
+            payload,
+            meta
+        });
     }
 
     /**
@@ -384,11 +392,24 @@ But, ${store.name}#getState() was called.`
      */
     onChange(handler: (stores: Array<Store<T>>) => void): () => void {
         this.on(CHANGE_STORE_GROUP, handler);
-        const releaseHandler = this.removeListener.bind(this, CHANGE_STORE_GROUP, handler);
+        const releaseHandler = () => {
+            this.removeListener(CHANGE_STORE_GROUP, handler);
+        };
         this._releaseHandlers.push(releaseHandler);
         return releaseHandler;
     }
 
+    /**
+     * Observe changes with details
+     */
+    onChangeDetails(handler: (changeReason: StoreGroupChangeResult) => void): () => void {
+        this.on(CHANGE_STORE_GROUP_DETAIL, handler);
+        const releaseHandler = () => {
+            this.removeListener(CHANGE_STORE_GROUP_DETAIL, handler);
+        };
+        this._releaseHandlers.push(releaseHandler);
+        return releaseHandler;
+    }
     /**
      * Release all events handler.
      * You can call this when no more call event handler

@@ -169,7 +169,7 @@ export abstract class Store<State = any> extends Dispatcher implements StoreLike
      * store.emitChange();
      * ```
      */
-    onChange(cb: (changingStores: Array<Store>) => void): () => void {
+    onChange(cb: (changingStores: Array<this>) => void): () => void {
         this.on(STATE_CHANGE_EVENT, cb);
         return this.removeListener.bind(this, STATE_CHANGE_EVENT, cb);
     }

@@ -229,7 +229,9 @@ describe("Context#transaction", () => {
         }
         const transactionName = "My Transaction";
         dispatcher.onDispatch((payload, meta) => {
-            assert.strictEqual(meta.transaction.name, transactionName);
+            assert.deepEqual(meta.transaction, {
+                name: transactionName
+            });
         });
         // 1st transaction
         return context.transaction(transactionName, transactionContext => {
