@@ -4,10 +4,12 @@ export default class LogGroup {
     /**
      * @type {string} title
      * @type {string} [useCaseName]
+     * @type {boolean} [isTransaction]
      */
-    constructor({ title, useCaseName }) {
+    constructor({ title, useCaseName, isTransaction }) {
         this.title = title;
         this.useCaseName = useCaseName;
+        this.isTransaction = isTransaction || false;
         /**
          * @type  {LogChunk|LogGroup[]}
          * @private

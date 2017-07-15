@@ -1,6 +1,6 @@
 # almin-logger [![Build Status](https://travis-ci.org/almin/almin.svg?branch=master)](https://travis-ci.org/almin/almin)
 
-Logger class for [Almin.js](https://github.com/azu/almin "Almin.js")
+Logger class for [Almin.js](https://github.com/almin/almin "Almin.js")
 
 ![logger](https://monosnap.com/file/AqRVq3UAah8riczytsgXHxGb50fwz2.png)
 
@@ -11,6 +11,12 @@ Logger class for [Almin.js](https://github.com/azu/almin "Almin.js")
 - Changed log of Store
 - Nesting log support if the browser support`console.groupCollapsed`.
 - Async(by default) and Sync logger
+
+## Mark meaning
+
+- :rocket: Transaction
+- :bookmark: A group like UseCase
+- :x: A group that include failure result
 
 ## Installation
 

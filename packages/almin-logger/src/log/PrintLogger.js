@@ -2,6 +2,7 @@
 "use strict";
 import LogGroup from "./LogGroup";
 import LogChunk from "./LogChunk";
+
 export default class PrintLogger {
     /**
      * @param {Object|Console} logger
@@ -20,9 +21,22 @@ export default class PrintLogger {
             .map(logGroup => logGroup.useCaseName)
             .join(", ");
         const groupTitleSuffix = childrenLogGroup.length > 0 ? `(includes "${includesUseCaseName}")` : "";
-        const isIncludedErrorChunk = this._includeErrorChunk(logGroup);
-        // x or flag
-        const groupMark = isIncludedErrorChunk ? `\u{274C}` : "\u{1F516}";
+        /**
+         * x(failure) or flag(success) or rocket(transaction)
+         * @param {LogGroup} logGroup
+         * @returns {string}
+         */
+        const getGroupMark = logGroup => {
+            const isIncludedErrorChunk = this._includeErrorChunk(logGroup);
+            if (isIncludedErrorChunk) {
+                return `\u{274C}`; // x
+            } else if (logGroup.isTransaction) {
+                return `\u{1F680}`;
+            } else {
+                return "\u{1F516}";
+            }
+        };
+        const groupMark = getGroupMark(logGroup);
         const groupTitle = `${groupMark} ${logGroup.title}${groupTitleSuffix}`;
         this.logger.groupCollapsed(groupTitle);
         logGroup.children.forEach(logItem => {
@@ -32,9 +46,30 @@ export default class PrintLogger {
                 this._outputChunk(logItem);
             }
         });
+
+        /**
+         *
+         * @param {LogGroup|LogChunk} log
+         * @param {"first"|"last"} direction
+         * @returns {number}
+         */
+        const getTimeStamp = (log, direction) => {
+            if (log instanceof LogGroup) {
+                if (direction === "last") {
+                    const lastItem = log.children[log.children.length - 1];
+                    return getTimeStamp(lastItem);
+                } else {
+                    const firstItem = log.children[0];
+                    return getTimeStamp(firstItem);
+                }
+            } else {
+                return log.timeStamp;
+            }
+        };
         if (logGroup.children.length > 1) {
-            const takenTime =
-                logGroup.children[logGroup.children.length - 1].timeStamp - logGroup.children[0].timeStamp;
+            const firstItemTimeStamp = getTimeStamp(logGroup, "first");
+            const lastItemTimeStamp = getTimeStamp(logGroup, "last");
+            const takenTime = lastItemTimeStamp - firstItemTimeStamp;
             this.logger.log(`Taken time: ${takenTime}ms`);
         }
         this.logger.groupEnd(groupTitle);

@@ -17,7 +17,10 @@ const dispatcher = new Dispatcher();
 // context connect dispatch with stores
 const appContext = new Context({
     dispatcher,
-    store: AppStore.create()
+    store: AppStore.create(),
+    options: {
+        strict: true
+    }
 });
 if (process.env.NODE_ENV !== "production") {
     // start logger
@@ -29,19 +32,20 @@ if (process.env.NODE_ENV !== "production") {
 AppLocator.context = appContext;
 // Initialize application domain
 (async function bootApp() {
-    // reset repository and observe changes
-    await AppLocator.context.useCase(InitializeRepositoryUseCase.create()).execute();
-    // Create anonymous customer data
-    await AppLocator.context.useCase(InitializeCustomerUseCase.create()).execute();
-    // use initialState if server-side provide
-    // if initialState is not provided, client fetch products data
-    const initialShopProducts = window.__PRELOADED_STATE__ ? window.__PRELOADED_STATE__ : undefined;
-    await AppLocator.context.useCase(InitializeProductUseCase.create()).execute(initialShopProducts);
+    await appContext.transaction("bootstrap", async transactionContext => {
+        // reset repository and observe changes
+        await transactionContext.useCase(InitializeRepositoryUseCase.create()).execute();
+        // Create anonymous customer data
+        await transactionContext.useCase(InitializeCustomerUseCase.create()).execute();
+        // use initialState if server-side provide
+        // if initialState is not provided, client fetch products data
+        const initialShopProducts = window.__PRELOADED_STATE__ ? window.__PRELOADED_STATE__ : undefined;
+        await transactionContext.useCase(InitializeProductUseCase.create()).execute(initialShopProducts);
+        // commit
+        transactionContext.commit();
+    });
     // Render <Bootstrap>
     const Bootstrap = AlminReactContainer.create(App, AppLocator.context);
     // Initial render
-    ReactDOM.render(
-        <Bootstrap />,
-        document.getElementById("flux-app")
-    );
+    ReactDOM.render(<Bootstrap />, document.getElementById("flux-app"));
 })();

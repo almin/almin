@@ -19,6 +19,8 @@ import ErrorUseCase from "./usecase/ErrorUseCase";
 import WrapUseCase from "./usecase/WrapUseCase";
 import DispatchUseCase from "./usecase/DispatchUseCase";
 import { ParentUseCase, ChildUseCase } from "./usecase/NestingUseCase";
+import { createStore } from "./store/create-store";
+
 describe("AsyncLogger", function() {
     describe("#addLog", () => {
         it("should add current LogGroups", () => {
@@ -28,7 +30,7 @@ describe("AsyncLogger", function() {
             });
             const dispatcher = new Dispatcher();
             const useCase = new WrapUseCase();
-            const store = new Store();
+            const store = createStore();
             const context = new Context({
                 store,
                 dispatcher
@@ -63,7 +65,7 @@ describe("AsyncLogger", function() {
         });
         const dispatcher = new Dispatcher();
         const useCase = new DispatchUseCase();
-        const store = new Store();
+        const store = createStore();
         const context = new Context({
             store,
             dispatcher
@@ -113,7 +115,7 @@ describe("AsyncLogger", function() {
                 console: consoleMock
             });
             const context = new Context({
-                store: new Store(),
+                store: createStore(),
                 dispatcher: new Dispatcher()
             });
             logger.startLogging(context);
@@ -150,7 +152,7 @@ describe("AsyncLogger", function() {
             console: consoleMock
         });
         const dispatcher = new Dispatcher();
-        const store = new Store();
+        const store = createStore();
         const context = new Context({
             store,
             dispatcher
@@ -185,7 +187,7 @@ describe("AsyncLogger", function() {
         const logger = new AsyncLogger({
             console: consoleMock
         });
-        const store = new Store();
+        const store = createStore();
         const dispatcher = new Dispatcher();
         const useCase = new NoDispatchUseCase();
         const context = new Context({
@@ -215,7 +217,7 @@ describe("AsyncLogger", function() {
             console: consoleMock
         });
         const dispatcher = new Dispatcher();
-        const store = new Store();
+        const store = createStore();
         const context = new Context({
             store,
             dispatcher

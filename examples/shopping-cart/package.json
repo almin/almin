@@ -8,9 +8,11 @@
   },
   "scripts": {
     "clean": "rimraf public/build build/ && mkdirp public/build",
-    "start": "webpack-dev-server --hot --content-base public/ --open",
-    "start:ssr": "node build/server.js",
+    "start": "webpack-dev-server --hot --content-base public/",
+    "start:ssr": "npm run build:ssr && npm run server:ssr",
+    "server:ssr": "node build/server.js",
     "build": "NODE_ENV=production webpack -p",
+    "build:ssr": "NODE_ENV=production webpack --config webpack.server.config.js -p",
     "watch": "NODE_ENV=development webpack -d -w",
     "test": "mocha",
     "ci": "npm test"
@@ -18,7 +20,7 @@
   "author": "azu",
   "license": "MIT",
   "dependencies": {
-    "almin": "^0.12.1",
+    "almin": "^0.13.1",
     "almin-logger": "^4.1.0",
     "almin-react-container": "^0.2.2",
     "power-assert": "^1.4.2",

@@ -1,12 +1,17 @@
 const path = require("path");
 
-module.exports = {
-    entry: "./src/index.js",
+const client = require("./webpack.config");
+const server = {
+    entry: "./src/server-index.js",
     devtool: process.env.WEBPACK_DEVTOOL || "source-map",
     output: {
-        path: path.join(__dirname, "public", "build"),
-        publicPath: "/build/",
-        filename: "bundle.js"
+        path: path.join(__dirname, "build"),
+        filename: "server.js"
+    },
+    target: "node",
+    node: {
+        __filename: false,
+        __dirname: false
     },
     module: {
         rules: [
@@ -21,3 +26,4 @@ module.exports = {
         ]
     }
 };
+module.exports = [client, server];

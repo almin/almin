@@ -6,6 +6,8 @@ import SyncLogger from "../src/SyncLogger";
 import AlminLogger from "../src/AlminLogger";
 import ConsoleMock from "./helper/ConsoleMock";
 import NoDispatchUseCase from "./usecase/NoDispatchUseCase";
+import { createStore } from "./store/create-store";
+
 describe("SyncLogger", function() {
     it("should output", function(done) {
         const consoleMock = ConsoleMock.create();
@@ -13,7 +15,7 @@ describe("SyncLogger", function() {
             console: consoleMock
         });
         const dispatcher = new Dispatcher();
-        const store = new Store();
+        const store = createStore();
         const context = new Context({
             store,
             dispatcher
