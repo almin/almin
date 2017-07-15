@@ -2,19 +2,19 @@
 "use strict";
 const assert = require("assert");
 const sinon = require("sinon");
-import { Context } from "../src/Context";
-import { Dispatcher } from "../src/Dispatcher";
-import { Store } from "../src/Store";
-import { StoreGroup } from "../src/UILayer/StoreGroup";
+import { Context, Dispatcher, Store, StoreGroup, UseCase } from "../src/";
 import { NoDispatchUseCase } from "./use-case/NoDispatchUseCase";
 import ReturnPromiseUseCase from "./use-case/ReturnPromiseUseCase";
 import { createStore } from "./helper/create-new-store";
+import { createUpdatableStoreWithUseCase } from "./helper/create-update-store-usecase";
 
 describe("StoreGroup edge case", function() {
-    describe("when {A,B}Store#emitChange on completed Payload", () => {
-        it("should onChange at once", () => {
-            const aStore = createStore({ name: "AStore" });
-            const bStore = createStore({ name: "BStore" });
+    describe("when {A,B}Store#emitChange on UseCase is completed", () => {
+        it("should Context#onChange is called at once", () => {
+            const { MockStore: AStore, requestUpdateState: changeAState } = createUpdatableStoreWithUseCase("A");
+            const { MockStore: BStore, requestUpdateState: changeBState } = createUpdatableStoreWithUseCase("B");
+            const aStore = new AStore();
+            const bStore = new BStore();
             const storeGroup = new StoreGroup({ a: aStore, b: bStore });
             const context = new Context({
                 dispatcher: new Dispatcher(),
@@ -25,8 +25,19 @@ describe("StoreGroup edge case", function() {
             context.onChange(() => {
                 count++;
             });
-            return context.useCase(new NoDispatchUseCase()).execute().then(() => {
-                assert(count === 1);
+
+            class ChangeAandBStateUseCase extends UseCase {
+                execute() {
+                    return Promise.resolve().then(() => {
+                        // Update two states on CompletedPayload
+                        changeAState("update a");
+                        changeBState("update b");
+                    });
+                }
+            }
+
+            return context.useCase(new ChangeAandBStateUseCase()).execute().then(() => {
+                assert.strictEqual(count, 1, "update a and b should be collect up. onChange should be called 1");
             });
         });
     });
