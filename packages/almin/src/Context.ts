@@ -24,6 +24,9 @@ import { StoreGroupLike } from "./UILayer/StoreGroupLike";
 import { LifeCycleEventHub } from "./LifeCycleEventHub";
 import { StoreChangedPayload } from "./payload/StoreChangedPayload";
 
+/**
+ * Context arguments
+ */
 export interface ContextArgs<T> {
     dispatcher: Dispatcher;
     store: StoreLike<T>;

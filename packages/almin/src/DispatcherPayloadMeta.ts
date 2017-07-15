@@ -5,6 +5,9 @@ import { Dispatcher } from "./Dispatcher";
 import { UseCase } from "./UseCase";
 import { UseCaseLike } from "./UseCaseLike";
 
+/**
+ * Transaction data
+ */
 export interface Transaction {
     // Transaction name
     readonly name: string;

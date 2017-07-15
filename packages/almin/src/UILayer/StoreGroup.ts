@@ -197,12 +197,8 @@ export class StoreGroup<T> extends Dispatcher implements StoreGroupLike {
     /**
      * If exist working UseCase, return true
      */
-    protected get existWorkingUseCase() {
+    private get existWorkingUseCase() {
         return this._workingUseCaseMap.size > 0;
-    }
-
-    protected get isInitializedWithStateNameMap() {
-        return this._storeStateMap.size > 0;
     }
 
     /**
