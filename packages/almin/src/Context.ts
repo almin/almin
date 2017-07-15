@@ -129,6 +129,20 @@ export class Context<T> {
     }
 
     /**
+     * Return almin life cycle events hub.
+     * You can observe life cycle events on almin.
+     *
+     * ## Notes
+     *
+     * If you want to know the change of registered store, please use `context.onChange`.
+     * `context.onChange` is optimized for updating View.
+     * By contrast, `context.events.*` is not optimized data. it is useful for logging.
+     */
+    get events() {
+        return this.lifeCycleEventHub;
+    }
+
+    /**
      * Return state value of StoreGroup or Store.
      *
      * ### Example
