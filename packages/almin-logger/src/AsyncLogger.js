@@ -4,6 +4,7 @@ import AlminLogger from "./AlminLogger";
 import LogGroup from "./log/LogGroup";
 import LogChunk from "./log/LogChunk";
 import PrintLogger from "./log/PrintLogger";
+
 const EventEmitter = require("events");
 const { MapLike } = require("map-like");
 // FIXME: Almin 0.12 support pull-based Store
@@ -50,6 +51,10 @@ export default class AsyncLogger extends EventEmitter {
          * @type {MapLike}
          */
         this._logMap = new MapLike();
+        /**
+         * @type {MapLike}
+         */
+        this._transactionMap = new MapLike();
         this._releaseHandlers = [];
         /**
          * @type {Console|Object|*}
@@ -63,6 +68,54 @@ export default class AsyncLogger extends EventEmitter {
      * @param {Context} context
      */
     startLogging(context) {
+        /**
+         *
+         * @param meta
+         * @returns {LogGroup|undefined}
+         */
+        const getTransactionLogGroup = meta => {
+            // if it is transaction, add this logGroup as child of transaction
+            const transactionName = meta.transaction && meta.transaction.name;
+            if (transactionName) {
+                return this._transactionMap.get(transactionName);
+            }
+            return;
+        };
+
+        /**
+         *
+         * @param {LogGroup} logGroup
+         */
+        const outputLogging = logGroup => {
+            const index = this._currentLogBuffer.indexOf(logGroup);
+            if (index !== -1) {
+                this._currentLogBuffer.splice(index, 1);
+                this.printLogger.printLogGroup(logGroup);
+                this.emit(AlminLogger.Events.output, logGroup);
+            }
+        };
+        /**
+         * @param {TransactionBeganPayload} payload
+         * @param {DispatcherPayloadMeta} meta
+         */
+        const onBeginTransaction = (payload, meta) => {
+            const logGroup = new LogGroup({ title: payload.name, isTransaction: true });
+            this._transactionMap.set(payload.name, logGroup);
+            // the logGroup is root
+            this._currentLogBuffer.push(logGroup);
+        };
+
+        /**
+         * @param {TransactionEndedPayload} payload
+         * @param {DispatcherPayloadMeta} meta
+         */
+        const onEndTransaction = (payload, meta) => {
+            const logGroup = getTransactionLogGroup(meta);
+            if (logGroup) {
+                outputLogging(logGroup);
+            }
+            this._transactionMap.delete(payload.name);
+        };
         /**
          * @param {WillExecutedPayload} payload
          * @param {DispatcherPayloadMeta} meta
@@ -88,7 +141,11 @@ export default class AsyncLogger extends EventEmitter {
                 parentLogMap.addGroup(logGroup);
             }
             this._logMap.set(useCase, logGroup);
-            if (!parentUseCase) {
+            // if it is transaction, add this logGroup as child of transaction
+            const transactionLogGroup = getTransactionLogGroup(meta);
+            if (transactionLogGroup) {
+                transactionLogGroup.addGroup(logGroup);
+            } else if (!parentUseCase) {
                 // if logGroup is of root
                 this._currentLogBuffer.push(logGroup);
             }
@@ -115,41 +172,65 @@ export default class AsyncLogger extends EventEmitter {
                 })
             );
         };
-        const onChangeStores = changeStores => {
+        /**
+         * @param {StoreChangedPayload} payload
+         * @param {DispatcherPayloadMeta} meta
+         */
+        const onChangeStore = (payload, meta) => {
+            const store = payload.store;
             // one, or more stores
-            const stores = [].concat(changeStores);
             const useCases = this._logMap.keys();
             const workingUseCaseNames = useCases.map(useCase => {
                 return useCase.name;
             });
-            // if Store#emitChange is called by async, workingUseCaseNames.length is 0.
             const existWorkingUseCase = workingUseCaseNames.length !== 0;
             if (existWorkingUseCase) {
-                // It support Almin's QueuedStoreGroup implementation
-                stores.forEach(store => {
-                    const state = tryGetState(store);
+                const state = tryGetState(store);
+                if (meta.useCase) {
+                    const logGroup = this._logMap.get(meta.useCase);
+                    if (!logGroup) {
+                        return;
+                    }
+                    logGroup.addChunk(
+                        new LogChunk({
+                            log: [`\u{1F4BE} Store:${store.name}`, state !== null ? state : store],
+                            payload,
+                            useCase: meta.useCase,
+                            timeStamp: meta.timeStamp
+                        })
+                    );
+                } else {
+                    // add log to all UseCase
                     this.addLog([`\u{1F4BE} Store:${store.name}`, state !== null ? state : store]);
                     if (workingUseCaseNames.length >= 2) {
                         this.addLog(`\u{2139}\u{FE0F} Currently executing UseCases: ${workingUseCaseNames.join(", ")}`);
                     }
-                });
+                }
             } else {
-                // It support Almin's StoreGroup implementation.
-                // StoreGroup emit change after UseCase is completed
-                const storeLogGroup = new LogGroup({
-                    title: `Store is changed`
-                });
-                const timeStamp = Date.now();
-                stores.forEach(store => {
+                // Async update of StoreGroup
+                const transactionLogGroup = getTransactionLogGroup(meta);
+                if (transactionLogGroup) {
+                    const state = tryGetState(store);
+                    transactionLogGroup.addChunk(
+                        new LogChunk({
+                            log: [`\u{1F4BE} Store:${store.name}`, state !== null ? state : store],
+                            timeStamp: meta.timeStamp
+                        })
+                    );
+                } else {
+                    // If isolated store update, immediate dump this
+                    const storeLogGroup = new LogGroup({
+                        title: `Store(${store.name}) is changed`
+                    });
                     const state = tryGetState(store);
                     storeLogGroup.addChunk(
                         new LogChunk({
                             log: [`\u{1F4BE} Store:${store.name}`, state !== null ? state : store],
-                            timeStamp
+                            timeStamp: meta.timeStamp
                         })
                     );
-                });
-                this.printLogger.printLogGroup(storeLogGroup);
+                    this.printLogger.printLogGroup(storeLogGroup);
+                }
             }
         };
         /**
@@ -203,22 +284,23 @@ export default class AsyncLogger extends EventEmitter {
                     timeStamp: meta.timeStamp
                 })
             );
-            const index = this._currentLogBuffer.indexOf(logGroup);
-            if (index !== -1) {
-                this._currentLogBuffer.splice(index, 1);
-                this.printLogger.printLogGroup(logGroup);
-                this.emit(AlminLogger.Events.output, logGroup);
+            const transactionLogGroup = getTransactionLogGroup(meta);
+            if (!transactionLogGroup) {
+                outputLogging(logGroup);
             }
             this._logMap.delete(useCase);
         };
+
         // release handler
         this._releaseHandlers = [
-            context.onChange(onChangeStores),
-            context.onDispatch(onDispatch),
-            context.onWillExecuteEachUseCase(onWillExecuteEachUseCase),
-            context.onDidExecuteEachUseCase(onDidExecuteEachUseCase),
-            context.onCompleteEachUseCase(onCompleteUseCase),
-            context.onErrorDispatch(onErrorHandler)
+            context.events.onBeginTransaction(onBeginTransaction),
+            context.events.onEndTransaction(onEndTransaction),
+            context.events.onChangeStore(onChangeStore),
+            context.events.onDispatch(onDispatch),
+            context.events.onWillExecuteEachUseCase(onWillExecuteEachUseCase),
+            context.events.onDidExecuteEachUseCase(onDidExecuteEachUseCase),
+            context.events.onCompleteEachUseCase(onCompleteUseCase),
+            context.events.onErrorDispatch(onErrorHandler)
         ];
     }
 

@@ -4,7 +4,9 @@
       "allow": [
         "execute",
         "executed",
-        "execution"
+        "execution",
+        "failure",
+        "pros"
       ]
     },
     "no-dead-link": true,

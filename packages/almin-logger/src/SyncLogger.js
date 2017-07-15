@@ -62,18 +62,18 @@ export default class SyncLogger extends EventEmitter {
             const startTimeStamp = this._logMap[useCase.name];
             const takenTime = meta.timeStamp - startTimeStamp;
             this.logger.log(`${useCase.name} is completed`);
-            this.logger.info("Take time(ms): " + takenTime);
+            this.logger.info(`Take time(ms): ${takenTime}`);
             this.logger.groupEnd(useCase.name);
             this.emit(AlminLogger.Events.output);
         };
         // release handler
         this._releaseHandlers = [
             context.onChange(onChange),
-            context.onDispatch(onDispatch),
-            context.onWillExecuteEachUseCase(onWillExecuteEachUseCase),
-            context.onDidExecuteEachUseCase(onDidExecuteEachUseCase),
-            context.onCompleteEachUseCase(onCompleteUseCase),
-            context.onErrorDispatch(onErrorHandler)
+            context.events.onDispatch(onDispatch),
+            context.events.onWillExecuteEachUseCase(onWillExecuteEachUseCase),
+            context.events.onDidExecuteEachUseCase(onDidExecuteEachUseCase),
+            context.events.onCompleteEachUseCase(onCompleteUseCase),
+            context.events.onErrorDispatch(onErrorHandler)
         ];
     }
 

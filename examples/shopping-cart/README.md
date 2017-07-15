@@ -12,8 +12,8 @@ Original example from:
 
     # client-side rendering mode
     npm start
+    open http://localhost:8080/
     # server-side rendering mode
-    npm run watch
     npm run start:ssr # Run after generated build/server.js 
     open http://localhost:3000/server
 
