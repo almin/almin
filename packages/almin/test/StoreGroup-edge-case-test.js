@@ -8,8 +8,28 @@ import { Store } from "../src/Store";
 import { StoreGroup } from "../src/UILayer/StoreGroup";
 import { NoDispatchUseCase } from "./use-case/NoDispatchUseCase";
 import ReturnPromiseUseCase from "./use-case/ReturnPromiseUseCase";
+import { createStore } from "./helper/create-new-store";
 
 describe("StoreGroup edge case", function() {
+    describe("when {A,B}Store#emitChange on completed Payload", () => {
+        it("should onChange at once", () => {
+            const aStore = createStore({ name: "AStore" });
+            const bStore = createStore({ name: "BStore" });
+            const storeGroup = new StoreGroup({ a: aStore, b: bStore });
+            const context = new Context({
+                dispatcher: new Dispatcher(),
+                store: storeGroup
+            });
+
+            let count = 0;
+            context.onChange(() => {
+                count++;
+            });
+            return context.useCase(new NoDispatchUseCase()).execute().then(() => {
+                assert(count === 1);
+            });
+        });
+    });
     // See https://github.com/almin/almin/issues/179
     describe("when call Store#emitChange in Store#receivePayload", () => {
         it("should not infinity loop", () => {

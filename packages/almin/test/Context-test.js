@@ -130,8 +130,8 @@ describe("Context", function() {
                 done();
             });
             // catch multiple changes at one time
-            aStore.updateState({ a: 1 });
-            bStore.updateState({ b: 1 });
+            aStore.mutableStateWithoutEmit({ a: 1 });
+            bStore.mutableStateWithoutEmit({ b: 1 });
             aStore.emitChange();
         });
     });

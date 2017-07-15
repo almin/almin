@@ -7,6 +7,7 @@ import { createStore } from "./helper/create-new-store";
 import { NoDispatchUseCase } from "./use-case/NoDispatchUseCase";
 import { DispatchUseCase } from "./use-case/DispatchUseCase";
 import { ThrowUseCase } from "./use-case/ThrowUseCase";
+import { createUpdatableStoreWithUseCase } from "./helper/create-update-store-usecase";
 
 /**
  * create a Store that can handle receivePayload
@@ -31,26 +32,29 @@ const createReceivePayloadStore = receivePayloadHandler => {
 };
 describe("Context#transaction", () => {
     it("should collect up StoreGroup commit", function() {
-        const aStore = createStore({ name: "AStore" });
-        const bStore = createStore({ name: "BStore" });
-        const cStore = createStore({ name: "CStore" });
+        const { MockStore: AStore, MockUseCase: AUseCase } = createUpdatableStoreWithUseCase("A");
+        const { MockStore: BStore, MockUseCase: BUseCase } = createUpdatableStoreWithUseCase("B");
+        const { MockStore: CStore, MockUseCase: CUseCase } = createUpdatableStoreWithUseCase("C");
+        const aStore = new AStore();
+        const bStore = new BStore();
+        const cStore = new CStore();
         const storeGroup = new StoreGroup({ a: aStore, b: bStore, c: cStore });
 
-        class ChangeAUseCase extends UseCase {
+        class ChangeAUseCase extends AUseCase {
             execute() {
-                aStore.updateState(1);
+                this.requestUpdateState(1);
             }
         }
 
-        class ChangeBUseCase extends UseCase {
+        class ChangeBUseCase extends BUseCase {
             execute() {
-                bStore.updateState(1);
+                this.requestUpdateState(1);
             }
         }
 
-        class ChangeCUseCase extends UseCase {
+        class ChangeCUseCase extends CUseCase {
             execute() {
-                cStore.updateState(1);
+                this.requestUpdateState(1);
             }
         }
 
@@ -211,7 +215,8 @@ describe("Context#transaction", () => {
     });
 
     it("should meta.transaction is current transaction", function() {
-        const aStore = createStore({ name: "test" });
+        const { MockStore: AStore, MockUseCase: AUseCase } = createUpdatableStoreWithUseCase("A");
+        const aStore = new AStore();
         const storeGroup = new StoreGroup({ a: aStore });
         const dispatcher = new Dispatcher();
         const context = new Context({
@@ -222,11 +227,12 @@ describe("Context#transaction", () => {
             }
         });
 
-        class ChangeAUseCase extends UseCase {
+        class ChangeAUseCase extends AUseCase {
             execute() {
-                aStore.updateState(1);
+                this.requestUpdateState(1);
             }
         }
+
         const transactionName = "My Transaction";
         dispatcher.onDispatch((payload, meta) => {
             assert.deepEqual(meta.transaction, {

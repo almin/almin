@@ -18,7 +18,7 @@ const createAsyncChangeStoreUseCase = store => {
         execute() {
             return Promise.resolve().then(() => {
                 const newState = { a: {} };
-                store.updateState(newState);
+                store.mutableStateWithoutEmit(newState);
             });
         }
     }
@@ -29,7 +29,7 @@ const createChangeStoreUseCase = store => {
     class ChangeTheStoreUseCase extends UseCase {
         execute() {
             const newState = { a: {} };
-            store.updateState(newState);
+            store.mutableStateWithoutEmit(newState);
         }
     }
 
