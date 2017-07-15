@@ -76,10 +76,10 @@ describe("StoreGroup edge case", function() {
             context.onChange(() => {
                 callStack.push("change");
             });
-            context.onDidExecuteEachUseCase(() => {
+            context.events.onDidExecuteEachUseCase(() => {
                 callStack.push("did");
             });
-            context.onCompleteEachUseCase(() => {
+            context.events.onCompleteEachUseCase(() => {
                 callStack.push("complete");
             });
             return context.useCase(new ReturnPromiseUseCase()).execute().then(() => {

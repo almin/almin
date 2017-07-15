@@ -21,7 +21,7 @@ describe("DispatcherPayloadMeta", () => {
             });
             const useCase = new NoDispatchUseCase();
             let actualMeta = null;
-            context.onWillExecuteEachUseCase((payload, meta) => {
+            context.events.onWillExecuteEachUseCase((payload, meta) => {
                 actualMeta = meta;
             });
             return context.useCase(useCase).execute().then(() => {
@@ -42,7 +42,7 @@ describe("DispatcherPayloadMeta", () => {
             });
             const useCase = new DispatchUseCase();
             let actualMeta = null;
-            context.onDispatch((payload, meta) => {
+            context.events.onDispatch((payload, meta) => {
                 actualMeta = meta;
             });
             return context.useCase(useCase).execute({ type: "test" }).then(() => {
@@ -63,7 +63,7 @@ describe("DispatcherPayloadMeta", () => {
             });
             const useCase = new NoDispatchUseCase();
             let actualMeta = null;
-            context.onDidExecuteEachUseCase((payload, meta) => {
+            context.events.onDidExecuteEachUseCase((payload, meta) => {
                 actualMeta = meta;
             });
             return context.useCase(useCase).execute().then(() => {
@@ -83,7 +83,7 @@ describe("DispatcherPayloadMeta", () => {
             });
             const useCase = new ReturnPromiseUseCase();
             let actualMeta = null;
-            context.onDidExecuteEachUseCase((payload, meta) => {
+            context.events.onDidExecuteEachUseCase((payload, meta) => {
                 actualMeta = meta;
             });
             return context.useCase(useCase).execute().then(() => {
@@ -105,7 +105,7 @@ describe("DispatcherPayloadMeta", () => {
             });
             const useCase = new NoDispatchUseCase();
             let actualMeta = null;
-            context.onCompleteEachUseCase((payload, meta) => {
+            context.events.onCompleteEachUseCase((payload, meta) => {
                 actualMeta = meta;
             });
             return context.useCase(useCase).execute().then(() => {
@@ -127,7 +127,7 @@ describe("DispatcherPayloadMeta", () => {
             });
             const useCase = new ErrorUseCase();
             let actualMeta = null;
-            context.onErrorDispatch((payload, meta) => {
+            context.events.onErrorDispatch((payload, meta) => {
                 actualMeta = meta;
             });
             return context.useCase(useCase).execute().catch(() => {
@@ -154,10 +154,10 @@ describe("DispatcherPayloadMeta", () => {
             const didMeta = [];
             const completeMeta = [];
             let childDispatchMeta = null;
-            context.onWillExecuteEachUseCase((payload, meta) => willMeta.push(meta));
-            context.onDidExecuteEachUseCase((payload, meta) => didMeta.push(meta));
-            context.onCompleteEachUseCase((payload, meta) => completeMeta.push(meta));
-            context.onDispatch((payload, meta) => (childDispatchMeta = meta));
+            context.events.onWillExecuteEachUseCase((payload, meta) => willMeta.push(meta));
+            context.events.onDidExecuteEachUseCase((payload, meta) => didMeta.push(meta));
+            context.events.onCompleteEachUseCase((payload, meta) => completeMeta.push(meta));
+            context.events.onDispatch((payload, meta) => (childDispatchMeta = meta));
             return context.useCase(parentUseCase).execute().then(() => {
                 const [parentWillMeta, childWillMeta] = willMeta;
                 const [childDidMeta, parentDidMeta] = didMeta;

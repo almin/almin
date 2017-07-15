@@ -22,7 +22,7 @@ describe("UseCaseContext", () => {
                 dispatcher,
                 store: createStore({ name: "test" })
             });
-            context.onDispatch(payload => {
+            context.events.onDispatch(payload => {
                 dispatched.push(payload);
             });
             return context.useCase(new ParentUseCase()).execute().then(() => {

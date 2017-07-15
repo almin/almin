@@ -42,6 +42,9 @@ export class LifeCycleEventHub {
         return releaseHandler;
     }
 
+    /**
+     * Register `handler` function that is called when begin `Context.transaction`.
+     */
     onBeginTransaction(handler: (payload: TransactionBeganPayload, meta: DispatcherPayloadMeta) => void) {
         const releaseHandler = this.dispatcher.onDispatch(function onBeginTransaction(payload, meta) {
             if (isTransactionBeganPayload(payload)) {
@@ -52,6 +55,9 @@ export class LifeCycleEventHub {
         return releaseHandler;
     }
 
+    /**
+     * Register `handler` function that is called when `Context.transaction` is ended.
+     */
     onEndTransaction(handler: (payload: TransactionEndedPayload, meta: DispatcherPayloadMeta) => void) {
         const releaseHandler = this.dispatcher.onDispatch(function onEndTransaction(payload, meta) {
             if (isTransactionEndedPayload(payload)) {

@@ -94,10 +94,10 @@ describe("UseCase", function() {
                 const expectedType = expectedCallStackOfAUseCase.shift();
                 assert.equal(type, expectedType);
             });
-            context.onWillExecuteEachUseCase((payload, meta) => {
+            context.events.onWillExecuteEachUseCase((payload, meta) => {
                 callStack.push(`${meta.useCase.name}:will`);
             });
-            context.onDidExecuteEachUseCase((payload, meta) => {
+            context.events.onDidExecuteEachUseCase((payload, meta) => {
                 callStack.push(`${meta.useCase.name}:did`);
             });
             // when

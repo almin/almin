@@ -22,8 +22,6 @@ import { TransactionContext } from "./UnitOfWork/TransactionContext";
 import { createSingleStoreGroup } from "./UILayer/SingleStoreGroup";
 import { StoreGroupLike } from "./UILayer/StoreGroupLike";
 import { LifeCycleEventHub } from "./LifeCycleEventHub";
-import { TransactionBeganPayload } from "./payload/TransactionBeganPayload";
-import { TransactionEndedPayload } from "./payload/TransactionEndedPayload";
 import { StoreChangedPayload } from "./payload/StoreChangedPayload";
 
 export interface ContextArgs<T> {
@@ -329,22 +327,10 @@ Please enable strict mode via \`new Context({ dispatcher, store, options: { stri
     }
 
     /**
-     * Register `handler` function that is called when begin `Context.transaction`.
-     */
-    onBeginTransaction(handler: (payload: TransactionBeganPayload, meta: DispatcherPayloadMeta) => void) {
-        return this.lifeCycleEventHub.onBeginTransaction(handler);
-    }
-
-    /**
-     * Register `handler` function that is called when `Context.transaction` is ended.
-     */
-    onEndTransaction(handler: (payload: TransactionEndedPayload, meta: DispatcherPayloadMeta) => void) {
-        return this.lifeCycleEventHub.onEndTransaction(handler);
-    }
-
-    /**
      * Register `handler` function to Context.
      * `handler` is called when each useCases will execute.
+     * @deprecated
+     * Use `context.events.onWillExecuteEachUseCase` insteadof it.
      */
     onWillExecuteEachUseCase(handler: (payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         return this.lifeCycleEventHub.onWillExecuteEachUseCase(handler);
@@ -369,6 +355,9 @@ Please enable strict mode via \`new Context({ dispatcher, store, options: { stri
      *
      * context.useCase(dispatchUseCase).execute();
      * ```
+     *
+     * @deprecated
+     * Use `context.events.onDispatch` insteadof it.
      */
     onDispatch(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         return this.lifeCycleEventHub.onDispatch(handler);
@@ -376,6 +365,8 @@ Please enable strict mode via \`new Context({ dispatcher, store, options: { stri
 
     /**
      * `handler` is called when each useCases are executed.
+     * @deprecated
+     * Use `context.events.onDidExecuteEachUseCase` insteadof it.
      */
     onDidExecuteEachUseCase(handler: (payload: DidExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         return this.lifeCycleEventHub.onDidExecuteEachUseCase(handler);
@@ -384,6 +375,8 @@ Please enable strict mode via \`new Context({ dispatcher, store, options: { stri
     /**
      * `handler` is called when each useCases are completed.
      * This `handler` is always called asynchronously.
+     * @deprecated
+     * Use `context.events.onCompleteEachUseCase` insteadof it.
      */
     onCompleteEachUseCase(handler: (payload: CompletedPayload, meta: DispatcherPayloadMeta) => void): () => void {
         return this.lifeCycleEventHub.onCompleteEachUseCase(handler);
@@ -397,6 +390,8 @@ Please enable strict mode via \`new Context({ dispatcher, store, options: { stri
      * - Throw exception in a UseCase
      * - Return rejected promise in a UseCase
      * - Call `UseCase#throwError(error)`
+     * @deprecated
+     * Use `context.events.onErrorDispatch` insteadof it.
      */
     onErrorDispatch(handler: (payload: ErrorPayload, meta: DispatcherPayloadMeta) => void): () => void {
         return this.lifeCycleEventHub.onErrorDispatch(handler);
