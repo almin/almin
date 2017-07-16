@@ -419,7 +419,6 @@ But, ${store.name}#getState() was called.`
                 const prevState = this._stateCacheMap.get(store);
                 const nextState = store.getState();
                 // mark `store` as `emitChange`ed store in a UseCase life-cycle
-                console.log("mark", prevState, nextState);
                 this.storeGroupEmitChangeChecker.mark(store, prevState, nextState);
                 if (this.isStrictMode) {
                     // warning if this store is not allowed update at the time
