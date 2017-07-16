@@ -337,7 +337,8 @@ Please enable strict mode via \`new Context({ dispatcher, store, options: { stri
         // unitOfWork automatically close on transactionContext exited
         // by design.
         const promise = transactionHandler(context);
-        if (!promise) {
+        const isResultPromise = typeof promise === "object" && promise !== null && typeof promise.then == "function";
+        if (!isResultPromise) {
             throw new Error(`transaction context should return promise.
 Transaction should be exited after all useCases have been completed.
 
