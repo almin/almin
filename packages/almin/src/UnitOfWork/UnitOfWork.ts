@@ -26,7 +26,7 @@ export interface Committable {
 export class UnitOfWork extends EventEmitter {
     private commitments: Commitment[];
     private committable: Committable;
-    private isDisposed: boolean;
+    isDisposed: boolean;
 
     /**
      * @param {Committable} committable it is often StoreGroup

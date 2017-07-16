@@ -4,8 +4,10 @@ export { Dispatcher } from "./Dispatcher";
 export { Store } from "./Store";
 export { StoreGroup } from "./UILayer/StoreGroup";
 export { UseCase } from "./UseCase";
+export { UseCaseExecutor } from "./UseCaseExecutor";
 export { Context } from "./Context";
 export { FunctionalUseCaseContext } from "./FunctionalUseCaseContext";
+// payload
 export { CompletedPayload } from "./payload/CompletedPayload";
 export { DidExecutedPayload } from "./payload/DidExecutedPayload";
 export { Payload } from "./payload/Payload";
@@ -19,4 +21,5 @@ export { DispatcherPayloadMeta } from "./DispatcherPayloadMeta";
 import * as StoreGroupTypes from "./UILayer/StoreGroupTypes";
 export { StoreGroupTypes };
 export { StoreLike } from "./StoreLike";
+export { UseCaseLike } from "./UseCaseLike";
 export { DispatchedPayload } from "./Dispatcher";

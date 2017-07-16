@@ -8,6 +8,9 @@ import { UseCase } from "../src/UseCase";
 import { UseCaseExecutor } from "../src/UseCaseExecutor";
 import { CallableUseCase } from "./use-case/CallableUseCase";
 import { ThrowUseCase } from "./use-case/ThrowUseCase";
+import { isWillExecutedPayload } from "../src/payload/WillExecutedPayload";
+import { isDidExecutedPayload } from "../src/payload/DidExecutedPayload";
+import { isCompletedPayload } from "../src/payload/CompletedPayload";
 
 describe("UseCaseExecutor", function() {
     describe("#executor", () => {
@@ -142,22 +145,22 @@ describe("UseCaseExecutor", function() {
             }
 
             const callStack = [];
-            const expectedCallStack = [1, 2, 3];
+            const expectedCallStack = ["will", "dispatch", "did", "complete"];
             const executor = new UseCaseExecutor({
                 useCase: new SyncUseCase(),
                 dispatcher
             });
             // then
-            executor.onWillExecuteEachUseCase(() => {
-                callStack.push(1);
-            });
-            executor.onDispatch(({ type, value }) => {
-                if (type === expectedPayload.type) {
-                    callStack.push(2);
+            executor.onDispatch(payload => {
+                if (isWillExecutedPayload(payload)) {
+                    callStack.push("will");
+                } else if (payload.type === expectedPayload.type) {
+                    callStack.push("dispatch");
+                } else if (isDidExecutedPayload(payload)) {
+                    callStack.push("did");
+                } else if (isCompletedPayload(payload)) {
+                    callStack.push("complete");
                 }
-            });
-            executor.onDidExecuteEachUseCase(() => {
-                callStack.push(3);
             });
             // when
             return executor.execute(expectedPayload).then(() => {
@@ -233,7 +236,6 @@ describe("UseCaseExecutor", function() {
                     }
                 }
 
-                // then
                 let isCalledUseCase = false;
                 let isCalledDidExecuted = false;
                 let isCalledCompleted = false;
@@ -242,24 +244,17 @@ describe("UseCaseExecutor", function() {
                     useCase: new AsyncUseCase(),
                     dispatcher
                 });
-                executor.onDidExecuteEachUseCase((payload, meta) => {
-                    if (meta.useCase instanceof AsyncUseCase) {
+                executor.onDispatch((payload, meta) => {
+                    if (isDidExecutedPayload(payload) && meta.useCase instanceof AsyncUseCase) {
                         isCalledDidExecuted = true;
-                    }
-                });
-                executor.onCompleteExecuteEachUseCase((payload, meta) => {
-                    if (meta.useCase instanceof AsyncUseCase) {
+                    } else if (isCompletedPayload(payload) && meta.useCase instanceof AsyncUseCase) {
                         isCalledCompleted = true;
-                    }
-                });
-                // 4
-                executor.onDispatch(payload => {
-                    if (payload.type === expectedPayload.type) {
+                    } else if (payload.type === expectedPayload.type) {
                         assert.equal(payload.value, expectedPayload.value);
                         isCalledUseCase = true;
                     }
                 });
-                // 1
+                // then
                 return executor.execute(expectedPayload).then(() => {
                     assert(isCalledUseCase);
                     assert(isCalledDidExecuted);

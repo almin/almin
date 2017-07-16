@@ -6,9 +6,9 @@ import { UseCase } from "./UseCase";
 import { DispatcherPayloadMeta, DispatcherPayloadMetaImpl } from "./DispatcherPayloadMeta";
 import { UseCaseInstanceMap } from "./UseCaseInstanceMap";
 // payloads
-import { CompletedPayload, isCompletedPayload } from "./payload/CompletedPayload";
-import { DidExecutedPayload, isDidExecutedPayload } from "./payload/DidExecutedPayload";
-import { WillExecutedPayload, isWillExecutedPayload } from "./payload/WillExecutedPayload";
+import { CompletedPayload } from "./payload/CompletedPayload";
+import { DidExecutedPayload } from "./payload/DidExecutedPayload";
+import { WillExecutedPayload } from "./payload/WillExecutedPayload";
 import { UseCaseLike } from "./UseCaseLike";
 import { Payload } from "./payload/Payload";
 
@@ -151,7 +151,7 @@ export class UseCaseExecutor<T extends UseCaseLike> extends Dispatcher {
     /**
      * @param   [args] arguments of the UseCase
      */
-    private _willExecute(args?: any[]): void {
+    private willExecuteUseCase(args?: any[]): void {
         // Add instance to manager
         // It should be removed when it will be completed.
         UseCaseInstanceMap.set(this.useCase, this);
@@ -177,7 +177,7 @@ export class UseCaseExecutor<T extends UseCaseLike> extends Dispatcher {
     /**
      * dispatch did execute each UseCase
      */
-    private _didExecute(value?: any): void {
+    private didExecuteUseCase(value?: any): void {
         // if the UseCase return a promise, almin recognize the UseCase as continuous.
         // In other word, If the UseCase want to continue, please return a promise object.
         const isResultPromise = typeof value === "object" && value !== null && typeof value.then == "function";
@@ -199,7 +199,7 @@ export class UseCaseExecutor<T extends UseCaseLike> extends Dispatcher {
      * dispatch complete each UseCase
      * @param   [value] unwrapped result value of the useCase executed
      */
-    private _complete(value?: any): void {
+    private completeUseCase(value?: any): void {
         const payload = new CompletedPayload({
             value
         });
@@ -220,56 +220,10 @@ export class UseCaseExecutor<T extends UseCaseLike> extends Dispatcher {
         // Delete the reference from instance manager
         // It prevent leaking of instance.
         UseCaseInstanceMap.delete(this.useCase);
-        this.emit("COMPLETE");
     }
 
-    /**
-     * called the {@link handler} with useCase when the useCase will do.
-     * @param   handler
-     */
-    onWillExecuteEachUseCase(handler: (payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void {
-        const releaseHandler = this.onDispatch(function onWillExecute(payload, meta) {
-            if (isWillExecutedPayload(payload)) {
-                handler(payload, meta);
-            }
-        });
-        this._releaseHandlers.push(releaseHandler);
-        return releaseHandler;
-    }
-
-    /**
-     * called the `handler` with useCase when the useCase is executed.
-     * @param   handler
-     */
-    onDidExecuteEachUseCase(handler: (payload: DidExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void {
-        const releaseHandler = this.onDispatch(function onDidExecuted(payload, meta) {
-            if (isDidExecutedPayload(payload)) {
-                handler(payload, meta);
-            }
-        });
-        this._releaseHandlers.push(releaseHandler);
-        return releaseHandler;
-    }
-
-    /**
-     * called the `handler` with useCase when the useCase is completed.
-     * @param   handler
-     * @returns
-     */
-    onCompleteExecuteEachUseCase(
-        handler: (payload: CompletedPayload, meta: DispatcherPayloadMeta) => void
-    ): () => void {
-        const releaseHandler = this.onDispatch(function onCompleted(payload, meta) {
-            if (isCompletedPayload(payload)) {
-                handler(payload, meta);
-            }
-        });
-        this._releaseHandlers.push(releaseHandler);
-        return releaseHandler;
-    }
-
-    onComplete(handler: () => void): void {
-        this.on("COMPLETE", handler);
+    onRelease(handler: () => void): void {
+        this.on("USECASE_EXECUTOR_RELEASE", handler);
     }
 
     /**
@@ -325,10 +279,10 @@ export class UseCaseExecutor<T extends UseCaseLike> extends Dispatcher {
             const proxyfiedUseCase = proxifyUseCase<T>(
                 this.useCase,
                 args => {
-                    this._willExecute(args);
+                    this.willExecuteUseCase(args);
                 },
                 value => {
-                    this._didExecute(value);
+                    this.didExecuteUseCase(value);
                 },
                 value => {
                     resolve(value);
@@ -338,12 +292,12 @@ export class UseCaseExecutor<T extends UseCaseLike> extends Dispatcher {
         };
         return new Promise(startingExecutor)
             .then(result => {
-                this._complete(result);
+                this.completeUseCase(result);
                 this.release();
             })
             .catch(error => {
                 this.useCase.throwError(error);
-                this._complete();
+                this.completeUseCase();
                 this.release();
                 return Promise.reject(error);
             });
@@ -367,6 +321,7 @@ export class UseCaseExecutor<T extends UseCaseLike> extends Dispatcher {
     release(): void {
         this._releaseHandlers.forEach(releaseHandler => releaseHandler());
         this._releaseHandlers.length = 0;
+        this.emit("USECASE_EXECUTOR_RELEASE");
         this.removeAllListeners();
     }
 }
