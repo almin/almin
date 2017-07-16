@@ -4,7 +4,6 @@ export { Dispatcher } from "./Dispatcher";
 export { Store } from "./Store";
 export { StoreGroup } from "./UILayer/StoreGroup";
 export { UseCase } from "./UseCase";
-export { UseCaseExecutor } from "./UseCaseExecutor";
 export { Context } from "./Context";
 export { FunctionalUseCaseContext } from "./FunctionalUseCaseContext";
 // payload
@@ -20,6 +19,7 @@ export { DispatcherPayloadMeta } from "./DispatcherPayloadMeta";
 // For TypeScript
 import * as StoreGroupTypes from "./UILayer/StoreGroupTypes";
 export { StoreGroupTypes };
+export { UseCaseExecutor } from "./UseCaseExecutor";
 export { StoreLike } from "./StoreLike";
 export { UseCaseLike } from "./UseCaseLike";
 export { DispatchedPayload } from "./Dispatcher";

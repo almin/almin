@@ -78,15 +78,28 @@ https://almin.js.org/docs/warnings/usecase-is-already-released.html
     );
 };
 
+export interface UseCaseExecutor<T extends UseCaseLike> extends Dispatcher {
+    useCase: T;
+
+    executor(executor: (useCase: Pick<T, "execute">) => any): Promise<void>;
+
+    execute(): Promise<void>;
+
+    execute<T>(args: T): Promise<void>;
+
+    execute(...args: Array<any>): Promise<void>;
+
+    release(): void;
+}
+
 /**
  * `UseCaseExecutor` is a helper class for executing UseCase.
  *
  * You can not create the instance of UseCaseExecutor directory.
  * You can get the instance by `Context#useCase(useCase)`,
  *
- * @private
  */
-export class UseCaseExecutor<T extends UseCaseLike> extends Dispatcher {
+export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher implements UseCaseExecutor<T> {
     /**
      * A executable useCase
      */
@@ -265,7 +278,7 @@ export class UseCaseExecutor<T extends UseCaseLike> extends Dispatcher {
      * So, Almin return only command result that is success or failure.
      * You should not relay on the data of the command result.
      */
-    executor(executor: (useCase: Pick<T, "execute">) => any): any {
+    executor(executor: (useCase: Pick<T, "execute">) => any): Promise<void> {
         const startingExecutor = (resolve: Function, reject: Function): void => {
             if (typeof executor !== "function") {
                 console.error(
@@ -305,8 +318,15 @@ export class UseCaseExecutor<T extends UseCaseLike> extends Dispatcher {
 
     /**
      * execute UseCase instance.
-     * UseCase is a executable object. it means that has `execute` method.
-     * Notes: UseCaseExecutor doesn't return resolved value by design
+     * UseCase is a executable object that has `execute` method.
+     *
+     * This method invoke UseCase's `execute` method and return a promise<void>.
+     * The promise will be resolved when the UseCase is completed finished.
+     *
+     * ## Notes
+     *
+     * The `execute(arguments)` is shortcut of `executor(useCase => useCase.execute(arguments)`
+     *
      */
     execute(): Promise<void>;
     execute<T>(args: T): Promise<void>;
