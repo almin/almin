@@ -32,6 +32,8 @@ export class UseCaseUnitOfWork {
     private options: UseCaseUnitOfWorkOptions;
     private unsubscribeMap: MapLike<UseCaseExecutor<any>, () => void>;
     private isTransactionWorking: boolean;
+    // Does the user have been commit or exit action at least one?
+    private doesReflectActionAtLeastOne: boolean;
 
     constructor(args: UseCaseUnitOfWorkArgs) {
         this.name = args.name;
@@ -41,6 +43,7 @@ export class UseCaseUnitOfWork {
         this.options = args.options;
         this.unsubscribeMap = new MapLike<UseCaseExecutor<any>, () => void>();
         this.isTransactionWorking = false;
+        this.doesReflectActionAtLeastOne = false;
         if (this.options.autoCommit) {
             this.unitOfWork.onAddedCommitment(() => {
                 this.commit();
@@ -113,6 +116,7 @@ export class UseCaseUnitOfWork {
      * After commit, prune current queue.
      */
     commit() {
+        this.doesReflectActionAtLeastOne = true;
         this.unitOfWork.commit();
     }
 
@@ -158,11 +162,25 @@ export class UseCaseUnitOfWork {
         this.isTransactionWorking = false;
     }
 
+    exit() {
+        this.doesReflectActionAtLeastOne = true;
+        this.endTransaction();
+    }
+
     /**
      * Release this Unit of Work.
      * After released, can't commit this Unit of Work.
      */
     release() {
+        if (process.env.NODE_ENV !== "production") {
+            if (!this.doesReflectActionAtLeastOne) {
+                console.error(`Warning(Transaction): Transaction(${this
+                    .name}) should be commit() or exit() at least one. 
+If you not want to commit, Please call \`transactionContext.exit()\` at end of transaction.
+`);
+            }
+        }
+
         if (this.isTransactionWorking) {
             this.endTransaction();
         }

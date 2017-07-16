@@ -6,9 +6,9 @@ import { DispatcherPayloadMetaImpl } from "../src/DispatcherPayloadMeta";
 import { createStore } from "./helper/create-new-store";
 import { SyncNoDispatchUseCase } from "./use-case/SyncNoDispatchUseCase";
 import { DispatchUseCase } from "./use-case/DispatchUseCase";
-import { ThrowUseCase } from "./use-case/ThrowUseCase";
 import { createUpdatableStoreWithUseCase } from "./helper/create-update-store-usecase";
 import { AsyncUseCase } from "./use-case/AsyncUseCase";
+const sinon = require("sinon");
 
 /**
  * create a Store that can handle receivePayload
@@ -300,6 +300,35 @@ describe("Context#transaction", () => {
                     const [payload, meta] = receivedCommitments[0];
                     assert.ok(payload instanceof Payload);
                     assert.ok(meta instanceof DispatcherPayloadMetaImpl);
+                });
+        });
+    });
+    context("Warning(Transaction):", () => {
+        let consoleErrorStub = null;
+        beforeEach(() => {
+            consoleErrorStub = sinon.stub(console, "error");
+        });
+        afterEach(() => {
+            consoleErrorStub.restore();
+        });
+        it("should be warned when no-commit and no-exit in a transaction", function() {
+            const aStore = createStore({ name: "test" });
+            const storeGroup = new StoreGroup({ a: aStore });
+            const dispatcher = new Dispatcher();
+            const context = new Context({
+                dispatcher,
+                store: storeGroup,
+                options: {
+                    strict: true
+                }
+            });
+            // 1st transaction
+            return context
+                .transaction("transaction", transactionContext => {
+                    return Promise.resolve();
+                })
+                .then(() => {
+                    assert.strictEqual(consoleErrorStub.callCount, 1);
                 });
         });
     });

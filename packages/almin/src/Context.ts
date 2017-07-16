@@ -255,6 +255,14 @@ export class Context<T> {
      *
      * ## Notes
      *
+     * ### Transaction should be commit or exit
+     *
+     * Transaction context should be called `commit()` or `exit()`.
+     * Because, this check logic avoid to silent failure of transaction.
+     *
+     * And, transaction context should return a promise.
+     * In most case, transaction context should return `transactionContext.useCase(useCase).execute()`.
+     *
      * ### Transaction is not lock system
      *
      * The **transaction** does not lock the store.
@@ -274,8 +282,10 @@ export class Context<T> {
      *
      * ```js
      * context.transaction("No commit transaction", transactionContext => {
-     *      // No commit
-     *      return transactionContext.useCase(new LogUseCase()).execute();
+     *      // No commit - Call `transactionContext.exit()` insteadof `transactionContext.commit()`
+     *      return transactionContext.useCase(new LogUseCase()).execute().then(() => {
+     *          transactionContext.exit();
+     *      });
      * });
      * ```
      *
@@ -317,19 +327,32 @@ Please enable strict mode via \`new Context({ dispatcher, store, options: { stri
             useCase: createUseCaseExecutorAndOpenUoW,
             commit() {
                 unitOfWork.commit();
+            },
+            exit() {
+                unitOfWork.exit();
             }
         };
         unitOfWork.beginTransaction();
         // transactionContext resolve with void
         // unitOfWork automatically close on transactionContext exited
         // by design.
-        return transactionHandler(context).then(
+        const promise = transactionHandler(context);
+        if (!promise) {
+            throw new Error(`transaction context should return promise.
+Transaction should be exited after all useCases have been completed.
+
+For example, following transaction will be exited after SomeUseCase is completed.
+
+context.transaction("transaction", transactionContext => {
+     return transactionContext.useCase(new SomeUseCase()).execute();
+});          
+`);
+        }
+        return promise.then(
             () => {
-                unitOfWork.endTransaction();
                 unitOfWork.release();
             },
             error => {
-                unitOfWork.endTransaction();
                 unitOfWork.release();
                 return Promise.reject(error);
             }
