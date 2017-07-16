@@ -257,7 +257,7 @@ export class Context<T> {
      *
      * ### Transaction should be commit or exit
      *
-     * Transaction context should be `commit()` or `exit()`.
+     * Transaction context should be called `commit()` or `exit()`.
      * Because, this check logic avoid to silent failure of transaction.
      *
      * And, transaction context should return a promise.
