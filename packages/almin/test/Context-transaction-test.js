@@ -4,9 +4,11 @@ import * as assert from "assert";
 import { Context, Dispatcher, Payload, Store, StoreGroup, UseCase } from "../src/";
 import { DispatcherPayloadMetaImpl } from "../src/DispatcherPayloadMeta";
 import { createStore } from "./helper/create-new-store";
-import { NoDispatchUseCase } from "./use-case/NoDispatchUseCase";
+import { SyncNoDispatchUseCase } from "./use-case/SyncNoDispatchUseCase";
 import { DispatchUseCase } from "./use-case/DispatchUseCase";
 import { ThrowUseCase } from "./use-case/ThrowUseCase";
+import { createUpdatableStoreWithUseCase } from "./helper/create-update-store-usecase";
+import { AsyncUseCase } from "./use-case/AsyncUseCase";
 
 /**
  * create a Store that can handle receivePayload
@@ -31,26 +33,29 @@ const createReceivePayloadStore = receivePayloadHandler => {
 };
 describe("Context#transaction", () => {
     it("should collect up StoreGroup commit", function() {
-        const aStore = createStore({ name: "AStore" });
-        const bStore = createStore({ name: "BStore" });
-        const cStore = createStore({ name: "CStore" });
+        const { MockStore: AStore, MockUseCase: AUseCase } = createUpdatableStoreWithUseCase("A");
+        const { MockStore: BStore, MockUseCase: BUseCase } = createUpdatableStoreWithUseCase("B");
+        const { MockStore: CStore, MockUseCase: CUseCase } = createUpdatableStoreWithUseCase("C");
+        const aStore = new AStore();
+        const bStore = new BStore();
+        const cStore = new CStore();
         const storeGroup = new StoreGroup({ a: aStore, b: bStore, c: cStore });
 
-        class ChangeAUseCase extends UseCase {
+        class ChangeAUseCase extends AUseCase {
             execute() {
-                aStore.updateState(1);
+                this.requestUpdateState(1);
             }
         }
 
-        class ChangeBUseCase extends UseCase {
+        class ChangeBUseCase extends BUseCase {
             execute() {
-                bStore.updateState(1);
+                this.requestUpdateState(1);
             }
         }
 
-        class ChangeCUseCase extends UseCase {
+        class ChangeCUseCase extends CUseCase {
             execute() {
-                cStore.updateState(1);
+                this.requestUpdateState(1);
             }
         }
 
@@ -112,8 +117,9 @@ describe("Context#transaction", () => {
         receivedPayloadList.length = 0;
         return context.transaction("transaction name", transactionContext => {
             assert.strictEqual(receivedPayloadList.length, 0, "no commitment");
+            // Sync && No Dispatch UseCase call receivedPayloadList at once
             return transactionContext
-                .useCase(new NoDispatchUseCase())
+                .useCase(new SyncNoDispatchUseCase())
                 .execute()
                 .then(() => {
                     assert.strictEqual(receivedPayloadList.length, 0, "no commitment");
@@ -121,12 +127,17 @@ describe("Context#transaction", () => {
                     assert.strictEqual(receivedPayloadList.length, 1, "1 UseCase executed commitment");
                 })
                 .then(() => {
-                    return transactionContext.useCase(new NoDispatchUseCase()).execute();
+                    // AsyncUseCase call receivedPayloadList twice
+                    return transactionContext.useCase(new AsyncUseCase()).execute();
                 })
                 .then(() => {
                     assert.strictEqual(receivedPayloadList.length, 1, "before: 1 UseCase executed commitment");
                     transactionContext.commit();
-                    assert.strictEqual(receivedPayloadList.length, 2, "after: 2 UseCase executed commitment");
+                    assert.strictEqual(
+                        receivedPayloadList.length,
+                        3,
+                        "after: Async UseCase add (did + complete) commitment"
+                    );
                 });
         });
     });
@@ -167,7 +178,7 @@ describe("Context#transaction", () => {
         return context
             .transaction("1st transaction", transactionContext => {
                 return transactionContext
-                    .useCase(new NoDispatchUseCase())
+                    .useCase(new SyncNoDispatchUseCase())
                     .execute()
                     .then(() => {
                         transactionContext.commit();
@@ -188,7 +199,7 @@ describe("Context#transaction", () => {
                 // 2nd transaction
                 return context.transaction("2nd transaction", transactionContext => {
                     return transactionContext
-                        .useCase(new NoDispatchUseCase())
+                        .useCase(new SyncNoDispatchUseCase())
                         .execute()
                         .then(() => {
                             transactionContext.commit();
@@ -211,7 +222,8 @@ describe("Context#transaction", () => {
     });
 
     it("should meta.transaction is current transaction", function() {
-        const aStore = createStore({ name: "test" });
+        const { MockStore: AStore, MockUseCase: AUseCase } = createUpdatableStoreWithUseCase("A");
+        const aStore = new AStore();
         const storeGroup = new StoreGroup({ a: aStore });
         const dispatcher = new Dispatcher();
         const context = new Context({
@@ -222,11 +234,12 @@ describe("Context#transaction", () => {
             }
         });
 
-        class ChangeAUseCase extends UseCase {
+        class ChangeAUseCase extends AUseCase {
             execute() {
-                aStore.updateState(1);
+                this.requestUpdateState(1);
             }
         }
+
         const transactionName = "My Transaction";
         dispatcher.onDispatch((payload, meta) => {
             assert.deepEqual(meta.transaction, {
@@ -236,7 +249,7 @@ describe("Context#transaction", () => {
         // 1st transaction
         return context.transaction(transactionName, transactionContext => {
             return transactionContext
-                .useCase(new NoDispatchUseCase())
+                .useCase(new SyncNoDispatchUseCase())
                 .execute()
                 .then(() => {
                     return transactionContext.useCase(new DispatchUseCase()).execute({
@@ -270,7 +283,7 @@ describe("Context#transaction", () => {
         return context.transaction("transaction name", transactionContext => {
             assert.strictEqual(receivedCommitments.length, 0, "no commitment");
             return transactionContext
-                .useCase(new NoDispatchUseCase())
+                .useCase(new SyncNoDispatchUseCase())
                 .execute()
                 .then(() => {
                     assert.strictEqual(receivedCommitments.length, 0, "no commitment");
@@ -278,12 +291,12 @@ describe("Context#transaction", () => {
                     assert.strictEqual(receivedCommitments.length, 1, "1 UseCase executed commitment");
                 })
                 .then(() => {
-                    return transactionContext.useCase(new NoDispatchUseCase()).execute();
+                    return transactionContext.useCase(new SyncNoDispatchUseCase()).execute();
                 })
                 .then(() => {
                     assert.strictEqual(receivedCommitments.length, 1, "before: 1 UseCase executed commitment");
                     transactionContext.commit();
-                    assert.strictEqual(receivedCommitments.length, 2, "after: 2 UseCase executed commitment");
+                    assert.strictEqual(receivedCommitments.length, 2, "after: 2 UseCase executed 2 commitment");
                     const [payload, meta] = receivedCommitments[0];
                     assert.ok(payload instanceof Payload);
                     assert.ok(meta instanceof DispatcherPayloadMetaImpl);

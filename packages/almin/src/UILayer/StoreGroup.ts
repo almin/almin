@@ -345,14 +345,18 @@ But, ${store.name}#getState() was called.`
             }
             this.tryUpdateState(payload, meta);
         } else if (isCompletedPayload(payload) && meta.useCase && meta.isUseCaseFinished) {
-            this._workingUseCaseMap.delete(meta.useCase.id);
             // if the useCase is already finished, doesn't emitChange in CompletedPayload
             // In other word, If the UseCase that return non-promise value, doesn't emitChange in CompletedPayload
             if (this._finishedUseCaseMap.has(meta.useCase.id)) {
                 this._finishedUseCaseMap.delete(meta.useCase.id);
+                // clean up about this UseCase
+                this._workingUseCaseMap.delete(meta.useCase.id);
                 return;
             }
+            // if the UseCase#execute has async behavior, try to update before actual completed
             this.tryUpdateState(payload, meta);
+            // Now, this UseCase actual finish
+            this._workingUseCaseMap.delete(meta.useCase.id);
         }
     }
 
@@ -415,6 +419,7 @@ But, ${store.name}#getState() was called.`
                 const prevState = this._stateCacheMap.get(store);
                 const nextState = store.getState();
                 // mark `store` as `emitChange`ed store in a UseCase life-cycle
+                console.log("mark", prevState, nextState);
                 this.storeGroupEmitChangeChecker.mark(store, prevState, nextState);
                 if (this.isStrictMode) {
                     // warning if this store is not allowed update at the time

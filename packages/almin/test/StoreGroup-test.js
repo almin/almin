@@ -18,7 +18,7 @@ const createAsyncChangeStoreUseCase = store => {
         execute() {
             return Promise.resolve().then(() => {
                 const newState = { a: {} };
-                store.updateState(newState);
+                store.mutableStateWithoutEmit(newState);
             });
         }
     }
@@ -29,7 +29,7 @@ const createChangeStoreUseCase = store => {
     class ChangeTheStoreUseCase extends UseCase {
         execute() {
             const newState = { a: {} };
-            store.updateState(newState);
+            store.mutableStateWithoutEmit(newState);
         }
     }
 
@@ -542,7 +542,6 @@ describe("StoreGroup", function() {
                             this.context.useCase(bUseCase).execute()
                         ]).then(() => {
                             cStore.updateState({ c: 1 });
-                            cStore.emitChange();
                         });
                     }
                 }
@@ -624,7 +623,7 @@ describe("StoreGroup", function() {
                         dispatcher.dispatch(new ExamplePayload());
                     };
                 };
-                const useCaseASync = ({ dispatcher }) => {
+                const useCaseAsync = ({ dispatcher }) => {
                     return () => {
                         dispatcher.dispatch(new ExamplePayload());
                         return Promise.resolve();
@@ -637,6 +636,7 @@ describe("StoreGroup", function() {
                     // Sync UseCase
                     ExamplePayload,
                     DidExecutedPayload,
+                    // CompletedPayload is not called because sync useCase is already finished,
                     // Async UseCase,
                     ExamplePayload,
                     DidExecutedPayload,
@@ -647,7 +647,7 @@ describe("StoreGroup", function() {
                     .useCase(useCaseSync)
                     .execute()
                     .then(() => {
-                        return context.useCase(useCaseASync).execute();
+                        return context.useCase(useCaseAsync).execute();
                     })
                     .then(() => {
                         assert.strictEqual(
@@ -659,7 +659,7 @@ describe("StoreGroup", function() {
                             const ExpectedPayloadClass = expectedReceivedPayloadList[index];
                             assert.ok(
                                 payload instanceof ExpectedPayloadClass,
-                                `${payload} instanceof ${ExpectedPayloadClass}`
+                                `${payload.type} instanceof ${ExpectedPayloadClass}`
                             );
                         });
                     });
@@ -797,7 +797,7 @@ describe("StoreGroup", function() {
     describe("Warning", () => {
         let consoleErrorStub = null;
         beforeEach(() => {
-            consoleErrorStub = sinon.stub(console, "error");
+            consoleErrorStub = sinon.spy(console, "error");
         });
         afterEach(() => {
             consoleErrorStub.restore();
@@ -834,14 +834,6 @@ describe("StoreGroup", function() {
 
                 checkUpdate() {
                     this.setState(Object.assign({}, state));
-                }
-
-                receivePayload() {
-                    // 3. directly state modified
-                    // It test _emitChangeStateCacheMap is pruned
-                    this.state = {
-                        value: "next"
-                    };
                 }
 
                 getState() {
@@ -883,7 +875,7 @@ describe("StoreGroup", function() {
                     assert.equal(
                         consoleErrorStub.callCount,
                         0,
-                        `It should not warn .
+                        `This does call emitChange() warning should not be called.
 init -> next -> init in a execution of UseCase should be valid.
 Something wrong implementation of calling Store#emitChange at multiple`
                     );

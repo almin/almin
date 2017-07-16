@@ -2,7 +2,7 @@
 "use strict";
 const sinon = require("sinon");
 const assert = require("assert");
-import { NoDispatchUseCase } from "./use-case/NoDispatchUseCase";
+import { SyncNoDispatchUseCase } from "./use-case/SyncNoDispatchUseCase";
 import { Dispatcher } from "../src/Dispatcher";
 import { UseCase } from "../src/UseCase";
 import { UseCaseExecutor } from "../src/UseCaseExecutor";
@@ -36,7 +36,7 @@ describe("UseCaseExecutor", function() {
         it("should throw error when pass non-executor function and output console.error", () => {
             const dispatcher = new Dispatcher();
             const executor = new UseCaseExecutor({
-                useCase: new NoDispatchUseCase(),
+                useCase: new SyncNoDispatchUseCase(),
                 dispatcher
             });
             return executor.executor(" THIS IS WRONG ").then(
@@ -79,7 +79,7 @@ describe("UseCaseExecutor", function() {
         it("executor(useCase => {}) useCase is actual wrapper object", () => {
             const dispatcher = new Dispatcher();
             const executor = new UseCaseExecutor({
-                useCase: new NoDispatchUseCase(),
+                useCase: new SyncNoDispatchUseCase(),
                 dispatcher
             });
             return executor.executor(useCase => {
@@ -111,7 +111,7 @@ describe("UseCaseExecutor", function() {
         it("should show warning when UseCase#execute twice", () => {
             const dispatcher = new Dispatcher();
             const executor = new UseCaseExecutor({
-                useCase: new NoDispatchUseCase(),
+                useCase: new SyncNoDispatchUseCase(),
                 dispatcher
             });
             return executor

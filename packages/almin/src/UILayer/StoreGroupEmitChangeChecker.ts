@@ -47,10 +47,10 @@ const warningIfStatePropertyIsModifiedDirectly = (store: Store, prevState: any, 
     }
     const isStateReferenceReplaced = prevState !== nextState;
     const isStateUpdated = shouldStateUpdate(store, prevState, nextState);
-    const isStateChangedButShouldNotUpdate = isStateReferenceReplaced && !isStateUpdated;
-    if (isStateChangedButShouldNotUpdate) {
+    const isStateReplacedButShouldNotUpdate = isStateReferenceReplaced && !isStateUpdated;
+    if (isStateReplacedButShouldNotUpdate) {
         console.error(
-            `Warning(Store): ${store.name}#state property is replace by difference value, but this change **does not** reflect to view.
+            `Warning(Store): ${store.name}#state property is replaced by different value, but this change **does not** reflect to view.
 Because, ${store.name}#shouldStateUpdate(prevState, store.state) has returned **false**.
 
 It means that the variance is present between ${store.name}#state property and shouldStateUpdate.
