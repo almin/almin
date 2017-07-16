@@ -8,8 +8,8 @@ import { createStore } from "./helper/create-new-store";
 import { DispatchUseCase } from "./use-case/DispatchUseCase";
 import { ErrorUseCase } from "./use-case/ErrorUseCase";
 import { ParentUseCase } from "./use-case/NestingUseCase";
-import { NoDispatchUseCase } from "./use-case/NoDispatchUseCase";
-import ReturnPromiseUseCase from "./use-case/ReturnPromiseUseCase";
+import { SyncNoDispatchUseCase } from "./use-case/SyncNoDispatchUseCase";
+import { AsyncUseCase } from "./use-case/AsyncUseCase";
 
 describe("DispatcherPayloadMeta", () => {
     describe("onWillExecuteEachUseCase", () => {
@@ -19,7 +19,7 @@ describe("DispatcherPayloadMeta", () => {
                 dispatcher,
                 store: createStore({ name: "test" })
             });
-            const useCase = new NoDispatchUseCase();
+            const useCase = new SyncNoDispatchUseCase();
             let actualMeta = null;
             context.events.onWillExecuteEachUseCase((payload, meta) => {
                 actualMeta = meta;
@@ -61,7 +61,7 @@ describe("DispatcherPayloadMeta", () => {
                 dispatcher,
                 store: createStore({ name: "test" })
             });
-            const useCase = new NoDispatchUseCase();
+            const useCase = new SyncNoDispatchUseCase();
             let actualMeta = null;
             context.events.onDidExecuteEachUseCase((payload, meta) => {
                 actualMeta = meta;
@@ -81,7 +81,7 @@ describe("DispatcherPayloadMeta", () => {
                 dispatcher,
                 store: createStore({ name: "test" })
             });
-            const useCase = new ReturnPromiseUseCase();
+            const useCase = new AsyncUseCase();
             let actualMeta = null;
             context.events.onDidExecuteEachUseCase((payload, meta) => {
                 actualMeta = meta;
@@ -103,7 +103,7 @@ describe("DispatcherPayloadMeta", () => {
                 dispatcher,
                 store: createStore({ name: "test" })
             });
-            const useCase = new NoDispatchUseCase();
+            const useCase = new SyncNoDispatchUseCase();
             let actualMeta = null;
             context.events.onCompleteEachUseCase((payload, meta) => {
                 actualMeta = meta;

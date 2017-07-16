@@ -3,10 +3,9 @@
 const assert = require("assert");
 const sinon = require("sinon");
 import { Context, Dispatcher, Store, StoreGroup, UseCase } from "../src/";
-import { NoDispatchUseCase } from "./use-case/NoDispatchUseCase";
-import ReturnPromiseUseCase from "./use-case/ReturnPromiseUseCase";
-import { createStore } from "./helper/create-new-store";
 import { createUpdatableStoreWithUseCase } from "./helper/create-update-store-usecase";
+import { AsyncUseCase } from "./use-case/AsyncUseCase";
+import { SyncNoDispatchUseCase } from "./use-case/SyncNoDispatchUseCase";
 
 describe("StoreGroup edge case", function() {
     describe("when {A,B}Store#emitChange on UseCase is completed", () => {
@@ -71,8 +70,8 @@ describe("StoreGroup edge case", function() {
             context.onChange(() => {
                 count++;
             });
-            return context.useCase(new NoDispatchUseCase()).execute().then(() => {
-                assert(count === 1);
+            return context.useCase(new SyncNoDispatchUseCase()).execute().then(() => {
+                assert.strictEqual(count, 1, "1 onChange by did(Sync UseCase)");
             });
         });
     });
@@ -113,7 +112,7 @@ describe("StoreGroup edge case", function() {
             context.events.onCompleteEachUseCase(() => {
                 callStack.push("complete");
             });
-            return context.useCase(new ReturnPromiseUseCase()).execute().then(() => {
+            return context.useCase(new AsyncUseCase()).execute().then(() => {
                 assert.deepEqual(
                     callStack,
                     [
