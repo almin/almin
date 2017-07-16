@@ -10,7 +10,7 @@
     "src/"
   ],
   "name": "almin-react-container",
-  "version": "0.3.7",
+  "version": "0.3.8",
   "description": "React bindings for Almin",
   "main": "lib/almin-react-container.js",
   "types": "lib/almin-react-container.d.ts",
@@ -34,13 +34,13 @@
   },
   "homepage": "https://github.com/almin/almin/tree/master/packages/almin-react-container",
   "peerDependencies": {
-    "almin": "^0.13.7",
+    "almin": "^0.13.8",
     "react": "^15.0.0"
   },
   "devDependencies": {
     "@types/node": "^7.0.12",
     "@types/react": "^15.0.20",
-    "almin": "^0.13.7",
+    "almin": "^0.13.8",
     "babel-preset-env": "^1.4.0",
     "babel-preset-power-assert": "^1.0.0",
     "babel-preset-react": "^6.24.1",
