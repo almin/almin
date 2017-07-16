@@ -1,4 +1,4 @@
-import { UseCaseExecutor } from "./UseCaseExecutor";
+import { UseCaseExecutorImpl } from "./UseCaseExecutor";
 import { UseCaseFunction } from "./FunctionalUseCaseContext";
 import { FunctionalUseCase } from "./FunctionalUseCase";
 import { UseCaseLike } from "./UseCaseLike";
@@ -9,12 +9,15 @@ import { Dispatcher } from "./Dispatcher";
 export function createUseCaseExecutor(
     useCase: UseCaseFunction,
     dispatcher: Dispatcher
-): UseCaseExecutor<FunctionalUseCase>;
-export function createUseCaseExecutor<T extends UseCaseLike>(useCase: T, dispatcher: Dispatcher): UseCaseExecutor<T>;
-export function createUseCaseExecutor(useCase: any, dispatcher: Dispatcher): UseCaseExecutor<any> {
+): UseCaseExecutorImpl<FunctionalUseCase>;
+export function createUseCaseExecutor<T extends UseCaseLike>(
+    useCase: T,
+    dispatcher: Dispatcher
+): UseCaseExecutorImpl<T>;
+export function createUseCaseExecutor(useCase: any, dispatcher: Dispatcher): UseCaseExecutorImpl<any> {
     // instance of UseCase
     if (isUseCase(useCase)) {
-        return new UseCaseExecutor({
+        return new UseCaseExecutorImpl({
             useCase,
             parent: isUseCase(dispatcher) ? dispatcher : null,
             dispatcher
@@ -28,7 +31,7 @@ The argument is UseCase constructor itself: ${useCase}`
         );
         // function to be FunctionalUseCase
         const functionalUseCase = new FunctionalUseCase(useCase);
-        return new UseCaseExecutor({
+        return new UseCaseExecutorImpl({
             useCase: functionalUseCase,
             parent: isUseCase(dispatcher) ? dispatcher : null,
             dispatcher

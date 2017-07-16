@@ -5,7 +5,7 @@ const assert = require("assert");
 import { SyncNoDispatchUseCase } from "./use-case/SyncNoDispatchUseCase";
 import { Dispatcher } from "../src/Dispatcher";
 import { UseCase } from "../src/UseCase";
-import { UseCaseExecutor } from "../src/UseCaseExecutor";
+import { UseCaseExecutorImpl } from "../src/UseCaseExecutor";
 import { CallableUseCase } from "./use-case/CallableUseCase";
 import { ThrowUseCase } from "./use-case/ThrowUseCase";
 import { isWillExecutedPayload } from "../src/payload/WillExecutedPayload";
@@ -23,7 +23,7 @@ describe("UseCaseExecutor", function() {
         });
         it("should catch sync throwing error in UseCase", () => {
             const dispatcher = new Dispatcher();
-            const executor = new UseCaseExecutor({
+            const executor = new UseCaseExecutorImpl({
                 useCase: new ThrowUseCase(),
                 dispatcher
             });
@@ -38,7 +38,7 @@ describe("UseCaseExecutor", function() {
         });
         it("should throw error when pass non-executor function and output console.error", () => {
             const dispatcher = new Dispatcher();
-            const executor = new UseCaseExecutor({
+            const executor = new UseCaseExecutorImpl({
                 useCase: new SyncNoDispatchUseCase(),
                 dispatcher
             });
@@ -60,7 +60,7 @@ describe("UseCaseExecutor", function() {
         it("should accept executor(useCase => {}) function arguments", () => {
             const dispatcher = new Dispatcher();
             const callableUseCase = new CallableUseCase();
-            const executor = new UseCaseExecutor({
+            const executor = new UseCaseExecutorImpl({
                 useCase: callableUseCase,
                 dispatcher
             });
@@ -81,7 +81,7 @@ describe("UseCaseExecutor", function() {
         });
         it("executor(useCase => {}) useCase is actual wrapper object", () => {
             const dispatcher = new Dispatcher();
-            const executor = new UseCaseExecutor({
+            const executor = new UseCaseExecutorImpl({
                 useCase: new SyncNoDispatchUseCase(),
                 dispatcher
             });
@@ -94,7 +94,7 @@ describe("UseCaseExecutor", function() {
         it("can call useCase.execute() by async", done => {
             const dispatcher = new Dispatcher();
             const callableUseCase = new CallableUseCase();
-            const executor = new UseCaseExecutor({
+            const executor = new UseCaseExecutorImpl({
                 useCase: callableUseCase,
                 dispatcher
             });
@@ -113,7 +113,7 @@ describe("UseCaseExecutor", function() {
         });
         it("should show warning when UseCase#execute twice", () => {
             const dispatcher = new Dispatcher();
-            const executor = new UseCaseExecutor({
+            const executor = new UseCaseExecutorImpl({
                 useCase: new SyncNoDispatchUseCase(),
                 dispatcher
             });
@@ -146,7 +146,7 @@ describe("UseCaseExecutor", function() {
 
             const callStack = [];
             const expectedCallStack = ["will", "dispatch", "did", "complete"];
-            const executor = new UseCaseExecutor({
+            const executor = new UseCaseExecutorImpl({
                 useCase: new SyncUseCase(),
                 dispatcher
             });
@@ -171,7 +171,7 @@ describe("UseCaseExecutor", function() {
     describe("#execute", function() {
         it("should catch sync throwing error in UseCase", () => {
             const dispatcher = new Dispatcher();
-            const executor = new UseCaseExecutor({
+            const executor = new UseCaseExecutorImpl({
                 useCase: new ThrowUseCase(),
                 dispatcher
             });
@@ -202,7 +202,7 @@ describe("UseCaseExecutor", function() {
                 }
 
                 // when
-                const executor = new UseCaseExecutor({
+                const executor = new UseCaseExecutorImpl({
                     useCase: new SyncUseCase(),
                     dispatcher
                 });
@@ -240,7 +240,7 @@ describe("UseCaseExecutor", function() {
                 let isCalledDidExecuted = false;
                 let isCalledCompleted = false;
                 // when
-                const executor = new UseCaseExecutor({
+                const executor = new UseCaseExecutorImpl({
                     useCase: new AsyncUseCase(),
                     dispatcher
                 });

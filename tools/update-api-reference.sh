@@ -16,6 +16,7 @@ npm run build
 cd "${projectDir}"
 # update
 addDoc "${srcDir}/Context.d.ts"
+addDoc "${srcDir}/UseCaseExecutor.d.ts"
 addDoc "${srcDir}/LifeCycleEventHub.d.ts"
 addDoc "${srcDir}/Dispatcher.d.ts"
 addDoc "${srcDir}/DispatcherPayloadMeta.d.ts"

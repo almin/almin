@@ -31,7 +31,7 @@ function renderAPIHeader(section) {
    // remove } block
    const header = stripIndent(section.codeText.replace(/}$/m, "")).trim();
    if(header.split("\n").length > 1){
-     return "### Interface of \n"
+     return "### Interface \n"
       + "```typescript\n"
       + header + "\n"
       + "```";

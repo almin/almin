@@ -7,7 +7,7 @@ import { CompletedPayload, DidExecutedPayload, WillExecutedPayload } from "../sr
 import { Store } from "../src/Store";
 import { StoreGroup } from "../src/UILayer/StoreGroup";
 import { UseCase } from "../src/UseCase";
-import { UseCaseExecutor } from "../src/UseCaseExecutor";
+import { UseCaseExecutorImpl } from "../src/UseCaseExecutor";
 import { createStore } from "./helper/create-new-store";
 import { createEchoStore } from "./helper/EchoStore";
 import { DispatchUseCase } from "./use-case/DispatchUseCase";
@@ -302,7 +302,7 @@ describe("Context", function() {
                 store: createEchoStore({ echo: { "1": 1 } })
             });
             const useCaseExecutor = appContext.useCase(new ThrowUseCase());
-            assert.ok(useCaseExecutor instanceof UseCaseExecutor);
+            assert.ok(useCaseExecutor instanceof UseCaseExecutorImpl);
             useCaseExecutor.execute();
         });
         it("should release defaultUnitOfWork after UseCase#execute is completed", function() {
