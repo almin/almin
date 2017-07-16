@@ -797,7 +797,7 @@ describe("StoreGroup", function() {
     describe("Warning", () => {
         let consoleErrorStub = null;
         beforeEach(() => {
-            consoleErrorStub = sinon.spy(console, "error");
+            consoleErrorStub = sinon.stub(console, "error");
         });
         afterEach(() => {
             consoleErrorStub.restore();
