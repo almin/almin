@@ -48,6 +48,24 @@ export class UseCaseUnitOfWork {
         }
     }
 
+    get isDisposed() {
+        return this.unitOfWork.isDisposed;
+    }
+
+    /**
+     * current queued commitment size
+     */
+    get size() {
+        return this.unitOfWork.size;
+    }
+
+    /**
+     * count of current working useCases
+     */
+    get workingUseCaseCount() {
+        return this.unsubscribeMap.size;
+    }
+
     beginTransaction() {
         this.isTransactionWorking = true;
         const payload = new TransactionBeganPayload(this.name);

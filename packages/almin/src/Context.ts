@@ -220,7 +220,7 @@ export class Context<T> {
     useCase(useCase: any): UseCaseExecutor<any> {
         const useCaseExecutor = createUseCaseExecutor(useCase, this.dispatcher);
         this.defaultUnitOfWork.open(useCaseExecutor);
-        useCaseExecutor.onComplete(() => {
+        useCaseExecutor.onRelease(() => {
             this.defaultUnitOfWork.close(useCaseExecutor);
         });
         return useCaseExecutor;
