@@ -14,6 +14,8 @@ import { DispatchUseCase } from "./use-case/DispatchUseCase";
 import { ParentUseCase } from "./use-case/NestingUseCase";
 import { SyncNoDispatchUseCase } from "./use-case/SyncNoDispatchUseCase";
 
+const sinon = require("sinon");
+
 // payload
 
 class TestUseCase extends UseCase {
@@ -334,6 +336,7 @@ describe("Context", function() {
     });
     describe("#release", () => {
         it("should release all handlers", () => {
+            const consoleErrorStub = sinon.stub(console, "error");
             // add handler
             const dispatcher = new Dispatcher();
             const store = createStore({
@@ -349,6 +352,12 @@ describe("Context", function() {
             const doneNotCall = () => {
                 throw new Error("It should not called");
             };
+            context.events.onBeginTransaction(() => {
+                doneNotCall();
+            });
+            context.events.onEndTransaction(() => {
+                doneNotCall();
+            });
             context.events.onWillExecuteEachUseCase(() => {
                 doneNotCall();
             });
@@ -387,6 +396,10 @@ describe("Context", function() {
                 .then(() => {
                     store.emitChange();
                     return context.useCase(new ParentUseCase()).execute();
+                })
+                .then(() => {
+                    assert.ok(consoleErrorStub.called, "Warning(UnitOfWork): Transaction(Default) is already ended.");
+                    consoleErrorStub.restore();
                 });
         });
     });

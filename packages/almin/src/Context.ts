@@ -20,7 +20,7 @@ import { StoreGroup } from "./UILayer/StoreGroup";
 import { createUseCaseExecutor } from "./UseCaseExecutorFactory";
 import { TransactionContext } from "./UnitOfWork/TransactionContext";
 import { createSingleStoreGroup } from "./UILayer/SingleStoreGroup";
-import { StoreGroupLike } from "./UILayer/StoreGroupLike";
+import { StoreGroupLike, StoreGroupReasonForChange } from "./UILayer/StoreGroupLike";
 import { LifeCycleEventHub } from "./LifeCycleEventHub";
 import { StoreChangedPayload } from "./payload/StoreChangedPayload";
 
@@ -111,7 +111,10 @@ export class Context<T> {
             options: { autoCommit: true }
         });
 
-        this.storeGroup.onChange((stores, details) => {
+        const storeGroupOnChangeToStoreChangedPayload = (
+            stores: Array<StoreLike<any>>,
+            details?: StoreGroupReasonForChange
+        ) => {
             stores.forEach(store => {
                 const payload = new StoreChangedPayload(store);
                 const meta = details
@@ -126,7 +129,8 @@ export class Context<T> {
                       });
                 this.dispatcher.dispatch(payload, meta);
             });
-        });
+        };
+        this.storeGroup.onChange(storeGroupOnChangeToStoreChangedPayload);
     }
 
     /**
@@ -436,6 +440,8 @@ context.transaction("transaction", transactionContext => {
      * You can call this when no more call event handler
      */
     release() {
+        this.defaultUnitOfWork.exit();
+        this.defaultUnitOfWork.release();
         this.storeGroup.release();
         this.lifeCycleEventHub.release();
     }

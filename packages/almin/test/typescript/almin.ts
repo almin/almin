@@ -68,23 +68,30 @@ const storeGroup = new StoreGroup({
 // Context
 const context = new Context({
     dispatcher,
-    store: storeGroup
+    store: storeGroup,
+    options: {
+        strict: true
+    }
 });
+
+const log = (..._messages: any[]) => {
+    // nope
+};
 // Context - life cycle
-context.onWillExecuteEachUseCase((payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => {
-    console.log(payload.args, meta);
+context.events.onWillExecuteEachUseCase((payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => {
+    log(payload.args, meta);
 });
-context.onDidExecuteEachUseCase((payload: DidExecutedPayload, meta: DispatcherPayloadMeta) => {
-    console.log(payload.value, meta);
+context.events.onDidExecuteEachUseCase((payload: DidExecutedPayload, meta: DispatcherPayloadMeta) => {
+    log(payload.value, meta);
 });
-context.onCompleteEachUseCase((payload: CompletedPayload, meta: DispatcherPayloadMeta) => {
-    console.log(payload.value, meta);
+context.events.onCompleteEachUseCase((payload: CompletedPayload, meta: DispatcherPayloadMeta) => {
+    log(payload.value, meta);
 });
-context.onErrorDispatch((payload: ErrorPayload, meta: DispatcherPayloadMeta) => {
-    console.log(payload.error, meta);
+context.events.onErrorDispatch((payload: ErrorPayload, meta: DispatcherPayloadMeta) => {
+    log(payload.error, meta);
 });
-context.onDispatch((payload: Payload, meta: DispatcherPayloadMeta) => {
-    console.log(payload.type, meta);
+context.events.onDispatch((payload: Payload, meta: DispatcherPayloadMeta) => {
+    log(payload.type, meta);
 });
 
 // UseCase
@@ -119,8 +126,8 @@ const functionalUseCase = (context: FunctionalUseCaseContext) => {
 // execute - functional execute with ArgT
 context.useCase(functionalUseCase).execute<functionUseCaseArgs>("1").then(() => {
     const state = context.getState();
-    console.log(state.aState.a);
-    console.log(state.bState.b);
+    log(state.aState.a);
+    log(state.bState.b);
 });
 // execute - functional execute without ArgT
 context.useCase(functionalUseCase).execute("value").then(() => {
@@ -133,8 +140,8 @@ context
     .execute<ParentUseCaseArgs>("value")
     .then(() => {
         const state = context.getState();
-        console.log(state.aState.a);
-        console.log(state.bState.b);
+        log(state.aState.a);
+        log(state.bState.b);
     })
     .catch((error: Error) => {
         console.error(error);
@@ -156,7 +163,7 @@ class MyUseCase extends UseCase {
 }
 
 context.useCase(new MyUseCase()).executor(useCase => useCase.execute("value")).then(() => {
-    console.log("test");
+    log("finish");
 });
 
 context
@@ -166,5 +173,5 @@ context
         transactionContext.commit();
     })
     .then(() => {
-        console.log("Finish");
+        log("Finish");
     });

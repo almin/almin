@@ -1,6 +1,6 @@
 // MIT © 2017 azu
 "use strict";
-const assert = require("assert");
+import * as assert from "assert";
 import { Context, Dispatcher, UseCase } from "../src/";
 import { createStore } from "./helper/create-new-store";
 import { functionalUseCase } from "./use-case/FunctionalUseCase";
@@ -11,12 +11,14 @@ describe("UseCaseContext", () => {
             const expectedPayload = {
                 type: "expected"
             };
-            const dispatched = [];
+            const dispatched: {}[] = [];
+
             class ParentUseCase extends UseCase {
                 execute() {
                     return this.context.useCase(functionalUseCase).execute(expectedPayload.type);
                 }
             }
+
             const dispatcher = new Dispatcher();
             const context = new Context({
                 dispatcher,
