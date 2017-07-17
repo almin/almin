@@ -170,6 +170,8 @@ export class UseCaseUnitOfWork {
     /**
      * Release this Unit of Work.
      * After released, can't commit this Unit of Work.
+     *
+     * Please call `exit` or `commit at once before releasing.
      */
     release() {
         if (process.env.NODE_ENV !== "production") {

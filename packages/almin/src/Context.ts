@@ -440,6 +440,7 @@ context.transaction("transaction", transactionContext => {
      * You can call this when no more call event handler
      */
     release() {
+        this.defaultUnitOfWork.exit();
         this.defaultUnitOfWork.release();
         this.storeGroup.release();
         this.lifeCycleEventHub.release();

@@ -427,9 +427,9 @@ describe("StoreGroup", function() {
 
                 class ChangeABUseCase extends UseCase {
                     execute() {
-                        aStore.updateState({ a: 1 });
+                        aStore.mutableStateWithoutEmit({ a: 1 });
                         aStore.emitChange(); // *1
-                        bStore.updateState({ b: 1 });
+                        bStore.mutableStateWithoutEmit({ b: 1 });
                         bStore.emitChange(); // *2
                     }
                 }
@@ -550,7 +550,6 @@ describe("StoreGroup", function() {
                     execute() {
                         return new Promise(resolve => {
                             aStore.updateState({ a: 1 });
-                            aStore.emitChange();
                             resolve();
                         });
                     }
@@ -560,7 +559,6 @@ describe("StoreGroup", function() {
                     execute() {
                         return new Promise(resolve => {
                             bStore.updateState({ b: 1 });
-                            bStore.emitChange();
                             resolve();
                         });
                     }
@@ -684,7 +682,6 @@ describe("StoreGroup", function() {
                     return () => {
                         actualStores = [];
                         aStore.updateState({ a: "new value" });
-                        aStore.emitChange();
                     };
                 };
                 // then
