@@ -4,11 +4,8 @@ import { Store } from "../../src/Store";
 
 /**
  * This helper is for creating Store
- * @param {string} name
- * @param {*} state
- * @returns {TestStore}
  */
-export function createStore({ name, state }) {
+export function createStore({ name, state }: { name: string; state?: any }) {
     class MockStore extends Store {
         constructor() {
             super();
@@ -19,7 +16,7 @@ export function createStore({ name, state }) {
         /**
          * Directly modify state
          */
-        mutableStateWithoutEmit(newState) {
+        mutableStateWithoutEmit(newState: any) {
             this.state = newState;
         }
 
@@ -27,7 +24,7 @@ export function createStore({ name, state }) {
          * setState
          * @param {*} newState
          */
-        updateState(newState) {
+        updateState(newState: any) {
             this.setState(newState);
         }
 
