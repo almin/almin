@@ -50,6 +50,12 @@ align-text@^0.1.1, align-text@^0.1.3:
     longest "^1.0.1"
     repeat-string "^1.5.2"
 
+almin-logger@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/almin-logger/-/almin-logger-4.1.0.tgz#01518d2407f4a29b6c586ba867ae66273a584ebc"
+  dependencies:
+    map-like "^1.0.3"
+
 almin@^0.12.1:
   version "0.12.3"
   resolved "https://registry.yarnpkg.com/almin/-/almin-0.12.3.tgz#418eb7be970b3978954bac91128d13f073270f36"
@@ -2181,7 +2187,7 @@ loose-envify@^1.0.0, loose-envify@^1.1.0:
   dependencies:
     js-tokens "^3.0.0"
 
-map-like@^1.1.2:
+map-like@^1.0.3, map-like@^1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/map-like/-/map-like-1.1.2.tgz#f42a301ebd9290372b9e4ddc49e5df9804a507b9"
 

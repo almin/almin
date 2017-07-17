@@ -349,6 +349,12 @@ describe("Context", function() {
             const doneNotCall = () => {
                 throw new Error("It should not called");
             };
+            context.events.onBeginTransaction(() => {
+                doneNotCall();
+            });
+            context.events.onEndTransaction(() => {
+                doneNotCall();
+            });
             context.events.onWillExecuteEachUseCase(() => {
                 doneNotCall();
             });
