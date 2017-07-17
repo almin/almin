@@ -126,9 +126,10 @@ export class UseCaseUnitOfWork {
     close(useCaseExecutor: UseCaseExecutor<any>) {
         const unsubscribe = this.unsubscribeMap.get(useCaseExecutor);
         if (typeof unsubscribe !== "function") {
-            if (process.env.NODE_ENV !== "production") {
-                console.warn("Warning: This UseCaseExecutor is not opened or already closed.", useCaseExecutor);
-            }
+            console.error(
+                "Warning(UnitOfWork): This UseCaseExecutor is not opened or already closed.",
+                useCaseExecutor
+            );
             return;
         }
         unsubscribe();
@@ -138,7 +139,7 @@ export class UseCaseUnitOfWork {
     endTransaction() {
         if (!this.isTransactionWorking) {
             if (process.env.NODE_ENV !== "production") {
-                console.error(`Warning(Transaction): Transaction(${this.name}) is already ended.`);
+                console.error(`Warning(UnitOfWork): Transaction(${this.name}) is already ended.`);
             }
             return;
         }
@@ -176,7 +177,7 @@ export class UseCaseUnitOfWork {
     release() {
         if (process.env.NODE_ENV !== "production") {
             if (!this.doesReflectActionAtLeastOne) {
-                console.error(`Warning(Transaction): Transaction(${this
+                console.error(`Warning(UnitOfWork): Transaction(${this
                     .name}) should be commit() or exit() at least one. 
 If you not want to commit, Please call \`transactionContext.exit()\` at end of transaction.
 `);
