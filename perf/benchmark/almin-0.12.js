@@ -3,19 +3,19 @@
 const { Dispatcher, Context, Store, StoreGroup, UseCase } = require("almin-0.12");
 
 module.exports = {
-    createContext(stores){
+    createContext(stores) {
         const storeMappings = stores.reduce((t, store) => {
             t[store.name] = store;
             return t;
-        }, {})
+        }, {});
         return new Context({
             dispatcher: new Dispatcher(),
             store: new StoreGroup(storeMappings)
         });
     },
-    createUseCase(state){
+    createUseCase() {
         class MyUseCase extends UseCase {
-            execute() {
+            execute(state) {
                 this.dispatch({
                     type: "update",
                     body: state
@@ -24,12 +24,12 @@ module.exports = {
         }
         return new MyUseCase();
     },
-    createStore(name){
+    createStore(name) {
         class TestStore extends Store {
             constructor() {
                 super();
                 this.name = name;
-                this.state = null
+                this.state = null;
             }
 
             receivePayload(payload) {

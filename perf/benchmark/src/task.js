@@ -27,8 +27,8 @@ module.exports = function(Almin, done) {
         const state = context.getState();
         log(state);
     });
-    const useCase = createUseCase({ newState: { a: 1 } });
-    context.useCase(useCase).execute().then(() => {
+    const useCase = createUseCase();
+    context.useCase(useCase).execute({ newState: { a: 1 } }).then(() => {
         done();
     });
 };

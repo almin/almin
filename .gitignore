@@ -87,6 +87,7 @@ crashlytics-build.properties
 /examples/**/build/
 /packages/**/lib/
 __obj/
+/perf/**/output/
 # Build cache.
 .eslintcache
 .textlintcache
