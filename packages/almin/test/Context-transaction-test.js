@@ -8,6 +8,7 @@ import { SyncNoDispatchUseCase } from "./use-case/SyncNoDispatchUseCase";
 import { DispatchUseCase } from "./use-case/DispatchUseCase";
 import { createUpdatableStoreWithUseCase } from "./helper/create-update-store-usecase";
 import { AsyncUseCase } from "./use-case/AsyncUseCase";
+
 const sinon = require("sinon");
 
 /**
@@ -32,6 +33,72 @@ const createReceivePayloadStore = receivePayloadHandler => {
     return new MockStore();
 };
 describe("Context#transaction", () => {
+    it("should collect up StoreGroup commit", function() {
+        class AStore extends Store {
+            constructor() {
+                super();
+                this.state = {};
+            }
+
+            receivePayload(payload) {
+                if (payload.type === "UPDATE") {
+                    this.setState(payload.body);
+                }
+            }
+
+            getState() {
+                return this.state;
+            }
+        }
+
+        const aStore = new AStore();
+        const storeGroup = new StoreGroup({ a: aStore });
+
+        class ChangeAUseCase extends UseCase {
+            execute(state) {
+                this.dispatch({
+                    type: "UPDATE",
+                    body: state
+                });
+            }
+        }
+
+        const context = new Context({
+            dispatcher: new Dispatcher(),
+            store: storeGroup,
+            options: {
+                strict: true
+            }
+        });
+        // then - called change handler a one-time
+        let onChangeCount = 0;
+        let changedStores = [];
+        context.onChange(stores => {
+            onChangeCount++;
+            changedStores = changedStores.concat(stores);
+        });
+        // when
+        return context
+            .transaction("transaction name", transactionContext => {
+                return transactionContext
+                    .useCase(new ChangeAUseCase())
+                    .execute(1)
+                    .then(transactionContext.useCase(new ChangeAUseCase()).execute(2))
+                    .then(transactionContext.useCase(new ChangeAUseCase()).execute(3))
+                    .then(transactionContext.useCase(new ChangeAUseCase()).execute(4))
+                    .then(transactionContext.useCase(new ChangeAUseCase()).execute(5))
+                    .then(() => {
+                        transactionContext.commit();
+                    });
+            })
+            .then(() => {
+                assert.equal(onChangeCount, 1);
+                assert.equal(changedStores.length, 1);
+                assert.deepEqual(context.getState(), {
+                    a: 5
+                });
+            });
+    });
     it("should collect up StoreGroup commit", function() {
         const { MockStore: AStore, MockUseCase: AUseCase } = createUpdatableStoreWithUseCase("A");
         const { MockStore: BStore, MockUseCase: BUseCase } = createUpdatableStoreWithUseCase("B");
@@ -67,10 +134,10 @@ describe("Context#transaction", () => {
             }
         });
         // then - called change handler a one-time
-        let calledCount = 0;
+        let onChangeCount = 0;
         let changedStores = [];
-        storeGroup.onChange(stores => {
-            calledCount++;
+        context.onChange(stores => {
+            onChangeCount++;
             changedStores = changedStores.concat(stores);
         });
         // when
@@ -91,7 +158,7 @@ describe("Context#transaction", () => {
                     });
             })
             .then(() => {
-                assert.equal(calledCount, 1);
+                assert.equal(onChangeCount, 1);
                 assert.equal(changedStores.length, 3);
                 assert.deepEqual(context.getState(), {
                     a: 1,
@@ -185,7 +252,8 @@ describe("Context#transaction", () => {
                     })
                     .then(() => {
                         assert.strictEqual(beginTransactions.length, 1);
-                        assert.strictEqual(endTransaction.length, 0);
+                        // commit does end
+                        assert.strictEqual(endTransaction.length, 1);
                     });
             })
             .then(() => {
@@ -206,7 +274,7 @@ describe("Context#transaction", () => {
                         })
                         .then(() => {
                             assert.strictEqual(beginTransactions.length, 2);
-                            assert.strictEqual(endTransaction.length, 1);
+                            assert.strictEqual(endTransaction.length, 2);
                         });
                 });
             })

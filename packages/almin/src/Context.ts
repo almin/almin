@@ -46,7 +46,6 @@ export class Context<T> {
     private lifeCycleEventHub: LifeCycleEventHub;
     private storeGroup: StoreGroupLike;
     private isStrictMode = false;
-    private defaultUnitOfWork: UseCaseUnitOfWork;
 
     /**
      * `dispatcher` is an instance of `Dispatcher`.
@@ -104,13 +103,6 @@ export class Context<T> {
         if (this.isStrictMode) {
             this.storeGroup.useStrict();
         }
-        this.defaultUnitOfWork = new UseCaseUnitOfWork({
-            name: "Default",
-            dispatcher: this.dispatcher,
-            storeGroup: this.storeGroup,
-            options: { autoCommit: true }
-        });
-
         const storeGroupOnChangeToStoreChangedPayload = (
             stores: Array<StoreLike<any>>,
             details?: StoreGroupReasonForChange
@@ -223,9 +215,16 @@ export class Context<T> {
     useCase<T extends UseCaseLike>(useCase: T): UseCaseExecutor<T>;
     useCase(useCase: any): UseCaseExecutor<any> {
         const useCaseExecutor = createUseCaseExecutor(useCase, this.dispatcher);
-        this.defaultUnitOfWork.open(useCaseExecutor);
+        const unitOfWork = new UseCaseUnitOfWork({
+            name: "Default",
+            dispatcher: this.dispatcher,
+            storeGroup: this.storeGroup,
+            options: { autoCommit: true }
+        });
+        unitOfWork.open(useCaseExecutor);
         useCaseExecutor.onRelease(() => {
-            this.defaultUnitOfWork.close(useCaseExecutor);
+            unitOfWork.close(useCaseExecutor);
+            unitOfWork.release();
         });
         return useCaseExecutor;
     }
@@ -440,8 +439,6 @@ context.transaction("transaction", transactionContext => {
      * You can call this when no more call event handler
      */
     release() {
-        this.defaultUnitOfWork.exit();
-        this.defaultUnitOfWork.release();
         this.storeGroup.release();
         this.lifeCycleEventHub.release();
     }

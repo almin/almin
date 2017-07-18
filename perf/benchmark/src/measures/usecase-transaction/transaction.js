@@ -26,7 +26,7 @@ function runStore(almin, storeCount) {
             updateCount++;
         });
         // execute usecase
-        const useCase = almin.createUseCase(null);
+        const useCase = almin.createUseCase();
         context
             .transaction("transaction", transactionContext => {
                 return transactionContext
