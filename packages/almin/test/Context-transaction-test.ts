@@ -8,20 +8,25 @@ import { SyncNoDispatchUseCase } from "./use-case/SyncNoDispatchUseCase";
 import { DispatchUseCase } from "./use-case/DispatchUseCase";
 import { createUpdatableStoreWithUseCase } from "./helper/create-update-store-usecase";
 import { AsyncUseCase } from "./use-case/AsyncUseCase";
+import { DispatchedPayload } from "../src/Dispatcher";
+import { StoreLike } from "../src/StoreLike";
+import { TransactionBeganPayload } from "../src/payload/TransactionBeganPayload";
+import { TransactionEndedPayload } from "../src/payload/TransactionEndedPayload";
+import { Commitment } from "../src/UnitOfWork/UnitOfWork";
 
-const sinon = require("sinon");
+import sinon = require("sinon");
 
 /**
  * create a Store that can handle receivePayload
  */
-const createReceivePayloadStore = receivePayloadHandler => {
+const createReceivePayloadStore = (receivePayloadHandler: ((payload: DispatchedPayload) => void)): Store => {
     class MockStore extends Store {
         constructor() {
             super();
             this.state = {};
         }
 
-        receivePayload(payload) {
+        receivePayload(payload: DispatchedPayload) {
             receivePayloadHandler(payload);
         }
 
@@ -40,7 +45,7 @@ describe("Context#transaction", () => {
                 this.state = {};
             }
 
-            receivePayload(payload) {
+            receivePayload(payload: DispatchedPayload & { body: any }) {
                 if (payload.type === "UPDATE") {
                     this.setState(payload.body);
                 }
@@ -55,7 +60,7 @@ describe("Context#transaction", () => {
         const storeGroup = new StoreGroup({ a: aStore });
 
         class ChangeAUseCase extends UseCase {
-            execute(state) {
+            execute(state: any) {
                 this.dispatch({
                     type: "UPDATE",
                     body: state
@@ -72,7 +77,7 @@ describe("Context#transaction", () => {
         });
         // then - called change handler a one-time
         let onChangeCount = 0;
-        let changedStores = [];
+        let changedStores: StoreLike[] = [];
         context.onChange(stores => {
             onChangeCount++;
             changedStores = changedStores.concat(stores);
@@ -83,10 +88,10 @@ describe("Context#transaction", () => {
                 return transactionContext
                     .useCase(new ChangeAUseCase())
                     .execute(1)
-                    .then(transactionContext.useCase(new ChangeAUseCase()).execute(2))
-                    .then(transactionContext.useCase(new ChangeAUseCase()).execute(3))
-                    .then(transactionContext.useCase(new ChangeAUseCase()).execute(4))
-                    .then(transactionContext.useCase(new ChangeAUseCase()).execute(5))
+                    .then(() => transactionContext.useCase(new ChangeAUseCase()).execute(2))
+                    .then(() => transactionContext.useCase(new ChangeAUseCase()).execute(3))
+                    .then(() => transactionContext.useCase(new ChangeAUseCase()).execute(4))
+                    .then(() => transactionContext.useCase(new ChangeAUseCase()).execute(5))
                     .then(() => {
                         transactionContext.commit();
                     });
@@ -135,7 +140,7 @@ describe("Context#transaction", () => {
         });
         // then - called change handler a one-time
         let onChangeCount = 0;
-        let changedStores = [];
+        let changedStores: StoreLike[] = [];
         context.onChange(stores => {
             onChangeCount++;
             changedStores = changedStores.concat(stores);
@@ -168,7 +173,7 @@ describe("Context#transaction", () => {
             });
     });
     it("commit and each store#receivePayload is called", function() {
-        const receivedPayloadList = [];
+        const receivedPayloadList: DispatchedPayload[] = [];
         const aStore = createReceivePayloadStore(payload => {
             receivedPayloadList.push(payload);
         });
@@ -219,8 +224,8 @@ describe("Context#transaction", () => {
                 strict: true
             }
         });
-        const beginTransactions = [];
-        const endTransaction = [];
+        const beginTransactions: TransactionBeganPayload[] = [];
+        const endTransaction: TransactionEndedPayload[] = [];
         context.events.onBeginTransaction((payload, meta) => {
             beginTransactions.push(payload);
             assert.strictEqual(meta.isTrusted, true, "meta.isTrusted should be true");
@@ -229,7 +234,7 @@ describe("Context#transaction", () => {
             assert.strictEqual(meta.parentUseCase, null, "meta.parentUseCase should be null");
             assert.strictEqual(typeof meta.timeStamp, "number");
             assert.strictEqual(typeof meta.transaction, "object", "transaction object");
-            assert.strictEqual(typeof meta.transaction.name, "string", "transaction object");
+            assert.strictEqual(typeof (meta.transaction as any).name, "string", "transaction object");
         });
         context.events.onEndTransaction((payload, meta) => {
             endTransaction.push(payload);
@@ -239,7 +244,7 @@ describe("Context#transaction", () => {
             assert.strictEqual(meta.parentUseCase, null, "meta.parentUseCase should be null");
             assert.strictEqual(typeof meta.timeStamp, "number");
             assert.strictEqual(typeof meta.transaction, "object", "transaction object");
-            assert.strictEqual(typeof meta.transaction.name, "string", "transaction object");
+            assert.strictEqual(typeof (meta.transaction as any).name, "string", "transaction object");
         });
         // 1st transaction
         return context
@@ -309,7 +314,7 @@ describe("Context#transaction", () => {
         }
 
         const transactionName = "My Transaction";
-        dispatcher.onDispatch((payload, meta) => {
+        dispatcher.onDispatch((_payload, meta) => {
             assert.deepEqual(meta.transaction, {
                 name: transactionName
             });
@@ -333,7 +338,7 @@ describe("Context#transaction", () => {
         });
     });
     it("commit and each store#onDispatch is called", function() {
-        const receivedCommitments = [];
+        const receivedCommitments: Commitment[] = [];
         const aStore = createStore({ name: "test" });
         aStore.onDispatch((payload, meta) => {
             receivedCommitments.push([payload, meta]);
@@ -372,12 +377,12 @@ describe("Context#transaction", () => {
         });
     });
     context("Warning(Transaction):", () => {
-        let consoleErrorStub = null;
+        let consoleErrorStub: null | sinon.SinonStub = null;
         beforeEach(() => {
             consoleErrorStub = sinon.stub(console, "error");
         });
         afterEach(() => {
-            consoleErrorStub.restore();
+            consoleErrorStub!.restore();
         });
         it("should be warned when no-commit and no-exit in a transaction", function() {
             const aStore = createStore({ name: "test" });
@@ -392,11 +397,11 @@ describe("Context#transaction", () => {
             });
             // 1st transaction
             return context
-                .transaction("transaction", transactionContext => {
+                .transaction("transaction", _transactionContext => {
                     return Promise.resolve();
                 })
                 .then(() => {
-                    assert.strictEqual(consoleErrorStub.callCount, 1);
+                    assert.strictEqual(consoleErrorStub!.callCount, 1);
                 });
         });
     });
