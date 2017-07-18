@@ -65,7 +65,7 @@ storeRanges.forEach(count => {
 queue.onEmpty().then(() => {
     var fields = ["count", "didExecutedTime", "completeTime", "updateTime"];
     var myCars = resultsCurrent;
-    var csv = json2csv({ data: myCars, fields: fields });
+    var csv = json2csv({ data: myCars, fields: fields, del: "\t" });
     console.log(csv);
     fs.writeFileSync(outputCSVPath, csv, "utf-8");
 });
