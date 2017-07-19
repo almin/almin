@@ -5,13 +5,18 @@ const assert = require("assert");
 import { ErrorPayload } from "../src/payload/ErrorPayload";
 import { Store } from "../src/Store";
 import { UseCase } from "../src/UseCase";
-import { createStore } from "./helper/create-store";
+import { createStore } from "./helper/create-new-store";
 
 describe("Store", function() {
     describe("#name", () => {
         describe("when define displayName", () => {
             it("#name is same with displayName", () => {
-                class MyStore extends Store {}
+                class MyStore extends Store {
+                    getState() {
+                        return {};
+                    }
+                }
+
                 const expectedName = "Expected Store";
                 MyStore.displayName = expectedName;
                 const store = new MyStore();
@@ -19,21 +24,14 @@ describe("Store", function() {
             });
         });
     });
-    describe("#getState", () => {
-        describe("when has not implemented", () => {
-            it("throw error", () => {
-                class MyStore extends Store {}
-                const store = new MyStore();
-                assert.throws(() => {
-                    store.getState();
-                }, /should be implemented/);
-            });
-        });
-    });
     describe("#setState", () => {
         describe("when newState tha is not updatable state", () => {
             it("should not update with newState", () => {
-                class MyStore extends Store {
+                type State = { key: string };
+
+                class MyStore extends Store<State> {
+                    state: State;
+
                     constructor() {
                         super();
                         this.state = {
@@ -41,7 +39,7 @@ describe("Store", function() {
                         };
                     }
 
-                    shouldStateUpdate(prevState, nextState) {
+                    shouldStateUpdate(prevState: State, nextState: State) {
                         return prevState.key !== nextState.key;
                     }
 
@@ -49,6 +47,7 @@ describe("Store", function() {
                         return this.state;
                     }
                 }
+
                 const store = new MyStore();
                 const currentState = store.getState();
                 store.setState({
@@ -60,7 +59,11 @@ describe("Store", function() {
         });
         describe("when newState that is updatable state", () => {
             it("should not update with newState", () => {
-                class MyStore extends Store {
+                type State = { key: string };
+
+                class MyStore extends Store<State> {
+                    state: State;
+
                     constructor() {
                         super();
                         this.state = {
@@ -68,7 +71,7 @@ describe("Store", function() {
                         };
                     }
 
-                    shouldStateUpdate(prevState, nextState) {
+                    shouldStateUpdate(prevState: State, nextState: State) {
                         return prevState.key !== nextState.key;
                     }
 
@@ -76,6 +79,7 @@ describe("Store", function() {
                         return this.state;
                     }
                 }
+
                 const store = new MyStore();
                 const currentState = store.getState();
                 store.setState({
@@ -125,11 +129,16 @@ describe("Store", function() {
         });
         it("can override by sub class", () => {
             class CustomShouldStateUpdateStore extends Store {
-                shouldStateUpdate(prev, next) {
+                shouldStateUpdate(_prev: any, _next: any) {
                     // always true
                     return true;
                 }
+
+                getState() {
+                    return {};
+                }
             }
+
             const store = new CustomShouldStateUpdateStore();
             assert(store.shouldStateUpdate({ a: 1 }, { a: 1 }));
         });
@@ -150,13 +159,17 @@ describe("Store", function() {
         // Related https://github.com/almin/almin/issues/190
         describe("when call Store#setState out of UseCase", () => {
             it("should be called Store#onChange", done => {
-                class AStore extends Store {
+                type State = number;
+
+                class AStore extends Store<State> {
+                    state: State;
+
                     constructor() {
                         super();
                         this.state = 0;
                     }
 
-                    updateState(state) {
+                    updateState(state: State) {
                         this.setState(state);
                     }
 
@@ -164,10 +177,9 @@ describe("Store", function() {
                         return this.state;
                     }
                 }
+
                 const aStore = new AStore();
-                const expectedState = {
-                    expected: "value"
-                };
+                const expectedState: State = 42;
                 aStore.onChange(() => {
                     assert.ok(aStore.getState(), expectedState);
                     done();
@@ -180,6 +192,7 @@ describe("Store", function() {
         describe("when useCaseName is minified", function() {
             it("can receive error from UseCase", function(done) {
                 const store = createStore({ name: "test" });
+
                 class TestUseCase extends UseCase {
                     execute() {
                         const domainError = new Error("domain error");
@@ -187,6 +200,7 @@ describe("Store", function() {
                         this.throwError(domainError);
                     }
                 }
+
                 const testUseCase = new TestUseCase();
                 testUseCase.name = "minified";
                 // delegate
@@ -205,6 +219,7 @@ describe("Store", function() {
         });
         it("should receive error from UseCase", function(done) {
             const store = createStore({ name: "test" });
+
             class TestUseCase extends UseCase {
                 execute() {
                     const domainError = new Error("domain error");
@@ -212,6 +227,7 @@ describe("Store", function() {
                     this.throwError(domainError);
                 }
             }
+
             const testUseCase = new TestUseCase();
             // delegate
             testUseCase.pipe(store);
