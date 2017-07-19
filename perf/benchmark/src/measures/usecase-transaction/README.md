@@ -1,4 +1,7 @@
-# Increase store benchmark
+# UseCase vs. Transaction
+
+It measure taken time that is executing 5 UseCase.
+
 
 - "count": Number of Store
 - "updateCount": count of updating store
