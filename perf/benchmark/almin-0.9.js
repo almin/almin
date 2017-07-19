@@ -3,15 +3,14 @@
 const { Dispatcher, Context, Store, StoreGroup, UseCase } = require("almin-0.9");
 module.exports = {
     createContext: function(stores) {
-
         return new Context({
             dispatcher: new Dispatcher(),
             store: new StoreGroup(stores)
         });
     },
-    createUseCase(state){
+    createUseCase() {
         class MyUseCase extends UseCase {
-            execute() {
+            execute(state) {
                 this.dispatch({
                     type: "update",
                     body: state
@@ -20,13 +19,13 @@ module.exports = {
         }
         return new MyUseCase();
     },
-    createStore(name){
+    createStore(name) {
         class TestStore extends Store {
             constructor() {
                 super();
                 this.name = name;
-                this.state = null
-                this.onDispatch((payload) => {
+                this.state = null;
+                this.onDispatch(payload => {
                     if (payload.type === "update") {
                         this.updateState(payload.body);
                     }

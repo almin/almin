@@ -19,6 +19,8 @@ import { StoreGroupChangingStoreStrictChecker } from "./StoreGroupChangingStoreS
 import { StoreGroupLike, StoreGroupReasonForChange } from "./StoreGroupLike";
 import { isDidExecutedPayload } from "../payload/DidExecutedPayload";
 import { isErrorPayload } from "../payload/ErrorPayload";
+import { isTransactionBeganPayload } from "../payload/TransactionBeganPayload";
+import { isTransactionEndedPayload } from "../payload/TransactionEndedPayload";
 
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
 
@@ -136,6 +138,8 @@ export class StoreGroup<T> extends Dispatcher implements StoreGroupLike {
     private _storeStateMap: StoreStateMap;
     // is strict mode
     private isStrictMode = false;
+    // is transaction working
+    private isTransactionWorking = false;
     // checker
     private storeGroupEmitChangeChecker = new StoreGroupEmitChangeChecker();
     private storeGroupChangingStoreStrictChecker = new StoreGroupChangingStoreStrictChecker();
@@ -311,16 +315,19 @@ But, ${store.name}#getState() was called.`
      * If call with no-arguments, use ChangedPayload by default.
      */
     emitChange(): void {
-        this.tryToUpdateStoreGroupState();
+        this.emitChangeIfStateIsChange();
     }
 
-    private tryUpdateState(payload: Payload, meta: DispatcherPayloadMeta) {
+    private tryToUpdateState(payload: Payload, meta: DispatcherPayloadMeta) {
         this.writePhaseInRead(this.stores, payload, meta);
-        this.tryToUpdateStoreGroupState(payload, meta);
+        // StoreGroup soft lock `emitChange` in the transaction.
+        if (!this.isTransactionWorking) {
+            this.emitChangeIfStateIsChange(payload, meta);
+        }
     }
 
     /**
-     * **internal**
+     * **Internal**
      *
      * ## Implementation Notes:
      *
@@ -333,17 +340,20 @@ But, ${store.name}#getState() was called.`
     commit(commitment: Commitment): void {
         const payload = commitment[0];
         const meta = commitment[1];
-        if (!meta.isTrusted) {
-            this.tryUpdateState(payload, meta);
+        if (isTransactionBeganPayload(payload)) {
+            // TODO: lock emitChange
+            this.isTransactionWorking = true;
+        } else if (!meta.isTrusted) {
+            this.tryToUpdateState(payload, meta);
         } else if (isErrorPayload(payload)) {
-            this.tryUpdateState(payload, meta);
+            this.tryToUpdateState(payload, meta);
         } else if (isWillExecutedPayload(payload) && meta.useCase) {
             this._workingUseCaseMap.set(meta.useCase.id, true);
         } else if (isDidExecutedPayload(payload) && meta.useCase) {
             if (meta.isUseCaseFinished) {
                 this._finishedUseCaseMap.set(meta.useCase.id, true);
             }
-            this.tryUpdateState(payload, meta);
+            this.tryToUpdateState(payload, meta);
         } else if (isCompletedPayload(payload) && meta.useCase && meta.isUseCaseFinished) {
             // if the useCase is already finished, doesn't emitChange in CompletedPayload
             // In other word, If the UseCase that return non-promise value, doesn't emitChange in CompletedPayload
@@ -354,9 +364,14 @@ But, ${store.name}#getState() was called.`
                 return;
             }
             // if the UseCase#execute has async behavior, try to update before actual completed
-            this.tryUpdateState(payload, meta);
+            this.tryToUpdateState(payload, meta);
             // Now, this UseCase actual finish
             this._workingUseCaseMap.delete(meta.useCase.id);
+        } else if (isTransactionEndedPayload(payload)) {
+            // TODO: unlock emitChange
+            this.isTransactionWorking = false;
+            // try to emitChange after finish the transaction
+            this.emitChangeIfStateIsChange(payload, meta);
         }
     }
 
@@ -365,7 +380,7 @@ But, ${store.name}#getState() was called.`
     }
 
     // read -> emitChange if needed
-    private tryToUpdateStoreGroupState(payload?: Payload, meta?: DispatcherPayloadMeta): void {
+    private emitChangeIfStateIsChange(payload?: Payload, meta?: DispatcherPayloadMeta): void {
         this._pruneChangingStateOfStores();
         const nextState = this.readPhaseInRead(this.stores);
         if (!this.shouldStateUpdate(this.state, nextState)) {
@@ -427,7 +442,7 @@ But, ${store.name}#getState() was called.`
             }
             // if not exist working UseCases, immediate invoke emitChange.
             if (!this.existWorkingUseCase) {
-                this.tryToUpdateStoreGroupState();
+                this.emitChangeIfStateIsChange();
             }
         };
         if (process.env.NODE_ENV !== "production") {

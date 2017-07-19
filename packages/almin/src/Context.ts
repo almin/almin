@@ -46,7 +46,6 @@ export class Context<T> {
     private lifeCycleEventHub: LifeCycleEventHub;
     private storeGroup: StoreGroupLike;
     private isStrictMode = false;
-    private defaultUnitOfWork: UseCaseUnitOfWork;
 
     /**
      * `dispatcher` is an instance of `Dispatcher`.
@@ -104,13 +103,6 @@ export class Context<T> {
         if (this.isStrictMode) {
             this.storeGroup.useStrict();
         }
-        this.defaultUnitOfWork = new UseCaseUnitOfWork({
-            name: "Default",
-            dispatcher: this.dispatcher,
-            storeGroup: this.storeGroup,
-            options: { autoCommit: true }
-        });
-
         const storeGroupOnChangeToStoreChangedPayload = (
             stores: Array<StoreLike<any>>,
             details?: StoreGroupReasonForChange
@@ -223,14 +215,26 @@ export class Context<T> {
     useCase<T extends UseCaseLike>(useCase: T): UseCaseExecutor<T>;
     useCase(useCase: any): UseCaseExecutor<any> {
         const useCaseExecutor = createUseCaseExecutor(useCase, this.dispatcher);
-        this.defaultUnitOfWork.open(useCaseExecutor);
+        const unitOfWork = new UseCaseUnitOfWork({
+            name: "Default",
+            dispatcher: this.dispatcher,
+            storeGroup: this.storeGroup,
+            options: { autoCommit: true }
+        });
+        unitOfWork.open(useCaseExecutor);
         useCaseExecutor.onRelease(() => {
-            this.defaultUnitOfWork.close(useCaseExecutor);
+            unitOfWork.close(useCaseExecutor);
+            unitOfWork.release();
         });
         return useCaseExecutor;
     }
 
     /**
+     * ## Transaction
+     *
+     * - **Stability**: Experimental
+     * - This feature is subject to change. It may change or be removed in future versions.
+     *
      * Create new Unit of Work and execute UseCase.
      * You can prevent heavy updating of StoreGroup.
      *
@@ -267,13 +271,34 @@ export class Context<T> {
      * And, transaction context should return a promise.
      * In most case, transaction context should return `transactionContext.useCase(useCase).execute()`.
      *
+     * ### Transaction disallow to do multiple commits
+     *
+     * A transaction can do a single `commit()`
+     * Not to allow to do multiple commits in a transaction.
+     *
+     * Use multiple transaction chain insteadof multiple commit in a transaction.
+     *
+     * If you want to multiple commit, please file issue with the motivation.
+     *
      * ### Transaction is not lock system
      *
-     * The **transaction** does not lock the store.
-     * The **transaction** is a unit of work.
+     * The **transaction** does not lock updating of stores.
+     * The **transaction** method that create a new unit of work.
      *
      * It means that the store may be updated by other unit of work during executing `context.transaction`.
      * `context.transaction` provide the way for bulk updating.
+     *
+     * A Unit of Work promise the order of events in the Unit of Work.
+     * But, This don't promise the order of events between Unit of Works.
+     *
+     * ```
+     *  -----------------  commit   -----------------
+     * | Unit of Work A |  ------> |                 |
+     *  ----------------           |    StoreGroup   |
+     *  -----------------  commit  |                 |
+     * | Unit of Work B |  ------> |                 |
+     *  ----------------            -----------------
+     * ```
      *
      * Current implementation is **READ COMMITTED** of Transaction Isolation Levels.
      *
@@ -336,14 +361,20 @@ Please enable strict mode via \`new Context({ dispatcher, store, options: { stri
                 unitOfWork.exit();
             }
         };
+        // Start Transaction
         unitOfWork.beginTransaction();
-        // transactionContext resolve with void
-        // unitOfWork automatically close on transactionContext exited
-        // by design.
-        const promise = transactionHandler(context);
-        const isResultPromise = typeof promise === "object" && promise !== null && typeof promise.then == "function";
-        if (!isResultPromise) {
-            throw new Error(`transaction context should return promise.
+        // - transactionContext will resolve with void
+        // - unitOfWork automatically close when transactionContext is exited
+        // It is by design.
+        const promise = new Promise((resolve, reject) => {
+            const promise = transactionHandler(context);
+            const isResultPromise =
+                typeof promise === "object" && promise !== null && typeof promise.then == "function";
+            // if the transaction failed, exit the transaction and throw error
+            if (!isResultPromise) {
+                unitOfWork.exit();
+                return reject(
+                    new Error(`Error(Transaction): transactionHandler should return promise.
 Transaction should be exited after all useCases have been completed.
 
 For example, following transaction will be exited after SomeUseCase is completed.
@@ -351,8 +382,11 @@ For example, following transaction will be exited after SomeUseCase is completed
 context.transaction("transaction", transactionContext => {
      return transactionContext.useCase(new SomeUseCase()).execute();
 });          
-`);
-        }
+`)
+                );
+            }
+            resolve(promise);
+        });
         return promise.then(
             () => {
                 unitOfWork.release();
@@ -440,8 +474,6 @@ context.transaction("transaction", transactionContext => {
      * You can call this when no more call event handler
      */
     release() {
-        this.defaultUnitOfWork.exit();
-        this.defaultUnitOfWork.release();
         this.storeGroup.release();
         this.lifeCycleEventHub.release();
     }

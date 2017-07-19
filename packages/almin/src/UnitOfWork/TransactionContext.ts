@@ -10,7 +10,7 @@ export interface TransactionContext {
     useCase(useCase: UseCaseFunction): UseCaseExecutor<FunctionalUseCase>;
 
     /**
-     * Commit current queued payload.
+     * Commit current queued payloads and exit the transaction.
      */
     commit: () => void;
     /**

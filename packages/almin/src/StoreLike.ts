@@ -4,7 +4,7 @@ import { Dispatcher } from "./Dispatcher";
  *
  * Note: receivePayload is not in this, because Store#receivePayload is not a part of StoreGroup.
  */
-export interface StoreLike<T> extends Dispatcher {
+export interface StoreLike<T = any> extends Dispatcher {
     // Return the state
     getState(): T;
     // call the `handler` when the store is changed.

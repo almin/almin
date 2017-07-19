@@ -307,18 +307,6 @@ describe("Context", function() {
             assert.ok(useCaseExecutor instanceof UseCaseExecutorImpl);
             useCaseExecutor.execute();
         });
-        it("should release defaultUnitOfWork after UseCase#execute is completed", function() {
-            const dispatcher = new Dispatcher();
-            const appContext = new Context({
-                dispatcher,
-                store: createStore({ name: "test" })
-            });
-            // private check
-            assert.strictEqual(appContext.defaultUnitOfWork.workingUseCaseCount, 0);
-            return appContext.useCase(new SyncNoDispatchUseCase()).execute().then(() => {
-                assert.strictEqual(appContext.defaultUnitOfWork.workingUseCaseCount, 0);
-            });
-        });
     });
     describe("#execute", function() {
         describe("when pass UseCase constructor", function() {
@@ -336,7 +324,6 @@ describe("Context", function() {
     });
     describe("#release", () => {
         it("should release all handlers", () => {
-            const consoleErrorStub = sinon.stub(console, "error");
             // add handler
             const dispatcher = new Dispatcher();
             const store = createStore({
@@ -396,10 +383,6 @@ describe("Context", function() {
                 .then(() => {
                     store.emitChange();
                     return context.useCase(new ParentUseCase()).execute();
-                })
-                .then(() => {
-                    assert.ok(consoleErrorStub.called, "Warning(UnitOfWork): Transaction(Default) is already ended.");
-                    consoleErrorStub.restore();
                 });
         });
     });

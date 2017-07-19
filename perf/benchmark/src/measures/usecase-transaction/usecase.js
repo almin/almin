@@ -17,45 +17,45 @@ function runStore(almin, storeCount) {
             return almin.createStore(`Store${index}`);
         });
         const context = almin.createContext(stores);
-        let startTimeStamp, didTimeStamp, completeTimeStamp, onChangeTimeStamp;
-        context.onWillExecuteEachUseCase((payload, meta) => {
-            startTimeStamp = meta.timeStamp;
-        });
-        context.onDidExecuteEachUseCase((payload, meta) => {
-            didTimeStamp = meta.timeStamp;
-        });
-        context.onCompleteEachUseCase((payload, meta) => {
-            completeTimeStamp = meta.timeStamp;
-        });
+        let startTimeStamp,
+            onChangeTimeStamp,
+            updateCount = 0;
+        startTimeStamp = Date.now();
         context.onChange(() => {
             onChangeTimeStamp = Date.now();
+            updateCount++;
         });
         // execute usecase
-        const useCase = almin.createUseCase();
-        context.useCase(useCase).execute({ newState: 1 }).then(() => {
-            resolve({
-                didExecutedTime: didTimeStamp - startTimeStamp,
-                completeTime: completeTimeStamp - startTimeStamp,
-                updateTime: (onChangeTimeStamp || Date.now()) - startTimeStamp
+        const useCase = almin.createUseCase(null);
+        context
+            .useCase(useCase)
+            .execute(1)
+            .then(() => context.useCase(useCase).execute(2))
+            .then(() => context.useCase(useCase).execute(3))
+            .then(() => context.useCase(useCase).execute(4))
+            .then(() => context.useCase(useCase).execute(5))
+            .then(() => {
+                resolve({
+                    updateTime: (onChangeTimeStamp || Date.now()) - startTimeStamp,
+                    updateCount
+                });
+                context.release();
             });
-            context.release();
-        });
     });
 }
 
 const timeStamp = Date.now();
-const outputCSVPath = path.join(__dirname, "output", `${timeStamp}.csv`);
+const outputCSVPath = path.join(__dirname, "output", `usecase-${timeStamp}.csv`);
 // 0...350 stores
 const storeRanges = range(0, 350, 5);
 // count
 const resultsCurrent = [];
 storeRanges.forEach(count => {
     queue.add(() => {
-        return runStore(alminCurrent, count).then(({ didExecutedTime, completeTime, updateTime }) => {
+        return runStore(alminCurrent, count).then(({ updateTime, updateCount }) => {
             resultsCurrent.push({
                 count,
-                didExecutedTime,
-                completeTime,
+                updateCount,
                 updateTime
             });
         });
@@ -63,7 +63,7 @@ storeRanges.forEach(count => {
 });
 
 queue.onEmpty().then(() => {
-    var fields = ["count", "didExecutedTime", "completeTime", "updateTime"];
+    var fields = ["count", "updateCount", "updateTime"];
     var myCars = resultsCurrent;
     var csv = json2csv({ data: myCars, fields: fields, del: "\t" });
     console.log(csv);
