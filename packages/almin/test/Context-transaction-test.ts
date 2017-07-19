@@ -58,10 +58,8 @@ describe("Context#transaction", () => {
                         assert.fail("DON'T CALL");
                     },
                     (error: Error) => {
-                        assert.ok(
-                            error.message.indexOf("Error(Transaction): transactionHandler should return promise.") !==
-                                -1
-                        );
+                        const expectedMessage = "Error(Transaction): transactionHandler should return promise.";
+                        assert.ok(error.message.indexOf(expectedMessage) !== -1);
                     }
                 );
         });
@@ -86,11 +84,8 @@ describe("Context#transaction", () => {
                         assert.fail("DON'T CALL");
                     },
                     (error: Error) => {
-                        assert.ok(
-                            error.message.indexOf(
-                                `Error(Transaction): This unit of work is already commit() or exit().`
-                            ) !== -1
-                        );
+                        const expectedMessage = `Error(Transaction): This unit of work is already commit() or exit().`;
+                        assert.ok(error.message.indexOf(expectedMessage) !== -1);
                     }
                 );
         });
