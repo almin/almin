@@ -121,7 +121,7 @@ export class UseCaseUnitOfWork {
      * Do `commit()` and then this unit of work will be released.
      */
     commit() {
-        // transaction commit work once
+        // transaction commit work only once
         if (this.doesReflectActionAtLeastOne) {
             throw new Error(`Error(Transaction): This unit of work is already commit() or exit().
 Not to allow to do multiple commits in a transaction`);
@@ -180,6 +180,11 @@ Not to allow to do multiple commits in a transaction`);
     }
 
     exit() {
+        // transaction exit work only once
+        if (this.doesReflectActionAtLeastOne) {
+            throw new Error(`Error(Transaction): This unit of work is already commit() or exit().
+Not to allow to do multiple exit in a transaction`);
+        }
         this.doesReflectActionAtLeastOne = true;
         if (this.isTransactionWorking) {
             const commitment = this.createTransactionEndPayload();

@@ -38,7 +38,7 @@ const createReceivePayloadStore = (receivePayloadHandler: ((payload: DispatchedP
     return new MockStore();
 };
 describe("Context#transaction", () => {
-    context("Error Case", () => {
+    context("Error Pattern", () => {
         it("should throw error when return non-promise value in the transaction", function() {
             const aStore = createStore({ name: "test" });
             const storeGroup = new StoreGroup({ a: aStore });
@@ -59,6 +59,32 @@ describe("Context#transaction", () => {
                     },
                     (error: Error) => {
                         const expectedMessage = "Error(Transaction): transactionHandler should return promise.";
+                        assert.ok(error.message.indexOf(expectedMessage) !== -1);
+                    }
+                );
+        });
+        it("should throw error when do multiple exit in a transaction", function() {
+            const aStore = createStore({ name: "test" });
+            const storeGroup = new StoreGroup({ a: aStore });
+            const context = new Context({
+                dispatcher: new Dispatcher(),
+                store: storeGroup,
+                options: {
+                    strict: true
+                }
+            });
+            return context
+                .transaction("transaction name", transactionContext => {
+                    transactionContext.exit();
+                    transactionContext.exit();
+                    return Promise.resolve();
+                })
+                .then(
+                    () => {
+                        assert.fail("DON'T CALL");
+                    },
+                    (error: Error) => {
+                        const expectedMessage = `Error(Transaction): This unit of work is already commit() or exit().`;
                         assert.ok(error.message.indexOf(expectedMessage) !== -1);
                     }
                 );
