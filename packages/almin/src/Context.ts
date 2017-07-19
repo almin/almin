@@ -294,10 +294,10 @@ export class Context<T> {
      * ```
      *  -----------------  commit   -----------------
      * | Unit of Work A |  ------> |                 |
-     * -----------------           |    StoreGroup   |
+     *  ----------------           |    StoreGroup   |
      *  -----------------  commit  |                 |
      * | Unit of Work B |  ------> |                 |
-     * -----------------           ------------------
+     *  ----------------            -----------------
      * ```
      *
      * Current implementation is **READ COMMITTED** of Transaction Isolation Levels.
