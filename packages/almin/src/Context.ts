@@ -283,7 +283,7 @@ export class Context<T> {
      * ### Transaction is not lock system
      *
      * The **transaction** does not lock updating of stores.
-     * The **transaction** is a new unit of work.
+     * The **transaction** method that create a new unit of work.
      *
      * It means that the store may be updated by other unit of work during executing `context.transaction`.
      * `context.transaction` provide the way for bulk updating.
