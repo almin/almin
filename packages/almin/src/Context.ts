@@ -268,8 +268,8 @@ export class Context<T> {
      *
      * ### Transaction is not lock system
      *
-     * The **transaction** does not lock the store.
-     * The **transaction** is a unit of work.
+     * The **transaction** does not lock updating of stores.
+     * The **transaction** is a new unit of work.
      *
      * It means that the store may be updated by other unit of work during executing `context.transaction`.
      * `context.transaction` provide the way for bulk updating.
@@ -339,10 +339,15 @@ Please enable strict mode via \`new Context({ dispatcher, store, options: { stri
         // transactionContext resolve with void
         // unitOfWork automatically close on transactionContext exited
         // by design.
-        const promise = transactionHandler(context);
-        const isResultPromise = typeof promise === "object" && promise !== null && typeof promise.then == "function";
-        if (!isResultPromise) {
-            throw new Error(`transaction context should return promise.
+        const promise = new Promise((resolve, reject) => {
+            const promise = transactionHandler(context);
+            const isResultPromise =
+                typeof promise === "object" && promise !== null && typeof promise.then == "function";
+            // if the transaction failed, exit the transaction and throw error
+            if (!isResultPromise) {
+                unitOfWork.exit();
+                return reject(
+                    new Error(`Error(Transaction): transactionHandler should return promise.
 Transaction should be exited after all useCases have been completed.
 
 For example, following transaction will be exited after SomeUseCase is completed.
@@ -350,8 +355,11 @@ For example, following transaction will be exited after SomeUseCase is completed
 context.transaction("transaction", transactionContext => {
      return transactionContext.useCase(new SomeUseCase()).execute();
 });          
-`);
-        }
+`)
+                );
+            }
+            resolve(promise);
+        });
         return promise.then(
             () => {
                 unitOfWork.release();

@@ -38,6 +38,63 @@ const createReceivePayloadStore = (receivePayloadHandler: ((payload: DispatchedP
     return new MockStore();
 };
 describe("Context#transaction", () => {
+    context("Error Case", () => {
+        it("should throw error when return non-promise value in the transaction", function() {
+            const aStore = createStore({ name: "test" });
+            const storeGroup = new StoreGroup({ a: aStore });
+            const context = new Context({
+                dispatcher: new Dispatcher(),
+                store: storeGroup,
+                options: {
+                    strict: true
+                }
+            });
+            return context
+                .transaction("transaction name", () => {
+                    return null as any; // non-promise value
+                })
+                .then(
+                    () => {
+                        assert.fail("DON'T CALL");
+                    },
+                    (error: Error) => {
+                        assert.ok(
+                            error.message.indexOf("Error(Transaction): transactionHandler should return promise.") !==
+                                -1
+                        );
+                    }
+                );
+        });
+        it("should throw error when do multiple commit in a transaction", function() {
+            const aStore = createStore({ name: "test" });
+            const storeGroup = new StoreGroup({ a: aStore });
+            const context = new Context({
+                dispatcher: new Dispatcher(),
+                store: storeGroup,
+                options: {
+                    strict: true
+                }
+            });
+            return context
+                .transaction("transaction name", transactionContext => {
+                    transactionContext.commit();
+                    transactionContext.commit();
+                    return Promise.resolve();
+                })
+                .then(
+                    () => {
+                        assert.fail("DON'T CALL");
+                    },
+                    (error: Error) => {
+                        assert.ok(
+                            error.message.indexOf(
+                                `Error(Transaction): This unit of work is already commit() or exit().`
+                            ) !== -1
+                        );
+                    }
+                );
+        });
+    });
     it("should collect up StoreGroup commit", function() {
         class AStore extends Store {
             constructor() {
@@ -187,31 +244,30 @@ describe("Context#transaction", () => {
         });
         // reset initialized
         receivedPayloadList.length = 0;
-        return context.transaction("transaction name", transactionContext => {
-            assert.strictEqual(receivedPayloadList.length, 0, "no commitment");
-            // Sync && No Dispatch UseCase call receivedPayloadList at once
-            return transactionContext
-                .useCase(new SyncNoDispatchUseCase())
-                .execute()
-                .then(() => {
+        return context
+            .transaction("transaction name", transactionContext => {
+                assert.strictEqual(receivedPayloadList.length, 0, "no commitment");
+                // Sync && No Dispatch UseCase call receivedPayloadList at once
+                return transactionContext.useCase(new SyncNoDispatchUseCase()).execute().then(() => {
                     assert.strictEqual(receivedPayloadList.length, 0, "no commitment");
                     transactionContext.commit();
                     assert.strictEqual(receivedPayloadList.length, 1, "1 UseCase executed commitment");
-                })
-                .then(() => {
-                    // AsyncUseCase call receivedPayloadList twice
-                    return transactionContext.useCase(new AsyncUseCase()).execute();
-                })
-                .then(() => {
-                    assert.strictEqual(receivedPayloadList.length, 1, "before: 1 UseCase executed commitment");
-                    transactionContext.commit();
-                    assert.strictEqual(
-                        receivedPayloadList.length,
-                        3,
-                        "after: Async UseCase add (did + complete) commitment"
-                    );
                 });
-        });
+            })
+            .then(() => {
+                return context.transaction("nest transaction", transactionContext => {
+                    // AsyncUseCase call receivedPayloadList twice
+                    return transactionContext.useCase(new AsyncUseCase()).execute().then(() => {
+                        assert.strictEqual(receivedPayloadList.length, 1, "before: 1 UseCase executed commitment");
+                        transactionContext.commit();
+                        assert.strictEqual(
+                            receivedPayloadList.length,
+                            3,
+                            "after: Async UseCase add (did + complete) commitment"
+                        );
+                    });
+                });
+            });
     });
     it("can receive begin/end payload of transaction via Context", function() {
         const aStore = createStore({ name: "test" });
@@ -353,28 +409,27 @@ describe("Context#transaction", () => {
         });
         // reset initialized
         receivedCommitments.length = 0;
-        return context.transaction("transaction name", transactionContext => {
-            assert.strictEqual(receivedCommitments.length, 0, "no commitment");
-            return transactionContext
-                .useCase(new SyncNoDispatchUseCase())
-                .execute()
-                .then(() => {
+        return context
+            .transaction("transaction 1", transactionContext => {
+                assert.strictEqual(receivedCommitments.length, 0, "no commitment");
+                return transactionContext.useCase(new SyncNoDispatchUseCase()).execute().then(() => {
                     assert.strictEqual(receivedCommitments.length, 0, "no commitment");
                     transactionContext.commit();
                     assert.strictEqual(receivedCommitments.length, 1, "1 UseCase executed commitment");
-                })
-                .then(() => {
-                    return transactionContext.useCase(new SyncNoDispatchUseCase()).execute();
-                })
-                .then(() => {
-                    assert.strictEqual(receivedCommitments.length, 1, "before: 1 UseCase executed commitment");
-                    transactionContext.commit();
-                    assert.strictEqual(receivedCommitments.length, 2, "after: 2 UseCase executed 2 commitment");
-                    const [payload, meta] = receivedCommitments[0];
-                    assert.ok(payload instanceof Payload);
-                    assert.ok(meta instanceof DispatcherPayloadMetaImpl);
                 });
-        });
+            })
+            .then(() => {
+                return context.transaction("transaction 2", transactionContext => {
+                    return transactionContext.useCase(new SyncNoDispatchUseCase()).execute().then(() => {
+                        assert.strictEqual(receivedCommitments.length, 1, "before: 1 UseCase executed commitment");
+                        transactionContext.commit();
+                        assert.strictEqual(receivedCommitments.length, 2, "after: 2 UseCase executed 2 commitment");
+                        const [payload, meta] = receivedCommitments[0];
+                        assert.ok(payload instanceof Payload);
+                        assert.ok(meta instanceof DispatcherPayloadMetaImpl);
+                    });
+                });
+            });
     });
     context("Warning(Transaction):", () => {
         let consoleErrorStub: null | sinon.SinonStub = null;

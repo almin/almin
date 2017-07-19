@@ -46,7 +46,7 @@ export class UseCaseUnitOfWork {
         this.doesReflectActionAtLeastOne = false;
         if (this.options.autoCommit) {
             this.unitOfWork.onAddedCommitment(() => {
-                this.commit();
+                this.unitOfWork.commit();
             });
         }
     }
@@ -121,13 +121,14 @@ export class UseCaseUnitOfWork {
      * Do `commit()` and then this unit of work will be released.
      */
     commit() {
+        // transaction commit work once
+        if (this.doesReflectActionAtLeastOne) {
+            throw new Error(`Error(Transaction): This unit of work is already commit() or exit().
+Not to allow to do multiple commits in a transaction`);
+        }
         if (!this.isTransactionWorking) {
             this.unitOfWork.commit();
         } else {
-            // transaction commit work once
-            if (this.doesReflectActionAtLeastOne) {
-                throw new Error("This unit of work is already commit() or exit().");
-            }
             const commitment = this.createTransactionEndPayload();
             // Notes: It is specific order for updating store logging
             // 1. commit
@@ -194,7 +195,7 @@ export class UseCaseUnitOfWork {
      * Please call `exit` or `commit at once before releasing.
      */
     release() {
-        if (!this.doesReflectActionAtLeastOne) {
+        if (!this.options.autoCommit && !this.doesReflectActionAtLeastOne) {
             if (process.env.NODE_ENV !== "production") {
                 console.error(`Warning(UnitOfWork): Transaction(${this
                     .name}) should be commit() or exit() at least one. 
