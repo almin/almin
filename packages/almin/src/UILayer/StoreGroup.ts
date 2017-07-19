@@ -320,13 +320,14 @@ But, ${store.name}#getState() was called.`
 
     private tryToUpdateState(payload: Payload, meta: DispatcherPayloadMeta) {
         this.writePhaseInRead(this.stores, payload, meta);
+        // StoreGroup soft lock `emitChange` in the transaction.
         if (!this.isTransactionWorking) {
             this.emitChangeIfStateIsChange(payload, meta);
         }
     }
 
     /**
-     * **internal**
+     * **Internal**
      *
      * ## Implementation Notes:
      *
@@ -339,12 +340,13 @@ But, ${store.name}#getState() was called.`
     commit(commitment: Commitment): void {
         const payload = commitment[0];
         const meta = commitment[1];
-        if (!meta.isTrusted) {
+        if (isTransactionBeganPayload(payload)) {
+            // TODO: lock emitChange
+            this.isTransactionWorking = true;
+        } else if (!meta.isTrusted) {
             this.tryToUpdateState(payload, meta);
         } else if (isErrorPayload(payload)) {
             this.tryToUpdateState(payload, meta);
-        } else if (isTransactionBeganPayload(payload)) {
-            this.isTransactionWorking = true;
         } else if (isWillExecutedPayload(payload) && meta.useCase) {
             this._workingUseCaseMap.set(meta.useCase.id, true);
         } else if (isDidExecutedPayload(payload) && meta.useCase) {
@@ -366,6 +368,7 @@ But, ${store.name}#getState() was called.`
             // Now, this UseCase actual finish
             this._workingUseCaseMap.delete(meta.useCase.id);
         } else if (isTransactionEndedPayload(payload)) {
+            // TODO: unlock emitChange
             this.isTransactionWorking = false;
             // try to emitChange after finish the transaction
             this.emitChangeIfStateIsChange(payload, meta);
