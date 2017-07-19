@@ -235,14 +235,18 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
         UseCaseInstanceMap.delete(this.useCase);
     }
 
+    /**
+     * @private like
+     */
     onRelease(handler: () => void): void {
         this.on("USECASE_EXECUTOR_RELEASE", handler);
     }
 
     /**
      * Similar to `execute(arguments)`, but it accept an executor function insteadof `arguments`
-     *
      * `executor(useCase => useCase.execute())` return a Promise object that resolved with undefined.
+     *
+     * This method is type-safe. It is useful for TypeScript.
      *
      * ## Example
      *
@@ -267,6 +271,11 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
      * context.useCase(new MyUseCase())
      *  .executor(useCase => useCase.execute("value"))
      * ```
+     *
+     * ### I'm use TypeScript, Should I use `executor`?
+     *
+     * Yes. It is type-safe by default.
+     * In other words, JavaScript User have not benefits.
      *
      * ### Why executor's result always undefined?
      *
