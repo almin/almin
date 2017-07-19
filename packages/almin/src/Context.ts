@@ -230,6 +230,11 @@ export class Context<T> {
     }
 
     /**
+     * ## Transaction
+     *
+     * - **Stability**: Experimental
+     * - This feature is subject to change. It may change or be removed in future versions.
+     *
      * Create new Unit of Work and execute UseCase.
      * You can prevent heavy updating of StoreGroup.
      *
@@ -265,6 +270,15 @@ export class Context<T> {
      *
      * And, transaction context should return a promise.
      * In most case, transaction context should return `transactionContext.useCase(useCase).execute()`.
+     *
+     * ### Transaction disallow to do multiple commits
+     *
+     * A transaction can do a single `commit()`
+     * Not to allow to do multiple commits in a transaction.
+     *
+     * Use multiple transaction chain insteadof multiple commit in a transaction.
+     *
+     * If you want to multiple commit, please file issue with the motivation.
      *
      * ### Transaction is not lock system
      *
@@ -335,10 +349,11 @@ Please enable strict mode via \`new Context({ dispatcher, store, options: { stri
                 unitOfWork.exit();
             }
         };
+        // Start Transaction
         unitOfWork.beginTransaction();
-        // transactionContext resolve with void
-        // unitOfWork automatically close on transactionContext exited
-        // by design.
+        // - transactionContext will resolve with void
+        // - unitOfWork automatically close when transactionContext is exited
+        // It is by design.
         const promise = new Promise((resolve, reject) => {
             const promise = transactionHandler(context);
             const isResultPromise =
