@@ -15,6 +15,7 @@ import { TransactionEndedPayload } from "../src/payload/TransactionEndedPayload"
 import { Commitment } from "../src/UnitOfWork/UnitOfWork";
 
 import sinon = require("sinon");
+import { TransactionContext } from "../src/UnitOfWork/TransactionContext";
 
 /**
  * create a Store that can handle receivePayload
@@ -38,6 +39,35 @@ const createReceivePayloadStore = (receivePayloadHandler: ((payload: DispatchedP
     return new MockStore();
 };
 describe("Context#transaction", () => {
+    context("Warning(Transaction):", () => {
+        let consoleErrorStub: null | sinon.SinonStub = null;
+        beforeEach(() => {
+            consoleErrorStub = sinon.stub(console, "error");
+        });
+        afterEach(() => {
+            consoleErrorStub!.restore();
+        });
+        it("should be warned when no-commit and no-exit in a transaction", function() {
+            const aStore = createStore({ name: "test" });
+            const storeGroup = new StoreGroup({ a: aStore });
+            const dispatcher = new Dispatcher();
+            const context = new Context({
+                dispatcher,
+                store: storeGroup,
+                options: {
+                    strict: true
+                }
+            });
+            // 1st transaction
+            return context
+                .transaction("transaction", _transactionContext => {
+                    return Promise.resolve();
+                })
+                .then(() => {
+                    assert.strictEqual(consoleErrorStub!.callCount, 1);
+                });
+        });
+    });
     context("Error Pattern", () => {
         it("should throw error when return non-promise value in the transaction", function() {
             const aStore = createStore({ name: "test" });
@@ -114,6 +144,82 @@ describe("Context#transaction", () => {
                         assert.ok(error.message.indexOf(expectedMessage) !== -1);
                     }
                 );
+        });
+    });
+    context("When two unit of work is running", () => {
+        it("should not lock the updating of StoreGroup", () => {
+            const { MockStore: TransactionStore, MockUseCase: TransactionUseCase } = createUpdatableStoreWithUseCase(
+                "TransactionTarget"
+            );
+            const { MockStore: UseCaseStore, MockUseCase: UseCaseUseCase } = createUpdatableStoreWithUseCase(
+                "UseCaseTarget"
+            );
+
+            const transactionStore = new TransactionStore();
+            const useCaseStore = new UseCaseStore();
+            const storeGroup = new StoreGroup({ transactionStore, useCaseStore });
+
+            class ChangeByTransactionUseCase extends TransactionUseCase {
+                execute(state: any) {
+                    this.requestUpdateState(state);
+                }
+            }
+
+            class ChangeByUseCase extends UseCaseUseCase {
+                execute(state: any) {
+                    this.requestUpdateState(state);
+                }
+            }
+
+            const context = new Context({
+                dispatcher: new Dispatcher(),
+                store: storeGroup,
+                options: {
+                    strict: true
+                }
+            });
+            // then - called change handler a one-time
+            let onChangeCount = 0;
+            let changedStores: StoreLike[] = [];
+            context.onChange(stores => {
+                onChangeCount++;
+                changedStores = changedStores.concat(stores);
+            });
+
+            const runUseCase = (context: Context<any>) => {
+                return context.useCase(new ChangeByUseCase()).executor(useCase => useCase.execute("useCase"));
+            };
+            const runTransaction = (transactionContext: TransactionContext) => {
+                return transactionContext
+                    .useCase(new ChangeByTransactionUseCase())
+                    .executor(useCase => useCase.execute("transaction"));
+            };
+            // when
+            // `transaction` should not lock store-group
+            // different unit of work can affect the singleton store-group
+            return context
+                .transaction("transaction name", transactionContext => {
+                    // `context`
+                    return runUseCase(context)
+                        .then(() => {
+                            assert.strictEqual(
+                                onChangeCount,
+                                1,
+                                "ChangeByUseCase can change store group, because transaction don't lock"
+                            );
+                        })
+                        .then(() => {
+                            return runTransaction(transactionContext);
+                        })
+                        .then(() => {
+                            transactionContext.commit();
+                        });
+                })
+                .then(() => {
+                    assert.equal(onChangeCount, 2);
+                    assert.equal(changedStores.length, 2);
+                    assert.deepEqual(context.getState(), { transactionStore: "transaction", useCaseStore: "useCase" });
+                });
         });
     });
     it("should collect up StoreGroup commit", function() {
@@ -451,34 +557,5 @@ describe("Context#transaction", () => {
                     });
                 });
             });
-    });
-    context("Warning(Transaction):", () => {
-        let consoleErrorStub: null | sinon.SinonStub = null;
-        beforeEach(() => {
-            consoleErrorStub = sinon.stub(console, "error");
-        });
-        afterEach(() => {
-            consoleErrorStub!.restore();
-        });
-        it("should be warned when no-commit and no-exit in a transaction", function() {
-            const aStore = createStore({ name: "test" });
-            const storeGroup = new StoreGroup({ a: aStore });
-            const dispatcher = new Dispatcher();
-            const context = new Context({
-                dispatcher,
-                store: storeGroup,
-                options: {
-                    strict: true
-                }
-            });
-            // 1st transaction
-            return context
-                .transaction("transaction", _transactionContext => {
-                    return Promise.resolve();
-                })
-                .then(() => {
-                    assert.strictEqual(consoleErrorStub!.callCount, 1);
-                });
-        });
     });
 });

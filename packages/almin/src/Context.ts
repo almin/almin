@@ -288,6 +288,18 @@ export class Context<T> {
      * It means that the store may be updated by other unit of work during executing `context.transaction`.
      * `context.transaction` provide the way for bulk updating.
      *
+     * A Unit of Work promise the order of events in the Unit of Work.
+     * But, This don't promise the order of events between Unit of Works.
+     *
+     * ```
+     *  -----------------  commit   -----------------
+     * | Unit of Work A |  ------> |                 |
+     * -----------------           |    StoreGroup   |
+     *  -----------------  commit  |                 |
+     * | Unit of Work B |  ------> |                 |
+     * -----------------           ------------------
+     * ```
+     *
      * Current implementation is **READ COMMITTED** of Transaction Isolation Levels.
      *
      * - <https://en.wikipedia.org/wiki/Isolation_(database_systems)>
