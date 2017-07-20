@@ -53,9 +53,10 @@ export class StoreGroupChangingStoreStrictChecker {
      */
     warningIfStoreIsNotAllowedUpdate(store: Store) {
         if (!this.isMarked(store)) {
-            // TODO: should we async update in receivePayload?
-            console.error(`Warning(Store): ${store.name} can only update own state in ${store.name}#receivePayload.
+            // TODO: should we support async update in receivePayload?
+            console.error(`Warning(Store): ${store.name} can only update own state in ${store.name}#receivePayload in strict mode.
 If you update the state outside of $\{store.name}#receivePayload, please check the ${store.name}.
+See https://almin.js.org/docs/tips/strict-mode.html
 `);
         }
     }

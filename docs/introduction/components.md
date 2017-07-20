@@ -170,9 +170,12 @@ What's the hub between `AppStore` and **View**?
 `Context` have the role of hub again!
 
 ```js
-import {Context} from "almin";
+import {Context, Dispatcher} from "almin";
 const appStore = new AppStore();
-const context = new Context({ store: appStore });
+const context = new Context({
+    dispatcher: new Dispatcher(), 
+    store: appStore
+});
 context.onChange((changedStore) => {
     // subscribe the change of Store
     // update View

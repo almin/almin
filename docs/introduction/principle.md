@@ -8,7 +8,7 @@ Almin has a [Unit of Work](https://martinfowler.com/eaaCatalog/unitOfWork.html "
 It is a actual internal class and almin apply Unit of Work pattern.
 
 - Unit of Work can stop unintended updating of `StoreGroup`
-- In other word, The user can control updating of `StoreGroup` while some UseCase is executing 
+- In other word, The user can control updating of `StoreGroup` while a series of UseCase is executing 
 
 Following figure describe it:
 
