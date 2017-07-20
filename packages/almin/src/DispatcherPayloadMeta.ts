@@ -6,13 +6,17 @@ import { UseCase } from "./UseCase";
 import { UseCaseLike } from "./UseCaseLike";
 
 /**
- * Transaction data
+ * Transaction data structure
  */
 export interface Transaction {
     // Transaction name
     readonly name: string;
 }
 
+/**
+ * Dispatch Payload Meta arguments.
+ * @private
+ */
 export interface DispatcherPayloadMetaArgs {
     useCase?: UseCaseLike;
     dispatcher?: Dispatcher | Dispatcher;
