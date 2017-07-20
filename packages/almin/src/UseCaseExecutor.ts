@@ -277,10 +277,10 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
      * Yes. It is type-safe by default.
      * In other words, JavaScript User have not benefits.
      *
-     * ### Why executor's result always undefined?
+     * ### Why executor's result always to be undefined?
      *
      * UseCaseExecutor always resolve `undefined` data by design.
-     * In CQRS, the command always have a void return type.
+     * In CQRS, the command always have returned void type.
      *
      * - http://cqrs.nu/Faq
      *
