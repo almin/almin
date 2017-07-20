@@ -37,6 +37,10 @@ A executable useCase
 ### `executor(executor: (useCase: Pick<T, "execute">) => any): Promise<void>;`
 
 
+- **Stability**: Experimental
+- This feature is subject to change. It may change or be removed in future versions.
+- If you inserting in this, please see <https://github.com/almin/almin/issues/193>
+
 Similar to `execute(arguments)`, but it accept an executor function insteadof `arguments`
 `executor(useCase => useCase.execute())` return a Promise object that resolved with undefined.
 
