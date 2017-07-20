@@ -108,6 +108,45 @@ describe("AsyncLogger", function() {
                 });
             });
     });
+    context("when transaction", () => {
+        it("should be nest of logGroup ", () => {
+            const consoleMock = ConsoleMock.create();
+            const logger = new AsyncLogger({
+                console: consoleMock
+            });
+            const context = new Context({
+                store: createStore(),
+                dispatcher: new Dispatcher(),
+                options: {
+                    strict: true
+                }
+            });
+            logger.startLogging(context);
+
+            const results = [];
+            logger.on(AlminLogger.Events.output, function(logGroup) {
+                results.push(logGroup);
+            });
+            return context
+                .transaction("transaction", transactionContext => {
+                    return transactionContext.useCase(new NoDispatchUseCase()).execute().then(() => {
+                        transactionContext.commit();
+                    });
+                })
+                .then(() => {
+                    assert(results.length === 1);
+                    const [logGroup] = results;
+                    assert(logGroup.title === "transaction");
+                    assert(logGroup.children.length === 1);
+                    const [noDispatchUseCaseLogGroup] = logGroup.children;
+                    assert(noDispatchUseCaseLogGroup.children.length === 3);
+                    const [will, did, complete] = noDispatchUseCaseLogGroup.children;
+                    assert(will.payload instanceof WillExecutedPayload);
+                    assert(did.payload instanceof DidExecutedPayload);
+                    assert(complete.payload instanceof CompletedPayload);
+                });
+        });
+    });
     context("when nest useCase", () => {
         it("should nest of logGroup ", () => {
             const consoleMock = ConsoleMock.create();
