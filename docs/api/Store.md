@@ -16,7 +16,7 @@ export declare abstract class Store<State = any> extends Dispatcher implements S
     abstract getState(): State;
     setState(newState: State): void;
     shouldStateUpdate(prevState: any | State, nextState: any | State): boolean;
-    onChange(cb: (changingStores: Array<Store>) => void): () => void;
+    onChange(cb: (changingStores: Array<this>) => void): () => void;
     emitChange(): void;
     release(): void;
 }
@@ -54,6 +54,10 @@ abcStore
  });
 ```
 
+We recommenced that implement `Store#receivePayload` insteadof using `Store#onDispatch`.
+`Store#receivePayload` is almost same with `Store#onDispatch`.
+But, `Store#receivePayload` is more match with Almin's life cycle.
+
 ### Example
 
 To implement store, you have to inherit `Store` class.
@@ -66,6 +70,11 @@ class YourStore extends Store {
          foo : "bar"
       };
    }
+
+   receivePayload(payload){
+     this.setState(this.state.reduce(payload));
+   }
+
    getState(){
      return {
          yourStore: this.state
@@ -158,7 +167,7 @@ Use Shallow Object Equality Test by default.
 
 ----
 
-### `onChange(cb: (changingStores: Array<Store>) => void): () => void;`
+### `onChange(cb: (changingStores: Array<this>) => void): () => void;`
 
 
 Subscribe change event of the store.

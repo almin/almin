@@ -243,6 +243,10 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
     }
 
     /**
+     * - **Stability**: Experimental
+     * - This feature is subject to change. It may change or be removed in future versions.
+     * - If you inserting in this, please see <https://github.com/almin/almin/issues/193>
+     *
      * Similar to `execute(arguments)`, but it accept an executor function insteadof `arguments`
      * `executor(useCase => useCase.execute())` return a Promise object that resolved with undefined.
      *

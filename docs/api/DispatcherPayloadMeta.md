@@ -6,6 +6,9 @@
 ## Interface
 
 ```typescript
+export interface Transaction {
+    readonly name: string;
+}
 export interface DispatcherPayloadMeta {
     readonly useCase: UseCaseLike | null;
     readonly dispatcher: UseCase | Dispatcher | null;
@@ -13,8 +16,20 @@ export interface DispatcherPayloadMeta {
     readonly timeStamp: number;
     readonly isTrusted: boolean;
     readonly isUseCaseFinished: boolean;
+    transaction?: Transaction;
 }
 ```
+
+----
+
+### Interface 
+```typescript
+export interface Transaction {
+    readonly name: string;
+```
+
+
+Transaction data structure
 
 ----
 
@@ -101,6 +116,14 @@ Most of useCase is fixed value.
 But, DidExecutedPayload's value is case by case.
 In `DidExecutedPayload`, the value is false if the UseCase#execute return a promise.
 See https://github.com/almin/almin/issues/149
+
+----
+
+### `transaction?: Transaction;`
+
+
+If the payload object is dispatched in a transaction, to be transaction object
+otherwise, to be undefined
 
 ----
 
