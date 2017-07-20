@@ -6,29 +6,11 @@
 ## Interface
 
 ```typescript
-export declare class InitializedPayload extends Payload {
-    constructor();
-}
-    constructor(stateStoreMapping: StoreMap<T>);
-    protected readonly existWorkingUseCase: boolean;
-    protected readonly isInitializedWithStateNameMap: boolean;
+constructor(stateStoreMapping: StoreMap<T>);
     shouldStateUpdate(prevState: any, nextState: any): boolean;
-    onChange(handler: (stores: Array<Store<T>>) => void): () => void;
+    onChange(handler: (stores: Array<Store<T>>, details?: StoreGroupReasonForChange) => void): () => void;
     release(): void;
 ```
-
-----
-
-### Interface of 
-```typescript
-export declare class InitializedPayload extends Payload {
-    constructor();
-```
-
-
-Initialized Payload
-This is exported for an unit testing.
-DO NOT USE THIS in your application.
 
 ----
 
@@ -56,24 +38,13 @@ class BStore extends Store {
 }
 const aStore = new AStore();
 const bStore = new BStore();
-const storeGroup = new CQRSStoreGroup({
+const storeGroup = new StoreGroup({
     a: aStore, // stateName: store
     b: bStore
 });
 console.log(storeGroup.getState());
 // { a: "a value", b: "b value" }
 ```
-
-----
-
-### Interface of 
-```typescript
-protected readonly existWorkingUseCase: boolean;
-protected readonly isInitializedWithStateNameMap: boolean;
-```
-
-
-If exist working UseCase, return true
 
 ----
 
@@ -97,7 +68,7 @@ shouldStateUpdate(prevState, nextState) {
 
 ----
 
-### `onChange(handler: (stores: Array<Store<T>>) => void): () => void;`
+### `onChange(handler: (stores: Array<Store<T>>, details?: StoreGroupReasonForChange) => void): () => void;`
 
 
 Observe changes of the store group.
