@@ -9,14 +9,6 @@
 export interface Transaction {
     readonly name: string;
 }
-export interface DispatcherPayloadMetaArgs {
-    useCase?: UseCaseLike;
-    dispatcher?: Dispatcher | Dispatcher;
-    isUseCaseFinished?: boolean;
-    parentUseCase?: UseCase | null;
-    isTrusted: boolean;
-    transaction?: Transaction;
-}
 export interface DispatcherPayloadMeta {
     readonly useCase: UseCaseLike | null;
     readonly dispatcher: UseCase | Dispatcher | null;
@@ -34,19 +26,10 @@ export interface DispatcherPayloadMeta {
 ```typescript
 export interface Transaction {
     readonly name: string;
-
-export interface DispatcherPayloadMetaArgs {
-    useCase?: UseCaseLike;
-    dispatcher?: Dispatcher | Dispatcher;
-    isUseCaseFinished?: boolean;
-    parentUseCase?: UseCase | null;
-    isTrusted: boolean;
-    transaction?: Transaction;
-}
 ```
 
 
-Transaction data
+Transaction data structure
 
 ----
 
