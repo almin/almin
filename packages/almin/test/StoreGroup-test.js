@@ -914,7 +914,51 @@ Something wrong implementation of calling Store#emitChange at multiple`
             });
         });
         describe("when strict mode", () => {
-            it("show warning if update store outside of receivePayload", function() {
+            it("should not show warning if update store inside of receivePayload", function() {
+                class AStore extends Store {
+                    constructor() {
+                        super();
+                        this.state = {
+                            a: "value"
+                        };
+                    }
+
+                    // Good: Update this store inside of receivePayload
+                    receivePayload(payload) {
+                        if (payload.type === "UPDATE_A") {
+                            this.setState(payload.body);
+                        }
+                    }
+
+                    getState() {
+                        return this.state;
+                    }
+                }
+
+                const store = new AStore();
+                const storeGroup = new StoreGroup({
+                    a: store
+                });
+                const context = new Context({
+                    dispatcher: new Dispatcher(),
+                    store: storeGroup,
+                    options: {
+                        strict: true
+                    }
+                });
+                const updateAStoreUseCase = ({ dispatcher }) => {
+                    return () => {
+                        dispatcher.dispatch({
+                            type: "UPDATE_A",
+                            body: "new value"
+                        });
+                    };
+                };
+                return context.useCase(updateAStoreUseCase).execute().then(() => {
+                    assert.strictEqual(consoleErrorStub.callCount, 0);
+                });
+            });
+            it("should show warning if update store outside of receivePayload", function() {
                 class AStore extends Store {
                     constructor() {
                         super();
@@ -939,15 +983,15 @@ Something wrong implementation of calling Store#emitChange at multiple`
                         strict: true
                     }
                 });
-                const useCase = ({ dispatcher }) => {
+                const updateAStoreUseCase = ({ dispatcher }) => {
                     return () => {
-                        // Warning: update state outside of receivePayload
+                        // Bad: update state outside of receivePayload
                         store.setState({
                             a: "new value"
                         });
                     };
                 };
-                return context.useCase(useCase).execute().then(() => {
+                return context.useCase(updateAStoreUseCase).execute().then(() => {
                     assert.strictEqual(consoleErrorStub.callCount, 1, "should not update state in a UseCase");
                 });
             });

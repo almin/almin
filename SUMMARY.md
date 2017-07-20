@@ -18,6 +18,7 @@
     - [examples/svg-feeling](https://github.com/almin/almin/tree/master/examples/svg-feeling)
     - [examples/shopping-cart](https://github.com/almin/almin/tree/master/examples/shopping-cart)
 - Tips
+    - [Strict mode](./docs/tips/strict-mode.md)
     - [Logging](./docs/tips/logging.md)
     - [Nesting UseCase](./docs/tips/nesting-usecase.md)
     - [LifeCycle of UseCase](./docs/tips/usecase-lifecycle.md)
