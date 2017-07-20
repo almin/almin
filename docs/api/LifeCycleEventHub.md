@@ -6,7 +6,8 @@
 ## Interface
 
 ```typescript
-onChangeStore(handler: (payload: StoreChangedPayload, meta: DispatcherPayloadMeta) => void): () => void;
+export declare class LifeCycleEventHub {
+    onChangeStore(handler: (payload: StoreChangedPayload, meta: DispatcherPayloadMeta) => void): () => void;
     onBeginTransaction(handler: (payload: TransactionBeganPayload, meta: DispatcherPayloadMeta) => void): () => void;
     onEndTransaction(handler: (payload: TransactionEndedPayload, meta: DispatcherPayloadMeta) => void): () => void;
     onWillExecuteEachUseCase(handler: (payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void;
@@ -17,6 +18,18 @@ onChangeStore(handler: (payload: StoreChangedPayload, meta: DispatcherPayloadMet
     release(): void;
 }
 ```
+
+----
+
+### `export declare class LifeCycleEventHub {`
+
+
+LifeCycleEventHub provide the way for observing almin life-cycle events.
+
+## See also
+
+- https://almin.js.org/docs/tips/usecase-lifecycle.html
+- almin-logger implementation
 
 ----
 

@@ -26,9 +26,12 @@
     - [UseCase is already released](docs/warnings/usecase-is-already-released.md)
 - API Reference
     - [Dispatcher](./docs/api/Dispatcher.md)
+    - [DispatcherPayloadMeta](./docs/api/DispatcherPayloadMeta.md)
     - [Store](./docs/api/Store.md)
     - [Store Group](./docs/api/StoreGroup.md)
     - [UseCase](./docs/api/UseCase.md)
     - [Context](./docs/api/Context.md)
     - [UseCaseContext](./docs/api/UseCaseContext.md)
+    - [UseCaseExecutor](./docs/api/UseCaseExecutor.md)
+    - [LifeCycleEventHub](./docs/api/LifeCycleEventHub.md)
 - [GLOSSARY](./docs/GLOSSARY.md)

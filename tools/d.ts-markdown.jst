@@ -4,7 +4,7 @@
 <%
 function shouldIgnoreSection(section) {
    if (/^\s*$/.test(section.docsText)) { return true; }
-   if (/^\s*$/.test(section.codeText)) { return true; }
+   if (/^\s+$/.test(section.codeText)) { return true; }
    // private method
    if (/private /.test(section.codeText)) { return true; }
    // @private

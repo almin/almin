@@ -24,6 +24,9 @@ export interface LifeCycleEventHubArgs {
  * - almin-logger implementation
  */
 export class LifeCycleEventHub {
+    /**
+     * @private
+     */
     private releaseHandlers: (() => void)[];
     private dispatcher: Dispatcher;
     private storeGroup: StoreGroupLike;
