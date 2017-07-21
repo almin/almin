@@ -22,7 +22,7 @@ export const ON_DISPATCH = "__ON_DISPATCH__";
  * An Payload type which accepts any other properties.
  * @private
  */
-export interface AnyPayload extends Payload {
+export interface UserDefinedPayload extends Payload {
     [extraProps: string]: any;
 }
 
@@ -34,7 +34,7 @@ export interface AnyPayload extends Payload {
  */
 export type DispatchedPayload =
     | Payload
-    | AnyPayload
+    | UserDefinedPayload
     | ErrorPayload
     | CompletedPayload
     | DidExecutedPayload

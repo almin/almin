@@ -12,10 +12,10 @@ describe("UseCaseUnitOfWork", function() {
                     super();
                     this.state = {
                         receive: [],
-                        direct: []
+                        onDispatchedPayload: []
                     };
                     this.onDispatch(payload => {
-                        this.state.direct = this.state.direct.concat(payload);
+                        this.state.onDispatchedPayload = this.state.onDispatchedPayload.concat(payload);
                     });
                 }
 
@@ -49,10 +49,17 @@ describe("UseCaseUnitOfWork", function() {
             };
             // then
             return context.useCase(useCase).execute().then(() => {
-                assert.deepEqual(aStore.state.receive, aStore.state.direct);
-                const expectedPayload = [InitializedPayload, MyPayload, DidExecutedPayload, CompletedPayload];
+                const expectedReceivePayload = [InitializedPayload, MyPayload, DidExecutedPayload, CompletedPayload];
+                const expectedOnDispatchPayload = [MyPayload];
                 aStore.state.receive.forEach((payload, index) => {
-                    const ConstructorPayload = expectedPayload[index];
+                    const ConstructorPayload = expectedReceivePayload[index];
+                    assert.ok(
+                        payload instanceof ConstructorPayload,
+                        `${JSON.stringify(payload)} should be instance of ${ConstructorPayload.name}`
+                    );
+                });
+                aStore.state.onDispatchedPayload.forEach((payload, index) => {
+                    const ConstructorPayload = expectedOnDispatchPayload[index];
                     assert.ok(
                         payload instanceof ConstructorPayload,
                         `${JSON.stringify(payload)} should be instance of ${ConstructorPayload.name}`
@@ -99,8 +106,6 @@ describe("UseCaseUnitOfWork", function() {
             };
             // then
             return context.useCase(useCase).execute().then(() => {
-                assert.deepEqual(aStore.state.receive, aStore.state.direct);
-                assert.deepEqual(bStore.state.receive, bStore.state.direct);
                 assert.deepEqual(aStore.state.receive, bStore.state.receive);
                 assert.deepEqual(aStore.state.direct, bStore.state.direct);
             });
