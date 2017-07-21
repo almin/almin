@@ -243,7 +243,7 @@ export class StoreGroup<T> extends Dispatcher implements StoreGroupLike {
             }
             // In almost case, A store should implement `receivePayload` insteadof of using `Store#onDispatch`
             // Warning(strict mode): Manually catch some event like Repository#onChange in a Store,
-            // It would be broken manually transaction mode
+            // It would be broken in transaction mode
             // `Store#onDispatch` receive only dispatched the Payload by `UseCase#dispatch` that is not trusted data.
             if (!meta.isTrusted) {
                 store.dispatch(payload, meta);
