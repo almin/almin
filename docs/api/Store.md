@@ -152,7 +152,7 @@ If strict mode is enabled, you should implement updating logic here.
 
 See <https://almin.js.org/docs/tips/strict-mode.html>
 
-## Implementation notes
+## Write phase in read-side(Store)
 
 `Store#receivePayload` is write phase in read-side, receive tha payload from write-side.
 In the almin, UseCase(write-side) dispatch a payload and, Store receive the payload.
@@ -186,7 +186,7 @@ class YourStore extends Store {
 }
 ```
 
-## Read phase in read-side
+## Read phase in read-side(Store)
 
 Read phase in read-side, just return the state of the store.
 Store#getState is called at View needed new state.
