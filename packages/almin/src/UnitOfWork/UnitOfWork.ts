@@ -2,7 +2,7 @@
 import { EventEmitter } from "events";
 import { Payload } from "../payload/Payload";
 import { DispatcherPayloadMeta } from "../DispatcherPayloadMeta";
-
+import { generateNewId } from "./UnitOfWorkIdGenerator";
 /**
  * Commitment is a tuple of payload and meta.
  * It is a minimal unit of transaction.
@@ -26,6 +26,8 @@ export interface Committable {
 export class UnitOfWork extends EventEmitter {
     private commitments: Commitment[];
     private committable: Committable;
+    // unique identifier
+    id: string;
     isDisposed: boolean;
 
     /**
@@ -33,6 +35,7 @@ export class UnitOfWork extends EventEmitter {
      */
     constructor(committable: Committable) {
         super();
+        this.id = generateNewId();
         this.commitments = [];
         this.committable = committable;
         this.isDisposed = false;

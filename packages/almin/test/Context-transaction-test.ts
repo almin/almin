@@ -92,6 +92,22 @@ describe("Context#transaction", () => {
                     }
                 );
         });
+        it("have unique id for in transactions", function() {
+            const aStore = createStore({ name: "test" });
+            const storeGroup = new StoreGroup({ a: aStore });
+            const context = new Context({
+                dispatcher: new Dispatcher(),
+                store: storeGroup,
+                options: {
+                    strict: true
+                }
+            });
+            return context.transaction("transaction name", transactionContext => {
+                assert.strictEqual(typeof transactionContext.id, "string");
+                transactionContext.exit();
+                return Promise.resolve();
+            });
+        });
         it("should throw error when do multiple exit in a transaction", function() {
             const aStore = createStore({ name: "test" });
             const storeGroup = new StoreGroup({ a: aStore });

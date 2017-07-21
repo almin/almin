@@ -51,6 +51,16 @@ export class UseCaseUnitOfWork {
         }
     }
 
+    /**
+     * Unique id
+     */
+    get id() {
+        return this.unitOfWork.id;
+    }
+
+    /**
+     * Is Unit of Work already disposed?
+     */
     get isDisposed() {
         return this.unitOfWork.isDisposed;
     }
