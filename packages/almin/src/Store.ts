@@ -159,9 +159,7 @@ export abstract class Store<State = any> extends Dispatcher implements StoreLike
      *    constructor(){
      *       super();
      *       // initialize state
-     *       this.state = {
-     *          foo : "bar"
-     *       };
+     *       this.state = {};
      *    }
      *    // Update code here
      *    receivePayload(payload){
