@@ -140,6 +140,7 @@ Welcome to pull request!
 
 - [azu/presentation-annotator: viewing presentation and annotate.](https://github.com/azu/presentation-annotator)
 - [morpheme-match/website at master · azu/morpheme-match](https://github.com/azu/morpheme-match/tree/master/website)
+- [azu/faao: Faao is a GitHub issue/pull-request client on Electron.](https://github.com/azu/faao "azu/faao: Faao is a GitHub issue/pull-request client on Electron.") - Full TypeScript example
 
 ## Packages
 
