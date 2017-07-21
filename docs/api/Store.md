@@ -270,6 +270,8 @@ store.emitChange();
 Emit "change" event to subscribers.
 If you want to notify changing ot tha store, call `Store#emitChange()`.
 
+Basically, you should use `this.setState` insteadof `this.emitChange`
+
 ----
 
 ### `release(): void;`

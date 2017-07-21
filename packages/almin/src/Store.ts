@@ -258,6 +258,8 @@ export abstract class Store<State = any> extends Dispatcher implements StoreLike
     /**
      * Emit "change" event to subscribers.
      * If you want to notify changing ot tha store, call `Store#emitChange()`.
+     *
+     * Basically, you should use `this.setState` insteadof `this.emitChange`
      */
     emitChange(): void {
         this.emit(STATE_CHANGE_EVENT, [this]);
