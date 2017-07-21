@@ -5,6 +5,7 @@
 Strict mode check that updating store/state in `Store#receivePayload`
 It means that show warning if update store outside of `Store#receivePayload`.
 
+In other word, Strict mode require that your store should be updated in `Store#receivePayload`.
 
 ## How to enable strict mode?
 
@@ -47,7 +48,7 @@ class AStore extends Store {
     // Good: Update this store inside of receivePayload
     receivePayload(payload) {
         if (payload.type === "UPDATE_A") {
-            this.setState(payload.body);
+            this.setState(payload.body); // Update!
         }
     }
 
