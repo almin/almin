@@ -111,45 +111,6 @@ export abstract class Store<State = any> extends Dispatcher implements StoreLike
     }
 
     /**
-     * You can implement that update own state.
-     * Update your state with `this.setState`.
-     *
-     * ```js
-     * class YourStore extends Store {
-     *    constructor(){
-     *       super();
-     *       // Initialize state
-     *       this.state = {};
-     *    }
-     *
-     *    // Update code here
-     *    receivePayload(payload){
-     *      this.setState(this.state.reduce(payload));
-     *    }
-     *
-     *    getState(){
-     *      return this.state;
-     *    }
-     * }
-     * ```
-     *
-     * ## Strict mode
-     *
-     * If strict mode is enabled, you should implement updating logic here.
-     *
-     * See <https://almin.js.org/docs/tips/strict-mode.html>
-     *
-     * ## Write phase in read-side(Store)
-     *
-     * `Store#receivePayload` is write phase in read-side, receive tha payload from write-side.
-     * In the almin, UseCase(write-side) dispatch a payload and, Store receive the payload.
-     * You can update the state of the store in the timing.
-     * In other word, you can create/cache the state data for `Store#getState()`
-     *
-     */
-    receivePayload?(payload: Payload): void;
-
-    /**
      * You should be overwrite by Store subclass and return the state of the store.
      *
      * ## Example
@@ -204,8 +165,55 @@ export abstract class Store<State = any> extends Dispatcher implements StoreLike
     }
 
     /**
+     * You can implement that update own state.
+     * Update your state with `this.setState` in the `receivePayload` implementation.
+     *
+     * ```js
+     * class YourStore extends Store {
+     *    constructor(){
+     *       super();
+     *       // Initialize state
+     *       this.state = {};
+     *    }
+     *
+     *    // Update code here
+     *    receivePayload(payload){
+     *      this.setState(this.state.reduce(payload));
+     *    }
+     *
+     *    getState(){
+     *      return this.state;
+     *    }
+     * }
+     * ```
+     *
+     * ## Strict mode
+     *
+     * If strict mode is enabled, you should implement updating logic here.
+     *
+     * See <https://almin.js.org/docs/tips/strict-mode.html>
+     *
+     * ## Store#receivePayload vs. Store#onDispatch
+     *
+     * - `Store#onDispatch` can receive **only** User defined payload.
+     * - `Store#receivePayload` can receive specific payloads for updating view.
+     *   - Also `Store#receivePayload` includes User defined payload.
+     *
+     * **Recommended**: Implement updating logic in `Store#receivePayload`.
+     *
+     * ## Write phase in read-side(Store)
+     *
+     * `Store#receivePayload` is write phase in read-side, receive tha payload from write-side.
+     * In the almin, UseCase(write-side) dispatch a payload and, Store receive the payload.
+     * You can update the state of the store in the timing.
+     * In other word, you can create/cache the state data for `Store#getState()`
+     *
+     */
+    receivePayload?(payload: Payload): void;
+
+    /**
      * Add `handler`(subscriber) to Store and return unsubscribe function
-     * Store#onDispatch receive only dispatched the Payload by `UseCase#dispatch`.
+     * Store#onDispatch receive **only** dispatched the Payload by `UseCase#dispatch`.
      *
      * ### Example
      *
