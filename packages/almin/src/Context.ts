@@ -353,6 +353,7 @@ Please enable strict mode via \`new Context({ dispatcher, store, options: { stri
             return useCaseExecutor;
         };
         const context: TransactionContext = {
+            id: unitOfWork.id,
             useCase: createUseCaseExecutorAndOpenUoW,
             commit() {
                 unitOfWork.commit();

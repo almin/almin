@@ -5,6 +5,14 @@ import { FunctionalUseCase } from "../FunctionalUseCase";
 import { UseCaseFunction } from "../FunctionalUseCaseContext";
 
 export interface TransactionContext {
+    /**
+     * Unique id
+     */
+    id: string;
+
+    /**
+     * Create new UseCaseExecutor and run useCase in the transaction
+     */
     useCase<T extends UseCaseLike>(useCase: T): UseCaseExecutor<T>;
 
     useCase(useCase: UseCaseFunction): UseCaseExecutor<FunctionalUseCase>;

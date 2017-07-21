@@ -21,6 +21,17 @@ const createCommitment = () => {
     return [new Payload({ type: `Example ${commitmentId++}` }), new DispatcherPayloadMetaImpl({})];
 };
 describe("UnitOfWork", () => {
+    describe("id", () => {
+        it("should create new id ", () => {
+            const { mockStoreGroup } = createMockStoreGroup();
+            const unitOfWork_1 = new UnitOfWork(mockStoreGroup);
+            const unitOfWork_2 = new UnitOfWork(mockStoreGroup);
+            const unitOfWork_3 = new UnitOfWork(mockStoreGroup);
+            assert.notStrictEqual(unitOfWork_1.id, unitOfWork_2.id);
+            assert.notStrictEqual(unitOfWork_1.id, unitOfWork_3.id);
+            assert.notStrictEqual(unitOfWork_2.id, unitOfWork_3.id);
+        });
+    });
     describe("#addCommitment", () => {
         it("can add new commitment", () => {
             const { mockStoreGroup } = createMockStoreGroup();
