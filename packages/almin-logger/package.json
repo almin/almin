@@ -15,7 +15,7 @@
   "bugs": {
     "url": "https://github.com/almin/almin/issues"
   },
-  "version": "5.0.0-2",
+  "version": "5.0.0",
   "description": "logger for Almin.js",
   "main": "lib/AlminLogger.js",
   "directories": {
@@ -36,7 +36,7 @@
     "log"
   ],
   "devDependencies": {
-    "almin": "^0.13.9",
+    "almin": "^0.13.10",
     "babel-cli": "^6.7.7",
     "babel-loader": "^6.2.10",
     "babel-plugin-add-module-exports": "^0.2.1",
@@ -52,7 +52,7 @@
     "zuul": "^3.10.1"
   },
   "peerDependencies": {
-    "almin": "^0.13.9"
+    "almin": "^0.13.10"
   },
   "dependencies": {
     "map-like": "^2.0.0"

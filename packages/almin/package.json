@@ -15,7 +15,7 @@
   "bugs": {
     "url": "https://github.com/almin/almin/issues"
   },
-  "version": "0.13.9",
+  "version": "0.13.10",
   "description": "Flux/CQRS patterns for JavaScript app.",
   "main": "lib/src/index.js",
   "types": "lib/src/index.d.ts",
