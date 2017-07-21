@@ -105,7 +105,7 @@ In other word, listen the dispatcher of `new Context({dispatcher})`.
 const dispatchUseCase = ({dispatcher}) => {
   return () => dispatcher.dispatch({ type: "fired-payload" });
 };
-context.onDispatch((payload, meta) => {
+context.events.onDispatch((payload, meta) => {
   console.log(payload); // { type: "fired-payload" }
 });
 
