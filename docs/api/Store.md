@@ -124,11 +124,37 @@ Constructor not have arguments.
 ### `receivePayload?(payload: Payload): void;`
 
 
-## Write phase in read-side
-
 You can implement that update own state.
+Update your state with `this.setState`.
 
-Write phase in read-side, receive tha payload from write-side.
+```js
+class YourStore extends Store {
+   constructor(){
+      super();
+      // Initialize state
+      this.state = {};
+   }
+
+   // Update code here
+   receivePayload(payload){
+     this.setState(this.state.reduce(payload));
+   }
+
+   getState(){
+     return this.state;
+   }
+}
+```
+
+## Strict mode
+
+If strict mode is enabled, you should implement updating logic here.
+
+See <https://almin.js.org/docs/tips/strict-mode.html>
+
+## Implementation notes
+
+`Store#receivePayload` is write phase in read-side, receive tha payload from write-side.
 In the almin, UseCase(write-side) dispatch a payload and, Store receive the payload.
 You can update the state of the store in the timing.
 In other word, you can create/cache the state data for `Store#getState()`
@@ -147,9 +173,7 @@ class YourStore extends Store {
    constructor(){
       super();
       // initialize state
-      this.state = {
-         foo : "bar"
-      };
+      this.state = {};
    }
    // Update code here
    receivePayload(payload){
