@@ -12,10 +12,11 @@ export declare abstract class Store<State = any> extends Dispatcher implements S
     state?: State;
     name: string;
     constructor();
-    receivePayload?(payload: Payload): void;
     abstract getState(): State;
     setState(newState: State): void;
     shouldStateUpdate(prevState: any | State, nextState: any | State): boolean;
+    receivePayload?(payload: Payload): void;
+    onDispatch(handler: (payload: Payload | UserDefinedPayload, meta: DispatcherPayloadMeta) => void): () => void;
     onChange(cb: (changingStores: Array<this>) => void): () => void;
     emitChange(): void;
     release(): void;
@@ -48,9 +49,9 @@ abcUseCase
  });
 
 abcStore
- .onDispatch(({ type, value }) => {
-     console.log(type);  // "ABC"
-     console.log(value); // 42
+ .onDispatch(payload => {
+     console.log(payload.type);  // "ABC"
+     console.log(payload.value); // 42
  });
 ```
 
@@ -66,19 +67,19 @@ To implement store, you have to inherit `Store` class.
 class YourStore extends Store {
    constructor(){
       super();
+      // Initialize state
       this.state = {
          foo : "bar"
       };
    }
 
+   // Update code here
    receivePayload(payload){
      this.setState(this.state.reduce(payload));
    }
 
    getState(){
-     return {
-         yourStore: this.state
-     };
+     return this.state;
    }
 }
 ```
@@ -120,26 +121,32 @@ Constructor not have arguments.
 
 ----
 
-### `receivePayload?(payload: Payload): void;`
-
-
-## Write phase in read-side
-
-You can implement that update own state.
-
-Write phase in read-side, receive tha payload from write-side.
-In the almin, UseCase(write-side) dispatch a payload and, Store receive the payload.
-You can update the state of the store in the timing.
-In other word, you can create/cache the state data for `Store#getState()`
-
-----
-
 ### `abstract getState(): State;`
 
 
-## Read phase in read-side
-
 You should be overwrite by Store subclass and return the state of the store.
+
+## Example
+
+```js
+class YourStore extends Store {
+   constructor(){
+      super();
+      // initialize state
+      this.state = {};
+   }
+   // Update code here
+   receivePayload(payload){
+     this.setState(this.state.reduce(payload));
+   }
+   // return your state
+   getState(){
+     return this.state;
+   }
+}
+```
+
+## Read phase in read-side(Store)
 
 Read phase in read-side, just return the state of the store.
 Store#getState is called at View needed new state.
@@ -167,6 +174,86 @@ Use Shallow Object Equality Test by default.
 
 ----
 
+### `receivePayload?(payload: Payload): void;`
+
+
+You can implement that update own state.
+Update your state with `this.setState` in the `receivePayload` implementation.
+
+```js
+class YourStore extends Store {
+   constructor(){
+      super();
+      // Initialize state
+      this.state = {};
+   }
+
+   // Update code here
+   receivePayload(payload){
+     this.setState(this.state.reduce(payload));
+   }
+
+   getState(){
+     return this.state;
+   }
+}
+```
+
+## Strict mode
+
+If strict mode is enabled, you should implement updating logic here.
+
+See <https://almin.js.org/docs/tips/strict-mode.html>
+
+## Store#receivePayload vs. Store#onDispatch
+
+- `Store#onDispatch` can receive **only** User defined payload.
+- `Store#receivePayload` can receive specific payloads for updating view.
+  - Also `Store#receivePayload` includes User defined payload.
+
+**Recommended**: Implement updating logic in `Store#receivePayload`.
+
+## Write phase in read-side(Store)
+
+`Store#receivePayload` is write phase in read-side, receive tha payload from write-side.
+In the almin, UseCase(write-side) dispatch a payload and, Store receive the payload.
+You can update the state of the store in the timing.
+In other word, you can create/cache the state data for `Store#getState()`
+
+----
+
+### `onDispatch(handler: (payload: Payload | UserDefinedPayload, meta: DispatcherPayloadMeta) => void): () => void;`
+
+
+Add `handler`(subscriber) to Store and return unsubscribe function
+Store#onDispatch receive **only** dispatched the Payload by `UseCase#dispatch`.
+
+### Example
+
+```js
+class MyStore extends Store {
+  constructor(){
+    super();
+    this.unsubscribe = store.onDispatch((payload, meta) => {
+        console.log(payload);
+    });
+    // ....
+}
+```
+
+Some UseCase `dispatch` the payload and `Store#onDispatch` catch that.
+
+```js
+class MyUseCase extends UseCase{
+  execute(){
+    this.dispatch({
+      type: "test"
+    }); // => Store#onDispatch catch this
+}
+```
+
+----
+
 ### `onChange(cb: (changingStores: Array<this>) => void): () => void;`
 
 
@@ -190,6 +277,8 @@ store.emitChange();
 
 Emit "change" event to subscribers.
 If you want to notify changing ot tha store, call `Store#emitChange()`.
+
+Basically, you should use `this.setState` insteadof `this.emitChange`
 
 ----
 

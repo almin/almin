@@ -131,7 +131,7 @@ export class LifeCycleEventHub {
      * const dispatchUseCase = ({dispatcher}) => {
      *   return () => dispatcher.dispatch({ type: "fired-payload" });
      * };
-     * context.onDispatch((payload, meta) => {
+     * context.events.onDispatch((payload, meta) => {
      *   console.log(payload); // { type: "fired-payload" }
      * });
      *

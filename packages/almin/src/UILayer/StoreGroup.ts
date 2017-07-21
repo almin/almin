@@ -241,10 +241,13 @@ export class StoreGroup<T> extends Dispatcher implements StoreGroupLike {
             if (process.env.NODE_ENV !== "production") {
                 this.storeGroupChangingStoreStrictChecker.mark(store);
             }
-            // Deprecated: it is compatible behavior
-            // Please a store should implement `receivePayload` insteadof of using `Store#onDispatch`
-            // Warning: Manually catch some event like Repository#onChange in a Store, It would be broken manually transaction mode
-            store.dispatch(payload, meta);
+            // In almost case, A store should implement `receivePayload` insteadof of using `Store#onDispatch`
+            // Warning(strict mode): Manually catch some event like Repository#onChange in a Store,
+            // It would be broken in transaction mode
+            // `Store#onDispatch` receive only dispatched the Payload by `UseCase#dispatch` that is not trusted data.
+            if (!meta.isTrusted) {
+                store.dispatch(payload, meta);
+            }
             // reduce state by prevSate with payload if it is implemented
             if (typeof store.receivePayload === "function") {
                 store.receivePayload(payload);

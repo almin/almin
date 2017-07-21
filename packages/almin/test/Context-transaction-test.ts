@@ -1,8 +1,7 @@
 // MIT © 2017 azu
 "use strict";
 import * as assert from "assert";
-import { Context, Dispatcher, Payload, Store, StoreGroup, UseCase } from "../src/";
-import { DispatcherPayloadMetaImpl } from "../src/DispatcherPayloadMeta";
+import { Context, Dispatcher, Store, StoreGroup, UseCase } from "../src/";
 import { createStore } from "./helper/create-new-store";
 import { SyncNoDispatchUseCase } from "./use-case/SyncNoDispatchUseCase";
 import { DispatchUseCase } from "./use-case/DispatchUseCase";
@@ -520,42 +519,43 @@ describe("Context#transaction", () => {
                 });
         });
     });
-    it("commit and each store#onDispatch is called", function() {
-        const receivedCommitments: Commitment[] = [];
-        const aStore = createStore({ name: "test" });
-        aStore.onDispatch((payload, meta) => {
-            receivedCommitments.push([payload, meta]);
-        });
-        const storeGroup = new StoreGroup({ a: aStore });
-        const context = new Context({
-            dispatcher: new Dispatcher(),
-            store: storeGroup,
-            options: {
-                strict: true
-            }
-        });
-        // reset initialized
-        receivedCommitments.length = 0;
-        return context
-            .transaction("transaction 1", transactionContext => {
-                assert.strictEqual(receivedCommitments.length, 0, "no commitment");
-                return transactionContext.useCase(new SyncNoDispatchUseCase()).execute().then(() => {
+    it(
+        "commit and each Store#onDispatch is not called," +
+            "because, Store#onDispatch receive only dispatched the Payload by UseCase#dispatch.",
+        function() {
+            const receivedCommitments: Commitment[] = [];
+            const aStore = createStore({ name: "test" });
+            aStore.onDispatch((payload, meta) => {
+                receivedCommitments.push([payload, meta]);
+            });
+            const storeGroup = new StoreGroup({ a: aStore });
+            const context = new Context({
+                dispatcher: new Dispatcher(),
+                store: storeGroup,
+                options: {
+                    strict: true
+                }
+            });
+            // reset initialized
+            receivedCommitments.length = 0;
+            return context
+                .transaction("transaction 1", transactionContext => {
                     assert.strictEqual(receivedCommitments.length, 0, "no commitment");
-                    transactionContext.commit();
-                    assert.strictEqual(receivedCommitments.length, 1, "1 UseCase executed commitment");
-                });
-            })
-            .then(() => {
-                return context.transaction("transaction 2", transactionContext => {
                     return transactionContext.useCase(new SyncNoDispatchUseCase()).execute().then(() => {
-                        assert.strictEqual(receivedCommitments.length, 1, "before: 1 UseCase executed commitment");
+                        assert.strictEqual(receivedCommitments.length, 0, "no commitment");
                         transactionContext.commit();
-                        assert.strictEqual(receivedCommitments.length, 2, "after: 2 UseCase executed 2 commitment");
-                        const [payload, meta] = receivedCommitments[0];
-                        assert.ok(payload instanceof Payload);
-                        assert.ok(meta instanceof DispatcherPayloadMetaImpl);
+                        assert.strictEqual(receivedCommitments.length, 0, "1 UseCase executed commitment");
+                    });
+                })
+                .then(() => {
+                    return context.transaction("transaction 2", transactionContext => {
+                        return transactionContext.useCase(new SyncNoDispatchUseCase()).execute().then(() => {
+                            assert.strictEqual(receivedCommitments.length, 0, "before: 1 UseCase executed commitment");
+                            transactionContext.commit();
+                            assert.strictEqual(receivedCommitments.length, 0, "after: 2 UseCase executed 2 commitment");
+                        });
                     });
                 });
-            });
-    });
+        }
+    );
 });
