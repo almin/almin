@@ -75,7 +75,6 @@ Quote from [Microsoft .NET - Architecting Applications for the Enterprise (2nd E
 
 - [CQRS](https://martinfowler.com/bliki/CQRS.html "CQRS")
 - [CQRS Journey](https://msdn.microsoft.com/library/jj554200.aspx "CQRS Journey")
-- 
 
 ## Unit of work
 
