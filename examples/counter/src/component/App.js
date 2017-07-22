@@ -1,41 +1,33 @@
 // LICENSE : MIT
 "use strict";
 import React from "react";
-import { Context, Dispatcher, StoreGroup } from "almin";
-import { CounterStore } from "../store/CounterStore";
-// a single dispatcher
-const dispatcher = new Dispatcher();
-// a single store
-const counterStore = new CounterStore();
-// create store group
-const storeGroup = new StoreGroup({
-    // stateName : store
-    "counter": counterStore
-});
-// create context
-const appContext = new Context({
-    dispatcher,
-    store: storeGroup
-});
-import Counter from "./Counter";
-export default class App extends React.Component {
-    constructor(...args) {
-        super(...args);
-        this.state = appContext.getState();
-    }
+import PropTypes from "prop-types";
+import { Context } from "almin";
+import { CounterState } from "../store/CounterState";
+import { Counter } from "./Counter";
 
-    componentDidMount() {
-        // when change store, update component
+export default class App extends React.Component {
+    componentWillMount() {
+        const appContext = this.props.appContext;
+        // set initial state
+        this.setState(appContext.getState());
+        // update component's state with store's state when store is changed
         const onChangeHandler = () => {
             this.setState(appContext.getState());
         };
-        appContext.onChange(onChangeHandler);
+        this.unSubscribe = appContext.onChange(onChangeHandler);
+    }
+
+    componentWillUnmount() {
+        if (typeof this.unSubscribe === "function") {
+            this.unSubscribe();
+        }
     }
 
     render() {
         /**
          * Where is "CounterState" come from?
-         * It is `key` of counterStore in StoreGroup.
+         * It is a `key` of StoreGroup.
          *
          * ```
          * const storeGroup = new StoreGroup({
@@ -45,7 +37,9 @@ export default class App extends React.Component {
          * @type {CounterState}
          */
         const counterState = this.state.counter;
-        return <Counter counterState={counterState}
-                        appContext={appContext}/>;
+        return <Counter counterState={counterState} appContext={this.props.appContext} />;
     }
 }
+App.propTypes = {
+    appContext: PropTypes.instanceOf(Context).isRequired
+};
