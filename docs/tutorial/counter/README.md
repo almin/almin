@@ -204,15 +204,15 @@ We can test above classes independently.
 
 This example use [React](https://facebook.github.io/react/ "React").
 
-### App
+### index.js
 
-We will create `App.js` is the root of component aka. Container component.
+We will create `index.js` is the root of the application.
 
-And, create `Context` object that is communicator between Store and UseCase.
+First, we create `Context` object that is communicator between Store and UseCase.
 
 ```js
 import {Context, Dispatcher} from "almin";
-import {CounterStore} from "../store/CounterStore";
+import {CounterStore} from "./store/CounterStore";
 // a single dispatcher
 const dispatcher = new Dispatcher();
 // initialize store
@@ -229,13 +229,39 @@ const appContext = new Context({
 });
 ```
 
+Second, We will pass the `appContext` to `App` component and render to DOM.
+
+```jsx
+ReactDOM.render(<App appContext={appContext} />, document.getElementById("js-app"))
+```
+
+Full code of `index.js`:
+
+[include, index.js](../../../examples/counter/src/index.js)
+
+------
+
+### App.js
+
+We will create `App.js` is the root of component aka. Container component.
+
+It receive `appContext` from `index.js` and use it.
+
 Full code of `App.js`:
 
 [include, App.js](../../../examples/counter/src/component/App.js)
 
+#### App's state
+
+Root Component has state that sync to almin's state.
+
 Focus on `onChange`:
 
 ```js
+// update component's state with store's state when store is changed
+const onChangeHandler = () => {
+    this.setState(appContext.getState());
+};
 appContext.onChange(onChangeHandler);
 ```
 
@@ -252,6 +278,30 @@ CounterComponent.propTypes = {
     counterState: React.PropTypes.instanceOf(CounterState).isRequired
 };
 ```
+
+### Execute UseCase from View
+
+We can execute `IncrementalCounterUseCase` when Counter's Increment button is clicked.
+
+```js
+    incrementCounter() {
+        // execute IncrementalCounterUseCase with new count value
+        const context = this.props.appContext;
+        context.useCase(new IncrementalCounterUseCase()).execute();
+    }
+```
+
+Execute `IncrementalCounterUseCase` and work following:
+
+1. Execute `IncrementalCounterUseCase`
+2. `CounterStore` is updated(create new `CounterState`)
+3. `App` Component's state is updated via `onChangeHandler`
+4. `Counter` receive new `CounterState`, refresh view
+
+Full code of `Counter.js`:
+
+[include, Counter.js](../../../examples/counter/src/component/Counter.js)
+
 
 ## End
 

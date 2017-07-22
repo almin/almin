@@ -2,14 +2,11 @@
 "use strict";
 import React from "react";
 import PropTypes from "prop-types";
-import IncrementalCounterUseCase from "../usecase/IncrementalCounterUseCase";
+import { IncrementalCounterUseCase } from "../usecase/IncrementalCounterUseCase";
 import { Context } from "almin";
-import CounterState from "../store/CounterState";
-export default class CounterComponent extends React.Component {
-    constructor(props) {
-        super(props);
-    }
+import { CounterState } from "../store/CounterState";
 
+export class Counter extends React.Component {
     incrementCounter() {
         // execute IncrementalCounterUseCase with new count value
         const context = this.props.appContext;
@@ -29,7 +26,8 @@ export default class CounterComponent extends React.Component {
         );
     }
 }
-CounterComponent.propTypes = {
+
+Counter.propTypes = {
     appContext: PropTypes.instanceOf(Context).isRequired,
     counterState: PropTypes.instanceOf(CounterState).isRequired
 };

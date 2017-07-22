@@ -1,7 +1,8 @@
 // LICENSE : MIT
 "use strict";
+
 // reduce function
-export default class CounterState {
+export class CounterState {
     /**
      * @param {Number} count
      */

@@ -1,7 +1,8 @@
 // LICENSE : MIT
 "use strict";
 const assert = require("assert");
-import IncrementalCounterUseCase from "../src/usecase/IncrementalCounterUseCase";
+import { IncrementalCounterUseCase } from "../src/usecase/IncrementalCounterUseCase";
+
 describe("ActionCreator", function() {
     describe("countUp", function() {
         it("should emit `countUp` event", function(done) {
