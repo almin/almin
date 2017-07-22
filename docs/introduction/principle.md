@@ -2,6 +2,81 @@
 
 This document describe almin's principles:
 
+## CQRS
+
+Command and Query Responsibility Segregation(CQRS) is a pattern.
+
+> "CQRS is simply the creation of two objects where there was previously only one. The separation occurs based upon whether the methods are a command or a query (the same definition that is used by Meyer in Command and Query Separation: a command is any method that mutates state and a query is any method that returns a value)."
+> -- [CQRS, Task Based UIs, Event Sourcing agh! | Greg Young](http://codebetter.com/gregyoung/2010/02/16/cqrs-task-based-uis-event-sourcing-agh/ "CQRS, Task Based UIs, Event Sourcing agh! | Greg Young")
+
+CQRS separate "one" model to "two" models.
+CQRS has two models that are Command(Write) model and Query(Read) model.
+
+For example, Flux's store is a "one" model, but it is also Write and Read model. 
+
+### In Flux
+
+[Flux architecture](https://facebook.github.io/flux/ "Flux") define [Stores](https://facebook.github.io/flux/docs/in-depth-overview.html#stores "Stores") role.
+
+> Stores contain the application state and logic. 
+> -- [Stores](https://facebook.github.io/flux/docs/in-depth-overview.html#stores "Stores")
+
+It means that Stores is a single model, but has two task - `state` and `logic`.
+
+- On Application Layer: Store has application state
+- On Domain Layer: Store has bossiness logic
+
+![Flux Layering](./img/flux-layer.png)
+
+**Complexity**
+
+The Complexity: **N × M** (multiplication)
+
+Stores is both Write stack and Read stack.
+
+- **N**: **Store does logic and Update State(Write)**
+- **M**: **Store return state for View(Read)**
+
+### In Almin/CQRS
+
+Almin separate Store's two task to one task.
+Store has only `state` role and Almin move `logic` to domain model.
+(Domain model has business logic)
+
+![Flux Layering + CQRS](./img/flux-layer-cqrs.png)
+
+Additionally, Almin introduce domain model for `logic` role.
+
+- On Application Layer: Store has application state
+- On Domain Layer: Domain model has bossiness logic
+
+![Almin Layering](./img/almin-layer.png)
+
+**Complexity**
+
+The Complexity: **N + M** (addition)
+
+Domain model is write stack and Store is read stack.
+
+- **N**: **Domain model does logic and Update State(Write)**
+- **M**: **Store return state for View(Read)**
+
+Almin aim to reduce the complexity at large application.
+
+<!-- textlint-disable -->
+
+Quote from [Microsoft .NET - Architecting Applications for the Enterprise (2nd Edition)](https://www.amazon.com/dp/0735685355/ "Microsoft .NET - Architecting Applications for the Enterprise (2nd Edition)") ([日本語](https://www.amazon.co.jp/dp/B00ZQZ8JNE/))
+
+<!-- textlint-enable -->
+
+![domain vs. cqrs](./img/domain-cqrs.png)
+
+**Related**:
+
+- [CQRS](https://martinfowler.com/bliki/CQRS.html "CQRS")
+- [CQRS Journey](https://msdn.microsoft.com/ja-jp/library/jj554200.aspx "CQRS Journey")
+- 
+
 ## Unit of work
 
 Almin has a [Unit of Work](https://martinfowler.com/eaaCatalog/unitOfWork.html "Unit of Work").
