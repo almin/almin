@@ -2,6 +2,7 @@
 import { UseCase } from "almin";
 import todoListRepository, { TodoListRepository } from "../infra/TodoListRepository";
 import TodoItem from "../domain/TodoList/TodoItem";
+
 export class AddTodoItemFactory {
     static create() {
         return new AddTodoItemUseCase({
@@ -11,15 +12,17 @@ export class AddTodoItemFactory {
 }
 
 export class AddTodoItemUseCase extends UseCase {
+    private todoListRepository: TodoListRepository;
+
     /**
      * @param {TodoListRepository} todoListRepository
      */
-    constructor({ todoListRepository }) {
+    constructor({ todoListRepository }: { todoListRepository: TodoListRepository }) {
         super();
         this.todoListRepository = todoListRepository;
     }
 
-    execute(title) {
+    execute(title: string) {
         // Get todoList from repository
         const todoList = this.todoListRepository.lastUsed();
         // Create TodoItem

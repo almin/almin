@@ -1,7 +1,7 @@
 "use strict";
 import TodoItem from "../../domain/TodoList/TodoItem";
 import TodoList from "../../domain/TodoList/TodoList";
-enum FilterType {
+export enum FilterTypes {
     ALL_TODOS = "ALL_TODOS",
     ACTIVE_TODOS = "ACTIVE_TODOS",
     COMPLETED_TODOS = "COMPLETED_TODOS"
@@ -9,11 +9,11 @@ enum FilterType {
 
 export interface TodoStateArgs {
     items: TodoItem[];
-    filterType: FilterType;
+    filterType: FilterTypes;
 }
 export default class TodoState {
     items: TodoItem[];
-    filterType: FilterType;
+    filterType: FilterTypes;
 
     constructor(args: TodoStateArgs) {
         this.items = args.items;
@@ -60,13 +60,14 @@ export default class TodoState {
         );
     }
 
-    reduce(payload: { type: "FilterTodoListUseCase"; filterType: FilterType }) {
+    reduce(payload: { type: "FilterTodoListUseCase"; filterType: FilterTypes }) {
         switch (payload.type) {
             case "FilterTodoListUseCase":
-                return new TodoState({
-                    ...this as TodoStateArgs,
-                    filterType: payload.filterType
-                });
+                return new TodoState(
+                    Object.assign({}, this, {
+                        filterType: payload.filterType
+                    })
+                );
             default:
                 return this;
         }

@@ -30,6 +30,8 @@
   "devDependencies": {
     "@types/mocha": "^2.2.41",
     "@types/node": "^8.0.15",
+    "@types/react": "^15.0.38",
+    "@types/react-dom": "^15.5.1",
     "@types/uuid": "^3.4.0",
     "awesome-typescript-loader": "^3.2.1",
     "cross-env": "^5.0.1",

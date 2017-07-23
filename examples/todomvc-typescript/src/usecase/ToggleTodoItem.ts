@@ -1,27 +1,29 @@
 "use strict";
+import { UseCase } from "almin";
 import todoListRepository, { TodoListRepository } from "../infra/TodoListRepository";
-export class UpdateTodoItemTitleFactory {
+
+export class ToggleTodoItemFactory {
     static create() {
-        return new UpdateTodoItemTitleUseCase({
+        return new ToggleTodoItemUseCase({
             todoListRepository
         });
     }
 }
 
-export class UpdateTodoItemTitleUseCase {
+export class ToggleTodoItemUseCase extends UseCase {
+    private todoListRepository: TodoListRepository;
+
     /**
      * @param {TodoListRepository} todoListRepository
      */
-    constructor({ todoListRepository }) {
+    constructor({ todoListRepository }: { todoListRepository: TodoListRepository }) {
+        super();
         this.todoListRepository = todoListRepository;
     }
 
-    execute({ id, title }) {
+    execute(itemId: string) {
         const todoList = this.todoListRepository.lastUsed();
-        if (!todoList.hasItem(id)) {
-            return Promise.reject(new Error(`Not found item:${id}`));
-        }
-        todoList.updateItem({ id, title });
+        todoList.toggleComplete(itemId);
         this.todoListRepository.save(todoList);
     }
 }

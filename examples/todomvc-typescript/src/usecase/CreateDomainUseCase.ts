@@ -10,10 +10,12 @@ export class CreateDomainUseCaseFactory {
 }
 
 export class CreateDomainUseCase extends UseCase {
+    private todoListRepository: TodoListRepository;
+
     /**
      * @param {TodoListRepository}todoListRepository
      */
-    constructor({ todoListRepository }) {
+    constructor({ todoListRepository }: { todoListRepository: TodoListRepository }) {
         super();
         this.todoListRepository = todoListRepository;
     }

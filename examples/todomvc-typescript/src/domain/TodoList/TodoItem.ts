@@ -3,12 +3,12 @@ const uuid = require("uuid");
 export interface TodoItemArgs {
     id?: string;
     title: string;
-    completed: boolean;
+    completed?: boolean;
 }
 export default class TodoItem {
     id: string;
     title: string;
-    completed: boolean;
+    completed: boolean = false;
 
     constructor(args: TodoItemArgs) {
         this.id = args.id || uuid();
@@ -17,9 +17,6 @@ export default class TodoItem {
     }
 
     updateItem(updated: Partial<TodoItemArgs>) {
-        return new TodoItem({
-            ...this as TodoItem,
-            ...updated
-        });
+        return new TodoItem(Object.assign({}, this, updated));
     }
 }

@@ -3,6 +3,7 @@ const REPOSITORY_CHANGE = "REPOSITORY_CHANGE";
 import { EventEmitter } from "events";
 import TodoList from "../domain/TodoList/TodoList";
 import MemoryDB from "./adpter/MemoryDB";
+
 // Collection repository
 export class TodoListRepository extends EventEmitter {
     private _database: MemoryDB<string, TodoList>;
@@ -28,12 +29,16 @@ export class TodoListRepository extends EventEmitter {
     /**
      * @returns {TodoList|undefined}
      */
-    lastUsed(): TodoList | undefined {
+    lastUsed(): TodoList {
         const todoList = this._database.get(`${TodoList.name}.lastUsed`);
         if (todoList) {
-            return this._get(todoList.id);
+            const prevTodoList = this._get(todoList.id);
+            if (prevTodoList) {
+                return prevTodoList;
+            }
         }
-        return;
+        // default list
+        return new TodoList();
     }
 
     /**
@@ -57,5 +62,6 @@ export class TodoListRepository extends EventEmitter {
         this.on(REPOSITORY_CHANGE, handler);
     }
 }
+
 // singleton
 export default new TodoListRepository();
