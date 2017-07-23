@@ -1,9 +1,9 @@
 "use strict";
 const uuid = require("uuid");
 import * as assert from "assert";
-import TodoItem from "./TodoItem";
+import TodoItem, { TodoItemArgs } from "./TodoItem";
 export default class TodoList {
-    private id: string;
+    id: string;
     private _items: TodoItem[];
 
     constructor() {
@@ -36,7 +36,7 @@ export default class TodoList {
      * @param {Object} updated
      * @returns {TodoItem}
      */
-    updateItem(updated: Partial<TodoItem>) {
+    updateItem(updated: Partial<TodoItemArgs>) {
         if (updated.id === undefined) {
             throw new Error("should have {id}");
         }

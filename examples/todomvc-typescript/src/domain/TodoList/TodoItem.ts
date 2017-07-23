@@ -16,10 +16,10 @@ export default class TodoItem {
         this.completed = args.completed;
     }
 
-    updateItem(updated: Partial<TodoItem>) {
+    updateItem(updated: Partial<TodoItemArgs>) {
         return new TodoItem({
-            ...this as TodoItemArgs,
-            updated
+            ...this as TodoItem,
+            ...updated
         });
     }
 }

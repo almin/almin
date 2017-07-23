@@ -1,15 +1,14 @@
 "use strict";
-const EventEmitter = require("events");
 const REPOSITORY_CHANGE = "REPOSITORY_CHANGE";
+import { EventEmitter } from "events";
 import TodoList from "../domain/TodoList/TodoList";
 import MemoryDB from "./adpter/MemoryDB";
 // Collection repository
 export class TodoListRepository extends EventEmitter {
-    constructor(database = new MemoryDB()) {
+    private _database: MemoryDB<string, TodoList>;
+
+    constructor(database = new MemoryDB<string, TodoList>()) {
         super();
-        /**
-         * @type {MemoryDB}
-         */
         this._database = database;
     }
 
@@ -17,29 +16,30 @@ export class TodoListRepository extends EventEmitter {
      * @param id
      * @private
      */
-    _get(id) {
+    _get(id: string) {
         // Domain.<id>
         return this._database.get(`${TodoList.name}.${id}`);
     }
 
-    find(todoList) {
+    find(todoList: TodoList) {
         return this._get(todoList.id);
     }
 
     /**
      * @returns {TodoList|undefined}
      */
-    lastUsed() {
+    lastUsed(): TodoList | undefined {
         const todoList = this._database.get(`${TodoList.name}.lastUsed`);
         if (todoList) {
             return this._get(todoList.id);
         }
+        return;
     }
 
     /**
      * @param {TodoList} todoList
      */
-    save(todoList) {
+    save(todoList: TodoList) {
         this._database.set(`${TodoList.name}.lastUsed`, todoList);
         this._database.set(`${TodoList.name}.${todoList.id}`, todoList);
         this.emit(REPOSITORY_CHANGE, todoList);
@@ -48,12 +48,12 @@ export class TodoListRepository extends EventEmitter {
     /**
      * @param {TodoList} todoList
      */
-    remove(todoList) {
+    remove(todoList: TodoList) {
         this._database.delete(`${TodoList.name}.${todoList.id}`);
         this.emit(REPOSITORY_CHANGE);
     }
 
-    onChange(handler) {
+    onChange(handler: () => void) {
         this.on(REPOSITORY_CHANGE, handler);
     }
 }
