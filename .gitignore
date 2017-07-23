@@ -91,3 +91,4 @@ __obj/
 # Build cache.
 .eslintcache
 .textlintcache
+/examples/**/lib/
