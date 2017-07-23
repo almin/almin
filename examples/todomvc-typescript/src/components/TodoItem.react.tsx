@@ -7,27 +7,27 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-const React = require("react");
-const PropTypes = require("prop-types");
-const ReactPropTypes = PropTypes;
+import * as React from "react";
+
 const classNames = require("classnames");
 import AppLocator from "../AppLocator";
 import { UpdateTodoItemTitleFactory } from "../usecase/UpdateTodoItemTitle";
 import { ToggleTodoItemFactory } from "../usecase/ToggleTodoItem";
 import { RemoveTodoItemFactory } from "../usecase/RemoveTodoItem";
-import TodoTextInput from "./TodoTextInput.react";
+import { TodoTextInput } from "./TodoTextInput.react";
+import TodoItem from "../domain/TodoList/TodoItem";
 
-class TodoItem extends React.Component {
-    static propTypes = {
-        todo: ReactPropTypes.object.isRequired
-    };
+export interface TodoItemProps {
+    todo: TodoItem;
+}
 
+export class TodoItemComponent extends React.Component<TodoItemProps, {}> {
     state = {
         isEditing: false,
         completed: false
     };
 
-    componentWillReceiveProps(nextPros, nextState) {
+    componentWillReceiveProps(nextPros: TodoItemProps) {
         const todo = nextPros.todo;
         this.setState({
             completed: todo.completed
@@ -72,7 +72,7 @@ class TodoItem extends React.Component {
         );
     }
 
-    _onToggleComplete = event => {
+    _onToggleComplete = () => {
         AppLocator.context.useCase(ToggleTodoItemFactory.create()).execute(this.props.todo.id);
     };
 
@@ -86,7 +86,7 @@ class TodoItem extends React.Component {
      * in different ways.
      * @param  {string} title
      */
-    _onSave = title => {
+    _onSave = (title: string) => {
         AppLocator.context.useCase(UpdateTodoItemTitleFactory.create()).execute({
             id: this.props.todo.id,
             title
@@ -98,5 +98,3 @@ class TodoItem extends React.Component {
         AppLocator.context.useCase(RemoveTodoItemFactory.create()).execute(this.props.todo.id);
     };
 }
-
-export default TodoItem;

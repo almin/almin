@@ -1,5 +1,6 @@
 "use strict";
 import todoListRepository, { TodoListRepository } from "../infra/TodoListRepository";
+import { UseCase } from "almin";
 
 export class UpdateTodoItemTitleFactory {
     static create() {
@@ -9,13 +10,14 @@ export class UpdateTodoItemTitleFactory {
     }
 }
 
-export class UpdateTodoItemTitleUseCase {
+export class UpdateTodoItemTitleUseCase extends UseCase {
     private todoListRepository: TodoListRepository;
 
     /**
      * @param {TodoListRepository} todoListRepository
      */
     constructor({ todoListRepository }: { todoListRepository: TodoListRepository }) {
+        super();
         this.todoListRepository = todoListRepository;
     }
 

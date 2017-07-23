@@ -7,20 +7,19 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-const React = require("react");
-const PropTypes = require("prop-types");
-const ReactPropTypes = PropTypes;
+import * as React from "react";
+
 const ENTER_KEY_CODE = 13;
 
-class TodoTextInput extends React.Component {
-    static propTypes = {
-        className: ReactPropTypes.string,
-        id: ReactPropTypes.string,
-        placeholder: ReactPropTypes.string,
-        onSave: ReactPropTypes.func.isRequired,
-        value: ReactPropTypes.string
-    };
+export interface TodoTextInputProps {
+    id?: string;
+    className?: string;
+    placeholder?: string;
+    onSave: (text: string) => void;
+    value?: string;
+}
 
+export class TodoTextInput extends React.Component<TodoTextInputProps, {}> {
     state = {
         value: this.props.value || ""
     };
@@ -57,7 +56,7 @@ class TodoTextInput extends React.Component {
     /**
      * @param {object} event
      */
-    _onChange = (/*object*/ event) => {
+    _onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
             value: event.target.value
         });
@@ -66,11 +65,9 @@ class TodoTextInput extends React.Component {
     /**
      * @param  {object} event
      */
-    _onKeyDown = event => {
+    _onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.keyCode === ENTER_KEY_CODE) {
             this._save();
         }
     };
 }
-
-export default TodoTextInput;

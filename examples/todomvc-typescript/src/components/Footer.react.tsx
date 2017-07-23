@@ -7,23 +7,21 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-const React = require("react");
-const PropTypes = require("prop-types");
-const ReactPropTypes = PropTypes;
+import * as React from "react";
+import TodoItem from "../domain/TodoList/TodoItem";
+
 const classNames = require("classnames");
 import AppLocator from "../AppLocator";
 import { RemoveTodoItemFactory } from "../usecase/RemoveAllCompletedItems";
 import { FilterTodoListFactory } from "../usecase/FilterTodoList";
 import { FilterTypes } from "../store/TodoStore/TodoState";
 
-class Footer extends React.Component {
-    static propTypes = {
-        allTodos: ReactPropTypes.array.isRequired
-    };
+export interface FooterProps {
+    allTodos: TodoItem[];
+    filterType: FilterTypes;
+}
 
-    /**
-     * @return {object}
-     */
+export class Footer extends React.Component<FooterProps, {}> {
     render() {
         const allTodos = this.props.allTodos;
         const filterType = this.props.filterType;
@@ -50,8 +48,8 @@ class Footer extends React.Component {
             );
         }
 
-        const filterByType = type => {
-            return event => {
+        const filterByType = (type: FilterTypes) => {
+            return (event: React.MouseEvent<HTMLElement>) => {
                 event.preventDefault();
                 AppLocator.context.useCase(FilterTodoListFactory.create()).execute(type);
             };
@@ -102,8 +100,6 @@ class Footer extends React.Component {
      * Event handler to delete all completed TODOs
      */
     _onClearCompletedClick = () => {
-        AppLocator.context.useCase(RemoveTodoItemFactory.create()).execute();
+        AppLocator.context.useCase(RemoveTodoItemFactory.create()).executor(useCase => useCase.execute());
     };
 }
-
-export default Footer;

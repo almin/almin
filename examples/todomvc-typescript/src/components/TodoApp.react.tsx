@@ -11,14 +11,24 @@
  * This component operates as a "Controller-View".  It listens for changes in
  * the TodoStore and passes the new data to its children.
  */
+import * as React from "react";
+import { Footer } from "./Footer.react";
+import { Header } from "./Header.react";
+import { MainSection } from "./MainSection.react";
+import { Context } from "almin";
+import { appStoreGroup } from "../store/appStoreGroup";
 
-const React = require("react");
-import Footer from "./Footer.react";
-import Header from "./Header.react";
-import MainSection from "./MainSection.react";
+export interface TodoAppProps {
+    appContext: Context<typeof appStoreGroup.state>;
+}
 
-class TodoApp extends React.Component {
-    constructor(props) {
+// state is same with AppStoreGroup's state
+export type TodoAppState = typeof appStoreGroup.state;
+
+export class TodoApp extends React.Component<TodoAppProps, TodoAppState> {
+    releaseChange: () => void;
+
+    constructor(props: TodoAppProps) {
         super(props);
         const appContext = props.appContext;
         this.state = appContext.getState();
@@ -46,5 +56,3 @@ class TodoApp extends React.Component {
         );
     }
 }
-
-export default TodoApp;

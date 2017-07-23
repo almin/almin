@@ -7,19 +7,18 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-const React = require("react");
-const PropTypes = require("prop-types");
-const ReactPropTypes = PropTypes;
+import * as React from "react";
 import AppLocator from "../AppLocator";
 import { ToggleAllTodoItemFactory } from "../usecase/ToggleAllTodoItems";
-import TodoItem from "./TodoItem.react";
+import { TodoItemComponent } from "./TodoItem.react";
+import TodoItem from "../domain/TodoList/TodoItem";
 
-class MainSection extends React.Component {
-    static propTypes = {
-        allTodos: ReactPropTypes.array.isRequired,
-        areAllComplete: ReactPropTypes.bool.isRequired
-    };
+export interface MainSectionProps {
+    allTodos: TodoItem[];
+    areAllComplete: boolean;
+}
 
+export class MainSection extends React.Component<MainSectionProps, {}> {
     /**
      * @return {object}
      */
@@ -32,7 +31,7 @@ class MainSection extends React.Component {
 
         const allTodos = this.props.allTodos;
         const todos = allTodos.map(todo => {
-            return <TodoItem key={todo.id} todo={todo} />;
+            return <TodoItemComponent key={todo.id} todo={todo} />;
         });
         return (
             <section id="main">
@@ -40,7 +39,7 @@ class MainSection extends React.Component {
                     id="toggle-all"
                     type="checkbox"
                     onChange={this._onToggleCompleteAll}
-                    checked={this.props.areAllComplete ? "checked" : ""}
+                    checked={this.props.areAllComplete}
                 />
                 <label htmlFor="toggle-all">Mark all as complete</label>
                 <ul id="todo-list">
@@ -57,5 +56,3 @@ class MainSection extends React.Component {
         AppLocator.context.useCase(ToggleAllTodoItemFactory.create()).execute();
     };
 }
-
-export default MainSection;

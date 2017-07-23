@@ -1,10 +1,12 @@
 "use strict";
 const uuid = require("uuid");
+
 export interface TodoItemArgs {
     id?: string;
     title: string;
     completed?: boolean;
 }
+
 export default class TodoItem {
     id: string;
     title: string;
@@ -13,7 +15,7 @@ export default class TodoItem {
     constructor(args: TodoItemArgs) {
         this.id = args.id || uuid();
         this.title = args.title;
-        this.completed = args.completed;
+        this.completed = args.completed !== undefined ? args.completed : false;
     }
 
     updateItem(updated: Partial<TodoItemArgs>) {

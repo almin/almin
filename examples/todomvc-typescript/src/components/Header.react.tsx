@@ -7,12 +7,12 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-const React = require("react");
+import * as React from "react";
 import AppLocator from "../AppLocator";
 import { AddTodoItemFactory } from "../usecase/AddTodoItem";
-import TodoTextInput from "./TodoTextInput.react";
+import { TodoTextInput } from "./TodoTextInput.react";
 
-class Header extends React.Component {
+export class Header extends React.Component {
     /**
      * @return {object}
      */
@@ -31,11 +31,9 @@ class Header extends React.Component {
      * in different ways.
      * @param {string} text
      */
-    _onSave = text => {
+    _onSave = (text: string) => {
         if (text.trim()) {
             AppLocator.context.useCase(AddTodoItemFactory.create()).execute(text);
         }
     };
 }
-
-export default Header;
