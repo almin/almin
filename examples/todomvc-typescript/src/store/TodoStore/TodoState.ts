@@ -1,19 +1,23 @@
 "use strict";
-import { FilterTodoListUseCase } from "../../usecase/FilterTodoList";
-export const FilterTypes = {
-    ALL_TODOS: "ALL_TODOS",
-    ACTIVE_TODOS: "ACTIVE_TODOS",
-    COMPLETED_TODOS: "COMPLETED_TODOS"
-};
+import TodoItem from "../../domain/TodoList/TodoItem";
+import TodoList from "../../domain/TodoList/TodoList";
+enum FilterType {
+    ALL_TODOS = "ALL_TODOS",
+    ACTIVE_TODOS = "ACTIVE_TODOS",
+    COMPLETED_TODOS = "COMPLETED_TODOS"
+}
 
+export interface TodoStateArgs {
+    items: TodoItem[];
+    filterType: FilterType;
+}
 export default class TodoState {
-    /**
-     * @param {TodoItem[]} items
-     * @param {string} filterType
-     */
-    constructor({ items, filterType }) {
-        this.items = items;
-        this.filterType = filterType;
+    items: TodoItem[];
+    filterType: FilterType;
+
+    constructor(args: TodoStateArgs) {
+        this.items = args.items;
+        this.filterType = args.filterType;
     }
 
     /**
@@ -44,30 +48,25 @@ export default class TodoState {
     }
 
     /**
-     * @param {TodoList} todoList
-     * @returns {TodoState}
+     * Merge todoList and return new state
      */
-    merge(todoList) {
+    merge(todoList: TodoList) {
         const items = todoList.getAllTodoItems();
         return new TodoState(
-            Object.assign({}, this, {
+            Object.assign({
+                ...this as TodoStateArgs,
                 items
             })
         );
     }
 
-    /**
-     * @param {DispatcherPayload} payload
-     * @returns {TodoState}
-     */
-    reduce(payload) {
+    reduce(payload: { type: "FilterTodoListUseCase"; filterType: FilterType }) {
         switch (payload.type) {
-            case FilterTodoListUseCase.name:
-                return new TodoState(
-                    Object.assign({}, this, {
-                        filterType: payload.filterType
-                    })
-                );
+            case "FilterTodoListUseCase":
+                return new TodoState({
+                    ...this as TodoStateArgs,
+                    filterType: payload.filterType
+                });
             default:
                 return this;
         }

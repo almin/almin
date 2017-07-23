@@ -1,5 +1,6 @@
 "use strict";
 import { UseCase } from "almin";
+import { FilterType } from "../store/TodoStore/TodoState";
 export class FilterTodoListFactory {
     static create() {
         return new FilterTodoListUseCase();
@@ -7,9 +8,9 @@ export class FilterTodoListFactory {
 }
 
 export class FilterTodoListUseCase extends UseCase {
-    execute(filterType) {
+    execute(filterType: FilterType) {
         this.dispatch({
-            type: FilterTodoListUseCase.name,
+            type: "FilterTodoListUseCase",
             filterType
         });
     }

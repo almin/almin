@@ -1,11 +1,14 @@
 "use strict";
-import { Store } from "almin";
+import { DispatchedPayload, Store } from "almin";
 import TodoState, { FilterTypes } from "./TodoState";
+import { TodoListRepository } from "../../infra/TodoListRepository";
 export default class TodoStore extends Store {
+    private todoListRepository: TodoListRepository;
+
     /**
      * @param {TodoListRepository} todoListRepository
      */
-    constructor({ todoListRepository }) {
+    constructor({ todoListRepository }: { todoListRepository: TodoListRepository }) {
         super();
         // Initial State
         this.state = new TodoState({
@@ -16,7 +19,7 @@ export default class TodoStore extends Store {
     }
 
     // Update state
-    receivePayload(payload) {
+    receivePayload(payload: DispatchedPayload) {
         const todoList = this.todoListRepository.lastUsed();
         if (!todoList) {
             return;
