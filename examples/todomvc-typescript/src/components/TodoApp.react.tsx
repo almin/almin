@@ -16,7 +16,7 @@ import { Footer } from "./Footer.react";
 import { Header } from "./Header.react";
 import { MainSection } from "./MainSection.react";
 import { Context } from "almin";
-import { appStoreGroup } from "../store/appStoreGroup";
+import { appStoreGroup } from "../store/AppStoreGroup";
 
 export interface TodoAppProps {
     appContext: Context<typeof appStoreGroup.state>;
