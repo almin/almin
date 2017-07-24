@@ -1,7 +1,7 @@
 // LICENSE : MIT
 "use strict";
-const assert = require("power-assert");
-import TodoItem from "../../src/domain/TodoList/TodoItem";
+const assert = require("assert");
+import TodoItem from "../../lib/domain/TodoList/TodoItem";
 describe("TodoItem-test", function() {
     it("could serialize", function() {
         const item = new TodoItem({

@@ -1,11 +1,11 @@
 // LICENSE : MIT
 "use strict";
-const assert = require("power-assert");
-import MemoryDB from "../../src/infra/adpter/MemoryDB";
-import TodoList from "../../src/domain/TodoList/TodoList";
-import TodoItem from "../../src/domain/TodoList/TodoItem";
-import { TodoListRepository } from "../../src/infra/TodoListRepository";
-import { UpdateTodoItemTitleUseCase } from "../../src/usecase/UpdateTodoItemTitle";
+const assert = require("assert");
+import MemoryDB from "../../lib/infra/adpter/MemoryDB";
+import TodoList from "../../lib/domain/TodoList/TodoList";
+import TodoItem from "../../lib/domain/TodoList/TodoItem";
+import { TodoListRepository } from "../../lib/infra/TodoListRepository";
+import { UpdateTodoItemTitleUseCase } from "../../lib/usecase/UpdateTodoItemTitle";
 describe("UpdateTodoItem", function() {
     it("should update TodoItem with title", function(done) {
         const mockTodoList = new TodoList();

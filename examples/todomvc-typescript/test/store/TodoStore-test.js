@@ -1,13 +1,13 @@
 // LICENSE : MIT
 "use strict";
-const assert = require("power-assert");
-import TodoList from "../../src/domain/TodoList/TodoList";
+const assert = require("assert");
+import TodoList from "../../lib/domain/TodoList/TodoList";
 import { Context, Dispatcher } from "almin";
-import TodoItem from "../../src/domain/TodoList/TodoItem";
-import TodoStore from "../../src/store/TodoStore/TodoStore";
-import TodoState, { FilterTypes } from "../../src/store/TodoStore/TodoState";
-import { FilterTodoListUseCase } from "../../src/usecase/FilterTodoList";
-import { TodoListRepository } from "../../src/infra/TodoListRepository";
+import TodoItem from "../../lib/domain/TodoList/TodoItem";
+import TodoStore from "../../lib/store/TodoStore/TodoStore";
+import TodoState, { FilterTypes } from "../../lib/store/TodoStore/TodoState";
+import { FilterTodoListUseCase } from "../../lib/usecase/FilterTodoList";
+import { TodoListRepository } from "../../lib/infra/TodoListRepository";
 describe("TodoStore", function() {
     it("should return TodoState instance", function() {
         const todoListRepository = new TodoListRepository();
