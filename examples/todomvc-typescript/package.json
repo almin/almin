@@ -1,8 +1,8 @@
 {
   "private": true,
-  "name": "example-todomvc",
+  "name": "example-todomvc-typescript",
   "version": "1.0.2",
-  "description": "TODO app example",
+  "description": "TODO MVC example",
   "directories": {
     "test": "test"
   },

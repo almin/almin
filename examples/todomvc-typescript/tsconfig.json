@@ -10,9 +10,6 @@
     "declaration": true,
     "jsx": "react",
     // Transform jsx syntax in babels phase
-    "types": [
-      "node"
-    ],
     "lib": [
       "es2017",
       "dom"
