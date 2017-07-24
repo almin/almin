@@ -1,4 +1,4 @@
-# TodoMVC
+# TodoMVC TypeScript
 
 TodoMVC is popular example for MV* library.
 
@@ -19,8 +19,7 @@ TodoMVC is popular example for MV* library.
 
 ## Tests
 
-    npm tests
-
+    npm test
 
 ### Domain Layer
 
