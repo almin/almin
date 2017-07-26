@@ -153,7 +153,7 @@ export default class AsyncLogger extends EventEmitter {
             const useCaseName = useCase ? useCase.name : "<no-name>";
             const title = `${useCaseName}${parentSuffix}`;
             const logGroup = new LogGroup({ title, useCaseName: useCaseName });
-            const args = payload.args.length && payload.args.length > 0 ? payload.args : [];
+            const args = payload.args.length && payload.args.length > 0 ? payload.args : [undefined];
             const log = [`${useCaseName} execute:`].concat(args);
             logGroup.addChunk(
                 new LogChunk({

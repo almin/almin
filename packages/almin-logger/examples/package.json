@@ -12,13 +12,12 @@
     "watch": "webpack -w",
     "start": "webpack-dev-server --hot --content-base public/ --open",
     "npm": "npm run --if-present build",
-    "preinstall": "npm rm almin-logger",
     "test": "mocha"
   },
   "author": "azu",
   "license": "MIT",
   "dependencies": {
-    "almin": "^0.10.0",
+    "almin": "^0.13.0",
     "almin-logger": "file:../",
     "react": "^15.0.1",
     "react-dom": "^15.0.1",

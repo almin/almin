@@ -17,18 +17,21 @@
   },
   "version": "5.0.0",
   "description": "logger for Almin.js",
-  "main": "lib/AlminLogger.js",
+  "main": "lib/src/AlminLogger.js",
+  "types": "lib/src/AlminLogger.d.ts",
   "directories": {
     "test": "test"
   },
   "scripts": {
+    "clean": "rimraf lib/",
+    "prebuild": "npm run clean",
     "build": "cross-env NODE_ENV=production tsc -p .",
-    "build:test": "tsc -p test/",
+    "build:test": "npm run clean && tsc -p test/",
     "watch": "tsc -p . --watch",
     "prepublish": "npm run --if-present build",
-    "test:saucelabs": "zuul -- test/*-test.js",
-    "test:browser": "zuul --local 8080 --ui mocha-bdd -- test/*-test.js",
-    "test": "npm run build:test && mocha lib/test/",
+    "test:saucelabs": "zuul -- lib/test/*-test.js",
+    "test:browser": "npm run build:test && zuul --local 8080 --ui mocha-bdd -- lib/test/*-test.js",
+    "test": "npm run clean && npm run build:test && mocha lib/test/",
     "ci": "npm run test"
   },
   "keywords": [
@@ -42,6 +45,7 @@
     "cross-env": "^5.0.1",
     "mocha": "^3.4.2",
     "power-assert": "^1.4.4",
+    "rimraf": "^2.6.1",
     "simple-mock": "^0.7.0",
     "typescript": "^2.4.2",
     "webpack": "^2.2.1",
