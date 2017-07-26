@@ -11,7 +11,7 @@ import {
     WillExecutedPayload
 } from "almin";
 import AsyncLogger from "../src/AsyncLogger";
-import LogGroup from "../src/log/LogGroup";
+import { LogGroup } from "../src/log/LogGroup";
 import AlminLogger from "../src/AlminLogger";
 import ConsoleMock from "./helper/ConsoleMock";
 import NoDispatchUseCase from "./usecase/NoDispatchUseCase";

@@ -1,17 +1,32 @@
 // LICENSE : MIT
 "use strict";
 import AlminLogger from "./AlminLogger";
-import LogGroup from "./log/LogGroup";
-import LogChunk from "./log/LogChunk";
-import PrintLogger from "./log/PrintLogger";
-
-const EventEmitter = require("events");
-const { MapLike } = require("map-like");
+import { LogGroup } from "./log/LogGroup";
+import { LogChunk } from "./log/LogChunk";
+import { PrintLogger } from "./log/PrintLogger";
+import { EventEmitter } from "events";
+import {
+    CompletedPayload,
+    Context,
+    DidExecutedPayload,
+    DispatcherPayloadMeta,
+    ErrorPayload,
+    Payload,
+    Store,
+    StoreChangedPayload,
+    StoreLike,
+    TransactionBeganPayload,
+    TransactionEndedPayload,
+    UseCase,
+    UseCaseLike,
+    WillExecutedPayload
+} from "almin";
+import { MapLike } from "map-like";
 // FIXME: Almin 0.12 support pull-based Store
 // https://github.com/almin/almin/pull/154
 // Some Store must to have prevState arguments.
 // Call ths Store without argument, throw error
-const tryGetState = store => {
+const tryGetState = (store: StoreLike) => {
     try {
         return store.getState();
     } catch (error) {
@@ -36,10 +51,17 @@ const tryGetState = store => {
  *
  */
 export default class AsyncLogger extends EventEmitter {
+    private useCaseLogGroupMap: MapLike<UseCaseLike, LogGroup>;
+    private logger: any;
+    printLogger: any;
+    _currentLogBuffer: LogGroup[];
+    _releaseHandlers: Array<() => void>;
+    _transactionMap: MapLike<string, LogGroup>;
+
     /**
      * @param {Object} console
      */
-    constructor({ console }) {
+    constructor({ console }: { console: any }) {
         super();
         /**
          * Will show log buffer
@@ -50,11 +72,11 @@ export default class AsyncLogger extends EventEmitter {
         /**
          * @type {MapLike}
          */
-        this._logMap = new MapLike();
+        this.useCaseLogGroupMap = new MapLike<UseCaseLike, LogGroup>();
         /**
          * @type {MapLike}
          */
-        this._transactionMap = new MapLike();
+        this._transactionMap = new MapLike<string, LogGroup>();
         this._releaseHandlers = [];
         /**
          * @type {Console|Object|*}
@@ -67,13 +89,13 @@ export default class AsyncLogger extends EventEmitter {
      * start logging for {@link context}
      * @param {Context} context
      */
-    startLogging(context) {
+    startLogging(context: Context<any>) {
         /**
          *
          * @param meta
          * @returns {LogGroup|undefined}
          */
-        const getTransactionLogGroup = meta => {
+        const getTransactionLogGroup = (meta: DispatcherPayloadMeta) => {
             // if it is transaction, add this logGroup as child of transaction
             const transactionName = meta.transaction && meta.transaction.name;
             if (transactionName) {
@@ -86,7 +108,7 @@ export default class AsyncLogger extends EventEmitter {
          *
          * @param {LogGroup} logGroup
          */
-        const outputLogging = logGroup => {
+        const outputLogging = (logGroup: LogGroup) => {
             const index = this._currentLogBuffer.indexOf(logGroup);
             if (index !== -1) {
                 this._currentLogBuffer.splice(index, 1);
@@ -98,7 +120,7 @@ export default class AsyncLogger extends EventEmitter {
          * @param {TransactionBeganPayload} payload
          * @param {DispatcherPayloadMeta} meta
          */
-        const onBeginTransaction = (payload, meta) => {
+        const onBeginTransaction = (payload: TransactionBeganPayload, _meta: DispatcherPayloadMeta) => {
             const logGroup = new LogGroup({ title: payload.name, isTransaction: true });
             this._transactionMap.set(payload.name, logGroup);
             // the logGroup is root
@@ -109,7 +131,7 @@ export default class AsyncLogger extends EventEmitter {
          * @param {TransactionEndedPayload} payload
          * @param {DispatcherPayloadMeta} meta
          */
-        const onEndTransaction = (payload, meta) => {
+        const onEndTransaction = (payload: TransactionEndedPayload, meta: DispatcherPayloadMeta) => {
             const logGroup = getTransactionLogGroup(meta);
             if (logGroup) {
                 outputLogging(logGroup);
@@ -120,14 +142,19 @@ export default class AsyncLogger extends EventEmitter {
          * @param {WillExecutedPayload} payload
          * @param {DispatcherPayloadMeta} meta
          */
-        const onWillExecuteEachUseCase = (payload, meta) => {
+        const onWillExecuteEachUseCase = (payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => {
             const useCase = meta.useCase;
-            const parentUseCase = meta.parentUseCase !== useCase ? meta.parentUseCase : null;
+            if (!useCase) {
+                return;
+            }
+            const parentUseCase =
+                meta.parentUseCase !== useCase && meta.parentUseCase instanceof UseCase ? meta.parentUseCase : null;
             const parentSuffix = parentUseCase ? ` <- ${parentUseCase.name}` : "";
-            const title = `${useCase.name}${parentSuffix}`;
-            const logGroup = new LogGroup({ title, useCaseName: useCase.name });
-            const args = payload.args.length && payload.args.length > 0 ? payload.args : undefined;
-            const log = [`${useCase.name} execute:`].concat(args);
+            const useCaseName = useCase ? useCase.name : "<no-name>";
+            const title = `${useCaseName}${parentSuffix}`;
+            const logGroup = new LogGroup({ title, useCaseName: useCaseName });
+            const args = payload.args.length && payload.args.length > 0 ? payload.args : [undefined];
+            const log = [`${useCaseName} execute:`].concat(args);
             logGroup.addChunk(
                 new LogChunk({
                     useCase,
@@ -137,10 +164,12 @@ export default class AsyncLogger extends EventEmitter {
                 })
             );
             if (parentUseCase) {
-                const parentLogMap = this._logMap.get(parentUseCase);
-                parentLogMap.addGroup(logGroup);
+                const parentLogMap = this.useCaseLogGroupMap.get(parentUseCase);
+                if (parentLogMap) {
+                    parentLogMap.addGroup(logGroup);
+                }
             }
-            this._logMap.set(useCase, logGroup);
+            this.useCaseLogGroupMap.set(useCase, logGroup);
             // if it is transaction, add this logGroup as child of transaction
             const transactionLogGroup = getTransactionLogGroup(meta);
             if (transactionLogGroup) {
@@ -155,13 +184,17 @@ export default class AsyncLogger extends EventEmitter {
          * @param {Payload} payload
          * @param {DispatcherPayloadMeta} meta
          */
-        const onDispatch = (payload, meta) => {
+        const onDispatch = (payload: Payload, meta: DispatcherPayloadMeta) => {
             const useCase = meta.useCase;
             if (!useCase) {
                 this.addLog([`\u{1F525} Dispatch:${String(payload.type)}`, payload]);
                 return;
             }
-            const logGroup = this._logMap.get(useCase);
+            const logGroup = this.useCaseLogGroupMap.get(useCase);
+            if (!logGroup) {
+                console.warn("Warning(almin-logger): logGroup is not found. please report as issue.", payload, meta);
+                return;
+            }
             // http://emojipedia.org/fire/
             logGroup.addChunk(
                 new LogChunk({
@@ -176,10 +209,11 @@ export default class AsyncLogger extends EventEmitter {
          * @param {StoreChangedPayload} payload
          * @param {DispatcherPayloadMeta} meta
          */
-        const onChangeStore = (payload, meta) => {
-            const store = payload.store;
+        const onChangeStore = (payload: StoreChangedPayload, meta: DispatcherPayloadMeta) => {
+            const store = payload.store as Store;
+            const storeName = store.name ? store.name : "no-name";
             // one, or more stores
-            const useCases = this._logMap.keys();
+            const useCases = this.useCaseLogGroupMap.keys();
             const workingUseCaseNames = useCases.map(useCase => {
                 return useCase.name;
             });
@@ -187,13 +221,13 @@ export default class AsyncLogger extends EventEmitter {
             if (existWorkingUseCase) {
                 const state = tryGetState(store);
                 if (meta.useCase) {
-                    const logGroup = this._logMap.get(meta.useCase);
+                    const logGroup = this.useCaseLogGroupMap.get(meta.useCase);
                     if (!logGroup) {
                         return;
                     }
                     logGroup.addChunk(
                         new LogChunk({
-                            log: [`\u{1F4BE} Store:${store.name}`, state !== null ? state : store],
+                            log: [`\u{1F4BE} Store:${storeName}`, state !== null ? state : store],
                             payload,
                             useCase: meta.useCase,
                             timeStamp: meta.timeStamp
@@ -201,7 +235,7 @@ export default class AsyncLogger extends EventEmitter {
                     );
                 } else {
                     // add log to all UseCase
-                    this.addLog([`\u{1F4BE} Store:${store.name}`, state !== null ? state : store]);
+                    this.addLog([`\u{1F4BE} Store:${storeName}`, state !== null ? state : store]);
                     if (workingUseCaseNames.length >= 2) {
                         this.addLog(`\u{2139}\u{FE0F} Currently executing UseCases: ${workingUseCaseNames.join(", ")}`);
                     }
@@ -213,19 +247,19 @@ export default class AsyncLogger extends EventEmitter {
                     const state = tryGetState(store);
                     transactionLogGroup.addChunk(
                         new LogChunk({
-                            log: [`\u{1F4BE} Store:${store.name}`, state !== null ? state : store],
+                            log: [`\u{1F4BE} Store:${storeName}`, state !== null ? state : store],
                             timeStamp: meta.timeStamp
                         })
                     );
                 } else {
                     // If isolated store update, immediate dump this
                     const storeLogGroup = new LogGroup({
-                        title: `Store(${store.name}) is changed`
+                        title: `Store(${storeName}) is changed`
                     });
                     const state = tryGetState(store);
                     storeLogGroup.addChunk(
                         new LogChunk({
-                            log: [`\u{1F4BE} Store:${store.name}`, state !== null ? state : store],
+                            log: [`\u{1F4BE} Store:${storeName}`, state !== null ? state : store],
                             timeStamp: meta.timeStamp
                         })
                     );
@@ -237,11 +271,19 @@ export default class AsyncLogger extends EventEmitter {
          * @param {ErrorPayload} payload
          * @param {DispatcherPayloadMeta} meta
          */
-        const onErrorHandler = (payload, meta) => {
+        const onErrorHandler = (payload: ErrorPayload, meta: DispatcherPayloadMeta) => {
             // if has useCase and group by useCase
             const error = payload.error || "Something wrong";
             const useCase = meta.useCase;
-            const logGroup = this._logMap.get(useCase);
+            if (!useCase) {
+                this.addLog(error);
+                return;
+            }
+            const logGroup = this.useCaseLogGroupMap.get(useCase);
+            if (!logGroup) {
+                console.warn("Warning(almin-logger): logGroup is not found. please report as issue.", payload, meta);
+                return;
+            }
             logGroup.addChunk(
                 new LogChunk({
                     log: [`${useCase.name} throw Error:`, error],
@@ -255,10 +297,17 @@ export default class AsyncLogger extends EventEmitter {
          * @param {DidExecutedPayload} payload
          * @param {DispatcherPayloadMeta} meta
          */
-        const onDidExecuteEachUseCase = (payload, meta) => {
+        const onDidExecuteEachUseCase = (payload: DidExecutedPayload, meta: DispatcherPayloadMeta) => {
             const useCase = meta.useCase;
-            const resultValue = meta.value;
-            const logGroup = this._logMap.get(useCase);
+            if (!useCase) {
+                return;
+            }
+            const resultValue = payload.value;
+            const logGroup = this.useCaseLogGroupMap.get(useCase);
+            if (!logGroup) {
+                console.warn("Warning(almin-logger): logGroup is not found. please report as issue.", payload, meta);
+                return;
+            }
             logGroup.addChunk(
                 new LogChunk({
                     useCase,
@@ -272,10 +321,17 @@ export default class AsyncLogger extends EventEmitter {
          * @param {CompletedPayload} payload
          * @param {DispatcherPayloadMeta} meta
          */
-        const onCompleteUseCase = (payload, meta) => {
+        const onCompleteUseCase = (payload: CompletedPayload, meta: DispatcherPayloadMeta) => {
             const useCase = meta.useCase;
-            const resultValue = meta.value;
-            const logGroup = this._logMap.get(useCase);
+            if (!useCase) {
+                return;
+            }
+            const resultValue = payload.value;
+            const logGroup = this.useCaseLogGroupMap.get(useCase);
+            if (!logGroup) {
+                console.warn("Warning(almin-logger): logGroup is not found. please report as issue.", payload, meta);
+                return;
+            }
             logGroup.addChunk(
                 new LogChunk({
                     useCase,
@@ -288,7 +344,7 @@ export default class AsyncLogger extends EventEmitter {
             if (!transactionLogGroup) {
                 outputLogging(logGroup);
             }
-            this._logMap.delete(useCase);
+            this.useCaseLogGroupMap.delete(useCase);
         };
 
         // release handler
@@ -308,10 +364,13 @@ export default class AsyncLogger extends EventEmitter {
      * add log to logger
      * @param {*} log
      */
-    addLog(log) {
-        const useCases = this._logMap.keys();
+    addLog(log: any) {
+        const useCases = this.useCaseLogGroupMap.keys();
         useCases.forEach(useCase => {
-            const logGroup = this._logMap.get(useCase);
+            const logGroup = this.useCaseLogGroupMap.get(useCase);
+            if (!logGroup) {
+                return;
+            }
             logGroup.addChunk(
                 new LogChunk({
                     log,
@@ -325,7 +384,7 @@ export default class AsyncLogger extends EventEmitter {
      * flush current log buffer
      */
     flushBuffer() {
-        this._logMap.clear();
+        this.useCaseLogGroupMap.clear();
     }
 
     /**
@@ -334,6 +393,6 @@ export default class AsyncLogger extends EventEmitter {
     release() {
         this._releaseHandlers.forEach(releaseHandler => releaseHandler());
         this._releaseHandlers.length = 0;
-        this._logMap.clear();
+        this.useCaseLogGroupMap.clear();
     }
 }

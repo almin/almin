@@ -1,21 +1,23 @@
 // MIT © 2017 azu
 "use strict";
-import LogGroup from "./LogGroup";
-import LogChunk from "./LogChunk";
+import { LogGroup } from "./LogGroup";
+import { LogChunk } from "./LogChunk";
+import { LogChildItem } from "./LogChildItem";
 
-export default class PrintLogger {
+export class PrintLogger {
+    logger: any | Console;
     /**
      * @param {Object|Console} logger
      */
-    constructor(logger) {
+    constructor(logger: any) {
         this.logger = logger;
     }
 
     /**
      * @param {LogGroup} logGroup
      */
-    printLogGroup(logGroup) {
-        const childrenLogGroup = logGroup.children.filter(logItem => logItem instanceof LogGroup);
+    printLogGroup(logGroup: LogGroup) {
+        const childrenLogGroup = logGroup.children.filter(logItem => logItem instanceof LogGroup) as LogGroup[];
         const includesUseCaseName = childrenLogGroup
             .filter(logGroup => logGroup !== undefined)
             .map(logGroup => logGroup.useCaseName)
@@ -26,7 +28,7 @@ export default class PrintLogger {
          * @param {LogGroup} logGroup
          * @returns {string}
          */
-        const getGroupMark = logGroup => {
+        const getGroupMark = (logGroup: LogGroup) => {
             const isIncludedErrorChunk = this._includeErrorChunk(logGroup);
             if (isIncludedErrorChunk) {
                 return `\u{274C}`; // x
@@ -53,7 +55,7 @@ export default class PrintLogger {
          * @param {"first"|"last"} direction
          * @returns {number}
          */
-        const getTimeStamp = (log, direction) => {
+        const getTimeStamp = (log: LogChildItem, direction?: "first" | "last"): number => {
             if (log instanceof LogGroup) {
                 if (direction === "last") {
                     const lastItem = log.children[log.children.length - 1];
@@ -79,7 +81,7 @@ export default class PrintLogger {
      * @param {LogChunk} chunk
      * @private
      */
-    _outputChunk(chunk) {
+    _outputChunk(chunk: LogChunk) {
         const logs = Array.isArray(chunk.log) ? chunk.log : [chunk.log];
         this._outputToConsole(logs);
     }
@@ -89,7 +91,7 @@ export default class PrintLogger {
      * @param {*[]} logs
      * @private
      */
-    _outputToConsole(logs) {
+    _outputToConsole(logs: Array<any>) {
         if (this._includeErrorChunkLogs(logs)) {
             this.logger.error(...logs);
         } else {
@@ -103,7 +105,7 @@ export default class PrintLogger {
      * @returns {boolean}
      * @private
      */
-    _includeErrorChunk(logGroup) {
+    _includeErrorChunk(logGroup: LogGroup): boolean {
         return logGroup.children.some(chunk => {
             if (chunk instanceof LogGroup) {
                 return this._includeErrorChunk(chunk);
@@ -118,7 +120,7 @@ export default class PrintLogger {
      * @param {*|*[]} logs
      * @private
      */
-    _includeErrorChunkLogs(logs) {
+    _includeErrorChunkLogs(logs: Array<any>) {
         if (!Array.isArray(logs)) {
             return logs instanceof Error;
         }
