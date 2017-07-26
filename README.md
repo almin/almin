@@ -116,9 +116,6 @@ Truly [Table of Contents](./SUMMARY.md) is here :arrow_left:
 - [example/counter](https://github.com/almin/almin/tree/master/examples/counter)
     - Simple Counter example
     - It uses only state
-- [example/todomvc](https://github.com/almin/almin/tree/master/examples/todomvc)
-    - TodoMVC implementation
-    - DDD/CQRS
 - [example/svg-feeling](https://github.com/almin/almin/tree/master/examples/svg-feeling)
     - Separate Domain and Store/State
         - Two way update state.
@@ -129,10 +126,15 @@ Truly [Table of Contents](./SUMMARY.md) is here :arrow_left:
     - This example is implemented of [flux-comparison](https://github.com/voronianski/flux-comparison "flux-comparison").
     - How to test?
     - How to implement domain layer?
-- [example/todomvc-flow](https://github.com/almin/almin/tree/master/examples/todomvc-flow)
+- [example/todomvc](https://github.com/almin/almin/tree/master/examples/todomvc)
     - TodoMVC implementation
     - DDD/CQRS
-    - With Flow type checker
+- [example/todomvc-flow](https://github.com/almin/almin/tree/master/examples/todomvc-flow)
+    - TodoMVC implementation
+    - Flow type version
+- [example/todomvc-typescript](https://github.com/almin/almin/tree/master/examples/todomvc-typescript)
+    - TodoMVC implementation
+    - TypeScript version
 
 ## Real Examples
 

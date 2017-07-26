@@ -25,7 +25,7 @@ It aims to create a scalable app.
 
 ![Overview of almin-architecture](./docs/resources/almin-architecture.png)
 
-The above figure is overview of Almin architecture that is similar to CQRS([Command Query Responsibility Segregation](http://martinfowler.com/bliki/CQRS.html "Command Query Responsibility Segregation")).
+The above figure is overview of Almin architecture that is similar to CQRS([Command Query Responsibility Segregation](https://martinfowler.com/bliki/CQRS.html "Command Query Responsibility Segregation")).
 
 But, Almin is not a framework, provides only these components
 
