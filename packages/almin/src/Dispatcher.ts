@@ -12,20 +12,12 @@ import { WillExecutedPayload } from "./payload/WillExecutedPayload";
 import { TransactionBeganPayload } from "./payload/TransactionBeganPayload";
 import { TransactionEndedPayload } from "./payload/TransactionEndedPayload";
 import { StoreChangedPayload } from "./payload/StoreChangedPayload";
+import { AnyPayload } from "./payload/AnyPayload";
 
 /**
  * @private
  */
 export const ON_DISPATCH = "__ON_DISPATCH__";
-
-/**
- * An Payload type which accepts any other properties.
- * @private
- */
-export interface UserDefinedPayload extends Payload {
-    [extraProps: string]: any;
-}
-
 /**
  * Payload object types.
  *
@@ -34,7 +26,7 @@ export interface UserDefinedPayload extends Payload {
  */
 export type DispatchedPayload =
     | Payload
-    | UserDefinedPayload
+    | AnyPayload
     | ErrorPayload
     | CompletedPayload
     | DidExecutedPayload

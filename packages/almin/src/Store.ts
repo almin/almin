@@ -1,10 +1,11 @@
 // LICENSE : MIT
 "use strict";
-import { Dispatcher, UserDefinedPayload } from "./Dispatcher";
+import { Dispatcher } from "./Dispatcher";
 import { StoreLike } from "./StoreLike";
 import { shallowEqual } from "shallow-equal-object";
 import { Payload } from "./payload/Payload";
 import { DispatcherPayloadMeta } from "./DispatcherPayloadMeta";
+import { AnyPayload } from "./payload/AnyPayload";
 
 const STATE_CHANGE_EVENT = "STATE_CHANGE_EVENT";
 /**
@@ -240,7 +241,7 @@ export abstract class Store<State = any> extends Dispatcher implements StoreLike
      * ```
      *
      */
-    onDispatch(handler: (payload: Payload | UserDefinedPayload, meta: DispatcherPayloadMeta) => void): () => void {
+    onDispatch(handler: (payload: Payload | AnyPayload, meta: DispatcherPayloadMeta) => void): () => void {
         return super.onDispatch(handler);
     }
 

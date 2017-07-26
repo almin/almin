@@ -1,5 +1,6 @@
 // LICENSE : MIT
 "use strict";
+
 export class Payload {
     /**
      * `type` is unique property of the payload.
