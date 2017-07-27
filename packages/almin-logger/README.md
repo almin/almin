@@ -27,7 +27,7 @@ Old IE need [console-polyfill](https://github.com/paulmillr/console-polyfill "co
 ## Usage
 
 ```js
-import ContextLogger from "almin-logger";
+import AlminLogger from "almin-logger";
 // your store
 import AppStore from "./stores/AppStore";
 // context
@@ -40,7 +40,7 @@ const appContext = new Context({
     store: AppStore.create()
 });
 // Create Logger
-const logger = new ContextLogger();
+const logger = new AlminLogger();
 // Start logger
 logger.startLogging(appContext);
 ```
@@ -49,7 +49,7 @@ See [Examples](./examples) for more details.
 
 ## Options:
 
-### `new ContextLogger(options)`
+### `new AlminLogger(options)`
 
 ```js
 const DefaultOptions = {
