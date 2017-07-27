@@ -57,6 +57,15 @@ describe("AsyncLogger", function() {
                 return context.useCase(new DispatchUseCase()).execute({ type: "1" }).then(() => {
                     assert.strictEqual(results.length, 1, "same 1");
                 });
+            })
+            .then(() => {
+                // restart again
+                logger.startLogging(context);
+            })
+            .then(() => {
+                return context.useCase(new DispatchUseCase()).execute({ type: "2" }).then(() => {
+                    assert.strictEqual(results.length, 2, "start again");
+                });
             });
     });
     describe("#addLog", () => {
