@@ -97,9 +97,9 @@ export default class AsyncLogger extends EventEmitter {
          */
         const getTransactionLogGroup = (meta: DispatcherPayloadMeta) => {
             // if it is transaction, add this logGroup as child of transaction
-            const transactionName = meta.transaction && meta.transaction.name;
-            if (transactionName) {
-                return this._transactionMap.get(transactionName);
+            const transactionId = meta.transaction && meta.transaction.id;
+            if (transactionId) {
+                return this._transactionMap.get(transactionId);
             }
             return;
         };
@@ -117,26 +117,32 @@ export default class AsyncLogger extends EventEmitter {
             }
         };
         /**
-         * @param {TransactionBeganPayload} payload
-         * @param {DispatcherPayloadMeta} meta
+         * Start Transaction and create new LogGroup
          */
-        const onBeginTransaction = (payload: TransactionBeganPayload, _meta: DispatcherPayloadMeta) => {
-            const logGroup = new LogGroup({ title: payload.name, isTransaction: true });
-            this._transactionMap.set(payload.name, logGroup);
+        const onBeginTransaction = (_payload: TransactionBeganPayload, meta: DispatcherPayloadMeta) => {
+            if (!meta.transaction) {
+                console.warn("meta.transaction is missing");
+                return;
+            }
+            const logGroup = new LogGroup({ title: meta.transaction.name, isTransaction: true });
+            this._transactionMap.set(meta.transaction.id, logGroup);
             // the logGroup is root
             this._currentLogBuffer.push(logGroup);
         };
 
         /**
-         * @param {TransactionEndedPayload} payload
-         * @param {DispatcherPayloadMeta} meta
+         * End Transaction and output log if needed
          */
-        const onEndTransaction = (payload: TransactionEndedPayload, meta: DispatcherPayloadMeta) => {
+        const onEndTransaction = (_payload: TransactionEndedPayload, meta: DispatcherPayloadMeta) => {
+            if (!meta.transaction) {
+                console.warn("meta.transaction is missing");
+                return;
+            }
             const logGroup = getTransactionLogGroup(meta);
             if (logGroup) {
                 outputLogging(logGroup);
             }
-            this._transactionMap.delete(payload.name);
+            this._transactionMap.delete(meta.transaction.id);
         };
         /**
          * @param {WillExecutedPayload} payload

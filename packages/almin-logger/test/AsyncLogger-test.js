@@ -146,6 +146,36 @@ describe("AsyncLogger", function() {
                     assert(complete.payload instanceof CompletedPayload);
                 });
         });
+        it("should create difference logGroup by transaction.id ", () => {
+            const consoleMock = ConsoleMock.create();
+            const logger = new AsyncLogger({
+                console: consoleMock
+            });
+            const context = new Context({
+                store: createStore(),
+                dispatcher: new Dispatcher(),
+                options: {
+                    strict: true
+                }
+            });
+            logger.startLogging(context);
+            const results = [];
+            logger.on(AlminLogger.Events.output, function(logGroup) {
+                results.push(logGroup);
+            });
+            const getTransaction = () => {
+                return context.transaction("transaction", transactionContext => {
+                    return transactionContext.useCase(new NoDispatchUseCase()).execute().then(() => {
+                        transactionContext.commit();
+                    });
+                });
+            };
+            const transactionA = getTransaction();
+            const transactionB = getTransaction();
+            return Promise.all([transactionA, transactionB]).then(() => {
+                assert(results.length === 2);
+            });
+        });
     });
     context("when nest useCase", () => {
         it("should nest of logGroup ", () => {
