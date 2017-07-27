@@ -70,7 +70,7 @@ Sync mode is removed since almin-logger 6.0.
 
 ## FAQ
 
-### IE 11 always show log like "Dispatch".
+### IE 11 always show un-meaning name like "Dispatch".
 
 IE 11 not have `Function.name`.
 almin-logger depended on `Function.name` or `Function.displayName`.
