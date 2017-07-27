@@ -38,6 +38,39 @@ const createReceivePayloadStore = (receivePayloadHandler: ((payload: DispatchedP
     return new MockStore();
 };
 describe("Context#transaction", () => {
+    describe("id", () => {
+        it("should be difference id between transactions", () => {
+            const aStore = createStore({ name: "test" });
+            const storeGroup = new StoreGroup({ a: aStore });
+            const dispatcher = new Dispatcher();
+            const context = new Context({
+                dispatcher,
+                store: storeGroup,
+                options: {
+                    strict: true
+                }
+            });
+            const getTransactionId = (): Promise<string> => {
+                let id: string | null = null;
+                return context
+                    .transaction("transaction", transactionContext => {
+                        id = transactionContext.id;
+                        transactionContext.exit();
+                        return Promise.resolve();
+                    })
+                    .then(() => {
+                        return id as string;
+                    });
+            };
+            const transactionA = getTransactionId();
+            const transactionB = getTransactionId();
+            return Promise.all([transactionA, transactionB]).then(([aId, bId]) => {
+                assert.strictEqual(typeof aId, "string");
+                assert.strictEqual(typeof bId, "string");
+                assert.notStrictEqual(aId, bId);
+            });
+        });
+    });
     context("Warning(Transaction):", () => {
         let consoleErrorStub: null | sinon.SinonStub = null;
         beforeEach(() => {
@@ -513,9 +546,11 @@ describe("Context#transaction", () => {
 
         const transactionName = "My Transaction";
         dispatcher.onDispatch((_payload, meta) => {
-            assert.deepEqual(meta.transaction, {
-                name: transactionName
-            });
+            if (!meta.transaction) {
+                throw new Error("Not found meta.transaction");
+            }
+            assert.strictEqual(typeof meta.transaction.id, "string");
+            assert.strictEqual(meta.transaction.name, transactionName);
         });
         // 1st transaction
         return context.transaction(transactionName, transactionContext => {

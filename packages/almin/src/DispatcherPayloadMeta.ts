@@ -9,6 +9,8 @@ import { UseCaseLike } from "./UseCaseLike";
  * Transaction data structure
  */
 export interface Transaction {
+    // Transaction unique id
+    readonly id: string;
     // Transaction name
     readonly name: string;
 }

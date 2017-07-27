@@ -94,6 +94,7 @@ export class UseCaseUnitOfWork {
             // Always false because the payload is dispatched from this working useCase.
             isUseCaseFinished: false,
             transaction: {
+                id: this.id,
                 name: this.name
             }
         });
@@ -109,6 +110,7 @@ export class UseCaseUnitOfWork {
             // If unit of work is working as transaction, overwrite meta.transaction
             if (this.isTransactionWorking) {
                 meta.transaction = {
+                    id: this.id,
                     name: this.name
                 };
             }
@@ -167,6 +169,7 @@ Not to allow to do multiple commits in a transaction`);
             // Always false because the payload is dispatched from this working useCase.
             isUseCaseFinished: false,
             transaction: {
+                id: this.id,
                 name: this.name
             }
         });
