@@ -40,6 +40,7 @@
     "log"
   ],
   "devDependencies": {
+    "@types/mocha": "^2.2.41",
     "@types/node": "^8.0.16",
     "almin": "^0.13.10",
     "cross-env": "^5.0.1",
