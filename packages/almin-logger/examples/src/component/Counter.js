@@ -9,6 +9,7 @@ import ManuallLoggingUseCase from "../usecase/ManuallLoggingUseCase";
 import ThrowErrorUseCase from "../usecase/ThrowErrorUseCase";
 import { Context } from "almin";
 import CounterState from "../store/CounterState";
+
 export default class CounterComponent extends React.Component {
     constructor(props) {
         super(props);
@@ -39,6 +40,22 @@ export default class CounterComponent extends React.Component {
         const throwError = () => {
             context.useCase(new ThrowErrorUseCase()).execute();
         };
+        const transaction = () => {
+            context.transaction("+1 -1 +1 +1 = +2", transactionContext => {
+                return (
+                    Promise.resolve()
+                        .then(() => transactionContext.useCase(new IncrementalCounterUseCase()).execute())
+                        .then(() => transactionContext.useCase(new DecrementalCounterUseCase()).execute())
+                        // add 500ms delay
+                        .then(() => new Promise(resolve => setTimeout(resolve, 500)))
+                        .then(() => transactionContext.useCase(new IncrementalCounterUseCase()).execute())
+                        .then(() => transactionContext.useCase(new IncrementalCounterUseCase()).execute())
+                        .then(() => {
+                            transactionContext.commit();
+                        })
+                );
+            });
+        };
         const counterState = this.props.counterState;
 
         return (
@@ -50,6 +67,7 @@ export default class CounterComponent extends React.Component {
                 <button onClick={parallel}>Counter +- in parallel</button>
                 <button onClick={manuallLogging}>Manuall Logging</button>
                 <button onClick={throwError}>Throw Error in UseCase</button>
+                <button onClick={transaction}>Transaction(+1 -1 +1 +1)</button>
                 <p>
                     Count: {counterState.count}
                 </p>

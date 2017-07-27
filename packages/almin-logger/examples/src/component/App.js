@@ -14,7 +14,10 @@ const store = new StoreGroup({
 
 const appContext = new Context({
     dispatcher,
-    store
+    store,
+    options: {
+        strict: true
+    }
 });
 // setup logging
 const logger = new AlminLogger();
