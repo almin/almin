@@ -10,7 +10,7 @@ Logger class for [Almin.js](https://github.com/almin/almin "Almin.js")
 - Multiple Execution warning log of UseCase
 - Changed log of Store
 - Nesting log support if the browser support`console.groupCollapsed`.
-- Async(by default) and Sync logger
+- Async logging
 
 ## Mark meaning
 
@@ -27,7 +27,7 @@ Old IE need [console-polyfill](https://github.com/paulmillr/console-polyfill "co
 ## Usage
 
 ```js
-import AlminLogger from "almin-logger";
+import { AlminLogger } from "almin-logger";
 // your store
 import AppStore from "./stores/AppStore";
 // context
@@ -53,48 +53,20 @@ See [Examples](./examples) for more details.
 
 ```js
 const DefaultOptions = {
-    // output log asynchronously
-    async: true,
     // use `console` object for logging
     console: console,
 };
 ```
 
-### Async mode
+### Async
 
 Default: output log asynchronously
 
-**Pros**
-
 - no mixed UseCase/Dispatch log and the other log.
 
-**Cons**
+### <del>Sync mode</del>
 
-- Async log may confuse
-
-### Sync mode
-
-Set `async: false` to options.
-
-```js
-// Create Logger
-const logger = new ContextLogger({
-    async: false
-});
-// Start logger
-logger.startLogging(appContext);
-```
-
-**Pros**
-
-- mixed UseCase/Dispatch log and the other log.
-- time-series logging
-    - A `groupCollapsed` contain the error that is occurred during executing A UseCase. 
-
-**Cons**
-
-- mixed UseCase/Dispatch log and the other log.
-- It make confuse.
+Sync mode is removed since almin-logger 6.0.
 
 ## FAQ
 
