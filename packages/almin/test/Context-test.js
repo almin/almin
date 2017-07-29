@@ -33,6 +33,27 @@ class ThrowUseCase extends UseCase {
 }
 
 describe("Context", function() {
+    context("Deprecated API", () => {
+        let consoleErrorStub = null;
+        beforeEach(() => {
+            consoleErrorStub = sinon.stub(console, "warn");
+        });
+        afterEach(() => {
+            consoleErrorStub.restore();
+        });
+        it("should be deprecated warn", function() {
+            const aStore = createStore({ name: "test" });
+            const storeGroup = new StoreGroup({ a: aStore });
+            const dispatcher = new Dispatcher();
+            const context = new Context({
+                dispatcher,
+                store: storeGroup
+            });
+
+            context.onCompleteEachUseCase(() => {});
+            assert.strictEqual(consoleErrorStub.callCount, 1, "should be deprecated");
+        });
+    });
     describe("UseCase can dispatch in Context", function() {
         it("should dispatch Store", function() {
             const dispatcher = new Dispatcher();
