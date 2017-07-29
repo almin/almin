@@ -24,6 +24,13 @@ import { StoreGroupLike, StoreGroupReasonForChange } from "./UILayer/StoreGroupL
 import { LifeCycleEventHub } from "./LifeCycleEventHub";
 import { StoreChangedPayload } from "./payload/StoreChangedPayload";
 
+const deprecateWarning = (methodName: string) => {
+    console.warn(`Deprecated: Context.prototype.${methodName} is deprecated.
+Please use Context.prototype.events.${methodName} instead of it.
+See https://github.com/almin/almin/releases/tag/almin%400.13.10 for more details.
+`);
+};
+
 /**
  * Context arguments
  */
@@ -406,6 +413,7 @@ context.transaction("transaction", transactionContext => {
      * Use `context.events.onWillExecuteEachUseCase` insteadof it.
      */
     onWillExecuteEachUseCase(handler: (payload: WillExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void {
+        deprecateWarning("onWillExecuteEachUseCase");
         return this.lifeCycleEventHub.onWillExecuteEachUseCase(handler);
     }
 
@@ -433,6 +441,7 @@ context.transaction("transaction", transactionContext => {
      * Use `context.events.onDispatch` insteadof it.
      */
     onDispatch(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => void): () => void {
+        deprecateWarning("onDispatch");
         return this.lifeCycleEventHub.onDispatch(handler);
     }
 
@@ -442,6 +451,7 @@ context.transaction("transaction", transactionContext => {
      * Use `context.events.onDidExecuteEachUseCase` insteadof it.
      */
     onDidExecuteEachUseCase(handler: (payload: DidExecutedPayload, meta: DispatcherPayloadMeta) => void): () => void {
+        deprecateWarning("onDidExecuteEachUseCase");
         return this.lifeCycleEventHub.onDidExecuteEachUseCase(handler);
     }
 
@@ -452,6 +462,7 @@ context.transaction("transaction", transactionContext => {
      * Use `context.events.onCompleteEachUseCase` insteadof it.
      */
     onCompleteEachUseCase(handler: (payload: CompletedPayload, meta: DispatcherPayloadMeta) => void): () => void {
+        deprecateWarning("onCompleteEachUseCase");
         return this.lifeCycleEventHub.onCompleteEachUseCase(handler);
     }
 
@@ -467,6 +478,7 @@ context.transaction("transaction", transactionContext => {
      * Use `context.events.onErrorDispatch` insteadof it.
      */
     onErrorDispatch(handler: (payload: ErrorPayload, meta: DispatcherPayloadMeta) => void): () => void {
+        deprecateWarning("onErrorDispatch");
         return this.lifeCycleEventHub.onErrorDispatch(handler);
     }
 
