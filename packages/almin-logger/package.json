@@ -15,7 +15,7 @@
   "bugs": {
     "url": "https://github.com/almin/almin/issues"
   },
-  "version": "5.0.0",
+  "version": "6.0.0",
   "description": "logger for Almin.js",
   "main": "lib/src/AlminLogger.js",
   "types": "lib/src/AlminLogger.d.ts",
@@ -42,7 +42,7 @@
   "devDependencies": {
     "@types/mocha": "^2.2.41",
     "@types/node": "^8.0.16",
-    "almin": "^0.13.10",
+    "almin": "^0.13.11",
     "cross-env": "^5.0.1",
     "mocha": "^3.4.2",
     "power-assert": "^1.4.4",
@@ -53,7 +53,7 @@
     "zuul": "^3.10.1"
   },
   "peerDependencies": {
-    "almin": "^0.13.10"
+    "almin": "^0.13.11"
   },
   "dependencies": {
     "map-like": "^2.0.0"
