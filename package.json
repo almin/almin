@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "almin",
+  "name": "almin-monorepo",
   "version": "0.11.0",
   "description": "almin monorepo.",
   "directories": {
