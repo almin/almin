@@ -3,7 +3,6 @@
   "private": true,
   "version": "2.0.1",
   "scripts": {
-    "pretest": "rm-local-modules && npm i",
     "perf": "node --expose-gc StoreGroup-memory-test.js",
     "test": "npm run perf",
     "ci": "npm test"
@@ -11,10 +10,7 @@
   "author": "azu",
   "license": "MIT",
   "dependencies": {
-    "almin": "^0.12.1",
+    "almin": "^0.13.10",
     "prettysize": "0.0.3"
-  },
-  "devDependencies": {
-    "rm-local-modules": "0.0.1"
   }
 }

@@ -10,9 +10,7 @@
     "clean": "rimraf public/build && mkdirp public/build",
     "build": "NODE_ENV=production webpack -p",
     "watch": "webpack -w",
-    "start": "webpack-dev-server --hot --content-base public/ --open",
-    "npm": "npm run --if-present build",
-    "test": "mocha"
+    "start": "webpack-dev-server --hot --content-base public/ --open"
   },
   "author": "azu",
   "license": "MIT",
@@ -35,7 +33,6 @@
     "babel-register": "^6.7.2",
     "json-loader": "^0.5.4",
     "mkdirp": "^0.5.1",
-    "mocha": "^3.0.2",
     "rimraf": "^2.5.2",
     "webpack": "^2.0.0",
     "webpack-dev-server": "^2.0.0"
