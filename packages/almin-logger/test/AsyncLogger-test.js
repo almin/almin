@@ -22,6 +22,52 @@ import { ParentUseCase, ChildUseCase } from "./usecase/NestingUseCase";
 import { createStore } from "./store/create-store";
 
 describe("AsyncLogger", function() {
+    it("can start and stop", () => {
+        const consoleMock = ConsoleMock.create();
+        const logger = new AsyncLogger({
+            console: consoleMock
+        });
+        const store = createStore();
+        const context = new Context({
+            store,
+            dispatcher: new Dispatcher()
+        });
+        const results = [];
+        logger.on(AlminLogger.Events.output, function(logGroup) {
+            results.push(logGroup);
+        });
+        return context
+            .useCase(new DispatchUseCase())
+            .execute({ type: "1" })
+            .then(() => {
+                assert.strictEqual(results.length, 0, "not start yet");
+            })
+            .then(() => {
+                logger.startLogging(context);
+            })
+            .then(() => {
+                return context.useCase(new DispatchUseCase()).execute({ type: "1" }).then(() => {
+                    assert.strictEqual(results.length, 1, "start");
+                });
+            })
+            .then(() => {
+                logger.stopLogging();
+            })
+            .then(() => {
+                return context.useCase(new DispatchUseCase()).execute({ type: "1" }).then(() => {
+                    assert.strictEqual(results.length, 1, "same 1");
+                });
+            })
+            .then(() => {
+                // restart again
+                logger.startLogging(context);
+            })
+            .then(() => {
+                return context.useCase(new DispatchUseCase()).execute({ type: "2" }).then(() => {
+                    assert.strictEqual(results.length, 2, "start again");
+                });
+            });
+    });
     describe("#addLog", () => {
         it("should add current LogGroups", () => {
             const consoleMock = ConsoleMock.create();

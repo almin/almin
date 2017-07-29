@@ -53,10 +53,10 @@ const tryGetState = (store: StoreLike) => {
 export default class AsyncLogger extends EventEmitter {
     private useCaseLogGroupMap: MapLike<UseCaseLike, LogGroup>;
     private logger: any;
-    printLogger: any;
-    _currentLogBuffer: LogGroup[];
-    _releaseHandlers: Array<() => void>;
-    _transactionMap: MapLike<string, LogGroup>;
+    private printLogger: PrintLogger;
+    private currentLogBuffer: LogGroup[];
+    private _releaseHandlers: Array<() => void>;
+    private _transactionMap: MapLike<string, LogGroup>;
 
     /**
      * @param {Object} console
@@ -68,7 +68,7 @@ export default class AsyncLogger extends EventEmitter {
          * @type {MapLike[]}
          * @private
          */
-        this._currentLogBuffer = [];
+        this.currentLogBuffer = [];
         /**
          * @type {MapLike}
          */
@@ -109,9 +109,9 @@ export default class AsyncLogger extends EventEmitter {
          * @param {LogGroup} logGroup
          */
         const outputLogging = (logGroup: LogGroup) => {
-            const index = this._currentLogBuffer.indexOf(logGroup);
+            const index = this.currentLogBuffer.indexOf(logGroup);
             if (index !== -1) {
-                this._currentLogBuffer.splice(index, 1);
+                this.currentLogBuffer.splice(index, 1);
                 this.printLogger.printLogGroup(logGroup);
                 this.emit(AlminLogger.Events.output, logGroup);
             }
@@ -127,7 +127,7 @@ export default class AsyncLogger extends EventEmitter {
             const logGroup = new LogGroup({ title: meta.transaction.name, isTransaction: true });
             this._transactionMap.set(meta.transaction.id, logGroup);
             // the logGroup is root
-            this._currentLogBuffer.push(logGroup);
+            this.currentLogBuffer.push(logGroup);
         };
 
         /**
@@ -182,7 +182,7 @@ export default class AsyncLogger extends EventEmitter {
                 transactionLogGroup.addGroup(logGroup);
             } else if (!parentUseCase) {
                 // if logGroup is of root
-                this._currentLogBuffer.push(logGroup);
+                this.currentLogBuffer.push(logGroup);
             }
         };
         /**
@@ -366,6 +366,10 @@ export default class AsyncLogger extends EventEmitter {
         ];
     }
 
+    stopLogging() {
+        this.release();
+    }
+
     /**
      * add log to logger
      * @param {*} log
@@ -390,15 +394,17 @@ export default class AsyncLogger extends EventEmitter {
      * flush current log buffer
      */
     flushBuffer() {
+        this.currentLogBuffer.length = 0;
         this.useCaseLogGroupMap.clear();
+        this._transactionMap.clear();
     }
 
     /**
      * release event handlers
      */
     release() {
+        this.flushBuffer();
         this._releaseHandlers.forEach(releaseHandler => releaseHandler());
         this._releaseHandlers.length = 0;
-        this.useCaseLogGroupMap.clear();
     }
 }

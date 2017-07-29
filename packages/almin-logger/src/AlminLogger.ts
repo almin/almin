@@ -1,26 +1,21 @@
 // LICENSE : MIT
 "use strict";
 
-import SyncLogger from "./SyncLogger";
 import AsyncLogger from "./AsyncLogger";
 import { EventEmitter } from "events";
 import { Context } from "almin";
 
-const DefaultOptions = {
-    // output log asynchronously
-    async: true,
+const AlminLoggerDefaultOptions = {
     // use `console` object for logging
     console: console
 };
 
 export interface AlminLoggerOptions {
     console?: any;
-    async?: boolean;
 }
 
-export default class AlminLogger extends EventEmitter {
-    private isAsyncMode: boolean;
-    private logger: AsyncLogger | SyncLogger;
+export class AlminLogger extends EventEmitter {
+    private logger: AsyncLogger;
 
     /**
      * Event constants values
@@ -35,17 +30,12 @@ export default class AlminLogger extends EventEmitter {
     constructor(options: AlminLoggerOptions = {}) {
         super();
         // default logger is `console`
-        const console = options.console || DefaultOptions.console;
-        const isAsyncMode = options.async !== undefined ? options.async : DefaultOptions.async;
+        const console = options.console || AlminLoggerDefaultOptions.console;
         const loggerOptions = {
             console
         };
-        /**
-         * @type {boolean} if current is async mode, return true
-         */
-        this.isAsyncMode = isAsyncMode;
         // default: Async logger
-        this.logger = isAsyncMode ? new AsyncLogger(loggerOptions) : new SyncLogger(loggerOptions);
+        this.logger = new AsyncLogger(loggerOptions);
         this.logger.on(AlminLogger.Events.output, () => {
             this.emit(AlminLogger.Events.output);
         });
@@ -63,8 +53,8 @@ export default class AlminLogger extends EventEmitter {
         this.logger.startLogging(context);
     }
 
-    stopLogging(_context: Context<any>) {
-        this.logger.release();
+    stopLogging() {
+        this.logger.stopLogging();
     }
 
     /**
@@ -82,3 +72,6 @@ export default class AlminLogger extends EventEmitter {
         this.logger.release();
     }
 }
+
+// also export as default
+export default AlminLogger;
