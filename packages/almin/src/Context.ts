@@ -26,7 +26,7 @@ import { StoreChangedPayload } from "./payload/StoreChangedPayload";
 
 const deprecateWarning = (methodName: string) => {
     console.warn(`Deprecated: Context.prototype.${methodName} is deprecated.
-Please use Context.prototype.events.${methodName} insteadof it.
+Please use Context.prototype.events.${methodName} instead of it.
 See https://github.com/almin/almin/releases/tag/almin%400.13.10 for more details.
 `);
 };
