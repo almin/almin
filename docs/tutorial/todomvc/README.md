@@ -140,7 +140,7 @@ export default class TodoList {
 }
 ```
 
-We can focus on bushiness logic because domain model is a just plain JavaScript.
+We can focus on business logic because domain model is a just plain JavaScript.
 
 ### Where domain model are stored?
 
