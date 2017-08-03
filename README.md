@@ -31,11 +31,15 @@ Almin provides some patterns, is not a framework.
 
 Almin is an implementation of Read/Write Stack Architecture that is well-known as Flux/CQRS.
 
-- [Almin.js | JavaScriptアーキテクチャ](http://azu.github.io/slide/2016/child_process_sushi/almin-javascript-architecture.html "Almin.js | JavaScriptアーキテクチャ") (Japanese)
+## Presentations
+
+- The architecture of Almin(Japanese)
+    - [Almin.js | JavaScriptアーキテクチャ](http://azu.github.io/slide/2016/child_process_sushi/almin-javascript-architecture.html "Almin.js | JavaScriptアーキテクチャ") (Japanese)
 - Patterns For Large-Scale JavaScript Application Architecture (Japanese)
     - [複雑なJavaScriptアプリケーションを考えながら作る話](http://azu.github.io/slide/2016/react-meetup/large-scale-javascript.html)
     - [azu/large-scale-javascript: 複雑なJavaScriptアプリケーションを作るために考えること](https://github.com/azu/large-scale-javascript)
-
+- DDD and Almin (japanese)
+    - [Faao - ドメイン駆動設計で作るGitHub Issue Client -](http://azu.github.io/slide/2017/teppeis-sushi/client-side-ddd-on-github.html "Faao - ドメイン駆動設計で作るGitHub Issue Client -")
 
 ## Installation
 
