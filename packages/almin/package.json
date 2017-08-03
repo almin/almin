@@ -23,7 +23,7 @@
     "test": "test"
   },
   "scripts": {
-    "clean": "rimraf lib/",
+    "clean": "rimraf lib/ out/",
     "build": "npm-run-all -s build:src build:lib",
     "build:src": "tsc --project .",
     "build:lib": "npm-run-all -p build:lib:*",
@@ -34,9 +34,10 @@
     "lint:js": "eslint --config ../../.eslintrc.json --cache test/",
     "lint:js:fix": "eslint --fix --config ../../.eslintrc.json --cache test/",
     "test": "run-s build:test test:js lint",
-    "test:js": "cross-env NODE_ENV=development mocha lib/test",
-    "test:saucelabs": "npm run build:test && zuul -- lib/test/*-test.js",
-    "test:browser": "npm run build:test && zuul --local 8080 --ui mocha-bdd -- lib/test/*-test.js",
+    "test:js": "cross-env NODE_ENV=development mocha out/test",
+    "test:saucelabs": "npm run build:test && zuul -- out/test/*-test.js",
+    "test:browser": "npm run build:test && zuul --local 8080 --ui mocha-bdd -- out/test/*-test.js",
+    "posttest": "rimraf out/",
     "ci": "npm test",
     "prepublish": "npm run --if-present build"
   },
