@@ -9,12 +9,11 @@
   "scripts": {
     "clean": "rimraf public/build && mkdirp public/build",
     "start": "webpack-dev-server --hot --content-base public/ --open",
-    "build": "webpack -p",
+    "build": "webpack",
     "build:ts": "cross-env NODE_ENV=production tsc -p .",
     "watch:ts": "tsc -p . --watch",
     "test": "npm run build:ts && mocha test/",
-    "ci": "npm test",
-    "prepublish": "npm run --if-present build"
+    "ci": "npm test"
   },
   "author": "azu",
   "license": "MIT",
