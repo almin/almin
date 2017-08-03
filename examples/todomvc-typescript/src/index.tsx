@@ -11,7 +11,7 @@ import { CreateDomainUseCaseFactory } from "./usecase/CreateDomainUseCase";
 // context
 import { Context, Dispatcher } from "almin";
 
-const AlminLogger = require("almin-logger");
+import { AlminLogger } from "almin-logger";
 // instances
 const dispatcher = new Dispatcher();
 // context connect dispatch with stores
