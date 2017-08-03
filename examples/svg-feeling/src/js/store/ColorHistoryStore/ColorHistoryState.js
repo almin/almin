@@ -2,10 +2,16 @@
 "use strict";
 import ColorHistory from "../../domain/ColorHistory";
 export default class ColorHistoryState {
+    constructor({ colorList }) {
+        this.colorList = colorList;
+    }
     /**
-     * @param {ColorHistory} history
+     * 
+     * @param {ColorHistory} history 
      */
-    constructor(history) {
-        this.history = history;
+    update(history) {
+        return new ColorHistoryState({
+            colorList: history.getAllColorList()
+        });
     }
 }

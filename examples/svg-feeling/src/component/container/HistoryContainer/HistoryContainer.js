@@ -9,8 +9,10 @@ export default class HistoryContainer extends React.Component {
     }
 
     render() {
-        return <div className="HistoryContainer">
-            <ColorHistoryList {...this.props}/>
-        </div>;
+        return (
+            <div className="HistoryContainer">
+                <ColorHistoryList colorList={this.props.ColorHistoryState.colorList} />
+            </div>
+        );
     }
 }
