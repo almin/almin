@@ -9,26 +9,25 @@
   "scripts": {
     "clean": "rimraf public/build && mkdirp public/build",
     "start": "webpack-dev-server --hot --content-base public/ --open",
-    "build": "webpack -p",
+    "build": "webpack",
     "build:ts": "cross-env NODE_ENV=production tsc -p .",
     "watch:ts": "tsc -p . --watch",
     "test": "npm run build:ts && mocha test/",
-    "ci": "npm test",
-    "prepublish": "npm run --if-present build"
+    "ci": "npm test"
   },
   "author": "azu",
   "license": "MIT",
   "dependencies": {
-    "almin": "^0.13.0",
-    "almin-logger": "^5.0.0",
+    "almin": "^0.13.11",
+    "almin-logger": "^6.0.0",
     "babel-preset-env": "^1.6.0",
     "babel-register": "^6.24.1",
     "classnames": "^2.2.3",
     "map-like": "^2.0.0",
-    "prop-types": "^15.5.4",
+    "prop-types": "^15.5.10",
     "react": "^15.5.3",
     "react-dom": "^15.5.3",
-    "uuid": "^3.0.1"
+    "uuid": "^3.1.0"
   },
   "devDependencies": {
     "@types/mocha": "^2.2.41",

@@ -1,6 +1,7 @@
 // LICENSE : MIT
 "use strict";
 import Color from "./value/Color";
+
 const uuid = require("uuid");
 export default class ColorHistory {
     /**
@@ -11,9 +12,10 @@ export default class ColorHistory {
         this._history = initialColor ? [initialColor] : [];
     }
 
-    getAllColorList(){
+    getAllColorList() {
         return this._history;
     }
+
     /**
      * @param {Color} color
      * @returns {boolean}
@@ -28,7 +30,7 @@ export default class ColorHistory {
      * @param {Color} color
      */
     recordColor(color) {
-        this._history.push(color);
+        this._history = this._history.concat(color);
     }
 
     /**
@@ -42,7 +44,7 @@ export default class ColorHistory {
      * @param colorHistory
      * @returns {boolean}
      */
-    isEqual(colorHistory){
+    isEqual(colorHistory) {
         return this.id === colorHistory.id && this._history.length === colorHistory._history.length;
     }
 }

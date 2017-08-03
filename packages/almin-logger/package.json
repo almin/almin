@@ -23,15 +23,16 @@
     "test": "test"
   },
   "scripts": {
-    "clean": "rimraf lib/",
+    "clean": "rimraf lib/ out/",
     "prebuild": "npm run clean",
     "build": "cross-env NODE_ENV=production tsc -p .",
-    "build:test": "npm run clean && tsc -p test/",
+    "build:test": "tsc -p test/",
     "watch": "tsc -p . --watch",
     "prepublish": "npm run --if-present build",
     "test:saucelabs": "zuul -- lib/test/*-test.js",
     "test:browser": "npm run build:test && zuul --local 8080 --ui mocha-bdd -- lib/test/*-test.js",
-    "test": "npm run clean && npm run build:test && mocha lib/test/",
+    "test": "rimraf out/ && npm run build:test && mocha out/test/",
+    "posttest": "rimraf out/",
     "ci": "npm run test"
   },
   "keywords": [

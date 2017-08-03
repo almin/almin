@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import AlminLogger from "almin-logger";
+import { AlminLogger } from "almin-logger";
 import AlminReactContainer from "almin-react-container";
 import App from "./components/App";
 import AppLocator from "./AppLocator";

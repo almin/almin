@@ -10,12 +10,12 @@
   "author": "azu",
   "license": "MIT",
   "dependencies": {
-    "almin": "^0.12.0",
-    "react": "^15.5.4",
-    "react-dom": "^15.5.4"
+    "almin": "^0.13.11",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1"
   },
   "devDependencies": {
-    "babel-loader": "^7.0.0",
-    "webpack": "^2.4.1"
+    "babel-loader": "^7.1.1",
+    "webpack": "^3.4.1"
   }
 }

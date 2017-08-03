@@ -7,9 +7,8 @@ import AppContextLocator from "./AppContextLocator";
 // store
 import AppStoreGroup from "./js/store/AppStoreGroup";
 // context
-import {Context}  from "almin";
-import {Dispatcher} from "almin";
-import AlminLogger from "almin-logger";
+import { Context, Dispatcher } from "almin";
+import { AlminLogger } from "almin-logger";
 // instances
 const dispatcher = new Dispatcher();
 const appStoreGroup = AppStoreGroup.create();
@@ -18,8 +17,7 @@ const appContext = new Context({
     dispatcher,
     store: appStoreGroup
 });
-if (process.env.NODE_ENV === "development") {
-    window.Perf = require("react-addons-perf");
+if (process.env.NODE_ENV !== "production") {
     // start logger
     const logger = new AlminLogger();
     logger.startLogging(appContext);
@@ -27,4 +25,4 @@ if (process.env.NODE_ENV === "development") {
 // Singleton
 AppContextLocator.context = appContext;
 // entry point
-ReactDOM.render(<App appContext={appContext}/>, document.getElementById("js-app"));
+ReactDOM.render(<App appContext={appContext} />, document.getElementById("js-app"));
