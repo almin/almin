@@ -31,16 +31,6 @@ Almin provides some patterns, is not a framework.
 
 Almin is an implementation of Read/Write Stack Architecture that is well-known as Flux/CQRS.
 
-## Presentations
-
-- The architecture of Almin(Japanese)
-    - [Almin.js | JavaScriptアーキテクチャ](http://azu.github.io/slide/2016/child_process_sushi/almin-javascript-architecture.html "Almin.js | JavaScriptアーキテクチャ") (Japanese)
-- Patterns For Large-Scale JavaScript Application Architecture (Japanese)
-    - [複雑なJavaScriptアプリケーションを考えながら作る話](http://azu.github.io/slide/2016/react-meetup/large-scale-javascript.html)
-    - [azu/large-scale-javascript: 複雑なJavaScriptアプリケーションを作るために考えること](https://github.com/azu/large-scale-javascript)
-- DDD and Almin (japanese)
-    - [Faao - ドメイン駆動設計で作るGitHub Issue Client -](http://azu.github.io/slide/2017/teppeis-sushi/client-side-ddd-on-github.html "Faao - ドメイン駆動設計で作るGitHub Issue Client -")
-
 ## Installation
 
     npm install almin
@@ -49,7 +39,7 @@ You'll also need a Promise polyfill for [older browsers](http://caniuse.com/#fea
 
     npm install es6-promise
 
-## Usage
+## Documentation
 
 :memo: Please See [https://almin.js.org/](https://almin.js.org/) for details.
 
@@ -147,6 +137,16 @@ Welcome to pull request!
 - [azu/presentation-annotator: viewing presentation and annotate.](https://github.com/azu/presentation-annotator)
 - [morpheme-match/website at master · azu/morpheme-match](https://github.com/azu/morpheme-match/tree/master/website)
 - [azu/faao: Faao is a GitHub issue/pull-request client on Electron.](https://github.com/azu/faao "azu/faao: Faao is a GitHub issue/pull-request client on Electron.") - Full TypeScript example
+
+## Presentations
+
+- The architecture of Almin(Japanese)
+    - [Almin.js | JavaScriptアーキテクチャ](http://azu.github.io/slide/2016/child_process_sushi/almin-javascript-architecture.html "Almin.js | JavaScriptアーキテクチャ") (Japanese)
+- Patterns For Large-Scale JavaScript Application Architecture (Japanese)
+    - [複雑なJavaScriptアプリケーションを考えながら作る話](http://azu.github.io/slide/2016/react-meetup/large-scale-javascript.html)
+    - [azu/large-scale-javascript: 複雑なJavaScriptアプリケーションを作るために考えること](https://github.com/azu/large-scale-javascript)
+- DDD and Almin (japanese)
+    - [Faao - ドメイン駆動設計で作るGitHub Issue Client -](http://azu.github.io/slide/2017/teppeis-sushi/client-side-ddd-on-github.html "Faao - ドメイン駆動設計で作るGitHub Issue Client -")
 
 ## Packages
 
