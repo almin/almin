@@ -8,10 +8,10 @@ import AppLocator from "./AppLocator";
 // store
 import AppStoreGroup from "./store/AppStoreGroup";
 // use-case
-import {CreateDomainUseCaseFactory} from "./usecase/CreateDomainUseCase";
+import { CreateDomainUseCaseFactory } from "./usecase/CreateDomainUseCase";
 // context
-import {Context, Dispatcher}  from "almin";
-import AlminLogger from "almin-logger";
+import { Context, Dispatcher } from "almin";
+import { AlminLogger } from "almin-logger";
 // instances
 const dispatcher: Dispatcher = new Dispatcher();
 // context connect dispatch with stores
@@ -27,5 +27,5 @@ AppLocator.context = appContext;
 // initialize domain
 appContext.useCase(CreateDomainUseCaseFactory.create()).execute().then(() => {
     // entry point
-    ReactDOM.render(<TodoApp appContext={appContext}/>, document.getElementById("todoapp"));
+    ReactDOM.render(<TodoApp appContext={appContext} />, document.getElementById("todoapp"));
 });
