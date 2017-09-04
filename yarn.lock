@@ -1766,9 +1766,9 @@ gitbook-plugin-forkmegithub@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/gitbook-plugin-forkmegithub/-/gitbook-plugin-forkmegithub-2.2.0.tgz#b64b62a1402b099b1b48c396a9d5b0aba967c04a"
 
-gitbook-plugin-include-codeblock@^3.1.1:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/gitbook-plugin-include-codeblock/-/gitbook-plugin-include-codeblock-3.1.1.tgz#2233e0ce3fd58644a183a7a39639164d742b2622"
+gitbook-plugin-include-codeblock@^3.1.3:
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/gitbook-plugin-include-codeblock/-/gitbook-plugin-include-codeblock-3.1.3.tgz#8de4d3c3b4eaae18e7faf1bd3347640c7537a714"
   dependencies:
     entities "^1.1.1"
     handlebars "^4.0.5"
