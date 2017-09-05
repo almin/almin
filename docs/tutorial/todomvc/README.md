@@ -333,7 +333,7 @@ export default class TodoStore extends Store {
 ```
 
 In other way, you can implement updating state from changes of `todoListRepository`.
-Because, `Store#receivePayload` is called in the [Almin life-cycle](../tips/usecase-lifecycle.md).
+Because, `Store#receivePayload` is called in the [Almin life-cycle](../../tips/usecase-lifecycle.md).
 
 - onDispatch
 - onError
