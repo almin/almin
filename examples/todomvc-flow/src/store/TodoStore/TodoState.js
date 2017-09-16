@@ -40,12 +40,12 @@ export default class TodoState {
     get displayItems(): Array<TodoItem> {
         return this.items.filter(item => {
             switch (this.filterType) {
-            case FilterTypes.ACTIVE_TODOS:
-                return !item.completed;
-            case FilterTypes.COMPLETED_TODOS:
-                return item.completed;
-            default:
-                return true;
+                case FilterTypes.ACTIVE_TODOS:
+                    return !item.completed;
+                case FilterTypes.COMPLETED_TODOS:
+                    return item.completed;
+                default:
+                    return true;
             }
         });
     }
@@ -56,9 +56,11 @@ export default class TodoState {
      */
     merge(todoList: TodoList): TodoState {
         const items = todoList.getAllTodoItems();
-        return new TodoState(Object.assign({}, this, {
-            items
-        }));
+        return new TodoState(
+            Object.assign({}, this, {
+                items
+            })
+        );
     }
 
     /**
@@ -67,12 +69,14 @@ export default class TodoState {
      */
     reduce(payload: DispatcherPayload): TodoState {
         switch (payload.type) {
-        case FilterTodoListUseCase.name:
-            return new TodoState(Object.assign(this, {
-                filterType: payload.filterType
-            }));
-        default:
-            return this;
+            case FilterTodoListUseCase.name:
+                return new TodoState(
+                    Object.assign(this, {
+                        filterType: payload.filterType
+                    })
+                );
+            default:
+                return this;
         }
     }
 }

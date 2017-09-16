@@ -40,12 +40,8 @@ class TodoApp extends React.Component {
         return (
             <div>
                 <Header />
-                <MainSection
-                    allTodos={todoState.displayItems}
-                    areAllComplete={todoState.areAllComplete}
-                />
-                <Footer allTodos={todoState.items}
-                        filterType={todoState.filterType}/>
+                <MainSection allTodos={todoState.displayItems} areAllComplete={todoState.areAllComplete} />
+                <Footer allTodos={todoState.items} filterType={todoState.filterType} />
             </div>
         );
     }

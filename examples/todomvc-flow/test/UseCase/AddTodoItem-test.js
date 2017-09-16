@@ -3,10 +3,10 @@
 const assert = require("power-assert");
 import MemoryDB from "../../src/infra/adpter/MemoryDB";
 import TodoList from "../../src/domain/TodoList/TodoList";
-import {TodoListRepository} from "../../src/infra/TodoListRepository";
-import {AddTodoItemUseCase} from "../../src/usecase/AddTodoItem";
-describe("AddTodoItem", function () {
-    it("should add TodoItem with title", function () {
+import { TodoListRepository } from "../../src/infra/TodoListRepository";
+import { AddTodoItemUseCase } from "../../src/usecase/AddTodoItem";
+describe("AddTodoItem", function() {
+    it("should add TodoItem with title", function() {
         const mockTodoList = new TodoList();
         // prepare
         const todoListRepository = new TodoListRepository(new MemoryDB());
@@ -26,5 +26,4 @@ describe("AddTodoItem", function () {
         // When
         useCase.execute(titleOfAdding);
     });
-
 });

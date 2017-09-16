@@ -124,15 +124,21 @@ const functionalUseCase = (context: FunctionalUseCaseContext) => {
     };
 };
 // execute - functional execute with ArgT
-context.useCase(functionalUseCase).execute<functionUseCaseArgs>("1").then(() => {
-    const state = context.getState();
-    log(state.aState.a);
-    log(state.bState.b);
-});
+context
+    .useCase(functionalUseCase)
+    .execute<functionUseCaseArgs>("1")
+    .then(() => {
+        const state = context.getState();
+        log(state.aState.a);
+        log(state.bState.b);
+    });
 // execute - functional execute without ArgT
-context.useCase(functionalUseCase).execute("value").then(() => {
-    // nope
-});
+context
+    .useCase(functionalUseCase)
+    .execute("value")
+    .then(() => {
+        // nope
+    });
 
 // execute: usecase with T
 context
@@ -147,9 +153,12 @@ context
         console.error(error);
     });
 // execute - usecase without T
-context.useCase(parentUseCase).execute("value").then(() => {
-    // nope
-});
+context
+    .useCase(parentUseCase)
+    .execute("value")
+    .then(() => {
+        // nope
+    });
 
 // executor
 
@@ -162,9 +171,12 @@ class MyUseCase extends UseCase {
     }
 }
 
-context.useCase(new MyUseCase()).executor(useCase => useCase.execute("value")).then(() => {
-    log("finish");
-});
+context
+    .useCase(new MyUseCase())
+    .executor(useCase => useCase.execute("value"))
+    .then(() => {
+        log("finish");
+    });
 
 context
     .transaction("my work", async transactionContext => {

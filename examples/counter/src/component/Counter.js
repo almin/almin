@@ -19,9 +19,7 @@ export class Counter extends React.Component {
         return (
             <div>
                 <button onClick={this.incrementCounter.bind(this)}>Increment Counter</button>
-                <p>
-                    Count: {counterState.count}
-                </p>
+                <p>Count: {counterState.count}</p>
             </div>
         );
     }

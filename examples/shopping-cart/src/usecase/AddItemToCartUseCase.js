@@ -1,13 +1,13 @@
 // LICENSE : MIT
 "use strict";
-import {UseCase} from "almin";
-import productRepository, {ProductRepository} from "../infra/ProductRepository";
-import cartRepository, {CartRepository} from "../infra/CartRepository";
+import { UseCase } from "almin";
+import productRepository, { ProductRepository } from "../infra/ProductRepository";
+import cartRepository, { CartRepository } from "../infra/CartRepository";
 import AppLocator from "../AppLocator";
 export default class AddItemToCartUseCase extends UseCase {
     static create() {
         const customer = AppLocator.customer;
-        return new this({customer, productRepository, cartRepository});
+        return new this({ customer, productRepository, cartRepository });
     }
 
     /**
@@ -15,7 +15,7 @@ export default class AddItemToCartUseCase extends UseCase {
      * @param {CartRepository} cartRepository
      * @param {ProductRepository} productRepository
      */
-    constructor({customer, cartRepository, productRepository}) {
+    constructor({ customer, cartRepository, productRepository }) {
         super();
         this.customer = customer;
         this.cartRepository = cartRepository;

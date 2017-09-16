@@ -4,17 +4,17 @@ const assert = require("power-assert");
 import Customer from "../src/domain/Customer/Customer";
 import Cart from "../src/domain/Cart/Cart";
 import ProductItem from "../src/domain/value/ProductItem";
-import {CartRepository} from "../src/infra/CartRepository";
+import { CartRepository } from "../src/infra/CartRepository";
 // Store
 import CartStore from "../src/stores/CartStore/CartStore";
 // State
 import CartState from "../src/stores/CartStore/CartState";
-describe("CartState", function () {
-    describe(".itemsByProduct", function () {
-        it("should return [ productItem ] ", function () {
+describe("CartState", function() {
+    describe(".itemsByProduct", function() {
+        it("should return [ productItem ] ", function() {
             // Given
-            const customer = new Customer({name: "Mint"});
-            const cart = new Cart({customer});
+            const customer = new Customer({ name: "Mint" });
+            const cart = new Cart({ customer });
             const productItem = new ProductItem({
                 id: 1,
                 title: "title",
@@ -37,11 +37,11 @@ describe("CartState", function () {
             assert.equal(item.quantity, 2);
         });
     });
-    describe(".totalPrice", function () {
-        it("should return total price of items", function () {
+    describe(".totalPrice", function() {
+        it("should return total price of items", function() {
             // Given
-            const customer = new Customer({name: "Mint"});
-            const cart = new Cart({customer});
+            const customer = new Customer({ name: "Mint" });
+            const cart = new Cart({ customer });
             const productItem = new ProductItem({
                 id: 1,
                 title: "title",
@@ -60,14 +60,14 @@ describe("CartState", function () {
         });
     });
 });
-describe("CartStore", function () {
-    context("when CartRepository is updated", function () {
-        it("should emitChange()", function () {
+describe("CartStore", function() {
+    context("when CartRepository is updated", function() {
+        it("should emitChange()", function() {
             const cartRepository = new CartRepository();
             const store = new CartStore(cartRepository);
             // when
-            const customer = new Customer({name: "Mint"});
-            const cart = new Cart({customer});
+            const customer = new Customer({ name: "Mint" });
+            const cart = new Cart({ customer });
             cartRepository.store(cart);
             // then
             const state = store.getState();

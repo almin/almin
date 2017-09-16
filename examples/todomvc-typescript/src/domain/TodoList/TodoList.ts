@@ -103,8 +103,10 @@ export default class TodoList {
      * remove all completed items
      */
     removeAllCompletedItems() {
-        this.getAllTodoItems().filter(item => item.completed).forEach(item => {
-            return this.removeItem(item.id);
-        });
+        this.getAllTodoItems()
+            .filter(item => item.completed)
+            .forEach(item => {
+                return this.removeItem(item.id);
+            });
     }
 }

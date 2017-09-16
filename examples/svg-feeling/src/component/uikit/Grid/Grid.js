@@ -16,7 +16,7 @@ import GridCell from "./GridCell";
  </GridCell>
  </Grid>
  */
-export {GridCell};
+export { GridCell };
 export class Grid extends React.Component {
     render() {
         // <Component>--modifier
@@ -28,11 +28,7 @@ export class Grid extends React.Component {
                 gutter: this.props.gutter
             }
         });
-        return (
-            <div className={classNames(names, this.props.className)}>
-                {this.props.children}
-            </div>
-        );
+        return <div className={classNames(names, this.props.className)}>{this.props.children}</div>;
     }
 }
 

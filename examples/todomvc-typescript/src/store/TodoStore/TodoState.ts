@@ -54,7 +54,7 @@ export default class TodoState {
         const items = todoList.getAllTodoItems();
         return new TodoState(
             Object.assign({
-                ...this as TodoStateArgs,
+                ...(this as TodoStateArgs),
                 items
             })
         );

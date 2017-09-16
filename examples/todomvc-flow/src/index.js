@@ -25,7 +25,10 @@ logger.startLogging(appContext);
 // Singleton
 AppLocator.context = appContext;
 // initialize domain
-appContext.useCase(CreateDomainUseCaseFactory.create()).execute().then(() => {
-    // entry point
-    ReactDOM.render(<TodoApp appContext={appContext} />, document.getElementById("todoapp"));
-});
+appContext
+    .useCase(CreateDomainUseCaseFactory.create())
+    .execute()
+    .then(() => {
+        // entry point
+        ReactDOM.render(<TodoApp appContext={appContext} />, document.getElementById("todoapp"));
+    });

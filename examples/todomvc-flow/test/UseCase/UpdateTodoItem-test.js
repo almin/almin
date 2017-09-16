@@ -4,12 +4,12 @@ const assert = require("power-assert");
 import MemoryDB from "../../src/infra/adpter/MemoryDB";
 import TodoList from "../../src/domain/TodoList/TodoList";
 import TodoItem from "../../src/domain/TodoList/TodoItem";
-import {TodoListRepository} from "../../src/infra/TodoListRepository";
-import {UpdateTodoItemTitleUseCase} from "../../src/usecase/UpdateTodoItemTitle";
-describe("UpdateTodoItem", function () {
-    it("should update TodoItem with title", function (done) {
+import { TodoListRepository } from "../../src/infra/TodoListRepository";
+import { UpdateTodoItemTitleUseCase } from "../../src/usecase/UpdateTodoItemTitle";
+describe("UpdateTodoItem", function() {
+    it("should update TodoItem with title", function(done) {
         const mockTodoList = new TodoList();
-        const existTodoItem = new TodoItem({title: "before"});
+        const existTodoItem = new TodoItem({ title: "before" });
         mockTodoList.addItem(existTodoItem);
         // prepare
         const todoListRepository = new TodoListRepository(new MemoryDB());
@@ -29,6 +29,6 @@ describe("UpdateTodoItem", function () {
             done();
         });
         // When
-        useCase.execute({id: existTodoItem.id, title: titleOfUPDATING});
+        useCase.execute({ id: existTodoItem.id, title: titleOfUPDATING });
     });
 });

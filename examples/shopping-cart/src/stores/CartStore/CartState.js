@@ -1,7 +1,7 @@
 // LICENSE : MIT
 "use strict";
 import Cart from "../../domain/Cart/Cart";
-export default  class CartState {
+export default class CartState {
     /**
      * @param {ProductItem[]} productItems
      */
@@ -18,9 +18,11 @@ export default  class CartState {
      * @returns {CartState}
      */
     update({ cart }) {
-        return new CartState(Object.assign({}, this, {
-            productItems: cart.products
-        }));
+        return new CartState(
+            Object.assign({}, this, {
+                productItems: cart.products
+            })
+        );
     }
 
     get hasItemAtLeastOne() {

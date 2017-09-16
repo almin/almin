@@ -14,8 +14,8 @@ class App extends React.Component {
         const ProductState = this.props.ProductState;
         return (
             <div>
-                <ProductsContainer products={ProductState.products}/>
-                <CartContainer CartState={CartState} total={"1"}/>
+                <ProductsContainer products={ProductState.products} />
+                <CartContainer CartState={CartState} total={"1"} />
             </div>
         );
     }

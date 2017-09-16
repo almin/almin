@@ -11,12 +11,7 @@ class ProductItemContainer extends React.Component {
     };
 
     render() {
-        return (
-            <ProductItem
-                product={this.props.product}
-                onAddToCartClicked={this.onAddToCartClicked}
-            />
-        );
+        return <ProductItem product={this.props.product} onAddToCartClicked={this.onAddToCartClicked} />;
     }
 }
 
@@ -24,19 +19,10 @@ class ProductsListContainer extends React.Component {
     render() {
         const products = this.props.products;
         const nodes = products.map(product => {
-            return (
-                <ProductItemContainer
-                    key={product.id}
-                    product={product}
-                />
-            );
+            return <ProductItemContainer key={product.id} product={product} />;
         });
 
-        return (
-            <ProductsList title="Flux Shop Demo">
-                {nodes}
-            </ProductsList>
-        );
+        return <ProductsList title="Flux Shop Demo">{nodes}</ProductsList>;
     }
 }
 

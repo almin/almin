@@ -101,9 +101,12 @@ describe("UseCase", function() {
                 callStack.push(`${meta.useCase.name}:did`);
             });
             // when
-            return context.useCase(aUseCase).execute().then(() => {
-                assert.deepEqual(callStack, expectedCallStack);
-            });
+            return context
+                .useCase(aUseCase)
+                .execute()
+                .then(() => {
+                    assert.deepEqual(callStack, expectedCallStack);
+                });
         });
         it("UseCase should have `context` that is Context instance", function() {
             class TestUseCase extends UseCase {
@@ -170,10 +173,13 @@ describe("UseCase", function() {
                 dispatcher.onDispatch(payload => {
                     dispatchedPayloads.push(payload);
                 });
-                return context.useCase(new ParentUseCase()).execute().then(() => {
-                    // childPayload should be delegated to dispatcher(root)
-                    assert(dispatchedPayloads.indexOf(childPayload) !== -1);
-                });
+                return context
+                    .useCase(new ParentUseCase())
+                    .execute()
+                    .then(() => {
+                        // childPayload should be delegated to dispatcher(root)
+                        assert(dispatchedPayloads.indexOf(childPayload) !== -1);
+                    });
             });
         });
         /*

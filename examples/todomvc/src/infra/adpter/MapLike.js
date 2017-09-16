@@ -52,7 +52,6 @@ export default class MapLike {
         return this._store[key];
     }
 
-
     /**
      * has value of key
      * @param key
@@ -61,7 +60,6 @@ export default class MapLike {
     has(key) {
         return this.get(key) != null;
     }
-
 
     /**
      * set value for key
@@ -78,7 +76,7 @@ export default class MapLike {
      * delete value for key
      * @param {string} key
      */
-    delete(key){
+    delete(key) {
         this._store[key] = null;
     }
 

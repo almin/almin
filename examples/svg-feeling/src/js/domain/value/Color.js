@@ -1,7 +1,7 @@
 // LICENSE : MIT
 "use strict";
 export default class Color {
-    constructor({hexCode}) {
+    constructor({ hexCode }) {
         this.hexCode = hexCode;
     }
 

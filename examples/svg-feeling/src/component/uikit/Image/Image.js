@@ -15,9 +15,7 @@ export default class Image extends React.Component {
     render() {
         return (
             // アイコンなのでaltは空にする
-            <img alt={this.props.alt || ""} {...this.props}
-                 className={classNames("Image", this.props.className)}
-            />
+            <img alt={this.props.alt || ""} {...this.props} className={classNames("Image", this.props.className)} />
         );
     }
 }

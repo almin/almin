@@ -6,7 +6,7 @@ const assert = require("assert");
  This is not iterable.
  */
 export default class MapLike<K, V> {
-    _store: {[key: K]: V};
+    _store: { [key: K]: V };
 
     constructor(entries: Array<[K, V]> = []) {
         this._store = Object.create(null);
@@ -55,7 +55,6 @@ export default class MapLike<K, V> {
         return this._store[key];
     }
 
-
     /**
      * has value of key
      * @param key
@@ -64,7 +63,6 @@ export default class MapLike<K, V> {
     has(key: K): boolean {
         return this.get(key) != null;
     }
-
 
     /**
      * set value for key

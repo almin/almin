@@ -13,7 +13,6 @@ export default class ProductCatalog {
         this.price = catalog.price;
         this.inventory = catalog.inventory;
         this.image = catalog.image;
-
     }
 
     /**

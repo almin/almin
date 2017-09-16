@@ -48,24 +48,32 @@ describe("UseCaseUnitOfWork", function() {
                 };
             };
             // then
-            return context.useCase(useCase).execute().then(() => {
-                const expectedReceivePayload = [InitializedPayload, MyPayload, DidExecutedPayload, CompletedPayload];
-                const expectedOnDispatchPayload = [MyPayload];
-                aStore.state.receive.forEach((payload, index) => {
-                    const ConstructorPayload = expectedReceivePayload[index];
-                    assert.ok(
-                        payload instanceof ConstructorPayload,
-                        `${JSON.stringify(payload)} should be instance of ${ConstructorPayload.name}`
-                    );
+            return context
+                .useCase(useCase)
+                .execute()
+                .then(() => {
+                    const expectedReceivePayload = [
+                        InitializedPayload,
+                        MyPayload,
+                        DidExecutedPayload,
+                        CompletedPayload
+                    ];
+                    const expectedOnDispatchPayload = [MyPayload];
+                    aStore.state.receive.forEach((payload, index) => {
+                        const ConstructorPayload = expectedReceivePayload[index];
+                        assert.ok(
+                            payload instanceof ConstructorPayload,
+                            `${JSON.stringify(payload)} should be instance of ${ConstructorPayload.name}`
+                        );
+                    });
+                    aStore.state.onDispatchedPayload.forEach((payload, index) => {
+                        const ConstructorPayload = expectedOnDispatchPayload[index];
+                        assert.ok(
+                            payload instanceof ConstructorPayload,
+                            `${JSON.stringify(payload)} should be instance of ${ConstructorPayload.name}`
+                        );
+                    });
                 });
-                aStore.state.onDispatchedPayload.forEach((payload, index) => {
-                    const ConstructorPayload = expectedOnDispatchPayload[index];
-                    assert.ok(
-                        payload instanceof ConstructorPayload,
-                        `${JSON.stringify(payload)} should be instance of ${ConstructorPayload.name}`
-                    );
-                });
-            });
         });
         it("should dispatch payload to each store", function() {
             class TestStore extends Store {
@@ -105,10 +113,13 @@ describe("UseCaseUnitOfWork", function() {
                 };
             };
             // then
-            return context.useCase(useCase).execute().then(() => {
-                assert.deepEqual(aStore.state.receive, bStore.state.receive);
-                assert.deepEqual(aStore.state.direct, bStore.state.direct);
-            });
+            return context
+                .useCase(useCase)
+                .execute()
+                .then(() => {
+                    assert.deepEqual(aStore.state.receive, bStore.state.receive);
+                    assert.deepEqual(aStore.state.direct, bStore.state.direct);
+                });
         });
     });
 });

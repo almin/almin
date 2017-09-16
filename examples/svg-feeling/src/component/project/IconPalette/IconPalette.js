@@ -14,12 +14,14 @@ export default class IconPalette extends React.Component {
             color: color.hexCode,
             fill: color.hexCode
         };
-        return <div className="IconPalette">
-            <SVGIcon name="check" style={fillColor}/>
-            <SVGIcon name="hearts" style={fillColor}/>
-            <SVGIcon name="play" style={fillColor}/>
-            <span className="IconPalette-hexCode">{color.hexCode}</span>
-        </div>;
+        return (
+            <div className="IconPalette">
+                <SVGIcon name="check" style={fillColor} />
+                <SVGIcon name="hearts" style={fillColor} />
+                <SVGIcon name="play" style={fillColor} />
+                <span className="IconPalette-hexCode">{color.hexCode}</span>
+            </div>
+        );
     }
 }
 IconPalette.propTypes = {

@@ -24,15 +24,17 @@ export default class App extends React.Component {
     }
 
     render() {
-        const {ColorState, ColorHistoryState, WallColorState} = this.state;
-        const {wallColor} = WallColorState;
+        const { ColorState, ColorHistoryState, WallColorState } = this.state;
+        const { wallColor } = WallColorState;
         const style = {
             backgroundColor: wallColor.rgba
         };
-        return <div className="App" style={style}>
-            <MousePositionContainer />
-            <PlaygroundContainer ColorState={ColorState}/>
-            <HistoryContainer ColorHistoryState={ColorHistoryState}/>
-        </div>;
+        return (
+            <div className="App" style={style}>
+                <MousePositionContainer />
+                <PlaygroundContainer ColorState={ColorState} />
+                <HistoryContainer ColorHistoryState={ColorHistoryState} />
+            </div>
+        );
     }
 }

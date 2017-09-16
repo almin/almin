@@ -11,7 +11,7 @@ const React = require("react");
 const PropTypes = require("prop-types");
 const ReactPropTypes = PropTypes;
 import AppLocator from "../AppLocator";
-import {ToggleAllTodoItemFactory} from "../usecase/ToggleAllTodoItems";
+import { ToggleAllTodoItemFactory } from "../usecase/ToggleAllTodoItems";
 import TodoItem from "./TodoItem.react";
 
 class MainSection extends React.Component {
@@ -32,7 +32,7 @@ class MainSection extends React.Component {
 
         const allTodos = this.props.allTodos;
         const todos = allTodos.map(todo => {
-            return <TodoItem key={todo.id} todo={todo}/>;
+            return <TodoItem key={todo.id} todo={todo} />;
         });
         return (
             <section id="main">

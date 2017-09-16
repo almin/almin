@@ -46,26 +46,35 @@ describe("AsyncLogger", function() {
                 logger.startLogging(context);
             })
             .then(() => {
-                return context.useCase(new DispatchUseCase()).execute({ type: "1" }).then(() => {
-                    assert.strictEqual(results.length, 1, "start");
-                });
+                return context
+                    .useCase(new DispatchUseCase())
+                    .execute({ type: "1" })
+                    .then(() => {
+                        assert.strictEqual(results.length, 1, "start");
+                    });
             })
             .then(() => {
                 logger.stopLogging();
             })
             .then(() => {
-                return context.useCase(new DispatchUseCase()).execute({ type: "1" }).then(() => {
-                    assert.strictEqual(results.length, 1, "same 1");
-                });
+                return context
+                    .useCase(new DispatchUseCase())
+                    .execute({ type: "1" })
+                    .then(() => {
+                        assert.strictEqual(results.length, 1, "same 1");
+                    });
             })
             .then(() => {
                 // restart again
                 logger.startLogging(context);
             })
             .then(() => {
-                return context.useCase(new DispatchUseCase()).execute({ type: "2" }).then(() => {
-                    assert.strictEqual(results.length, 2, "start again");
-                });
+                return context
+                    .useCase(new DispatchUseCase())
+                    .execute({ type: "2" })
+                    .then(() => {
+                        assert.strictEqual(results.length, 2, "start again");
+                    });
             });
     });
     describe("#addLog", () => {
@@ -91,17 +100,20 @@ describe("AsyncLogger", function() {
             const addLog = () => {
                 logger.addLog(expectedLog);
             };
-            return context.useCase(useCase).execute(addLog).then(() => {
-                assert(results.length === 1);
-                const [logGroup] = results;
-                assert(logGroup.title === "WrapUseCase");
-                assert(logGroup.children.length === 4);
-                const [first, second, third, last] = logGroup.children;
-                assert(first.payload instanceof WillExecutedPayload);
-                assert(second.log === expectedLog);
-                assert(third.payload instanceof DidExecutedPayload);
-                assert(last.payload instanceof CompletedPayload);
-            });
+            return context
+                .useCase(useCase)
+                .execute(addLog)
+                .then(() => {
+                    assert(results.length === 1);
+                    const [logGroup] = results;
+                    assert(logGroup.title === "WrapUseCase");
+                    assert(logGroup.children.length === 4);
+                    const [first, second, third, last] = logGroup.children;
+                    assert(first.payload instanceof WillExecutedPayload);
+                    assert(second.log === expectedLog);
+                    assert(third.payload instanceof DidExecutedPayload);
+                    assert(last.payload instanceof CompletedPayload);
+                });
         });
     });
     it("when complete output log, emit logGroup", () => {
@@ -141,17 +153,20 @@ describe("AsyncLogger", function() {
             })
             .then(() => {
                 const useCase = new ErrorUseCase();
-                return context.useCase(useCase).execute().catch(error => {
-                    assert(results.length === 1);
-                    const logGroup = results.shift();
-                    assert(logGroup.title === "ErrorUseCase");
-                    assert(logGroup.children.length === 4);
-                    const [first, second, third, last] = logGroup.children;
-                    assert(first.payload instanceof WillExecutedPayload);
-                    assert(second.payload instanceof DidExecutedPayload);
-                    assert(third.payload instanceof ErrorPayload);
-                    assert(last.payload instanceof CompletedPayload);
-                });
+                return context
+                    .useCase(useCase)
+                    .execute()
+                    .catch(error => {
+                        assert(results.length === 1);
+                        const logGroup = results.shift();
+                        assert(logGroup.title === "ErrorUseCase");
+                        assert(logGroup.children.length === 4);
+                        const [first, second, third, last] = logGroup.children;
+                        assert(first.payload instanceof WillExecutedPayload);
+                        assert(second.payload instanceof DidExecutedPayload);
+                        assert(third.payload instanceof ErrorPayload);
+                        assert(last.payload instanceof CompletedPayload);
+                    });
             });
     });
     context("when transaction", () => {
@@ -175,9 +190,12 @@ describe("AsyncLogger", function() {
             });
             return context
                 .transaction("transaction", transactionContext => {
-                    return transactionContext.useCase(new NoDispatchUseCase()).execute().then(() => {
-                        transactionContext.commit();
-                    });
+                    return transactionContext
+                        .useCase(new NoDispatchUseCase())
+                        .execute()
+                        .then(() => {
+                            transactionContext.commit();
+                        });
                 })
                 .then(() => {
                     assert(results.length === 1);
@@ -211,9 +229,12 @@ describe("AsyncLogger", function() {
             });
             const getTransaction = () => {
                 return context.transaction("transaction", transactionContext => {
-                    return transactionContext.useCase(new NoDispatchUseCase()).execute().then(() => {
-                        transactionContext.commit();
-                    });
+                    return transactionContext
+                        .useCase(new NoDispatchUseCase())
+                        .execute()
+                        .then(() => {
+                            transactionContext.commit();
+                        });
                 });
             };
             const transactionA = getTransaction();
@@ -240,25 +261,28 @@ describe("AsyncLogger", function() {
                 results.push(logGroup);
             });
             const useCase = new ParentUseCase();
-            return context.useCase(useCase).execute().then(() => {
-                assert(results.length === 1);
-                const [logGroup] = results;
-                assert(logGroup.title === "ParentUseCase");
-                assert(logGroup.children.length === 4);
-                const [first, childLogGroup, third, last] = logGroup.children;
-                assert(first.payload instanceof WillExecutedPayload);
-                assert(third.payload instanceof DidExecutedPayload);
-                assert(last.payload instanceof CompletedPayload);
-                // child
-                assert(childLogGroup instanceof LogGroup);
-                assert(childLogGroup.title === "ChildUseCase <- ParentUseCase");
-                assert(Array.isArray(childLogGroup.children));
-                assert(childLogGroup.children.length === 3);
-                const [childFirst, childSecond, childThird] = childLogGroup.children;
-                assert(childFirst.payload instanceof WillExecutedPayload);
-                assert(childSecond.payload instanceof DidExecutedPayload);
-                assert(childThird.payload instanceof CompletedPayload);
-            });
+            return context
+                .useCase(useCase)
+                .execute()
+                .then(() => {
+                    assert(results.length === 1);
+                    const [logGroup] = results;
+                    assert(logGroup.title === "ParentUseCase");
+                    assert(logGroup.children.length === 4);
+                    const [first, childLogGroup, third, last] = logGroup.children;
+                    assert(first.payload instanceof WillExecutedPayload);
+                    assert(third.payload instanceof DidExecutedPayload);
+                    assert(last.payload instanceof CompletedPayload);
+                    // child
+                    assert(childLogGroup instanceof LogGroup);
+                    assert(childLogGroup.title === "ChildUseCase <- ParentUseCase");
+                    assert(Array.isArray(childLogGroup.children));
+                    assert(childLogGroup.children.length === 3);
+                    const [childFirst, childSecond, childThird] = childLogGroup.children;
+                    assert(childFirst.payload instanceof WillExecutedPayload);
+                    assert(childSecond.payload instanceof DidExecutedPayload);
+                    assert(childThird.payload instanceof CompletedPayload);
+                });
         });
     });
     it("should log dispatch event", function() {

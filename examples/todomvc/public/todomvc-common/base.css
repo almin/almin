@@ -20,9 +20,9 @@ button {
 }
 
 body {
-    font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font: 14px "Helvetica Neue", Helvetica, Arial, sans-serif;
     line-height: 1.4em;
-    background: #eaeaea url('bg.png');
+    background: #eaeaea url("bg.png");
     color: #4d4d4d;
     width: 550px;
     margin: 0 auto;
@@ -50,7 +50,7 @@ input[type="checkbox"] {
 }
 
 #todoapp:before {
-    content: '';
+    content: "";
     border-left: 1px solid #f5d6d6;
     border-right: 1px solid #f5d6d6;
     width: 2px;
@@ -92,7 +92,7 @@ input[type="checkbox"] {
 }
 
 #header:before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     right: 0;
@@ -110,7 +110,7 @@ input[type="checkbox"] {
     );
     background: -webkit-linear-gradient(top, rgba(132, 110, 100, 0.8), rgba(101, 84, 76, 0.8));
     background: linear-gradient(top, rgba(132, 110, 100, 0.8), rgba(101, 84, 76, 0.8));
-    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0, StartColorStr='#9d8b83', EndColorStr='#847670');
+    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0, StartColorStr="#9d8b83", EndColorStr="#847670");
     border-top-left-radius: 1px;
     border-top-right-radius: 1px;
 }
@@ -154,7 +154,7 @@ input[type="checkbox"] {
     border-top: 1px dotted #adadad;
 }
 
-label[for='toggle-all'] {
+label[for="toggle-all"] {
     display: none;
 }
 
@@ -169,7 +169,7 @@ label[for='toggle-all'] {
 }
 
 #toggle-all:before {
-    content: '»';
+    content: "»";
     font-size: 28px;
     color: #d9d9d9;
     padding: 0 25px 7px;
@@ -229,7 +229,7 @@ label[for='toggle-all'] {
 }
 
 #todo-list li .toggle:after {
-    content: '✔';
+    content: "✔";
     /* 40 + a couple of pixels visual adjustment */
     line-height: 43px;
     font-size: 20px;
@@ -283,7 +283,7 @@ label[for='toggle-all'] {
 }
 
 #todo-list li .destroy:after {
-    content: '✖';
+    content: "✖";
 }
 
 #todo-list li:hover .destroy {
@@ -311,7 +311,7 @@ label[for='toggle-all'] {
 }
 
 #footer:before {
-    content: '';
+    content: "";
     position: absolute;
     right: 0;
     bottom: 31px;
@@ -478,18 +478,18 @@ hr {
 }
 
 .quote p:before {
-    content: '“';
+    content: "“";
     font-size: 50px;
-    opacity: .15;
+    opacity: 0.15;
     position: absolute;
     top: -20px;
     left: 3px;
 }
 
 .quote p:after {
-    content: '”';
+    content: "”";
     font-size: 50px;
-    opacity: .15;
+    opacity: 0.15;
     position: absolute;
     bottom: -42px;
     right: 3px;
@@ -513,17 +513,17 @@ hr {
 .speech-bubble {
     position: relative;
     padding: 10px;
-    background: rgba(0, 0, 0, .04);
+    background: rgba(0, 0, 0, 0.04);
     border-radius: 5px;
 }
 
 .speech-bubble:after {
-    content: '';
+    content: "";
     position: absolute;
     top: 100%;
     right: 30px;
     border: 13px solid transparent;
-    border-top-color: rgba(0, 0, 0, .04);
+    border-top-color: rgba(0, 0, 0, 0.04);
 }
 
 .learn-bar > .learn {
@@ -533,7 +533,7 @@ hr {
     left: -300px;
     padding: 10px;
     border-radius: 5px;
-    background-color: rgba(255, 255, 255, .6);
+    background-color: rgba(255, 255, 255, 0.6);
     -webkit-transition-property: left;
     transition-property: left;
     -webkit-transition-duration: 500ms;

@@ -93,14 +93,17 @@ describe("Context", function() {
                 store
             });
             const useCase = new DispatchUseCase();
-            return appContext.useCase(useCase).execute().then(() => {
-                const [payload, meta] = dispatchedPayload[0];
-                assert.deepEqual(payload, DISPATCHED_EVENT);
-                assert.strictEqual(meta.useCase, useCase);
-                assert.strictEqual(meta.dispatcher, useCase);
-                assert.strictEqual(meta.parentUseCase, null);
-                assert.strictEqual(typeof meta.timeStamp, "number");
-            });
+            return appContext
+                .useCase(useCase)
+                .execute()
+                .then(() => {
+                    const [payload, meta] = dispatchedPayload[0];
+                    assert.deepEqual(payload, DISPATCHED_EVENT);
+                    assert.strictEqual(meta.useCase, useCase);
+                    assert.strictEqual(meta.dispatcher, useCase);
+                    assert.strictEqual(meta.parentUseCase, null);
+                    assert.strictEqual(typeof meta.timeStamp, "number");
+                });
         });
     });
     describe("#getStates", function() {
@@ -250,11 +253,14 @@ describe("Context", function() {
                 assert.equal(meta.parentUseCase, null);
             });
             // when
-            return appContext.useCase(eventUseCase).execute().then(() => {
-                Object.keys(isCalled).forEach(key => {
-                    assert.ok(isCalled[key] === true, `${key} should be called`);
+            return appContext
+                .useCase(eventUseCase)
+                .execute()
+                .then(() => {
+                    Object.keys(isCalled).forEach(key => {
+                        assert.ok(isCalled[key] === true, `${key} should be called`);
+                    });
                 });
-            });
         });
     });
     describe("#onDidExecuteEachUseCase", function() {
@@ -425,14 +431,17 @@ describe("Context", function() {
                 });
             };
         };
-        return appContext.useCase(useCase).execute("value").then(() => {
-            assert.deepEqual(callStack, [
-                {
-                    type: "Example",
-                    value: "value"
-                }
-            ]);
-        });
+        return appContext
+            .useCase(useCase)
+            .execute("value")
+            .then(() => {
+                assert.deepEqual(callStack, [
+                    {
+                        type: "Example",
+                        value: "value"
+                    }
+                ]);
+            });
     });
     it("should execute functional UseCase and lifecycle hook is called ", function() {
         const dispatcher = new Dispatcher();
@@ -461,22 +470,25 @@ describe("Context", function() {
                 });
             };
         };
-        return appContext.useCase(useCase).execute("value").then(() => {
-            const expectedCallStackOfAUseCase = [
-                WillExecutedPayload,
-                Object /* {
+        return appContext
+            .useCase(useCase)
+            .execute("value")
+            .then(() => {
+                const expectedCallStackOfAUseCase = [
+                    WillExecutedPayload,
+                    Object /* {
                         type: "Example",
                         value: "value"
                     }*/,
-                DidExecutedPayload,
-                CompletedPayload
-            ];
-            assert.equal(callStack.length, expectedCallStackOfAUseCase.length);
-            expectedCallStackOfAUseCase.forEach((payload, index) => {
-                const ExpectedPayloadConstructor = expectedCallStackOfAUseCase[index];
-                assert.ok(callStack[index] instanceof ExpectedPayloadConstructor);
+                    DidExecutedPayload,
+                    CompletedPayload
+                ];
+                assert.equal(callStack.length, expectedCallStackOfAUseCase.length);
+                expectedCallStackOfAUseCase.forEach((payload, index) => {
+                    const ExpectedPayloadConstructor = expectedCallStackOfAUseCase[index];
+                    assert.ok(callStack[index] instanceof ExpectedPayloadConstructor);
+                });
             });
-        });
     });
 
     describe("Constructor with Store instance", () => {
@@ -511,9 +523,12 @@ describe("Context", function() {
                 dispatcher: new Dispatcher(),
                 store: counterStore
             });
-            return context.useCase(new IncrementUseCase()).execute().then(() => {
-                assert.ok(counterStore.receivePayloadList.length > 0);
-            });
+            return context
+                .useCase(new IncrementUseCase())
+                .execute()
+                .then(() => {
+                    assert.ok(counterStore.receivePayloadList.length > 0);
+                });
         });
     });
 });

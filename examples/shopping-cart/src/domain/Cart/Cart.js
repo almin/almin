@@ -1,14 +1,14 @@
 // LICENSE : MIT
 "use strict";
 const uuid = require("uuid");
-import {checkoutProducts} from "../../utils/WebAPIUtils";
+import { checkoutProducts } from "../../utils/WebAPIUtils";
 // Cart is Shopping Cart
 // Before you bought the product(item), add the product to the cart.
 export default class Cart {
     /**
      * @param {Customer} customer
      */
-    constructor({customer}) {
+    constructor({ customer }) {
         this.id = uuid();
         /**
          * @type {ProductItem[]}

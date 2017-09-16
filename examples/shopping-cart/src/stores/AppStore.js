@@ -14,9 +14,9 @@ export default class AppStore {
      */
     static create() {
         return new StoreGroup({
-            "CartState": new CartStore({ cartRepository, customerRepository }),
-            "CustomerState": new CustomerStore(customerRepository),
-            "ProductState": new ProductStore(productRepository)
+            CartState: new CartStore({ cartRepository, customerRepository }),
+            CustomerState: new CustomerStore(customerRepository),
+            ProductState: new ProductStore(productRepository)
         });
     }
 }

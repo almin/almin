@@ -28,7 +28,10 @@ module.exports = function(Almin, done) {
         log(state);
     });
     const useCase = createUseCase();
-    context.useCase(useCase).execute({ newState: { a: 1 } }).then(() => {
-        done();
-    });
+    context
+        .useCase(useCase)
+        .execute({ newState: { a: 1 } })
+        .then(() => {
+            done();
+        });
 };

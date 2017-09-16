@@ -27,10 +27,13 @@ describe("UseCaseContext", () => {
             context.events.onDispatch(payload => {
                 dispatched.push(payload);
             });
-            return context.useCase(new ParentUseCase()).execute().then(() => {
-                assert(dispatched.length === 1);
-                assert.deepEqual(dispatched[0], expectedPayload);
-            });
+            return context
+                .useCase(new ParentUseCase())
+                .execute()
+                .then(() => {
+                    assert(dispatched.length === 1);
+                    assert.deepEqual(dispatched[0], expectedPayload);
+                });
         });
     });
 });

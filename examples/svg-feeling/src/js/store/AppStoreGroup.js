@@ -1,6 +1,6 @@
 // LICENSE : MIT
 "use strict";
-import {StoreGroup} from "almin";
+import { StoreGroup } from "almin";
 import colorMixerRepository from "../infra/ColorMixerRepository";
 import ColorStore from "./ColorStore/ColorStore";
 import ColorHistoryStore from "./ColorHistoryStore/ColorHistoryStore";
@@ -12,9 +12,9 @@ export default class AppStoreGroup {
      */
     static create() {
         return new StoreGroup({
-            "ColorState": new ColorStore({colorMixerRepository}),
-            "ColorHistoryState": new ColorHistoryStore({colorMixerRepository}),
-            "WallColorState": new WallColorStore()
+            ColorState: new ColorStore({ colorMixerRepository }),
+            ColorHistoryState: new ColorHistoryStore({ colorMixerRepository }),
+            WallColorState: new WallColorStore()
         });
     }
 }
