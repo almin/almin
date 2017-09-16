@@ -8,22 +8,12 @@ export default class SVGIcon extends React.Component {
         const href = `resources/svg/icons.svg#${name}`;
         return (
             <svg className="SVGIcon" aria-hidden="true" {...this.props}>
-                <use xlinkHref={href}/>
+                <use xlinkHref={href} />
             </svg>
-
         );
     }
 }
 SVGIcon.propTypes = {
-    name: PropTypes.oneOf([
-        "play",
-        "play-no-space",
-        "cross",
-        "check",
-        "star",
-        "heart1",
-        "heart2",
-        "hearts",
-        "twitter"
-    ]).isRequired
+    name: PropTypes.oneOf(["play", "play-no-space", "cross", "check", "star", "heart1", "heart2", "hearts", "twitter"])
+        .isRequired
 };

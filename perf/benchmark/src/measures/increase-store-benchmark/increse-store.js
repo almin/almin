@@ -32,14 +32,17 @@ function runStore(almin, storeCount) {
         });
         // execute usecase
         const useCase = almin.createUseCase();
-        context.useCase(useCase).execute({ newState: 1 }).then(() => {
-            resolve({
-                didExecutedTime: didTimeStamp - startTimeStamp,
-                completeTime: completeTimeStamp - startTimeStamp,
-                updateTime: (onChangeTimeStamp || Date.now()) - startTimeStamp
+        context
+            .useCase(useCase)
+            .execute({ newState: 1 })
+            .then(() => {
+                resolve({
+                    didExecutedTime: didTimeStamp - startTimeStamp,
+                    completeTime: completeTimeStamp - startTimeStamp,
+                    updateTime: (onChangeTimeStamp || Date.now()) - startTimeStamp
+                });
+                context.release();
             });
-            context.release();
-        });
     });
 }
 

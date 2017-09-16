@@ -62,9 +62,7 @@ export class TodoItemComponent extends React.Component<TodoItemProps, {}> {
                         defaultChecked={this.state.completed}
                         onChange={this._onToggleComplete}
                     />
-                    <label onDoubleClick={this._onDoubleClick}>
-                        {todo.title}
-                    </label>
+                    <label onDoubleClick={this._onDoubleClick}>{todo.title}</label>
                     <button className="destroy" onClick={this._onDestroyClick} />
                 </div>
                 {input}

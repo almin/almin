@@ -3,6 +3,6 @@
 import Customer from "./Customer";
 export default class AnonymousCustomer extends Customer {
     constructor() {
-        super({name: "Anonymous"});
+        super({ name: "Anonymous" });
     }
 }

@@ -137,9 +137,12 @@ describe("StoreGroup", function() {
                     dispatcher: new Dispatcher(),
                     store: storeGroup
                 });
-                return context.useCase(useCase).execute().then(() => {
-                    assert.ok(isCalled === false);
-                });
+                return context
+                    .useCase(useCase)
+                    .execute()
+                    .then(() => {
+                        assert.ok(isCalled === false);
+                    });
             });
         });
         describe("onChange(changingStores)", () => {
@@ -169,11 +172,14 @@ describe("StoreGroup", function() {
                 });
                 // when
                 const useCase = new ChangeUseCase();
-                return context.useCase(useCase).execute().then(() => {
-                    assert.equal(changedStores.length, 2);
-                    // no specify in order
-                    assert.deepEqual(changedStores.sort(), [storeA, storeB].sort());
-                });
+                return context
+                    .useCase(useCase)
+                    .execute()
+                    .then(() => {
+                        assert.equal(changedStores.length, 2);
+                        // no specify in order
+                        assert.deepEqual(changedStores.sort(), [storeA, storeB].sort());
+                    });
             });
         });
         // sync
@@ -217,9 +223,12 @@ describe("StoreGroup", function() {
                     store: storeGroup
                 });
                 // then
-                const promise = context.useCase(asyncUseCase).execute().then(() => {
-                    assert.ok(isCalled, "after");
-                });
+                const promise = context
+                    .useCase(asyncUseCase)
+                    .execute()
+                    .then(() => {
+                        assert.ok(isCalled, "after");
+                    });
                 // not yet change
                 assert.strictEqual(isCalled, false, "before");
                 return promise;
@@ -239,9 +248,12 @@ describe("StoreGroup", function() {
 
                 class ChangeAAndBUseCase extends UseCase {
                     execute() {
-                        return this.context.useCase(changeBUseCase).execute().then(() => {
-                            aStore.updateState({ a: 1 });
-                        });
+                        return this.context
+                            .useCase(changeBUseCase)
+                            .execute()
+                            .then(() => {
+                                aStore.updateState({ a: 1 });
+                            });
                     }
                 }
 
@@ -251,9 +263,12 @@ describe("StoreGroup", function() {
                 });
                 // then
                 const useCase = new ChangeAAndBUseCase();
-                return context.useCase(useCase).execute().then(() => {
-                    assert.equal(onChangeCounter, 2);
-                });
+                return context
+                    .useCase(useCase)
+                    .execute()
+                    .then(() => {
+                        assert.equal(onChangeCounter, 2);
+                    });
             });
             describe("when UseCase#dispatch is called", function() {
                 it("should not be called - no changing store", function() {
@@ -359,9 +374,12 @@ describe("StoreGroup", function() {
                     });
                     // when
                     const useCase = new DispatchAndFinishAsyncUseCase();
-                    return context.useCase(useCase).execute().then(() => {
-                        assert.equal(calledCount, 2);
-                    });
+                    return context
+                        .useCase(useCase)
+                        .execute()
+                        .then(() => {
+                            assert.equal(calledCount, 2);
+                        });
                 });
             });
         });
@@ -388,9 +406,12 @@ describe("StoreGroup", function() {
                 });
                 // then
                 const useCase = new FailUseCase();
-                return context.useCase(useCase).execute().catch(() => {
-                    assert.equal(onChangeCounter, 1);
-                });
+                return context
+                    .useCase(useCase)
+                    .execute()
+                    .catch(() => {
+                        assert.equal(onChangeCounter, 1);
+                    });
             });
         });
         describe("when UseCase call `throwError()", function() {
@@ -414,9 +435,12 @@ describe("StoreGroup", function() {
                     dispatcher: new Dispatcher(),
                     store: storeGroup
                 });
-                return context.useCase(useCase).execute().then(() => {
-                    assert.ok(isCalled);
-                });
+                return context
+                    .useCase(useCase)
+                    .execute()
+                    .then(() => {
+                        assert.ok(isCalled);
+                    });
             });
         });
         describe("WhiteBox testing", function() {
@@ -446,11 +470,14 @@ describe("StoreGroup", function() {
                     assert.equal(changedStores.length, 2);
                 });
                 // when
-                return context.useCase(useCase).execute().then(() => {
-                    // collect up *1 and *2
-                    // Store#onChange in StoreGroup only add changing queue.
-                    assert.equal(calledCount, 1, "onChange is called just once");
-                });
+                return context
+                    .useCase(useCase)
+                    .execute()
+                    .then(() => {
+                        // collect up *1 and *2
+                        // Store#onChange in StoreGroup only add changing queue.
+                        assert.equal(calledCount, 1, "onChange is called just once");
+                    });
             });
             describe("when the UseCase don't return a promise", () => {
                 it("StoreGroup#emitChange is called just one time", function() {
@@ -475,9 +502,12 @@ describe("StoreGroup", function() {
                         calledCount++;
                     });
                     // when
-                    return context.useCase(useCase).execute().then(() => {
-                        assert.equal(calledCount, 1, "StoreGroup#emitChange is called just once");
-                    });
+                    return context
+                        .useCase(useCase)
+                        .execute()
+                        .then(() => {
+                            assert.equal(calledCount, 1, "StoreGroup#emitChange is called just once");
+                        });
                 });
             });
         });
@@ -517,9 +547,12 @@ describe("StoreGroup", function() {
                 });
                 const useCase = new ChangeTheStoreUseCase();
                 // when
-                return context.useCase(useCase).execute().then(() => {
-                    assert.equal(calledCount, 2);
-                });
+                return context
+                    .useCase(useCase)
+                    .execute()
+                    .then(() => {
+                        assert.equal(calledCount, 2);
+                    });
             });
         });
         describe("onChange calling flow example", function() {
@@ -575,10 +608,13 @@ describe("StoreGroup", function() {
                     actualChangedStores = actualChangedStores.concat(changedStores);
                 });
                 // when
-                return context.useCase(useCase).execute().then(() => {
-                    assert.equal(actualChangedStores.length, 3);
-                    assert.deepEqual(actualChangedStores, [aStore, bStore, cStore]);
-                });
+                return context
+                    .useCase(useCase)
+                    .execute()
+                    .then(() => {
+                        assert.equal(actualChangedStores.length, 3);
+                        assert.deepEqual(actualChangedStores, [aStore, bStore, cStore]);
+                    });
             });
         });
         describe("When StoreGroup calling Store#receivePayload", function() {
@@ -685,9 +721,12 @@ describe("StoreGroup", function() {
                     };
                 };
                 // then
-                return context.useCase(useCase).execute().then(() => {
-                    assert.deepEqual(actualStores, [aStore]);
-                });
+                return context
+                    .useCase(useCase)
+                    .execute()
+                    .then(() => {
+                        assert.deepEqual(actualStores, [aStore]);
+                    });
             });
         });
         describe("when Store is changed in receivePayload", function() {
@@ -729,9 +768,12 @@ describe("StoreGroup", function() {
                     };
                 };
                 // then
-                return context.useCase(useCase).execute().then(() => {
-                    assert.deepEqual(actualStores, [aStore]);
-                });
+                return context
+                    .useCase(useCase)
+                    .execute()
+                    .then(() => {
+                        assert.deepEqual(actualStores, [aStore]);
+                    });
             });
         });
     });
@@ -815,9 +857,12 @@ describe("StoreGroup", function() {
                     a: store
                 })
             });
-            return context.useCase(new EmitStoreUseCase()).execute().then(() => {
-                assert.equal(consoleErrorStub.callCount, 1, "It throw immutable warning");
-            });
+            return context
+                .useCase(new EmitStoreUseCase())
+                .execute()
+                .then(() => {
+                    assert.equal(consoleErrorStub.callCount, 1, "It throw immutable warning");
+                });
         });
         // See https://github.com/almin/almin/pull/205
         it("State changing: A -> B -> A by Store#emitChange should not warn", function() {
@@ -909,9 +954,12 @@ Something wrong implementation of calling Store#emitChange at multiple`
                     };
                 };
             };
-            return context.useCase(useCase).execute().then(() => {
-                assert.ok(consoleErrorStub.calledOnce);
-            });
+            return context
+                .useCase(useCase)
+                .execute()
+                .then(() => {
+                    assert.ok(consoleErrorStub.calledOnce);
+                });
         });
         describe("when strict mode", () => {
             it("should not show warning if update store inside of receivePayload", function() {
@@ -954,9 +1002,12 @@ Something wrong implementation of calling Store#emitChange at multiple`
                         });
                     };
                 };
-                return context.useCase(updateAStoreUseCase).execute().then(() => {
-                    assert.strictEqual(consoleErrorStub.callCount, 0);
-                });
+                return context
+                    .useCase(updateAStoreUseCase)
+                    .execute()
+                    .then(() => {
+                        assert.strictEqual(consoleErrorStub.callCount, 0);
+                    });
             });
             it("should show warning if update store outside of receivePayload", function() {
                 class AStore extends Store {
@@ -991,9 +1042,12 @@ Something wrong implementation of calling Store#emitChange at multiple`
                         });
                     };
                 };
-                return context.useCase(updateAStoreUseCase).execute().then(() => {
-                    assert.strictEqual(consoleErrorStub.callCount, 1, "should not update state in a UseCase");
-                });
+                return context
+                    .useCase(updateAStoreUseCase)
+                    .execute()
+                    .then(() => {
+                        assert.strictEqual(consoleErrorStub.callCount, 1, "should not update state in a UseCase");
+                    });
             });
         });
         describe("Not support warning case", () => {
@@ -1032,9 +1086,12 @@ Something wrong implementation of calling Store#emitChange at multiple`
                         };
                     };
                 };
-                return context.useCase(useCase).execute().then(() => {
-                    assert.equal(consoleErrorStub.callCount, 0, "Can't support this case");
-                });
+                return context
+                    .useCase(useCase)
+                    .execute()
+                    .then(() => {
+                        assert.equal(consoleErrorStub.callCount, 0, "Can't support this case");
+                    });
             });
         });
     });

@@ -5,11 +5,7 @@ import classNames from "classnames";
 export default class GridCell extends React.Component {
     render() {
         const col = `col-${this.props.col}`;
-        return (
-            <div className={classNames("GridCell", [col], this.props.className)}>
-                {this.props.children}
-            </div>
-        );
+        return <div className={classNames("GridCell", [col], this.props.className)}>{this.props.children}</div>;
     }
 }
 GridCell.propTypes = {

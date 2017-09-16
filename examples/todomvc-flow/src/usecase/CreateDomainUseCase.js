@@ -1,12 +1,12 @@
 // @flow
 "use strict";
-import {UseCase} from "almin";
+import { UseCase } from "almin";
 import TodoList from "../domain/TodoList/TodoList";
-import todoListRepository, {TodoListRepository} from "../infra/TodoListRepository";
+import todoListRepository, { TodoListRepository } from "../infra/TodoListRepository";
 
 export class CreateDomainUseCaseFactory {
     static create() {
-        return new CreateDomainUseCase({todoListRepository});
+        return new CreateDomainUseCase({ todoListRepository });
     }
 }
 
@@ -16,7 +16,7 @@ export class CreateDomainUseCase extends UseCase {
     /**
      * @param {TodoListRepository}todoListRepository
      */
-    constructor({todoListRepository}: {todoListRepository: TodoListRepository}) {
+    constructor({ todoListRepository }: { todoListRepository: TodoListRepository }) {
         super();
         this.todoListRepository = todoListRepository;
     }

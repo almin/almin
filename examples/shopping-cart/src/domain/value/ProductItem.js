@@ -8,7 +8,7 @@ export default class ProductItem {
      * @param {Number} inventory
      * @param {string} image
      */
-    constructor({id, title, price, inventory, image}) {
+    constructor({ id, title, price, inventory, image }) {
         this.id = id;
         this.title = title;
         this.price = price;

@@ -423,24 +423,30 @@ describe("Context#transaction", () => {
             .transaction("transaction name", transactionContext => {
                 assert.strictEqual(receivedPayloadList.length, 0, "no commitment");
                 // Sync && No Dispatch UseCase call receivedPayloadList at once
-                return transactionContext.useCase(new SyncNoDispatchUseCase()).execute().then(() => {
-                    assert.strictEqual(receivedPayloadList.length, 0, "no commitment");
-                    transactionContext.commit();
-                    assert.strictEqual(receivedPayloadList.length, 1, "1 UseCase executed commitment");
-                });
+                return transactionContext
+                    .useCase(new SyncNoDispatchUseCase())
+                    .execute()
+                    .then(() => {
+                        assert.strictEqual(receivedPayloadList.length, 0, "no commitment");
+                        transactionContext.commit();
+                        assert.strictEqual(receivedPayloadList.length, 1, "1 UseCase executed commitment");
+                    });
             })
             .then(() => {
                 return context.transaction("nest transaction", transactionContext => {
                     // AsyncUseCase call receivedPayloadList twice
-                    return transactionContext.useCase(new AsyncUseCase()).execute().then(() => {
-                        assert.strictEqual(receivedPayloadList.length, 1, "before: 1 UseCase executed commitment");
-                        transactionContext.commit();
-                        assert.strictEqual(
-                            receivedPayloadList.length,
-                            3,
-                            "after: Async UseCase add (did + complete) commitment"
-                        );
-                    });
+                    return transactionContext
+                        .useCase(new AsyncUseCase())
+                        .execute()
+                        .then(() => {
+                            assert.strictEqual(receivedPayloadList.length, 1, "before: 1 UseCase executed commitment");
+                            transactionContext.commit();
+                            assert.strictEqual(
+                                receivedPayloadList.length,
+                                3,
+                                "after: Async UseCase add (did + complete) commitment"
+                            );
+                        });
                 });
             });
     });
@@ -592,19 +598,33 @@ describe("Context#transaction", () => {
             return context
                 .transaction("transaction 1", transactionContext => {
                     assert.strictEqual(receivedCommitments.length, 0, "no commitment");
-                    return transactionContext.useCase(new SyncNoDispatchUseCase()).execute().then(() => {
-                        assert.strictEqual(receivedCommitments.length, 0, "no commitment");
-                        transactionContext.commit();
-                        assert.strictEqual(receivedCommitments.length, 0, "1 UseCase executed commitment");
-                    });
+                    return transactionContext
+                        .useCase(new SyncNoDispatchUseCase())
+                        .execute()
+                        .then(() => {
+                            assert.strictEqual(receivedCommitments.length, 0, "no commitment");
+                            transactionContext.commit();
+                            assert.strictEqual(receivedCommitments.length, 0, "1 UseCase executed commitment");
+                        });
                 })
                 .then(() => {
                     return context.transaction("transaction 2", transactionContext => {
-                        return transactionContext.useCase(new SyncNoDispatchUseCase()).execute().then(() => {
-                            assert.strictEqual(receivedCommitments.length, 0, "before: 1 UseCase executed commitment");
-                            transactionContext.commit();
-                            assert.strictEqual(receivedCommitments.length, 0, "after: 2 UseCase executed 2 commitment");
-                        });
+                        return transactionContext
+                            .useCase(new SyncNoDispatchUseCase())
+                            .execute()
+                            .then(() => {
+                                assert.strictEqual(
+                                    receivedCommitments.length,
+                                    0,
+                                    "before: 1 UseCase executed commitment"
+                                );
+                                transactionContext.commit();
+                                assert.strictEqual(
+                                    receivedCommitments.length,
+                                    0,
+                                    "after: 2 UseCase executed 2 commitment"
+                                );
+                            });
                     });
                 });
         }

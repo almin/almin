@@ -10,11 +10,7 @@ import classNames from "classnames";
  */
 export default class Link extends React.Component {
     render() {
-        return (
-            <a {...this.props}
-                className={classNames("Link", this.props.className)}
-            />
-        );
+        return <a {...this.props} className={classNames("Link", this.props.className)} />;
     }
 }
 Link.propTypes = {

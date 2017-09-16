@@ -4,11 +4,11 @@
     display: inline;
 }
 
-.GridCell[class*='col-'] {
+.GridCell[class*="col-"] {
     float: left;
 }
 
-.GridCell[class*='col-']:last-of-type {
+.GridCell[class*="col-"]:last-of-type {
     padding-right: 0;
 }
 

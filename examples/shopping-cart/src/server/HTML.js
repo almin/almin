@@ -2,7 +2,7 @@
 "use strict";
 const React = require("react");
 const serialize = require("serialize-javascript");
-export const HTML = (props) => `
+export const HTML = props => `
 <!DOCTYPE html>
 <html>
 <head>

@@ -1,7 +1,7 @@
 // LICENSE : MIT
 "use strict";
 export default class RGBAColor {
-    constructor({rgba}) {
+    constructor({ rgba }) {
         this.rgba = rgba;
     }
 

@@ -4,3 +4,4 @@ __obj/
 lib/
 *.min.js
 *.min.css
+_book

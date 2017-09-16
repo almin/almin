@@ -42,9 +42,7 @@ export class MainSection extends React.Component<MainSectionProps, {}> {
                     checked={this.props.areAllComplete}
                 />
                 <label htmlFor="toggle-all">Mark all as complete</label>
-                <ul id="todo-list">
-                    {todos}
-                </ul>
+                <ul id="todo-list">{todos}</ul>
             </section>
         );
     }

@@ -1,7 +1,7 @@
 // MIT © 2017 azu
 import Product from "./Product";
 
-"use strict";
+("use strict");
 export default class ProductFactory {
     /**
      * @param {Object} productJSON products.json data

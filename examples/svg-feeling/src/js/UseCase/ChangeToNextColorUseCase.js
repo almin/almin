@@ -1,13 +1,13 @@
 // LICENSE : MIT
 "use strict";
-import {UseCase} from "almin";
+import { UseCase } from "almin";
 import colorMixerRepository from "../infra/ColorMixerRepository";
 export class ChangeToNextColorUseCase extends UseCase {
     static create() {
-        return new this({colorMixerRepository});
+        return new this({ colorMixerRepository });
     }
 
-    constructor({colorMixerRepository}) {
+    constructor({ colorMixerRepository }) {
         super();
         this.colorMixerRepository = colorMixerRepository;
     }

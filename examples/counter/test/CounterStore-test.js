@@ -17,10 +17,13 @@ describe("CounterStore", function() {
                 })
             });
             // then
-            return context.useCase(useCase).execute().then(() => {
-                const state = store.getState();
-                assert.equal(state.count, 1);
-            });
+            return context
+                .useCase(useCase)
+                .execute()
+                .then(() => {
+                    const state = store.getState();
+                    assert.equal(state.count, 1);
+                });
         });
     });
 });

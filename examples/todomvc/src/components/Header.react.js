@@ -9,7 +9,7 @@
 
 const React = require("react");
 import AppLocator from "../AppLocator";
-import {AddTodoItemFactory} from "../usecase/AddTodoItem";
+import { AddTodoItemFactory } from "../usecase/AddTodoItem";
 import TodoTextInput from "./TodoTextInput.react";
 
 class Header extends React.Component {
@@ -20,11 +20,7 @@ class Header extends React.Component {
         return (
             <header id="header">
                 <h1>todos</h1>
-                <TodoTextInput
-                    id="new-todo"
-                    placeholder="What needs to be done?"
-                    onSave={this._onSave}
-                />
+                <TodoTextInput id="new-todo" placeholder="What needs to be done?" onSave={this._onSave} />
             </header>
         );
     }
@@ -35,7 +31,7 @@ class Header extends React.Component {
      * in different ways.
      * @param {string} text
      */
-    _onSave = (text) => {
+    _onSave = text => {
         if (text.trim()) {
             AppLocator.context.useCase(AddTodoItemFactory.create()).execute(text);
         }

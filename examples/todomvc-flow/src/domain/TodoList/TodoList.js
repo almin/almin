@@ -91,7 +91,7 @@ export default class TodoList {
         const item = this.getItem(id);
         if (item != null) {
             item.completed = !item.completed;
-            this.updateItem((item:TodoItemObjectT));
+            this.updateItem((item: TodoItemObjectT));
             return item;
         }
     }
@@ -115,9 +115,9 @@ export default class TodoList {
      */
     removeAllCompletedItems() {
         this.getAllTodoItems()
-        .filter(item => item.completed)
-        .forEach(item => {
-            return this.removeItem(item.id);
-        });
+            .filter(item => item.completed)
+            .forEach(item => {
+                return this.removeItem(item.id);
+            });
     }
 }

@@ -45,6 +45,9 @@ const context = new Context({
     dispatcher,
     store: loadingStore
 });
-context.useCase(loadingUseCase).execute<UpdateLoadingUseCaseArg>(true).then(() => {
-    // nope
-});
+context
+    .useCase(loadingUseCase)
+    .execute<UpdateLoadingUseCaseArg>(true)
+    .then(() => {
+        // nope
+    });

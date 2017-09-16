@@ -6,13 +6,13 @@ import AddItemToCartUseCase from "../src/usecase/AddItemToCartUseCase";
 import Customer from "../src/domain/Customer/Customer";
 import Cart from "../src/domain/Cart/Cart";
 // repository
-import {CartRepository} from "../src/infra/CartRepository";
-describe("AddItemToCartUseCase", function () {
-    context("when the customer has not cart", function () {
-        it("should throw error", function (done) {
+import { CartRepository } from "../src/infra/CartRepository";
+describe("AddItemToCartUseCase", function() {
+    context("when the customer has not cart", function() {
+        it("should throw error", function(done) {
             // Given
-            const {productRepository, products} = InitializedProductRepository.create();
-            const customer = new Customer({name: "Mint"});
+            const { productRepository, products } = InitializedProductRepository.create();
+            const customer = new Customer({ name: "Mint" });
             const cartRepository = new CartRepository();
             // Then
             const useCase = new AddItemToCartUseCase({
@@ -29,12 +29,12 @@ describe("AddItemToCartUseCase", function () {
             useCase.execute(itemID);
         });
     });
-    context("when the customer has a cart", function () {
-        it("should decrement item from Product", function (done) {
+    context("when the customer has a cart", function() {
+        it("should decrement item from Product", function(done) {
             // Given
-            const {productRepository, products} = InitializedProductRepository.create();
-            const customer = new Customer({name: "Mint"});
-            const cart = new Cart({customer});
+            const { productRepository, products } = InitializedProductRepository.create();
+            const customer = new Customer({ name: "Mint" });
+            const cart = new Cart({ customer });
             const cartRepository = new CartRepository();
             cartRepository.store(cart);
             // Then
@@ -52,11 +52,11 @@ describe("AddItemToCartUseCase", function () {
             // When
             useCase.execute(itemID);
         });
-        it("should add item to the cart of user", function (done) {
+        it("should add item to the cart of user", function(done) {
             // Given
-            const {productRepository, products} = InitializedProductRepository.create();
-            const customer = new Customer({name: "Mint"});
-            const cart = new Cart({customer});
+            const { productRepository, products } = InitializedProductRepository.create();
+            const customer = new Customer({ name: "Mint" });
+            const cart = new Cart({ customer });
             const cartRepository = new CartRepository();
             cartRepository.store(cart);
             // Then

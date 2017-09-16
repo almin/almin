@@ -36,11 +36,7 @@ const context = new Context({
 // View
 class App extends React.Component<AppState, {}> {
     render() {
-        return (
-            <div>
-                {this.props.myState.value}
-            </div>
-        );
+        return <div>{this.props.myState.value}</div>;
     }
 }
 interface AppState {

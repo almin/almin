@@ -57,9 +57,7 @@ export class Footer extends React.Component<FooterProps, {}> {
         return (
             <footer id="footer">
                 <span id="todo-count">
-                    <strong>
-                        {itemsLeft}
-                    </strong>
+                    <strong>{itemsLeft}</strong>
                     {itemsLeftPhrase}
                 </span>
                 <ul id="filters">

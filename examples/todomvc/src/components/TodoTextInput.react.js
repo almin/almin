@@ -30,16 +30,16 @@ class TodoTextInput extends React.Component {
      */
     render() /*object*/ {
         return (
-      <input
-        className={this.props.className}
-        id={this.props.id}
-        placeholder={this.props.placeholder}
-        onBlur={this._save}
-        onChange={this._onChange}
-        onKeyDown={this._onKeyDown}
-        value={this.state.value}
-        autoFocus={true}
-      />
+            <input
+                className={this.props.className}
+                id={this.props.id}
+                placeholder={this.props.placeholder}
+                onBlur={this._save}
+                onChange={this._onChange}
+                onKeyDown={this._onKeyDown}
+                value={this.state.value}
+                autoFocus={true}
+            />
         );
     }
 
@@ -66,7 +66,7 @@ class TodoTextInput extends React.Component {
     /**
      * @param  {object} event
      */
-    _onKeyDown = (event) => {
+    _onKeyDown = event => {
         if (event.keyCode === ENTER_KEY_CODE) {
             this._save();
         }

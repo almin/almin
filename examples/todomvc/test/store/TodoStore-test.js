@@ -48,9 +48,12 @@ describe("TodoStore", function() {
                 store
             });
             // then
-            return context.useCase(useCase).execute(FilterTypes.COMPLETED_TODOS).then(() => {
-                assert(store.getState().filterType, FilterTypes.COMPLETED_TODOS);
-            });
+            return context
+                .useCase(useCase)
+                .execute(FilterTypes.COMPLETED_TODOS)
+                .then(() => {
+                    assert(store.getState().filterType, FilterTypes.COMPLETED_TODOS);
+                });
         });
     });
 });

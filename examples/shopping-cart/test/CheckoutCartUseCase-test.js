@@ -7,15 +7,15 @@ import Customer from "../src/domain/Customer/Customer";
 import Cart from "../src/domain/Cart/Cart";
 import Product from "../src/domain/Product/Product";
 // repository
-import {CartRepository} from "../src/infra/CartRepository";
-describe("CheckoutCartUseCase", function () {
-    context("when the cart contain items", function () {
-        it("should flush item in the cart", function (done) {
+import { CartRepository } from "../src/infra/CartRepository";
+describe("CheckoutCartUseCase", function() {
+    context("when the cart contain items", function() {
+        it("should flush item in the cart", function(done) {
             // Given
-            const {products} = InitializedProductRepository.create();
+            const { products } = InitializedProductRepository.create();
             const [product] = products;
-            const customer = new Customer({name: "Mint"});
-            const cart = new Cart({customer});
+            const customer = new Customer({ name: "Mint" });
+            const cart = new Cart({ customer });
             cart.addItem(product.toProductItem());
             const cartRepository = new CartRepository();
             cartRepository.store(cart);

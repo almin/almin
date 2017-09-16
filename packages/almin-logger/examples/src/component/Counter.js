@@ -68,9 +68,7 @@ export default class CounterComponent extends React.Component {
                 <button onClick={manuallLogging}>Manuall Logging</button>
                 <button onClick={throwError}>Throw Error in UseCase</button>
                 <button onClick={transaction}>Transaction(+1 -1 +1 +1)</button>
-                <p>
-                    Count: {counterState.count}
-                </p>
+                <p>Count: {counterState.count}</p>
             </div>
         );
     }

@@ -12,7 +12,8 @@ export default class ConsoleMock {
         var properties = ["memory"];
         var methods = ("assert,clear,count,debug,dir,dirxml,error,exception,group," +
             "groupCollapsed,groupEnd,info,log,markTimeline,profile,profiles,profileEnd," +
-            "show,table,time,timeEnd,timeline,timelineEnd,timeStamp,trace,warn").split(",");
+            "show,table,time,timeEnd,timeline,timelineEnd,timeStamp,trace,warn"
+        ).split(",");
         while ((prop = properties.pop())) {
             if (!consoleMock[prop]) {
                 consoleMock[prop] = {};

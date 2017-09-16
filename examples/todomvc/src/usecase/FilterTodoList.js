@@ -1,5 +1,5 @@
 "use strict";
-import {UseCase} from "almin";
+import { UseCase } from "almin";
 export class FilterTodoListFactory {
     static create() {
         return new FilterTodoListUseCase();

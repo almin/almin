@@ -12,9 +12,9 @@ const PropTypes = require("prop-types");
 const ReactPropTypes = PropTypes;
 const classNames = require("classnames");
 import AppLocator from "../AppLocator";
-import {RemoveTodoItemFactory} from "../usecase/RemoveAllCompletedItems";
-import {FilterTodoListFactory} from "../usecase/FilterTodoList";
-import {FilterTypes} from "../store/TodoStore/TodoState";
+import { RemoveTodoItemFactory } from "../usecase/RemoveAllCompletedItems";
+import { FilterTodoListFactory } from "../usecase/FilterTodoList";
+import { FilterTypes } from "../store/TodoStore/TodoState";
 
 class Footer extends React.Component {
     static propTypes = {
@@ -43,15 +43,14 @@ class Footer extends React.Component {
         // Undefined and thus not rendered if no completed items are left.
         let clearCompletedButton;
         if (completed) {
-            clearCompletedButton =
-                <button
-                    id="clear-completed"
-                    onClick={this._onClearCompletedClick}>
+            clearCompletedButton = (
+                <button id="clear-completed" onClick={this._onClearCompletedClick}>
                     Clear completed ({completed})
-                </button>;
+                </button>
+            );
         }
 
-        const filterByType = (type) => {
+        const filterByType = type => {
             return event => {
                 event.preventDefault();
                 AppLocator.context.useCase(FilterTodoListFactory.create()).execute(type);
@@ -60,9 +59,7 @@ class Footer extends React.Component {
         return (
             <footer id="footer">
                 <span id="todo-count">
-                  <strong>
-                    {itemsLeft}
-                  </strong>
+                    <strong>{itemsLeft}</strong>
                     {itemsLeftPhrase}
                 </span>
                 <ul id="filters">
@@ -70,25 +67,26 @@ class Footer extends React.Component {
                         <a
                             href="#/"
                             onClick={filterByType(FilterTypes.ALL_TODOS)}
-                            className={classNames({selected: filterType === FilterTypes.ALL_TODOS})}>
+                            className={classNames({ selected: filterType === FilterTypes.ALL_TODOS })}
+                        >
                             All
                         </a>
-                    </li>
-                    {" "}
+                    </li>{" "}
                     <li>
                         <a
                             href="#/active"
                             onClick={filterByType(FilterTypes.ACTIVE_TODOS)}
-                            className={classNames({selected: filterType === FilterTypes.ACTIVE_TODOS})}>
+                            className={classNames({ selected: filterType === FilterTypes.ACTIVE_TODOS })}
+                        >
                             Active
                         </a>
-                    </li>
-                    {" "}
+                    </li>{" "}
                     <li>
                         <a
                             href="#/completed"
                             onClick={filterByType(FilterTypes.COMPLETED_TODOS)}
-                            className={classNames({selected: filterType === FilterTypes.COMPLETED_TODOS})}>
+                            className={classNames({ selected: filterType === FilterTypes.COMPLETED_TODOS })}
+                        >
                             Completed
                         </a>
                     </li>

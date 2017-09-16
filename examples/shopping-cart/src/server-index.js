@@ -28,7 +28,7 @@ const loadInitialState = () => {
     return Promise.resolve(require("./api/products.json"));
 };
 // catch memory leak event
-process.on("uncaughtException", (error) => {
+process.on("uncaughtException", error => {
     console.error(error);
 });
 // /server is server-side rendering
@@ -51,14 +51,13 @@ app.get("/server", (req, res) => {
         // StoreGroup#getState to <App .{..state} />
         const Bootstrap = AlminReactContainer.create(App, appContext);
         const html = HTML({
-            html: ReactDOMServer.renderToString(<Bootstrap/>),
+            html: ReactDOMServer.renderToString(<Bootstrap />),
             initialState: products
         });
         res.status(200).send(html);
         appContext.release();
     });
 });
-
 
 const port = process.env.PORT || 3000;
 // start server

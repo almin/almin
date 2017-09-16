@@ -26,8 +26,11 @@ context.onCompleteEachUseCase((payload, meta) => {
 context.onChange(() => {
     onChangeTimeStamp = Date.now();
 });
-context.useCase(useCase).execute().then(() => {
-    console.log(`UseCase will -> did: ${didTimeStamp - startTimeStamp}ms`);
-    console.log(`UseCase will -> complete: ${completeTimeStamp - startTimeStamp}ms`);
-    console.log(`Token Update State time: ${onChangeTimeStamp - startTimeStamp}ms`);
-});
+context
+    .useCase(useCase)
+    .execute()
+    .then(() => {
+        console.log(`UseCase will -> did: ${didTimeStamp - startTimeStamp}ms`);
+        console.log(`UseCase will -> complete: ${completeTimeStamp - startTimeStamp}ms`);
+        console.log(`Token Update State time: ${onChangeTimeStamp - startTimeStamp}ms`);
+    });

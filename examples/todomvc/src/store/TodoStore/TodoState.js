@@ -49,9 +49,11 @@ export default class TodoState {
      */
     merge(todoList) {
         const items = todoList.getAllTodoItems();
-        return new TodoState(Object.assign({}, this, {
-            items
-        }));
+        return new TodoState(
+            Object.assign({}, this, {
+                items
+            })
+        );
     }
 
     /**
@@ -61,9 +63,11 @@ export default class TodoState {
     reduce(payload) {
         switch (payload.type) {
             case FilterTodoListUseCase.name:
-                return new TodoState(Object.assign({}, this, {
-                    filterType: payload.filterType
-                }));
+                return new TodoState(
+                    Object.assign({}, this, {
+                        filterType: payload.filterType
+                    })
+                );
             default:
                 return this;
         }

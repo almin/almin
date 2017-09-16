@@ -2,7 +2,7 @@ export default class ColorState {
     /**
      * @param {Color} currentColor
      */
-    constructor({currentColor}) {
+    constructor({ currentColor }) {
         this.currentColor = currentColor;
     }
 
@@ -17,8 +17,8 @@ export default class ColorState {
 
     reduce(payload) {
         switch (payload.type) {
-        default:
-            return this;
+            default:
+                return this;
         }
     }
 }

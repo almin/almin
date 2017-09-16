@@ -35,9 +35,12 @@ describe("StoreGroup edge case", function() {
                 }
             }
 
-            return context.useCase(new ChangeAandBStateUseCase()).execute().then(() => {
-                assert.strictEqual(count, 1, "update a and b should be collect up. onChange should be called 1");
-            });
+            return context
+                .useCase(new ChangeAandBStateUseCase())
+                .execute()
+                .then(() => {
+                    assert.strictEqual(count, 1, "update a and b should be collect up. onChange should be called 1");
+                });
         });
     });
     // See https://github.com/almin/almin/issues/179
@@ -70,9 +73,12 @@ describe("StoreGroup edge case", function() {
             context.onChange(() => {
                 count++;
             });
-            return context.useCase(new SyncNoDispatchUseCase()).execute().then(() => {
-                assert.strictEqual(count, 1, "1 onChange by did(Sync UseCase)");
-            });
+            return context
+                .useCase(new SyncNoDispatchUseCase())
+                .execute()
+                .then(() => {
+                    assert.strictEqual(count, 1, "1 onChange by did(Sync UseCase)");
+                });
         });
     });
     // See https://github.com/almin/almin/issues/230
@@ -112,18 +118,21 @@ describe("StoreGroup edge case", function() {
             context.events.onCompleteEachUseCase(() => {
                 callStack.push("complete");
             });
-            return context.useCase(new AsyncUseCase()).execute().then(() => {
-                assert.deepEqual(
-                    callStack,
-                    [
-                        "change", // didExecute - receivePayload
-                        "did",
-                        "change", // complete - receivePayload
-                        "complete"
-                    ],
-                    "should be receivePayload -> almin lifecycle event"
-                );
-            });
+            return context
+                .useCase(new AsyncUseCase())
+                .execute()
+                .then(() => {
+                    assert.deepEqual(
+                        callStack,
+                        [
+                            "change", // didExecute - receivePayload
+                            "did",
+                            "change", // complete - receivePayload
+                            "complete"
+                        ],
+                        "should be receivePayload -> almin lifecycle event"
+                    );
+                });
         });
     });
 });
