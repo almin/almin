@@ -20,10 +20,11 @@ jobs:
       script: cd packages/almin && yarn run test:saucelabs
     # deploy gitbook
     - stage: deploy
-      install: if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == false ]; then yarn install; fi
+      if: branch = master AND type != pull_request
+      install: yarn install
       before_script:
-        - if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == false ]; then $(npm bin)/set-up-ssh --key "$encrypted_5d98d8341870_key" --iv "$encrypted_5d98d8341870_iv" --path-encrypted-key ".travis/github_deploy_key.enc"; fi
-      script: if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == false ]; then bash ./tools/push-to-github-io.sh; fi
+        - $(npm bin)/set-up-ssh --key "$encrypted_5d98d8341870_key" --iv "$encrypted_5d98d8341870_iv" --path-encrypted-key ".travis/github_deploy_key.enc"
+      script: bash ./tools/push-to-github-io.sh
   fast_finish: true
   allow_failures:
     - env:
