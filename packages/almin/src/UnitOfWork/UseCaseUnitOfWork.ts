@@ -8,6 +8,7 @@ import { Dispatcher } from "../Dispatcher";
 import { StoreGroupLike } from "../UILayer/StoreGroupLike";
 import { TransactionBeganPayload } from "../payload/TransactionBeganPayload";
 import { TransactionEndedPayload } from "../payload/TransactionEndedPayload";
+import AlminInstruments from "../instrument/AlminInstruments";
 
 export interface UseCaseUnitOfWorkOptions {
     autoCommit: boolean;
@@ -80,6 +81,13 @@ export class UseCaseUnitOfWork {
     }
 
     beginTransaction() {
+        if (process.env.NODE_ENV !== "production" && AlminInstruments.debugTool) {
+            AlminInstruments.debugTool.beginTransaction(this.id, {
+                id: this.id,
+                name: this.name
+            });
+        }
+
         this.isTransactionWorking = true;
         const payload = new TransactionBeganPayload(this.name);
         const meta = new DispatcherPayloadMetaImpl({
@@ -99,7 +107,11 @@ export class UseCaseUnitOfWork {
             }
         });
         this.dispatcher.dispatch(payload, meta);
-        this.unitOfWork.addCommitment([payload, meta]);
+        this.unitOfWork.addCommitment({
+            payload,
+            meta,
+            debugId: this.id
+        });
     }
 
     /**
@@ -116,12 +128,20 @@ export class UseCaseUnitOfWork {
             }
             // Notes: It is specific order for updating store logging
             // 1. Commit
-            this.unitOfWork.addCommitment([payload, meta]);
+            this.unitOfWork.addCommitment({
+                payload,
+                meta,
+                debugId: this.id
+            });
             // 2. Dispatch to Dispatcher
             this.dispatcher.dispatch(payload, meta);
         };
         const unsubscribe = useCaseExecutor.onDispatch(onDispatchOnUnitOfWork);
         this.unsubscribeMap.set(useCaseExecutor, unsubscribe);
+
+        if (process.env.NODE_ENV !== "production" && AlminInstruments.debugTool) {
+            AlminInstruments.debugTool.beforeUseCaseExecute(useCaseExecutor.useCase.id, useCaseExecutor.useCase);
+        }
     }
 
     /**
@@ -147,7 +167,7 @@ Not to allow to do multiple commits in a transaction`);
             this.unitOfWork.addCommitment(commitment);
             this.unitOfWork.commit();
             // 2. dispatch
-            this.dispatcher.dispatch(commitment[0], commitment[1]);
+            this.dispatcher.dispatch(commitment.payload, commitment.meta);
             this.isTransactionWorking = false;
         }
         // commit flag
@@ -155,6 +175,13 @@ Not to allow to do multiple commits in a transaction`);
     }
 
     private createTransactionEndPayload(): Commitment {
+        // TODO: call more meaningful timining
+        if (process.env.NODE_ENV !== "production" && AlminInstruments.debugTool) {
+            AlminInstruments.debugTool.endTransaction(this.id, {
+                id: this.id,
+                name: this.name
+            });
+        }
         // payload, meta
         const payload = new TransactionEndedPayload(this.name);
         const meta = new DispatcherPayloadMetaImpl({
@@ -173,13 +200,20 @@ Not to allow to do multiple commits in a transaction`);
                 name: this.name
             }
         });
-        return [payload, meta];
+        return {
+            payload,
+            meta,
+            debugId: this.id
+        };
     }
 
     /**
      * End transaction of the useCaseExecutor/UseCase
      */
     close(useCaseExecutor: UseCaseExecutor<any>) {
+        if (process.env.NODE_ENV !== "production" && AlminInstruments.debugTool) {
+            AlminInstruments.debugTool.afterUseCaseExecute(useCaseExecutor.useCase.id, useCaseExecutor.useCase);
+        }
         const unsubscribe = this.unsubscribeMap.get(useCaseExecutor);
         if (typeof unsubscribe !== "function") {
             console.error(
@@ -201,7 +235,7 @@ Disallow to do multiple exit in a transaction`);
         this.doesReflectActionAtLeastOne = true;
         if (this.isTransactionWorking) {
             const commitment = this.createTransactionEndPayload();
-            this.dispatcher.dispatch(commitment[0], commitment[1]);
+            this.dispatcher.dispatch(commitment.payload, commitment.meta);
             this.isTransactionWorking = false;
         }
     }

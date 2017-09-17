@@ -21,6 +21,8 @@ import { isDidExecutedPayload } from "../payload/DidExecutedPayload";
 import { isErrorPayload } from "../payload/ErrorPayload";
 import { isTransactionBeganPayload } from "../payload/TransactionBeganPayload";
 import { isTransactionEndedPayload } from "../payload/TransactionEndedPayload";
+import AlminInstruments from "../instrument/AlminInstruments";
+import { DebugId } from "../instrument/AlminAbstractPerfMarker";
 
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
 
@@ -120,10 +122,16 @@ console.log(storeGroup.getState());
  *
  */
 export class StoreGroup<T> extends Dispatcher implements StoreGroupLike {
+    /**
+     * Set debuggable name if needed.
+     */
+    static displayName?: string;
     // observing stores
     public stores: Array<Store<T>>;
     // current state
     public state: StateMap<T>;
+    // StoreGroup name
+    public name: string;
     // stores that are changed compared by previous state.
     private _changingStores: Array<Store<T>> = [];
     // all functions to release handlers
@@ -179,6 +187,11 @@ export class StoreGroup<T> extends Dispatcher implements StoreGroupLike {
         if (process.env.NODE_ENV !== "production") {
             assertConstructorArguments(stateStoreMapping);
         }
+        const own = this.constructor as typeof StoreGroup;
+        /**
+         * @type {string} Store name
+         */
+        this.name = own.displayName || own.name || "StoreGroup";
         this._storeStateMap = createStoreStateMap(stateStoreMapping);
         // pull stores from mapping if arguments is mapping.
         this.stores = this._storeStateMap.stores;
@@ -235,11 +248,27 @@ export class StoreGroup<T> extends Dispatcher implements StoreGroupLike {
 
     // write phase
     // Each store updates own state
-    private writePhaseInRead(stores: Array<Store<T>>, payload: Payload, meta: DispatcherPayloadMetaImpl): void {
+    private writePhaseInRead(
+        stores: Array<Store<T>>,
+        payload: Payload,
+        meta: DispatcherPayloadMetaImpl,
+        debugId?: DebugId
+    ): void {
+        if (process.env.NODE_ENV !== "production" && AlminInstruments.debugTool) {
+            if (debugId) {
+                AlminInstruments.debugTool.beforeStoreGroupWritePhase(debugId, this);
+            }
+        }
         for (let i = 0; i < stores.length; i++) {
             const store = stores[i];
             if (process.env.NODE_ENV !== "production") {
                 this.storeGroupChangingStoreStrictChecker.mark(store);
+            }
+            const hasReceivePayload = typeof store.receivePayload === "function";
+            if (process.env.NODE_ENV !== "production" && AlminInstruments.debugTool) {
+                if (hasReceivePayload && debugId) {
+                    AlminInstruments.debugTool.beforeStoreReceivePayload(debugId, store);
+                }
             }
             // In almost case, A store should implement `receivePayload` insteadof of using `Store#onDispatch`
             // Warning(strict mode): Manually catch some event like Repository#onChange in a Store,
@@ -249,11 +278,22 @@ export class StoreGroup<T> extends Dispatcher implements StoreGroupLike {
                 store.dispatch(payload, meta);
             }
             // reduce state by prevSate with payload if it is implemented
-            if (typeof store.receivePayload === "function") {
-                store.receivePayload(payload);
+            if (hasReceivePayload) {
+                store.receivePayload!(payload);
+            }
+
+            if (process.env.NODE_ENV !== "production" && AlminInstruments.debugTool) {
+                if (hasReceivePayload && debugId) {
+                    AlminInstruments.debugTool.afterStoreReceivePayload(debugId, store);
+                }
             }
             if (process.env.NODE_ENV !== "production") {
                 this.storeGroupChangingStoreStrictChecker.unMark(store);
+            }
+        }
+        if (process.env.NODE_ENV !== "production" && AlminInstruments.debugTool) {
+            if (debugId) {
+                AlminInstruments.debugTool.afterStoreGroupWritePhase(debugId, this);
             }
         }
     }
@@ -321,8 +361,8 @@ But, ${store.name}#getState() was called.`
         this.emitChangeIfStateIsChange();
     }
 
-    private tryToUpdateState(payload: Payload, meta: DispatcherPayloadMeta) {
-        this.writePhaseInRead(this.stores, payload, meta);
+    private tryToUpdateState(payload: Payload, meta: DispatcherPayloadMeta, debugId?: DebugId) {
+        this.writePhaseInRead(this.stores, payload, meta, debugId);
         // StoreGroup soft lock `emitChange` in the transaction.
         if (!this.isTransactionWorking) {
             this.emitChangeIfStateIsChange(payload, meta);
@@ -341,22 +381,23 @@ But, ${store.name}#getState() was called.`
      * It use `commit` insteadof receive data vis `this.onDispatch`.
      */
     commit(commitment: Commitment): void {
-        const payload = commitment[0];
-        const meta = commitment[1];
+        const payload = commitment.payload;
+        const meta = commitment.meta;
+        const debugId = commitment.debugId;
         if (isTransactionBeganPayload(payload)) {
             // TODO: lock emitChange
             this.isTransactionWorking = true;
         } else if (!meta.isTrusted) {
-            this.tryToUpdateState(payload, meta);
+            this.tryToUpdateState(payload, meta, debugId);
         } else if (isErrorPayload(payload)) {
-            this.tryToUpdateState(payload, meta);
+            this.tryToUpdateState(payload, meta, debugId);
         } else if (isWillExecutedPayload(payload) && meta.useCase) {
             this._workingUseCaseMap.set(meta.useCase.id, true);
         } else if (isDidExecutedPayload(payload) && meta.useCase) {
             if (meta.isUseCaseFinished) {
                 this._finishedUseCaseMap.set(meta.useCase.id, true);
             }
-            this.tryToUpdateState(payload, meta);
+            this.tryToUpdateState(payload, meta, debugId);
         } else if (isCompletedPayload(payload) && meta.useCase && meta.isUseCaseFinished) {
             // if the useCase is already finished, doesn't emitChange in CompletedPayload
             // In other word, If the UseCase that return non-promise value, doesn't emitChange in CompletedPayload
@@ -367,7 +408,7 @@ But, ${store.name}#getState() was called.`
                 return;
             }
             // if the UseCase#execute has async behavior, try to update before actual completed
-            this.tryToUpdateState(payload, meta);
+            this.tryToUpdateState(payload, meta, debugId);
             // Now, this UseCase actual finish
             this._workingUseCaseMap.delete(meta.useCase.id);
         } else if (isTransactionEndedPayload(payload)) {

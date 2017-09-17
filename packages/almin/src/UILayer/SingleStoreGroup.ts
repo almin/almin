@@ -15,8 +15,11 @@ export class SingleStoreGroup<T extends Store> extends Dispatcher implements Sto
     private storeGroup: StoreGroup<{ target: T }>;
     private store: T;
 
+    name: string;
+
     constructor(store: T) {
         super();
+        this.name = `SingleStoreGroup(${store.name})`;
         this.store = store;
         this.storeGroup = new StoreGroup({
             target: store
