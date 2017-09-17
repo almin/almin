@@ -196,7 +196,7 @@ Not to allow to do multiple commits in a transaction`);
         // transaction exit work only once
         if (this.doesReflectActionAtLeastOne) {
             throw new Error(`Error(Transaction): This unit of work is already commit() or exit().
-Not to allow to do multiple exit in a transaction`);
+Disallow to do multiple exit in a transaction`);
         }
         this.doesReflectActionAtLeastOne = true;
         if (this.isTransactionWorking) {
