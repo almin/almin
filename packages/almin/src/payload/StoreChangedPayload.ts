@@ -9,7 +9,7 @@ import { StoreLike } from "../StoreLike";
 export const TYPE = "ALMIN_STORE_IS_CHANGED__";
 
 /**
- * StoreChangedPayload is begin of transaction
+ * ChangePayload is that represent a store is changed.
  */
 export class StoreChangedPayload extends Payload {
     store: StoreLike<any>;

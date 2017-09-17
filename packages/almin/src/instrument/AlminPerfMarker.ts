@@ -32,6 +32,7 @@ export class AlminPerfMarker implements AlminPerfMarkerAbstract {
         const markName = `almin::${debugID}::${markType}`;
         const measureName = `${displayName} [${markType}]`;
         performance.measure(measureName, markName);
+        // clear unneeded marks
         performance.clearMarks(markName);
     };
 
@@ -71,13 +72,20 @@ export class AlminPerfMarker implements AlminPerfMarkerAbstract {
         this.markEnd(debugId, "Store#receivePayload", displayName);
     }
 
-    beforeUseCaseExecute(debugId: DebugId, _useCase: UseCaseLike): void {
+    willUseCaseExecute(debugId: DebugId, _useCase: UseCaseLike): void {
         this.markBegin(debugId, "UserCase#execute");
     }
 
-    afterUseCaseExecute(debugId: DebugId, useCase: UseCaseLike): void {
+    didUseCaseExecute(debugId: DebugId, useCase: UseCaseLike): void {
         const displayName = useCase.name;
         this.markEnd(debugId, "UserCase#execute", displayName);
+        // did -> complete
+        this.markBegin(debugId, "UserCase#complete");
+    }
+
+    completeUseCaseExecute(debugId: DebugId, useCase: UseCaseLike): void {
+        const displayName = useCase.name;
+        this.markEnd(debugId, "UserCase#complete", displayName);
     }
 
     beginTransaction(debugId: string, _transaction: Transaction): void {

@@ -23,6 +23,7 @@ import { isTransactionBeganPayload } from "../payload/TransactionBeganPayload";
 import { isTransactionEndedPayload } from "../payload/TransactionEndedPayload";
 import AlminInstruments from "../instrument/AlminInstruments";
 import { DebugId } from "../instrument/AlminAbstractPerfMarker";
+import { generateNewId } from "./StoreGroupIdGenerator";
 
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
 
@@ -122,9 +123,7 @@ console.log(storeGroup.getState());
  *
  */
 export class StoreGroup<T> extends Dispatcher implements StoreGroupLike {
-    /**
-     * Set debuggable name if needed.
-     */
+    // Set debuggable name if needed.
     static displayName?: string;
     // observing stores
     public stores: Array<Store<T>>;
@@ -132,6 +131,8 @@ export class StoreGroup<T> extends Dispatcher implements StoreGroupLike {
     public state: StateMap<T>;
     // StoreGroup name
     public name: string;
+    // debug id
+    public id: string;
     // stores that are changed compared by previous state.
     private _changingStores: Array<Store<T>> = [];
     // all functions to release handlers
@@ -192,6 +193,7 @@ export class StoreGroup<T> extends Dispatcher implements StoreGroupLike {
          * @type {string} Store name
          */
         this.name = own.displayName || own.name || "StoreGroup";
+        this.id = generateNewId();
         this._storeStateMap = createStoreStateMap(stateStoreMapping);
         // pull stores from mapping if arguments is mapping.
         this.stores = this._storeStateMap.stores;
@@ -256,6 +258,8 @@ export class StoreGroup<T> extends Dispatcher implements StoreGroupLike {
     ): void {
         if (process.env.NODE_ENV !== "production" && AlminInstruments.debugTool) {
             if (debugId) {
+                // Notes: writer's `debugId` is difference by source
+                // It means that writer's `debugId` should not depended on StoreGroup-self.
                 AlminInstruments.debugTool.beforeStoreGroupWritePhase(debugId, this);
             }
         }
@@ -301,11 +305,23 @@ export class StoreGroup<T> extends Dispatcher implements StoreGroupLike {
     // read phase
     // Get state from each store
     private readPhaseInRead(stores: Array<Store<T>>): StateMap<T> {
+        const debugTool = AlminInstruments.debugTool;
+        if (process.env.NODE_ENV !== "production" && debugTool) {
+            // Notes: use StoreGroup#id as reader's `id`
+            // Because reader is sync behavior and it nos called multiple at a time.
+            debugTool.beforeStoreGroupReadPhase(this.id, this);
+        }
         const groupState: StoreGroupState = {};
         for (let i = 0; i < stores.length; i++) {
             const store = stores[i];
             const prevState = this._stateCacheMap.get(store);
+            if (process.env.NODE_ENV !== "production" && debugTool) {
+                debugTool.beforeStoreGetState(this.id, this);
+            }
             const nextState = store.getState();
+            if (process.env.NODE_ENV !== "production" && debugTool) {
+                debugTool.afterStoreGetState(this.id, this);
+            }
             // if the prev/next state is same, not update the state.
             const stateName = this._storeStateMap.get(store);
             if (process.env.NODE_ENV !== "production") {
@@ -329,6 +345,9 @@ But, ${store.name}#getState() was called.`
             this._addChangingStateOfStores(store);
             // Set state
             groupState[stateName!] = nextState;
+        }
+        if (process.env.NODE_ENV !== "production" && debugTool) {
+            debugTool.afterStoreGroupReadPhase(this.id, this);
         }
         return groupState as StateMap<T>;
     }

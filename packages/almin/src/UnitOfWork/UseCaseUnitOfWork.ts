@@ -1,6 +1,6 @@
 // MIT © 2017 azu
 import { Payload } from "../payload/Payload";
-import { DispatcherPayloadMeta, DispatcherPayloadMetaImpl } from "../DispatcherPayloadMeta";
+import { DispatcherPayloadMeta, DispatcherPayloadMetaImpl, Transaction } from "../DispatcherPayloadMeta";
 import { Commitment, UnitOfWork } from "./UnitOfWork";
 import { MapLike } from "map-like";
 import { UseCaseExecutor } from "../UseCaseExecutor";
@@ -8,7 +8,6 @@ import { Dispatcher } from "../Dispatcher";
 import { StoreGroupLike } from "../UILayer/StoreGroupLike";
 import { TransactionBeganPayload } from "../payload/TransactionBeganPayload";
 import { TransactionEndedPayload } from "../payload/TransactionEndedPayload";
-import AlminInstruments from "../instrument/AlminInstruments";
 
 export interface UseCaseUnitOfWorkOptions {
     autoCommit: boolean;
@@ -81,13 +80,10 @@ export class UseCaseUnitOfWork {
     }
 
     beginTransaction() {
-        if (process.env.NODE_ENV !== "production" && AlminInstruments.debugTool) {
-            AlminInstruments.debugTool.beginTransaction(this.id, {
-                id: this.id,
-                name: this.name
-            });
-        }
-
+        const transaction: Transaction = {
+            id: this.id,
+            name: this.name
+        };
         this.isTransactionWorking = true;
         const payload = new TransactionBeganPayload(this.name);
         const meta = new DispatcherPayloadMetaImpl({
@@ -101,16 +97,13 @@ export class UseCaseUnitOfWork {
             isTrusted: true,
             // Always false because the payload is dispatched from this working useCase.
             isUseCaseFinished: false,
-            transaction: {
-                id: this.id,
-                name: this.name
-            }
+            transaction: transaction
         });
         this.dispatcher.dispatch(payload, meta);
         this.unitOfWork.addCommitment({
             payload,
             meta,
-            debugId: this.id
+            debugId: transaction.id
         });
     }
 
@@ -138,10 +131,6 @@ export class UseCaseUnitOfWork {
         };
         const unsubscribe = useCaseExecutor.onDispatch(onDispatchOnUnitOfWork);
         this.unsubscribeMap.set(useCaseExecutor, unsubscribe);
-
-        if (process.env.NODE_ENV !== "production" && AlminInstruments.debugTool) {
-            AlminInstruments.debugTool.beforeUseCaseExecute(useCaseExecutor.useCase.id, useCaseExecutor.useCase);
-        }
     }
 
     /**
@@ -175,13 +164,10 @@ Not to allow to do multiple commits in a transaction`);
     }
 
     private createTransactionEndPayload(): Commitment {
-        // TODO: call more meaningful timining
-        if (process.env.NODE_ENV !== "production" && AlminInstruments.debugTool) {
-            AlminInstruments.debugTool.endTransaction(this.id, {
-                id: this.id,
-                name: this.name
-            });
-        }
+        const transaction: Transaction = {
+            id: this.id,
+            name: this.name
+        };
         // payload, meta
         const payload = new TransactionEndedPayload(this.name);
         const meta = new DispatcherPayloadMetaImpl({
@@ -195,10 +181,7 @@ Not to allow to do multiple commits in a transaction`);
             isTrusted: true,
             // Always false because the payload is dispatched from this working useCase.
             isUseCaseFinished: false,
-            transaction: {
-                id: this.id,
-                name: this.name
-            }
+            transaction: transaction
         });
         return {
             payload,
@@ -211,9 +194,6 @@ Not to allow to do multiple commits in a transaction`);
      * End transaction of the useCaseExecutor/UseCase
      */
     close(useCaseExecutor: UseCaseExecutor<any>) {
-        if (process.env.NODE_ENV !== "production" && AlminInstruments.debugTool) {
-            AlminInstruments.debugTool.afterUseCaseExecute(useCaseExecutor.useCase.id, useCaseExecutor.useCase);
-        }
         const unsubscribe = this.unsubscribeMap.get(useCaseExecutor);
         if (typeof unsubscribe !== "function") {
             console.error(

@@ -10,6 +10,7 @@ export type MarkType =
     | "Store#getState"
     | "Store#receivePayload"
     | "UserCase#execute"
+    | "UserCase#complete"
     | "Transaction";
 
 export abstract class AlminPerfMarkerAbstract {
@@ -36,9 +37,11 @@ export abstract class AlminPerfMarkerAbstract {
     abstract afterStoreReceivePayload(debugId: DebugId, store: StoreLike): void;
 
     // UserCase#execute
-    abstract beforeUseCaseExecute(debugId: DebugId, useCase: UseCaseLike): void;
+    abstract willUseCaseExecute(debugId: DebugId, useCase: UseCaseLike): void;
 
-    abstract afterUseCaseExecute(debugId: DebugId, useCase: UseCaseLike): void;
+    abstract didUseCaseExecute(debugId: DebugId, useCase: UseCaseLike): void;
+
+    abstract completeUseCaseExecute(debugId: DebugId, useCase: UseCaseLike): void;
 
     // Context#transation
     abstract beginTransaction(debugId: DebugId, transaction: Transaction): void;

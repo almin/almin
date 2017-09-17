@@ -23,6 +23,7 @@ import { createSingleStoreGroup } from "./UILayer/SingleStoreGroup";
 import { StoreGroupLike, StoreGroupReasonForChange } from "./UILayer/StoreGroupLike";
 import { LifeCycleEventHub } from "./LifeCycleEventHub";
 import { StoreChangedPayload } from "./payload/StoreChangedPayload";
+import AlminInstruments from "./instrument/AlminInstruments";
 
 const deprecateWarning = (methodName: string) => {
     console.warn(`Deprecated: Context.prototype.${methodName} is deprecated.
@@ -110,6 +111,7 @@ export class Context<T> {
         if (this.isStrictMode) {
             this.storeGroup.useStrict();
         }
+        // Store -> StoreGroup -> LifeCycleEventHub
         const storeGroupOnChangeToStoreChangedPayload = (
             stores: Array<StoreLike<any>>,
             details?: StoreGroupReasonForChange
@@ -130,6 +132,25 @@ export class Context<T> {
             });
         };
         this.storeGroup.onChange(storeGroupOnChangeToStoreChangedPayload);
+        // Instruments Transaction/UseCase lifecycle
+        if (process.env.NODE_ENV !== "production" && AlminInstruments.debugTool) {
+            const debugTool = AlminInstruments.debugTool;
+            this.lifeCycleEventHub.onBeginTransaction((_payload, meta) => {
+                meta.transaction && debugTool.beginTransaction(meta.transaction.id, meta.transaction);
+            });
+            this.lifeCycleEventHub.onWillExecuteEachUseCase((_payload, meta) => {
+                meta.useCase && debugTool.willUseCaseExecute(meta.useCase.id, meta.useCase);
+            });
+            this.lifeCycleEventHub.onDidExecuteEachUseCase((_payload, meta) => {
+                meta.useCase && debugTool.didUseCaseExecute(meta.useCase.id, meta.useCase);
+            });
+            this.lifeCycleEventHub.onCompleteEachUseCase((_payload, meta) => {
+                meta.useCase && debugTool.completeUseCaseExecute(meta.useCase.id, meta.useCase);
+            });
+            this.lifeCycleEventHub.onEndTransaction((_payload, meta) => {
+                meta.transaction && debugTool.endTransaction(meta.transaction.id, meta.transaction);
+            });
+        }
     }
 
     /**
