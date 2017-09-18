@@ -156,9 +156,6 @@ export class Context<T> {
         if (this.config.strict) {
             this.storeGroup.useStrict();
         }
-        if (this.config.performanceProfile && AlminInstruments.debugTool) {
-            AlminInstruments.debugTool.enableProfile();
-        }
         // Store -> StoreGroup -> LifeCycleEventHub
         const storeGroupOnChangeToStoreChangedPayload = (
             stores: Array<StoreLike<any>>,
@@ -181,7 +178,8 @@ export class Context<T> {
         };
         this.storeGroup.onChange(storeGroupOnChangeToStoreChangedPayload);
         // Instruments Transaction/UseCase lifecycle
-        if (process.env.NODE_ENV !== "production" && AlminInstruments.debugTool) {
+        if (process.env.NODE_ENV !== "production" && this.config.performanceProfile && AlminInstruments.debugTool) {
+            AlminInstruments.debugTool.enableProfile();
             const debugTool = AlminInstruments.debugTool;
             this.lifeCycleEventHub.onBeginTransaction((_payload, meta) => {
                 meta.transaction && debugTool.beginTransaction(meta.transaction.id, meta.transaction);
