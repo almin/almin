@@ -1,18 +1,25 @@
 # UseCase LifeCycle
 
+Almin has life-cycle events.
+These events are useful for logging like [almin-logger](https://www.npmjs.com/package/almin-logger "almin-logger").
+
+For more information about logging, see [Logging tips](./logging.md).
+
 ## LifeCycle events
 
 | Event                    | When                                   | 
 |--------------------------|----------------------------------------|
+| onBeginTransaction       | A transaction begin                    |
+| onEndTransaction         | A transaction end                      |
 | onWillExecuteEachUseCase | Each UseCase will Execute              |
 | onDispatch @1            | UseCase call `this.dispatch(payload)`  |
-| onError @1               | UseCase call `this.throwError(new Error())` |
-| onDidExecuteEachUseCase  | Each UseCase did executed.             |
-| onCompleteEachUseCase    | Each UseCase is completed.             |
+| onErrorDispatch @1       | UseCase call `this.throwError(new Error())` |
+| onDidExecuteEachUseCase  | Each UseCase did executed              |
+| onCompleteEachUseCase    | Each UseCase is completed              |
 
 @1 A single UseCase can call multiple.
 
-See [API Reference](https://almin.js.org/) for details of events.
+For more details, see [LifeCycleEventHub · API Reference](https://almin.js.org/docs/api/LifeCycleEventHub.html "LifeCycleEventHub · Almin.js").
 
 ## What the difference between `onDidExecuteEachUseCase` and `onCompleteEachUseCase`?
 
@@ -49,10 +56,10 @@ export default class AsyncUseCase extends UseCase {
     // 3. call onDidExecuteEachUseCase
 }
 // listen on*
-context.onWillExecuteEachUseCase((payload, meta) => {});
-context.onDispatch((payload, meta) => {});
-context.onDidExecuteEachUseCase((payload, meta) => {});
-context.onCompleteEachUseCase((payload, meta) => {});
+context.events.onWillExecuteEachUseCase((payload, meta) => {});
+context.events.onDispatch((payload, meta) => {});
+context.events.onDidExecuteEachUseCase((payload, meta) => {});
+context.events.onCompleteEachUseCase((payload, meta) => {});
 ```
 
-Always `onCompleteEachUseCase` is called after the `onDidExecuteEachUseCase`.
+`onCompleteEachUseCase` is always called after the `onDidExecuteEachUseCase`.

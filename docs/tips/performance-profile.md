@@ -1,6 +1,6 @@
 # Performance profile
 
-> Almin 1.4.0+
+> New in Almin 1.4.0+
 
 You can profiling UseCase execute, StoreGroup write/read, Store update using the browser developer tool timeline.
 
@@ -9,6 +9,8 @@ The example of profiling result.
 ![performance-timeline.png](./img/performance-timeline.png)
 
 ## Metrics
+
+Performance profile metrics.
 
 
 | Mark                     | Duration                                 |
@@ -22,7 +24,15 @@ The example of profiling result.
 | `[UserCase#complete]`    | From **did execute** to **complete** for each UseCase |
 
 
-Related: [UseCase LifeCycle](./usecase-lifecycle.md)
+Notes: Some metrics require strict mode.
+
+`[StoreGroup#write]` and `[Store#receivePayload]` require strict mode compatible Store implementation.
+In other words, you should implement `receivePayload` on your Store.
+
+For more information about life-cycle, see following:
+
+- [Strict mode](./strict-mode.md)
+- [UseCase LifeCycle](./usecase-lifecycle.md)
 
 ## How to use?
 
