@@ -16,8 +16,8 @@ The example of profiling result.
 | `[StoreGroup#write]`     | `StoreGroup` write payload to all stores(Total of `Store#receivePayload`) |
 | `[Store#getState]`       | The time is spent of `Store#getState ` for each Store |
 | `[Store#receivePayload]` | The time is pent of  `Store#receivePayload` for each Store |
-| `[UserCase#execute]`     | From **will execute** to **did executed **for each UseCase |
-| `[UserCase#complete]`    | From **did exected** to **complete **for each UseCase |
+| `[UserCase#execute]`     | From **will execute** to **did executed** for each UseCase |
+| `[UserCase#complete]`    | From **did execute** to **complete** for each UseCase |
 
 
 Related: [UseCase LifeCycle](./usecase-lifecycle.md)
