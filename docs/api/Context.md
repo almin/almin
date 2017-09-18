@@ -56,18 +56,21 @@ const appContext = new Context({
 ### `dispatcher: Dispatcher;`
 
 
-Dispatcher instance
+Pass Dispatcher instance
 
 ----
 
-### Interface 
-```typescript
-store: StoreLike<T>;
-    options?: {
-```
+### `store: StoreLike<T>;`
 
 
-StoreGroup instance
+Pass StoreGroup instance
+
+----
+
+### `options?: {`
+
+
+Context's option is optional
 
 ----
 

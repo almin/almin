@@ -51,13 +51,16 @@ See https://github.com/almin/almin/releases/tag/almin%400.13.10 for more details
  */
 export interface ContextArgs<T> {
     /**
-     * Dispatcher instance
+     * Pass Dispatcher instance
      */
     dispatcher: Dispatcher;
     /**
-     * StoreGroup instance
+     * Pass StoreGroup instance
      */
     store: StoreLike<T>;
+    /**
+     * Context's option is optional
+     */
     options?: {
         /**
          * Set `strict` to `true` to enable strict mode.
