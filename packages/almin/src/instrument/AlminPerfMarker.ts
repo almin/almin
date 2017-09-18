@@ -57,24 +57,24 @@ export class AlminPerfMarker extends EventEmitter implements AlminPerfMarkerAbst
     };
 
     beforeStoreGroupReadPhase(debugId: DebugId, _storeGroup: StoreGroupLike): void {
-        this.markBegin(debugId, "StoreGroup#readPhase");
+        this.markBegin(debugId, "StoreGroup#read");
         this.emit("beforeStoreGroupReadPhase");
     }
 
     afterStoreGroupReadPhase(debugId: DebugId, storeGroup: StoreGroupLike): void {
         const displayName = storeGroup.name;
-        this.markEnd(debugId, "StoreGroup#readPhase", displayName);
+        this.markEnd(debugId, "StoreGroup#read", displayName);
         this.emit("afterStoreGroupReadPhase");
     }
 
     beforeStoreGroupWritePhase(debugId: DebugId, _storeGroup: StoreGroupLike): void {
-        this.markBegin(debugId, "StoreGroup#writePhase");
+        this.markBegin(debugId, "StoreGroup#write");
         this.emit("beforeStoreGroupWritePhase");
     }
 
     afterStoreGroupWritePhase(debugId: DebugId, storeGroup: StoreGroupLike): void {
         const displayName = storeGroup.name;
-        this.markEnd(debugId, "StoreGroup#writePhase", displayName);
+        this.markEnd(debugId, "StoreGroup#write", displayName);
         this.emit("afterStoreGroupWritePhase");
     }
 

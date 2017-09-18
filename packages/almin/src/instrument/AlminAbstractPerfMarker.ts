@@ -5,8 +5,8 @@ import { Transaction } from "../DispatcherPayloadMeta";
 
 export type DebugId = string;
 export type MarkType =
-    | "StoreGroup#readPhase"
-    | "StoreGroup#writePhase"
+    | "StoreGroup#read"
+    | "StoreGroup#write"
     | "Store#getState"
     | "Store#receivePayload"
     | "UserCase#execute"
@@ -22,12 +22,12 @@ export abstract class AlminPerfMarkerAbstract {
 
     abstract shouldMark(debugId: DebugId): boolean;
 
-    // StoreGroup#readPhase
+    // StoreGroup#read
     abstract beforeStoreGroupReadPhase(debugId: DebugId, storeGroup: StoreGroupLike): void;
 
     abstract afterStoreGroupReadPhase(debugId: DebugId, storeGroup: StoreGroupLike): void;
 
-    // StoreGroup#writePhase
+    // StoreGroup#write
     abstract beforeStoreGroupWritePhase(debugId: DebugId, storeGroup: StoreGroupLike): void;
 
     abstract afterStoreGroupWritePhase(debugId: DebugId, storeGroup: StoreGroupLike): void;
