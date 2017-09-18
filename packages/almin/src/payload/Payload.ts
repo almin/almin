@@ -1,7 +1,11 @@
 // LICENSE : MIT
 "use strict";
 
-export class Payload {
+export interface PayloadArgs {
+    type: any;
+}
+
+export abstract class Payload {
     /**
      * `type` is unique property of the payload.
      * A `type` property which may not be `undefined`
@@ -9,10 +13,9 @@ export class Payload {
      */
     readonly type: any;
 
-    /**
-     * @param {*} type
-     */
-    constructor({ type }: { type: any }) {
-        this.type = type;
+    constructor(args?: PayloadArgs) {
+        if (args) {
+            this.type = args.type;
+        }
     }
 }
