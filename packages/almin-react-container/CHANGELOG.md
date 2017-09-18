@@ -1,7 +1,15 @@
 # Change Log
 
 All notable changes to this project will be documented in this file.
-See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+<a name="0.4.0"></a>
+# [0.4.0](https://github.com/almin/almin/compare/almin-react-container@0.3.9...almin-react-container@0.4.0) (2017-09-18)
+
+
+
+
+**Note:** Version bump only for package almin-react-container
 
 <a name="0.3.0"></a>
 # [0.3.0](https://github.com/almin/almin/compare/almin-react-container@0.2.2...almin-react-container@0.3.0) (2017-05-31)
