@@ -20,9 +20,9 @@
   "author": "azu",
   "license": "MIT",
   "dependencies": {
-    "almin": "^0.13.1",
+    "almin": "^0.14.0",
     "almin-logger": "^6.0.0",
-    "almin-react-container": "^0.3.11",
+    "almin-react-container": "^0.4.0",
     "power-assert": "^1.4.4",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",

@@ -10,7 +10,7 @@
   "author": "azu",
   "license": "MIT",
   "dependencies": {
-    "almin": "^0.13.10",
-    "prettysize": "0.0.3"
+    "almin": "^0.14.0",
+    "prettysize": "0.1.0"
   }
 }

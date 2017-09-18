@@ -18,7 +18,7 @@
   "author": "azu",
   "license": "MIT",
   "dependencies": {
-    "almin": "^0.13.11",
+    "almin": "^0.14.0",
     "almin-logger": "^6.0.0",
     "babel-preset-env": "^1.6.0",
     "babel-register": "^6.24.1",
@@ -36,10 +36,10 @@
     "@types/react-dom": "^15.5.1",
     "@types/uuid": "^3.4.0",
     "awesome-typescript-loader": "^3.2.1",
-    "cross-env": "^5.0.1",
+    "cross-env": "^5.0.5",
     "mkdirp": "^0.5.1",
-    "mocha": "^3.4.2",
-    "rimraf": "^2.5.2",
+    "mocha": "^3.5.3",
+    "rimraf": "^2.6.2",
     "typescript": "^2.4.2",
     "webpack": "^2.0.0",
     "webpack-dev-server": "^2.0.0"

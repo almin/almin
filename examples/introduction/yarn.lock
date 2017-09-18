@@ -48,9 +48,9 @@ align-text@^0.1.1, align-text@^0.1.3:
     longest "^1.0.1"
     repeat-string "^1.5.2"
 
-almin@^0.13.11:
-  version "0.13.11"
-  resolved "https://registry.yarnpkg.com/almin/-/almin-0.13.11.tgz#953c6efa380d4a9245c3ed05bf8fa4826363635e"
+almin@^0.14.0:
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/almin/-/almin-0.14.0.tgz#c625feddbf4739c4bd3079d819c9e25a92451aba"
   dependencies:
     map-like "^2.0.0"
     shallow-equal-object "^1.0.1"

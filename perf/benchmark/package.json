@@ -8,9 +8,9 @@
     "test": "test"
   },
   "dependencies": {
-    "almin": "^0.12.1",
-    "almin-0.9": "file:pacakges/almin-0.9",
+    "almin": "^0.14.0",
     "almin-0.12": "file:pacakges/almin-0.12",
+    "almin-0.9": "file:pacakges/almin-0.9",
     "json2csv": "^3.7.3",
     "lodash.range": "^3.2.0",
     "p-queue": "^1.0.0"
@@ -20,9 +20,9 @@
     "babel-polyfill": "^6.23.0",
     "babel-preset-es2015": "^6.22.0",
     "benchmark": "^2.1.3",
-    "cross-env": "^4.0.0",
+    "cross-env": "^5.0.5",
     "lodash": "^4.17.4",
-    "mocha": "^3.2.0",
+    "mocha": "^3.5.3",
     "rm-local-modules": "0.0.1",
     "testem": "^1.15.0",
     "webpack": "^2.2.1"

@@ -52,6 +52,13 @@ almin-logger@^5.0.0:
   dependencies:
     map-like "^2.0.0"
 
+almin@^0.13.0:
+  version "0.13.11"
+  resolved "https://registry.yarnpkg.com/almin/-/almin-0.13.11.tgz#953c6efa380d4a9245c3ed05bf8fa4826363635e"
+  dependencies:
+    map-like "^2.0.0"
+    shallow-equal-object "^1.0.1"
+
 ansi-html@0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/ansi-html/-/ansi-html-0.0.7.tgz#813584021962a9e9e6fd039f940d12f56ca7859e"
@@ -2850,6 +2857,10 @@ sha.js@^2.4.0, sha.js@^2.4.8:
   resolved "https://registry.yarnpkg.com/sha.js/-/sha.js-2.4.8.tgz#37068c2c476b6baf402d14a49c67f597921f634f"
   dependencies:
     inherits "^2.0.1"
+
+shallow-equal-object@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/shallow-equal-object/-/shallow-equal-object-1.0.1.tgz#a402410fb4b7c15370ec7e78701e9280f1c1d1e4"
 
 signal-exit@^3.0.0:
   version "3.0.2"

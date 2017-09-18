@@ -17,7 +17,7 @@
   "author": "azu",
   "license": "MIT",
   "dependencies": {
-    "almin": "^0.13.11",
+    "almin": "^0.14.0",
     "power-assert": "^1.4.4",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",

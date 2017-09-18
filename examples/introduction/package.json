@@ -10,7 +10,7 @@
   "author": "azu",
   "license": "MIT",
   "dependencies": {
-    "almin": "^0.13.11",
+    "almin": "^0.14.0",
     "react": "^15.6.1",
     "react-dom": "^15.6.1"
   },
