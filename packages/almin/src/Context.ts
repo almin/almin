@@ -23,6 +23,8 @@ import { createSingleStoreGroup } from "./UILayer/SingleStoreGroup";
 import { StoreGroupLike, StoreGroupReasonForChange } from "./UILayer/StoreGroupLike";
 import { LifeCycleEventHub } from "./LifeCycleEventHub";
 import { StoreChangedPayload } from "./payload/StoreChangedPayload";
+import AlminInstruments from "./instrument/AlminInstruments";
+import { ContextConfig } from "./ContextConfig";
 
 const deprecateWarning = (methodName: string) => {
     console.warn(`Deprecated: Context.prototype.${methodName} is deprecated.
@@ -32,13 +34,56 @@ See https://github.com/almin/almin/releases/tag/almin%400.13.10 for more details
 };
 
 /**
- * Context arguments
+ * Initialize Context with a dispatcher, a Store(Group), and options.
+ *
+ * ## Example
+ *
+ * ```js
+ * const appContext = new Context({
+ *     dispatcher: new Dispatcher(),
+ *     store: AppStore.create(),
+ *     options: {
+ *         strict: true,
+ *         performanceProfile: process.env.NODE_ENV !== "production"
+ *     }
+ * });
+ * ```
  */
 export interface ContextArgs<T> {
+    /**
+     * Pass Dispatcher instance
+     */
     dispatcher: Dispatcher;
+    /**
+     * Pass StoreGroup instance
+     */
     store: StoreLike<T>;
+    /**
+     * Context's option is optional
+     */
     options?: {
+        /**
+         * Set `strict` to `true` to enable strict mode.
+         *
+         * Strict mode ensure consistency in almin.
+         * If you update your store outside of almin, show warning in strict mode.
+         *
+         * For more details, see <https://almin.js.org/docs/tips/strict-mode.html>
+         *
+         * Default: false(`false` in production build)
+         */
         strict?: boolean;
+        /**
+         * Set `performanceProfile` to `true` to enable profiling performance.
+         *
+         * If it is `true`, Show UseCase, Store, StoreGroup, and Transaction performance tracing in the browser devtool timeline.
+         * Only works in development mode and in browsers that support the [Performance.mark()](https://developer.mozilla.org/en-US/docs/Web/API/Performance/mark).
+         *
+         * For more details, see <https://almin.js.org/docs/tips/performance-profile.html>
+         *
+         * Default: false(`false` in production build)
+         */
+        performanceProfile?: boolean;
     };
 }
 
@@ -52,7 +97,7 @@ export class Context<T> {
     private dispatcher: Dispatcher;
     private lifeCycleEventHub: LifeCycleEventHub;
     private storeGroup: StoreGroupLike;
-    private isStrictMode = false;
+    private config: ContextConfig;
 
     /**
      * `dispatcher` is an instance of `Dispatcher`.
@@ -106,10 +151,15 @@ export class Context<T> {
             storeGroup: this.storeGroup
         });
 
-        this.isStrictMode = args.options !== undefined && args.options.strict === true;
-        if (this.isStrictMode) {
+        const options = args.options || {};
+        this.config = new ContextConfig({
+            strict: options.strict,
+            performanceProfile: options.performanceProfile
+        });
+        if (this.config.strict) {
             this.storeGroup.useStrict();
         }
+        // Store -> StoreGroup -> LifeCycleEventHub
         const storeGroupOnChangeToStoreChangedPayload = (
             stores: Array<StoreLike<any>>,
             details?: StoreGroupReasonForChange
@@ -130,6 +180,26 @@ export class Context<T> {
             });
         };
         this.storeGroup.onChange(storeGroupOnChangeToStoreChangedPayload);
+        // Instruments Transaction/UseCase lifecycle
+        if (process.env.NODE_ENV !== "production" && this.config.performanceProfile && AlminInstruments.debugTool) {
+            const debugTool = AlminInstruments.debugTool;
+            debugTool.beginProfile();
+            this.lifeCycleEventHub.onBeginTransaction((_payload, meta) => {
+                meta.transaction && debugTool.beginTransaction(meta.transaction.id, meta.transaction);
+            });
+            this.lifeCycleEventHub.onWillExecuteEachUseCase((_payload, meta) => {
+                meta.useCase && debugTool.willUseCaseExecute(meta.useCase.id, meta.useCase);
+            });
+            this.lifeCycleEventHub.onDidExecuteEachUseCase((_payload, meta) => {
+                meta.useCase && debugTool.didUseCaseExecute(meta.useCase.id, meta.useCase);
+            });
+            this.lifeCycleEventHub.onCompleteEachUseCase((_payload, meta) => {
+                meta.useCase && debugTool.completeUseCaseExecute(meta.useCase.id, meta.useCase);
+            });
+            this.lifeCycleEventHub.onEndTransaction((_payload, meta) => {
+                meta.transaction && debugTool.endTransaction(meta.transaction.id, meta.transaction);
+            });
+        }
     }
 
     /**
@@ -341,7 +411,7 @@ export class Context<T> {
      */
     transaction(name: string, transactionHandler: (transactionContext: TransactionContext) => Promise<any>) {
         if (process.env.NODE_ENV !== "production") {
-            if (!this.isStrictMode) {
+            if (!this.config.strict) {
                 console.error(`Warning(Context): Context#transaction only use in strict mode.
 Because, the transaction should have reliability of updating stores. strict mode promise it.
 Please enable strict mode via \`new Context({ dispatcher, store, options: { strict: true });\`

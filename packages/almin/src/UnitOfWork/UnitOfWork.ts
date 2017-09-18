@@ -3,18 +3,23 @@ import { EventEmitter } from "events";
 import { Payload } from "../payload/Payload";
 import { DispatcherPayloadMeta } from "../DispatcherPayloadMeta";
 import { generateNewId } from "./UnitOfWorkIdGenerator";
+import { DebugId } from "../instrument/AlminAbstractPerfMarker";
 /**
  * Commitment is a tuple of payload and meta.
  * It is a minimal unit of transaction.
  *
- * Notes: Why commitment is array?
+ * Notes: Why commitment is object?
  * commitment is collect as array at once.
  * Pass it StoreGroup directly.
  * If use ...arguments, it has spread cost by transpiler.
  *
  * It is similar reason to why use Dispatcher insteadof EventEmitter.
  */
-export type Commitment = [Payload, DispatcherPayloadMeta];
+export type Commitment = {
+    payload: Payload;
+    meta: DispatcherPayloadMeta;
+    debugId: DebugId;
+};
 
 /**
  * Unit of work committing target

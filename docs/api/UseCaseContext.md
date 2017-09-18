@@ -36,7 +36,7 @@ class ParentUseCase extends UseCase {
 ### Interface 
 ```typescript
 useCase(useCase: UseCaseFunction): UseCaseExecutor<FunctionalUseCase>;
-useCase<T extends UseCaseLike>(useCase: T): UseCaseExecutor<T>;
+    useCase<T extends UseCaseLike>(useCase: T): UseCaseExecutor<T>;
 ```
 
 

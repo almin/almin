@@ -1,6 +1,6 @@
 // MIT © 2017 azu
 import { Payload } from "../payload/Payload";
-import { DispatcherPayloadMeta, DispatcherPayloadMetaImpl } from "../DispatcherPayloadMeta";
+import { DispatcherPayloadMeta, DispatcherPayloadMetaImpl, Transaction } from "../DispatcherPayloadMeta";
 import { Commitment, UnitOfWork } from "./UnitOfWork";
 import { MapLike } from "map-like";
 import { UseCaseExecutor } from "../UseCaseExecutor";
@@ -80,6 +80,10 @@ export class UseCaseUnitOfWork {
     }
 
     beginTransaction() {
+        const transaction: Transaction = {
+            id: this.id,
+            name: this.name
+        };
         this.isTransactionWorking = true;
         const payload = new TransactionBeganPayload(this.name);
         const meta = new DispatcherPayloadMetaImpl({
@@ -93,13 +97,14 @@ export class UseCaseUnitOfWork {
             isTrusted: true,
             // Always false because the payload is dispatched from this working useCase.
             isUseCaseFinished: false,
-            transaction: {
-                id: this.id,
-                name: this.name
-            }
+            transaction: transaction
         });
         this.dispatcher.dispatch(payload, meta);
-        this.unitOfWork.addCommitment([payload, meta]);
+        this.unitOfWork.addCommitment({
+            payload,
+            meta,
+            debugId: transaction.id
+        });
     }
 
     /**
@@ -116,7 +121,11 @@ export class UseCaseUnitOfWork {
             }
             // Notes: It is specific order for updating store logging
             // 1. Commit
-            this.unitOfWork.addCommitment([payload, meta]);
+            this.unitOfWork.addCommitment({
+                payload,
+                meta,
+                debugId: this.id
+            });
             // 2. Dispatch to Dispatcher
             this.dispatcher.dispatch(payload, meta);
         };
@@ -147,7 +156,7 @@ Not to allow to do multiple commits in a transaction`);
             this.unitOfWork.addCommitment(commitment);
             this.unitOfWork.commit();
             // 2. dispatch
-            this.dispatcher.dispatch(commitment[0], commitment[1]);
+            this.dispatcher.dispatch(commitment.payload, commitment.meta);
             this.isTransactionWorking = false;
         }
         // commit flag
@@ -155,6 +164,10 @@ Not to allow to do multiple commits in a transaction`);
     }
 
     private createTransactionEndPayload(): Commitment {
+        const transaction: Transaction = {
+            id: this.id,
+            name: this.name
+        };
         // payload, meta
         const payload = new TransactionEndedPayload(this.name);
         const meta = new DispatcherPayloadMetaImpl({
@@ -168,12 +181,13 @@ Not to allow to do multiple commits in a transaction`);
             isTrusted: true,
             // Always false because the payload is dispatched from this working useCase.
             isUseCaseFinished: false,
-            transaction: {
-                id: this.id,
-                name: this.name
-            }
+            transaction: transaction
         });
-        return [payload, meta];
+        return {
+            payload,
+            meta,
+            debugId: this.id
+        };
     }
 
     /**
@@ -196,12 +210,12 @@ Not to allow to do multiple commits in a transaction`);
         // transaction exit work only once
         if (this.doesReflectActionAtLeastOne) {
             throw new Error(`Error(Transaction): This unit of work is already commit() or exit().
-Not to allow to do multiple exit in a transaction`);
+Disallow to do multiple exit in a transaction`);
         }
         this.doesReflectActionAtLeastOne = true;
         if (this.isTransactionWorking) {
             const commitment = this.createTransactionEndPayload();
-            this.dispatcher.dispatch(commitment[0], commitment[1]);
+            this.dispatcher.dispatch(commitment.payload, commitment.meta);
             this.isTransactionWorking = false;
         }
     }

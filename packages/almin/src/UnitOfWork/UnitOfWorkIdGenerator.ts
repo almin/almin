@@ -7,5 +7,5 @@ let _UnitOfWorkId: number = 0;
  */
 export const generateNewId = (): string => {
     _UnitOfWorkId++;
-    return String(`UnitOfWork__${_UnitOfWorkId}`);
+    return `UnitOfWork__${_UnitOfWorkId}`;
 };

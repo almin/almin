@@ -7,5 +7,5 @@ let _UseCaseCount: number = 0;
  */
 export const generateNewId = (): string => {
     _UseCaseCount++;
-    return String(`UseCase__${_UseCaseCount}`);
+    return `UseCase__${_UseCaseCount}`;
 };

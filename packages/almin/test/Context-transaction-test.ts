@@ -583,7 +583,11 @@ describe("Context#transaction", () => {
             const receivedCommitments: Commitment[] = [];
             const aStore = createStore({ name: "test" });
             aStore.onDispatch((payload, meta) => {
-                receivedCommitments.push([payload, meta]);
+                receivedCommitments.push({
+                    payload,
+                    meta,
+                    debugId: "x"
+                });
             });
             const storeGroup = new StoreGroup({ a: aStore });
             const context = new Context({

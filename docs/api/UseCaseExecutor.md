@@ -90,7 +90,7 @@ You should not relay on the data of the command result.
 ### Interface 
 ```typescript
 execute(): Promise<void>;
-execute<T>(args: T): Promise<void>;
+    execute<T>(args: T): Promise<void>;
 ```
 
 

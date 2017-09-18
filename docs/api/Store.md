@@ -16,7 +16,7 @@ export declare abstract class Store<State = any> extends Dispatcher implements S
     setState(newState: State): void;
     shouldStateUpdate(prevState: any | State, nextState: any | State): boolean;
     receivePayload?(payload: Payload): void;
-    onDispatch(handler: (payload: Payload | UserDefinedPayload, meta: DispatcherPayloadMeta) => void): () => void;
+    onDispatch(handler: (payload: Payload | AnyPayload, meta: DispatcherPayloadMeta) => void): () => void;
     onChange(cb: (changingStores: Array<this>) => void): () => void;
     emitChange(): void;
     release(): void;
@@ -222,7 +222,7 @@ In other word, you can create/cache the state data for `Store#getState()`
 
 ----
 
-### `onDispatch(handler: (payload: Payload | UserDefinedPayload, meta: DispatcherPayloadMeta) => void): () => void;`
+### `onDispatch(handler: (payload: Payload | AnyPayload, meta: DispatcherPayloadMeta) => void): () => void;`
 
 
 Add `handler`(subscriber) to Store and return unsubscribe function

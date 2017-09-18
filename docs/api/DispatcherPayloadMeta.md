@@ -7,6 +7,7 @@
 
 ```typescript
 export interface Transaction {
+    readonly id: string;
     readonly name: string;
 }
 export interface DispatcherPayloadMeta {
@@ -25,6 +26,7 @@ export interface DispatcherPayloadMeta {
 ### Interface 
 ```typescript
 export interface Transaction {
+    readonly id: string;
     readonly name: string;
 ```
 
