@@ -1,5 +1,7 @@
 # Performance profile
 
+> Almin 1.4.0+
+
 You can profiling UseCase execute, StoreGroup write/read, Store update using the browser developer tool timeline.
 
 The example of profiling result.
