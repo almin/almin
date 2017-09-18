@@ -21,6 +21,7 @@
 - Tips
     - [Strict mode](./docs/tips/strict-mode.md)
     - [Logging](./docs/tips/logging.md)
+    - [Performance profile](./docs/tips/performance-profile.md)
     - [Nesting UseCase](./docs/tips/nesting-usecase.md)
     - [LifeCycle of UseCase](./docs/tips/usecase-lifecycle.md)
 - Warnings
