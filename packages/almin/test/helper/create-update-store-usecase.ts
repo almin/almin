@@ -2,8 +2,9 @@
 "use strict";
 import { UseCase, Store } from "../../src/index";
 import { shallowEqual } from "shallow-equal-object";
+import { Payload } from "../../src/payload/Payload";
 
-export function createUpdatableStoreWithUseCase(name) {
+export function createUpdatableStoreWithUseCase(name: string) {
     let sharedState = {};
 
     /**
@@ -11,14 +12,14 @@ export function createUpdatableStoreWithUseCase(name) {
      * The change will be apply on Store#receivePayload
      * @param {*} newState
      */
-    const requestUpdateState = newState => {
+    const requestUpdateState = (newState: any) => {
         sharedState = newState;
     };
 
     /**
      * This UseCase can update Store via Store#receivePayload
      */
-    class MockUseCase extends UseCase {
+    abstract class MockUseCase extends UseCase {
         constructor() {
             super();
             this.name = `${name}UseCase`;
@@ -28,7 +29,7 @@ export function createUpdatableStoreWithUseCase(name) {
          * Update State
          * @param {*} newState
          */
-        requestUpdateState(newState) {
+        requestUpdateState(newState: any) {
             requestUpdateState(newState);
         }
     }
@@ -40,7 +41,7 @@ export function createUpdatableStoreWithUseCase(name) {
             this.state = {};
         }
 
-        receivePayload(payload) {
+        receivePayload(_payload: Payload) {
             if (!shallowEqual(this.state, sharedState)) {
                 this.setState(sharedState);
             }

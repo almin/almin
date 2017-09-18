@@ -4,6 +4,7 @@ import { StoreLike } from "../StoreLike";
 import { StoreGroupLike } from "../UILayer/StoreGroupLike";
 import { AlminPerfMarkerAbstract, DebugId, MarkType } from "./AlminAbstractPerfMarker";
 import { Transaction } from "../DispatcherPayloadMeta";
+import { EventEmitter } from "events";
 
 const canUsePerformanceMeasure: boolean =
     typeof performance !== "undefined" &&
@@ -12,10 +13,10 @@ const canUsePerformanceMeasure: boolean =
     typeof performance.measure === "function" &&
     typeof performance.clearMeasures === "function";
 
-export class AlminPerfMarker implements AlminPerfMarkerAbstract {
+export class AlminPerfMarker extends EventEmitter implements AlminPerfMarkerAbstract {
     private _isProfiling = false;
 
-    enableProfile(): void {
+    beginProfile(): void {
         this._isProfiling = true;
     }
 
@@ -23,8 +24,9 @@ export class AlminPerfMarker implements AlminPerfMarkerAbstract {
         return this._isProfiling;
     }
 
-    disableProfile(): void {
+    endProfile(): void {
         this._isProfiling = false;
+        this.removeAllListeners();
     }
 
     shouldMark(_debugId: DebugId) {
@@ -56,42 +58,51 @@ export class AlminPerfMarker implements AlminPerfMarkerAbstract {
 
     beforeStoreGroupReadPhase(debugId: DebugId, _storeGroup: StoreGroupLike): void {
         this.markBegin(debugId, "StoreGroup#readPhase");
+        this.emit("beforeStoreGroupReadPhase");
     }
 
     afterStoreGroupReadPhase(debugId: DebugId, storeGroup: StoreGroupLike): void {
         const displayName = storeGroup.name;
         this.markEnd(debugId, "StoreGroup#readPhase", displayName);
+        this.emit("afterStoreGroupReadPhase");
     }
 
     beforeStoreGroupWritePhase(debugId: DebugId, _storeGroup: StoreGroupLike): void {
         this.markBegin(debugId, "StoreGroup#writePhase");
+        this.emit("beforeStoreGroupWritePhase");
     }
 
     afterStoreGroupWritePhase(debugId: DebugId, storeGroup: StoreGroupLike): void {
         const displayName = storeGroup.name;
         this.markEnd(debugId, "StoreGroup#writePhase", displayName);
+        this.emit("afterStoreGroupWritePhase");
     }
 
     beforeStoreGetState(debugId: DebugId, _store: StoreLike): void {
         this.markBegin(debugId, "Store#getState");
+        this.emit("beforeStoreGetState");
     }
 
     afterStoreGetState(debugId: DebugId, store: StoreLike): void {
         const displayName = store.name;
         this.markEnd(debugId, "Store#getState", displayName);
+        this.emit("afterStoreGetState");
     }
 
     beforeStoreReceivePayload(debugId: DebugId, _store: StoreLike): void {
         this.markBegin(debugId, "Store#receivePayload");
+        this.emit("beforeStoreReceivePayload");
     }
 
     afterStoreReceivePayload(debugId: DebugId, store: StoreLike): void {
         const displayName = store.name;
         this.markEnd(debugId, "Store#receivePayload", displayName);
+        this.emit("afterStoreReceivePayload");
     }
 
     willUseCaseExecute(debugId: DebugId, _useCase: UseCaseLike): void {
         this.markBegin(debugId, "UserCase#execute");
+        this.emit("willUseCaseExecute");
     }
 
     didUseCaseExecute(debugId: DebugId, useCase: UseCaseLike): void {
@@ -99,19 +110,23 @@ export class AlminPerfMarker implements AlminPerfMarkerAbstract {
         this.markEnd(debugId, "UserCase#execute", displayName);
         // did -> complete
         this.markBegin(debugId, "UserCase#complete");
+        this.emit("didUseCaseExecute");
     }
 
     completeUseCaseExecute(debugId: DebugId, useCase: UseCaseLike): void {
         const displayName = useCase.name;
         this.markEnd(debugId, "UserCase#complete", displayName);
+        this.emit("completeUseCaseExecute");
     }
 
     beginTransaction(debugId: string, _transaction: Transaction): void {
         this.markBegin(debugId, "Transaction");
+        this.emit("beginTransaction");
     }
 
     endTransaction(debugId: string, transaction: Transaction): void {
         const displayName = transaction.name;
         this.markEnd(debugId, "Transaction", displayName);
+        this.emit("endTransaction");
     }
 }

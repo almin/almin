@@ -14,11 +14,11 @@ export type MarkType =
     | "Transaction";
 
 export abstract class AlminPerfMarkerAbstract {
-    abstract enableProfile(): void;
+    abstract beginProfile(): void;
 
     abstract get isProfiling(): boolean;
 
-    abstract disableProfile(): void;
+    abstract endProfile(): void;
 
     abstract shouldMark(debugId: DebugId): boolean;
 

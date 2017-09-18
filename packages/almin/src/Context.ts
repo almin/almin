@@ -179,8 +179,8 @@ export class Context<T> {
         this.storeGroup.onChange(storeGroupOnChangeToStoreChangedPayload);
         // Instruments Transaction/UseCase lifecycle
         if (process.env.NODE_ENV !== "production" && this.config.performanceProfile && AlminInstruments.debugTool) {
-            AlminInstruments.debugTool.enableProfile();
             const debugTool = AlminInstruments.debugTool;
+            debugTool.beginProfile();
             this.lifeCycleEventHub.onBeginTransaction((_payload, meta) => {
                 meta.transaction && debugTool.beginTransaction(meta.transaction.id, meta.transaction);
             });
