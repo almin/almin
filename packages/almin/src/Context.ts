@@ -67,6 +67,7 @@ export interface ContextArgs<T> {
          *
          * Strict mode ensure consistency in almin.
          * If you update your store outside of almin, show warning in strict mode.
+         *
          * For more details, see <https://almin.js.org/docs/tips/strict-mode.html>
          *
          * Default: false(`false` in production build)

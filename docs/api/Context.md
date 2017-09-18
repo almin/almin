@@ -81,7 +81,8 @@ Set `strict` to `true` to enable strict mode.
 
 Strict mode ensure consistency in almin.
 If you update your store outside of almin, show warning in strict mode.
-https://almin.js.org/docs/tips/strict-mode.html
+
+For more details, see <https://almin.js.org/docs/tips/strict-mode.html>
 
 Default: false(`false` in production build)
 
@@ -92,8 +93,10 @@ Default: false(`false` in production build)
 
 Set `performanceProfile` to `true` to enable profiling performance.
 
-It enable UseCase, Store, StoreGroup, and Transaction performance tracing in the browser devtool timeline.
+If it is `true`, Show UseCase, Store, StoreGroup, and Transaction performance tracing in the browser devtool timeline.
 Only works in development mode and in browsers that support the [Performance.mark()](https://developer.mozilla.org/en-US/docs/Web/API/Performance/mark).
+
+For more details, see <https://almin.js.org/docs/tips/performance-profile.html>
 
 Default: false(`false` in production build)
 
