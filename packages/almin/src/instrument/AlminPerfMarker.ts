@@ -13,7 +13,24 @@ const canUsePerformanceMeasure: boolean =
     typeof performance.clearMeasures === "function";
 
 export class AlminPerfMarker implements AlminPerfMarkerAbstract {
+    private _isProfiling = false;
+
+    enableProfile(): void {
+        this._isProfiling = true;
+    }
+
+    get isProfiling(): boolean {
+        return this._isProfiling;
+    }
+
+    disableProfile(): void {
+        this._isProfiling = false;
+    }
+
     shouldMark(_debugId: DebugId) {
+        if (!this._isProfiling) {
+            return false;
+        }
         return canUsePerformanceMeasure;
     }
 
@@ -34,6 +51,7 @@ export class AlminPerfMarker implements AlminPerfMarkerAbstract {
         performance.measure(measureName, markName);
         // clear unneeded marks
         performance.clearMarks(markName);
+        performance.clearMeasures(measureName);
     };
 
     beforeStoreGroupReadPhase(debugId: DebugId, _storeGroup: StoreGroupLike): void {

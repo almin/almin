@@ -36,7 +36,7 @@ LifeCycleEventHub provide the way for observing almin life-cycle events.
 ### `onChangeStore(handler: (payload: StoreChangedPayload, meta: DispatcherPayloadMeta) => void): () => void;`
 
 
-Register `handler` function that is called when Store is changed.
+Register `handler` function that is called when a Store is changed.
 
 ## Notes
 
@@ -44,7 +44,7 @@ This event should not use for updating view.
 
 ```js
 // BAD
-context.events.onChangeStore(() => {
+context.events.onChangeStore((store) => {
    updateView();
 })
 ```

@@ -11,6 +11,7 @@ export interface ContextArgs<T> {
     store: StoreLike<T>;
     options?: {
         strict?: boolean;
+        performanceProfile?: boolean;
     };
 }
 export declare class Context<T> {
@@ -32,18 +33,66 @@ export declare class Context<T> {
 
 ----
 
+### `export interface ContextArgs<T> {`
+
+
+Initialize Context with a dispatcher, a Store(Group), and options.
+
+## Example
+
+```js
+const appContext = new Context({
+    dispatcher: new Dispatcher(),
+    store: AppStore.create(),
+    options: {
+        strict: true,
+        performanceProfile: process.env.NODE_ENV !== "production"
+    }
+});
+```
+
+----
+
+### `dispatcher: Dispatcher;`
+
+
+Dispatcher instance
+
+----
+
 ### Interface 
 ```typescript
-export interface ContextArgs<T> {
-    dispatcher: Dispatcher;
-    store: StoreLike<T>;
+store: StoreLike<T>;
     options?: {
-        strict?: boolean;
-    };
 ```
 
 
-Context arguments
+StoreGroup instance
+
+----
+
+### `strict?: boolean;`
+
+
+Set `strict` to `true` to enable strict mode.
+
+Strict mode ensure consistency in almin.
+If you update your store outside of almin, show warning in strict mode.
+https://almin.js.org/docs/tips/strict-mode.html
+
+Default: false(`false` in production build)
+
+----
+
+### `performanceProfile?: boolean;`
+
+
+Set `performanceProfile` to `true` to enable profiling performance.
+
+It enable UseCase, Store, StoreGroup, and Transaction performance tracing in the browser devtool timeline.
+Only works in development mode and in browsers that support the [Performance.mark()](https://developer.mozilla.org/en-US/docs/Web/API/Performance/mark).
+
+Default: false(`false` in production build)
 
 ----
 
@@ -145,7 +194,7 @@ By contrast, `context.events.*` is not optimized data. it is useful for logging.
 ### Interface 
 ```typescript
 useCase(useCase: UseCaseFunction): UseCaseExecutor<FunctionalUseCase>;
-useCase<T extends UseCaseLike>(useCase: T): UseCaseExecutor<T>;
+    useCase<T extends UseCaseLike>(useCase: T): UseCaseExecutor<T>;
 ```
 
 

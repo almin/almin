@@ -26,10 +26,22 @@ function stripIndent(str) {
 
    return indent > 0 ? str.replace(re, "") : str;
 };
+
+function stripEndBracket(text){
+    var endBracketPattern = /};?$/;
+    if(endBracketPattern.test(text)){
+        var striped = text.replace(endBracketPattern, "").trim();
+        return stripEndBracket(striped);
+    }else{
+        return text;
+    }
+}
 // Multiple line or Single Header
 function renderAPIHeader(section) {
    // remove } block
-   const header = stripIndent(section.codeText.replace(/}$/m, "")).trim();
+   const header = stripIndent(
+     stripEndBracket(section.codeText.trim())
+   ).trim();
    if(header.split("\n").length > 1){
      return "### Interface \n"
       + "```typescript\n"
