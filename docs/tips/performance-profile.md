@@ -50,7 +50,11 @@ const appContext = new Context({
 });
 ```
 
-## Similar
+## Related
+
+- [UseCase LifeCycle](./usecase-lifecycle.md)
+
+## Similar options
 
 - [Vue.js](https://vuejs.org/v2/api/#performance "Vue.js")'s `performance` options
 - [React](https://facebook.github.io/react/ "React - A JavaScript library for building user interfaces") and`?react_perf`
