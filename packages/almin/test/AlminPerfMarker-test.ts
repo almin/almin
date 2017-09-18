@@ -87,7 +87,7 @@ describe("AlminPerfMarker", () => {
                     });
             })
             .then(() => {
-                assert.deepStrictEqual(markedEvents, expected);
+                assert.deepEqual(markedEvents, expected);
             });
     });
 });
