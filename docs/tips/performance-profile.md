@@ -22,7 +22,7 @@ The example of profiling result.
 
 Related: [UseCase LifeCycle](./usecase-lifecycle.md)
 
-## How to enable?
+## How to use?
 
 You can turn on performance profile by `performanceProfile` option. 
 
