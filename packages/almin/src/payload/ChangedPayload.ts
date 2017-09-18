@@ -10,9 +10,11 @@ export const TYPE = "ALMIN__ChangedPayload__";
 /**
  * ChangePayload is that represent something is changed.
  * Often, Store is changed.
+ * @deprecated
  */
 export class ChangedPayload extends Payload {
     constructor() {
         super({ type: TYPE });
+        console.warn("ChangedPayload will be removed.");
     }
 }
