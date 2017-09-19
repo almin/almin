@@ -38,9 +38,17 @@
     "test:saucelabs": "npm run build:test && zuul -- out/test/*-test.js",
     "test:browser": "npm run build:test && zuul --local 8080 --ui mocha-bdd -- out/test/*-test.js",
     "posttest": "rimraf out/",
-    "ci": "npm test",
+    "presize": "npm-run-all -s clean build",
+    "size": "size-limit",
+    "ci": "npm test && npm run size",
     "prepublish": "npm run --if-present build"
   },
+  "size-limit": [
+    {
+      "path": "lib/src/index.js",
+      "limit": "15 KB"
+    }
+  ],
   "keywords": [
     "flux",
     "cqrs",
@@ -62,6 +70,7 @@
     "power-assert": "^1.4.4",
     "rimraf": "^2.6.0",
     "sinon": "^2.3.8",
+    "size-limit": "^0.11.4",
     "source-map-support": "^0.4.15",
     "typescript": "~2.3.1",
     "zuul": "^3.10.1"
