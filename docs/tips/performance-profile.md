@@ -23,8 +23,13 @@ Performance profile metrics.
 | `[UserCase#execute]`     | From **will execute** to **did executed** for each UseCase |
 | `[UserCase#complete]`    | From **did execute** to **complete** for each UseCase |
 
+**Note 1**: `[UserCase#complete]` is long 
 
-Notes: Some metrics require strict mode.
+It it expected result. Because each UseCase have been completed by async.
+
+For more details, See [UseCase LifeCycle](./usecase-lifecycle.md) document.
+
+**Note 2**: Some metrics require strict mode
 
 `[StoreGroup#write]` and `[Store#receivePayload]` require strict mode compatible Store implementation.
 In other words, you should implement `receivePayload` on your Store.
