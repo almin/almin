@@ -16,7 +16,7 @@
     "url": "https://github.com/almin/almin/issues"
   },
   "version": "0.14.0",
-  "description": "Flux/CQRS patterns for JavaScript app.",
+  "description": "Client-side DDD/CQRS for JavaScript.",
   "main": "lib/src/index.js",
   "types": "lib/src/index.d.ts",
   "directories": {
