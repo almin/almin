@@ -1,0 +1,8 @@
+version: 1
+rules:
+  - expected: Almin
+    patterns:
+      - Almin.js
+  - expected: almin
+    patterns:
+      - almin.js

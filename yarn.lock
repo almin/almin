@@ -755,6 +755,10 @@ commander@2.9.0, commander@>=2.9.0, commander@^2.9.0:
   dependencies:
     graceful-readlink ">= 1.0.0"
 
+commandpost@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/commandpost/-/commandpost-1.2.1.tgz#2e9c4c7508b9dc704afefaa91cab92ee6054cc68"
+
 compare-func@^1.3.1:
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/compare-func/-/compare-func-1.3.2.tgz#99dd0ba457e1f9bc722b12c08ec33eeab31fa648"
@@ -1158,6 +1162,10 @@ diff@^2.2.2:
   version "2.2.3"
   resolved "https://registry.yarnpkg.com/diff/-/diff-2.2.3.tgz#60eafd0d28ee906e4e8ff0a52c1229521033bf99"
 
+diff@^3.3.0:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/diff/-/diff-3.3.1.tgz#aa8567a6eed03c531fc89d3f711cd0e5259dec75"
+
 dom-serializer@0, dom-serializer@0.1.0, dom-serializer@~0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/dom-serializer/-/dom-serializer-0.1.0.tgz#073c697546ce0780ce23be4a28e293e40bc30c82"
@@ -1319,6 +1327,10 @@ eslint-plugin-prettier@^2.1.2:
 esprima@^3.1.1:
   version "3.1.3"
   resolved "https://registry.yarnpkg.com/esprima/-/esprima-3.1.3.tgz#fdca51cee6133895e3c88d535ce49dbff62a4633"
+
+esprima@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/esprima/-/esprima-4.0.0.tgz#4499eddcd1110e0b218bacf2fa7f7f59f55ca804"
 
 event-stream@~3.1.5:
   version "3.1.7"
@@ -2498,6 +2510,13 @@ js-yaml@^3.2.4, js-yaml@^3.4.3, js-yaml@^3.6.1:
   dependencies:
     argparse "^1.0.7"
     esprima "^3.1.1"
+
+js-yaml@^3.9.1:
+  version "3.10.0"
+  resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.10.0.tgz#2e78441646bd4682e963f22b6e92823c309c62dc"
+  dependencies:
+    argparse "^1.0.7"
+    esprima "^4.0.0"
 
 jsbn@~0.1.0:
   version "0.1.1"
@@ -3938,6 +3957,14 @@ pretty-format@^20.0.3:
     ansi-regex "^2.1.1"
     ansi-styles "^3.0.0"
 
+prh@^5.4.3:
+  version "5.4.3"
+  resolved "https://registry.yarnpkg.com/prh/-/prh-5.4.3.tgz#d3864a6de2f35c6603e33c700106dce01c22876d"
+  dependencies:
+    commandpost "^1.2.1"
+    diff "^3.3.0"
+    js-yaml "^3.9.1"
+
 process-nextick-args@~1.0.6:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/process-nextick-args/-/process-nextick-args-1.0.7.tgz#150e20b756590ad3f91093f25a4f2ad8bff30ba3"
@@ -5028,6 +5055,14 @@ textlint-rule-no-dead-link@^3.0.1:
     isomorphic-fetch "^2.2.1"
     textlint-rule-helper "^2.0.0"
 
+textlint-rule-prh@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/textlint-rule-prh/-/textlint-rule-prh-5.0.1.tgz#bab66be6b03258880f3fbf466b689ed2ff379b0c"
+  dependencies:
+    prh "^5.4.3"
+    textlint-rule-helper "^2.0.0"
+    untildify "^3.0.2"
+
 textlint@^8.2.1:
   version "8.2.1"
   resolved "https://registry.yarnpkg.com/textlint/-/textlint-8.2.1.tgz#6803ab76cdf9532aac0ea106a89e09ae6aa7975d"
@@ -5347,6 +5382,10 @@ untildify@^2.1.0:
   resolved "https://registry.yarnpkg.com/untildify/-/untildify-2.1.0.tgz#17eb2807987f76952e9c0485fc311d06a826a2e0"
   dependencies:
     os-homedir "^1.0.0"
+
+untildify@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/untildify/-/untildify-3.0.2.tgz#7f1f302055b3fea0f3e81dc78eb36766cb65e3f1"
 
 unzip-response@^1.0.2:
   version "1.0.2"

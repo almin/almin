@@ -1,8 +1,12 @@
 # [Almin.js](https://github.com/almin/almin) [![Build Status](https://travis-ci.org/almin/almin.svg?branch=master)](https://travis-ci.org/almin/almin)
 
+<!-- textlint-disable no-dead-link -->
+
 [![Almin.js logo](https://almin.js.org/media/logo/logo.png)](https://github.com/almin/almin)
 
 [![Sauce Test Status](https://saucelabs.com/browser-matrix/almin.svg)](https://saucelabs.com/u/almin)
+
+<!-- textlint-enable no-dead-link -->
 
 Flux/CQRS patterns for JavaScript application.
 
@@ -16,9 +20,9 @@ But, I often hear a story that "Control flow of Flux/Redux is cool, but where to
 
 I think that people skip to Flux/Redux from MV* pattern.
 
-> MV* --> ( HOLE ) --> Flux/Redux(CQRS+EventSourcing)
+> MV* --> ( Missing things ) --> Flux/Redux(CQRS+EventSourcing)
 
-Almin.js aim to fill the HOLE between MV* and Flux/Redux.
+Almin aim to fill the **Missing things** between MV* and Flux/Redux.
 
 ## Features
 
@@ -27,7 +31,7 @@ Almin provides some patterns, is not a framework.
 - Testable
 - Scalable
 - Responsibility Layers patten - well-known as DDD(Domain-Driven Design)/CQRS
-- Support [TypeScript](https://www.typescriptlang.org/ "TypeScript") and [Flow](https://flowtype.org/ "FlowType")
+- Support [TypeScript](https://www.typescriptlang.org/ "TypeScript") and [Flow](https://flow.org/ "FlowType")
 
 Almin is an implementation of Read/Write Stack Architecture that is well-known as Flux/CQRS.
 
@@ -54,7 +58,7 @@ It aims to create a scalable app.
 
 ![Overview of almin-architecture](./docs/resources/almin-architecture.png)
 
-The above figure is overview of Almin architecture that is similar to CQRS([Command Query Responsibility Segregation](http://martinfowler.com/bliki/CQRS.html "Command Query Responsibility Segregation")).
+The above figure is overview of Almin architecture that is similar to CQRS([Command Query Responsibility Segregation](https://martinfowler.com/bliki/CQRS.html "Command Query Responsibility Segregation")).
 
 But, Almin is not a framework, provides only these components
 
@@ -140,12 +144,14 @@ Welcome to pull request!
 
 ## Presentations
 
-- The architecture of Almin(Japanese)
-    - [Almin.js | JavaScriptアーキテクチャ](http://azu.github.io/slide/2016/child_process_sushi/almin-javascript-architecture.html "Almin.js | JavaScriptアーキテクチャ") (Japanese)
+- The concept of Almin (English)
+    - [The Concept of Almin](http://azu.github.io/slide/2017/almin/concept-of-almin.html "The Concept of Almin")
+- The architecture of Almin (Japanese)
+    - [Almin.js | JavaScriptアーキテクチャ](http://azu.github.io/slide/2016/child_process_sushi/almin-javascript-architecture.html "Almin.js | JavaScriptアーキテクチャ")
 - Patterns For Large-Scale JavaScript Application Architecture (Japanese)
     - [複雑なJavaScriptアプリケーションを考えながら作る話](http://azu.github.io/slide/2016/react-meetup/large-scale-javascript.html)
     - [azu/large-scale-javascript: 複雑なJavaScriptアプリケーションを作るために考えること](https://github.com/azu/large-scale-javascript)
-- DDD and Almin (japanese)
+- DDD and Almin (Japanese)
     - [Faao - ドメイン駆動設計で作るGitHub Issue Client -](http://azu.github.io/slide/2017/teppeis-sushi/client-side-ddd-on-github.html "Faao - ドメイン駆動設計で作るGitHub Issue Client -")
 
 ## Packages

@@ -68,13 +68,6 @@ almin@^0.12.0:
     object-assign "^4.1.0"
     shallow-equal-object "^1.0.1"
 
-almin@^0.14.0:
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/almin/-/almin-0.14.0.tgz#c625feddbf4739c4bd3079d819c9e25a92451aba"
-  dependencies:
-    map-like "^2.0.0"
-    shallow-equal-object "^1.0.1"
-
 almin@^0.9.0:
   version "0.9.1"
   resolved "https://registry.yarnpkg.com/almin/-/almin-0.9.1.tgz#8aa21bb02984700f27bd405a280c3c6407297d19"
@@ -1984,10 +1977,6 @@ lru-queue@0.1:
 map-like@^1.0.3, map-like@^1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/map-like/-/map-like-1.1.2.tgz#f42a301ebd9290372b9e4ddc49e5df9804a507b9"
-
-map-like@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/map-like/-/map-like-2.0.0.tgz#94496d49ad333c0dc3234b27adbbd1e8535953b4"
 
 media-typer@0.3.0:
   version "0.3.0"

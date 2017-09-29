@@ -1,8 +1,13 @@
 {
   "filters": {
-  	"comments": true
+    "comments": true
   },
   "rules": {
+    "prh": {
+      "rulePaths": [
+        "prh.yml"
+      ]
+    },
     "alex": {
       "allow": [
         "execute",

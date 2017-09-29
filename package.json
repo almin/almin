@@ -27,6 +27,7 @@
     "textlint-rule-alex": "^1.0.1",
     "textlint-rule-common-misspellings": "^1.0.1",
     "textlint-rule-no-dead-link": "^3.0.1",
+    "textlint-rule-prh": "^5.0.1",
     "typescript": "^2.4.2"
   },
   "scripts": {
@@ -44,8 +45,8 @@
     "test:bench": "cd perf/benchmark && npm it",
     "exec": "lerna exec",
     "start:docs": "gitbook serve",
-    "lint:docs": "textlint --cache -f pretty-error docs/",
-    "lint:docs:fix": "textlint --fix --cache docs/",
+    "lint:docs": "textlint --cache -f pretty-error README.md docs/",
+    "lint:docs:fix": "textlint --fix --cache README.md docs/",
     "build:docs": "gitbook build",
     "build:docs:api": "bash ./tools/update-api-reference.sh",
     "ci": "lerna run ci --ignore benchmark",
