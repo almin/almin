@@ -106,7 +106,7 @@ Truly [Table of Contents](./SUMMARY.md) is here :arrow_left:
 - Tutorial
     - [Creating Counter App](./examples/counter/)
         - Apply Flux pattern to Almin
-    - [Creating Todo App](./examples/todomv/)
+    - [Creating Todo App](./examples/todomvc/)
         - Apply CQRS pattern to Almin
 
 ## Examples
