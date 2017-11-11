@@ -12,20 +12,24 @@ const createTestStore = initialState => {
         }
 
         updateState(newState) {
-            this.state = newState;
-            this.emitChange();
+            if (this.state !== newState) {
+                this.state = newState;
+                this.emitChange();
+            }
         }
 
         getState() {
             return this.state;
         }
     }
+
     return new TestStore();
 };
 describe("almin-react-container", () => {
     context("when update with new state", () => {
         it("should update WrapperComponent with new props", () => {
             let updatedCount = 0;
+
             class Passthrough extends Component {
                 componentWillUpdate() {
                     updatedCount++;
@@ -35,6 +39,7 @@ describe("almin-react-container", () => {
                     return <div />;
                 }
             }
+
             // initial state
             const initialState = {
                 testKey: "initial value"
@@ -65,6 +70,7 @@ describe("almin-react-container", () => {
     context("when update with same state", () => {
         it("should not update WrapperComponent", () => {
             let updatedCount = 0;
+
             class Passthrough extends Component {
                 componentWillUpdate() {
                     updatedCount++;
@@ -74,6 +80,7 @@ describe("almin-react-container", () => {
                     return <div />;
                 }
             }
+
             // initial state
             const initialState = {
                 testKey: "initial value"
@@ -97,6 +104,35 @@ describe("almin-react-container", () => {
             assert.strictEqual(updatedCount, 0);
             assert.deepEqual(container.state, newState, "should update state");
             assert.deepEqual(stub.props, newState, "should not update props");
+        });
+    });
+    context("with custom props", () => {
+        it("should pass props to Container", () => {
+            let updatedCount = 0;
+
+            class Passthrough extends Component {
+                componentWillUpdate() {
+                    updatedCount++;
+                }
+
+                render() {
+                    return <div />;
+                }
+            }
+
+            // initial state
+            const initialState = {
+                testKey: "initial value"
+            };
+            const testStore = createTestStore(initialState);
+            const context = new Context({
+                dispatcher: new Dispatcher(),
+                store: testStore
+            });
+            const Container = AlminReactContainer.create(Passthrough, context);
+            const tree = TestUtils.renderIntoDocument(<Container custom="value" />);
+            const stub = TestUtils.findRenderedComponentWithType(tree, Passthrough);
+            assert.equal(stub.props.custom, "value", "should have custom value");
         });
     });
 });

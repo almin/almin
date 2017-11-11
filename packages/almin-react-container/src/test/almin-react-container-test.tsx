@@ -2,7 +2,9 @@
 // It is test file for d.ts
 import AlminReactContainer from "../almin-react-container";
 import * as React from "react";
-import { Dispatcher, Context, Store } from "almin";
+import * as ReactDOM from "react-dom";
+import { Dispatcher, Context, Store, StoreGroup } from "almin";
+
 // Store
 class MyState {
     value: string;
@@ -11,7 +13,8 @@ class MyState {
         this.value = value;
     }
 }
-class MyStore extends Store {
+
+class MyStore extends Store<MyState> {
     state: MyState;
 
     constructor() {
@@ -22,26 +25,39 @@ class MyStore extends Store {
     }
 
     getState() {
-        return {
-            myState: this.state
-        };
+        return this.state;
     }
 }
+
+const storeGroup = new StoreGroup({
+    myState: new MyStore()
+});
 // Context
 const context = new Context({
     dispatcher: new Dispatcher(),
-    store: new MyStore()
+    store: storeGroup
 });
 
 // View
+
+type AppState = typeof storeGroup.state & {
+    // defined by App View
+    custom?: string;
+};
+
 class App extends React.Component<AppState, {}> {
     render() {
         return <div>{this.props.myState.value}</div>;
     }
 }
-interface AppState {
-    myState: MyState;
-}
+
 // Create Container
-const RootContainer = AlminReactContainer.create<AppState>(App, context);
+const RootContainer = AlminReactContainer.create(App, context);
 console.log(RootContainer);
+
+ReactDOM.render(<RootContainer />, document.body);
+// custom is optional
+React.createElement(RootContainer);
+React.createElement(RootContainer, {
+    custom: "value"
+});

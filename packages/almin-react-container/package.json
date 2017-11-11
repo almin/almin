@@ -39,7 +39,8 @@
   },
   "devDependencies": {
     "@types/node": "^7.0.12",
-    "@types/react": "^15.0.20",
+    "@types/react": "16.0.22",
+    "@types/react-dom": "16.0.3",
     "almin": "^0.14.0",
     "babel-preset-env": "^1.4.0",
     "babel-preset-power-assert": "^1.0.0",
@@ -51,7 +52,7 @@
     "power-assert": "^1.4.2",
     "react": "^15.4.2",
     "react-dom": "^15.5.4",
-    "typescript": "^2.3.2"
+    "typescript": "^2.6.1"
   },
   "dependencies": {
     "shallow-equal-object": "^1.0.1"

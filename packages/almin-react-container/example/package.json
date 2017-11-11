@@ -14,10 +14,11 @@
   "version": "1.0.0",
   "main": "lib/example.js",
   "dependencies": {
-    "almin": "^0.12.0-3",
+    "almin": "^0.14.0",
     "almin-react-container": "file:../",
-    "react": "^15.4.2",
-    "react-dom": "^15.4.2"
+    "prop-types": "^15.6.0",
+    "react": "^16.1.0",
+    "react-dom": "^16.1.0"
   },
   "devDependencies": {
     "babel-cli": "^6.24.0",
