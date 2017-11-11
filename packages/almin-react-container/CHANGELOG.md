@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.5.0"></a>
+# [0.5.0](https://github.com/almin/almin/compare/almin-react-container@0.4.0...almin-react-container@0.5.0) (2017-11-11)
+
+
+### Features
+
+* **almin-react-container:** Can pass props to <Container {...props} />  ([#294](https://github.com/almin/almin/issues/294)) ([2fc5d2b](https://github.com/almin/almin/commit/2fc5d2b))
+
+
+
+
 <a name="0.4.0"></a>
 # [0.4.0](https://github.com/almin/almin/compare/almin-react-container@0.3.9...almin-react-container@0.4.0) (2017-09-18)
 
