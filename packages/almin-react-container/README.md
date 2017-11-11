@@ -66,7 +66,9 @@ const RootContainer = AlminReactContainer.create(App, context);
 ReactDOM.render(<RootContainer />, document.getElementById("js-app"));
 ```
 
-See [Example/](./example/)
+For more details, see [Example/](./example/).
+
+For TypeScript user, see [almin-react-container-test.tsx](./test/almin-react-container-test.tsx).
 
 ## Changelog
 

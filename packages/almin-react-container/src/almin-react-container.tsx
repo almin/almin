@@ -15,7 +15,7 @@ export type AlminReactContainerDiff<T, U> = AlminReactContainerOmit<T, keyof U &
 
 export type AlminReactContainerWeakDiff<T, U> = AlminReactContainerDiff<T, U> & { [K in (keyof U & keyof T)]?: T[K] };
 
-export default class AlminReactContainer {
+export class AlminReactContainer {
     static create<T, P>(
         WrappedComponent: React.ComponentClass<T>,
         context: Context<P>
@@ -67,3 +67,5 @@ export default class AlminReactContainer {
         };
     }
 }
+
+export default AlminReactContainer;
