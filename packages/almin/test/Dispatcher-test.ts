@@ -1,8 +1,7 @@
 // LICENSE : MIT
 "use strict";
 const assert = require("assert");
-
-import { Dispatcher } from "../src/Dispatcher";
+import { Dispatcher } from "../src/";
 
 describe("Dispatcher", function() {
     describe("#onDispatch", function() {
@@ -19,16 +18,27 @@ describe("Dispatcher", function() {
         });
     });
     describe("#dispatch", function() {
-        it("should dispatch with payload object, otherwise throw error", function() {
+        it("when dispatch string, should throw error", function() {
             const dispatcher = new Dispatcher();
             try {
-                dispatcher.dispatch("it is not payload");
+                dispatcher.dispatch("it is not payload" as any);
                 throw new Error("UNREACHED");
             } catch (error) {
                 assert(error.message !== "UNREACHED");
             }
         });
-        it("should dispatch with payload object that has type propery", function(done) {
+        it("when dispatch with payload that has string type, should pass test", function(done) {
+            const dispatcher = new Dispatcher();
+            const expectedPayload = {
+                type: "string type"
+            };
+            dispatcher.onDispatch(payload => {
+                assert.deepEqual(payload, expectedPayload);
+                done();
+            });
+            dispatcher.dispatch(expectedPayload);
+        });
+        it("when dispatch with payload that has object type, should pass test", function(done) {
             const dispatcher = new Dispatcher();
             const expectedPayload = {
                 type: {
@@ -41,7 +51,20 @@ describe("Dispatcher", function() {
             });
             dispatcher.dispatch(expectedPayload);
         });
-        it("should pass payload object to listening handler", function(done) {
+        it("when dispatch with payload object that has type property, should pass test", function(done) {
+            const dispatcher = new Dispatcher();
+            const expectedPayload = {
+                type: {
+                    /* string Symbol anything */
+                }
+            };
+            dispatcher.onDispatch(payload => {
+                assert.deepEqual(payload, expectedPayload);
+                done();
+            });
+            dispatcher.dispatch(expectedPayload);
+        });
+        it("when dispatch payload object, listen handler catch the payload", function(done) {
             const dispatcher = new Dispatcher();
             const expectedPayload = {
                 type: "pay",
