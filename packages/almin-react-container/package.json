@@ -42,17 +42,17 @@
     "@types/react": "16.0.22",
     "@types/react-dom": "16.0.3",
     "almin": "^0.14.0",
-    "babel-preset-env": "^1.4.0",
+    "babel-preset-env": "^1.6.1",
     "babel-preset-power-assert": "^1.0.0",
     "babel-preset-react": "^6.24.1",
-    "babel-register": "^6.24.1",
-    "cross-env": "^3.2.4",
-    "jsdom": "^10.1.0",
-    "mocha": "^3.3.0",
-    "power-assert": "^1.4.2",
-    "react": "^15.4.2",
-    "react-dom": "^15.5.4",
-    "typescript": "^2.6.1"
+    "babel-register": "^6.26.0",
+    "cross-env": "^5.1.1",
+    "jsdom": "^11.3.0",
+    "mocha": "^4.0.1",
+    "power-assert": "^1.4.4",
+    "react": "^16.1.1",
+    "react-dom": "^16.1.1",
+    "typescript": "~2.6.1"
   },
   "dependencies": {
     "shallow-equal-object": "^1.0.1"

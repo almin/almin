@@ -6,6 +6,7 @@ import { LogChildItem } from "./LogChildItem";
 
 export class PrintLogger {
     logger: any | Console;
+
     /**
      * @param {Object|Console} logger
      */
@@ -120,7 +121,7 @@ export class PrintLogger {
      * @param {*|*[]} logs
      * @private
      */
-    _includeErrorChunkLogs(logs: Array<any>) {
+    _includeErrorChunkLogs(logs: Array<any> | any) {
         if (!Array.isArray(logs)) {
             return logs instanceof Error;
         }
