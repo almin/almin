@@ -1,7 +1,7 @@
 // LICENSE : MIT
 "use strict";
 const assert = require("assert");
-import { Dispatcher } from "../src/";
+import { Dispatcher, Payload } from "../src/";
 
 describe("Dispatcher", function() {
     describe("#onDispatch", function() {
@@ -26,6 +26,37 @@ describe("Dispatcher", function() {
             } catch (error) {
                 assert(error.message !== "UNREACHED");
             }
+        });
+        it("when dispatch Payload instance that have not type, should throw error", function() {
+            const dispatcher = new Dispatcher();
+
+            // @ts-ignore
+            class MyPayload extends Payload {}
+
+            try {
+                dispatcher.dispatch(new MyPayload());
+                throw new Error("UNREACHED");
+            } catch (error) {
+                assert(error.message !== "UNREACHED");
+            }
+        });
+        it("when dispatch Payload instance, should pass test", function(done) {
+            const dispatcher = new Dispatcher();
+
+            class MyPayload extends Payload {
+                type: string;
+
+                // Not have type
+                constructor() {
+                    super({ type: "MyPayload" });
+                }
+            }
+
+            dispatcher.onDispatch(payload => {
+                assert.ok(payload instanceof MyPayload);
+                done();
+            });
+            dispatcher.dispatch(new MyPayload());
         });
         it("when dispatch with payload that has string type, should pass test", function(done) {
             const dispatcher = new Dispatcher();

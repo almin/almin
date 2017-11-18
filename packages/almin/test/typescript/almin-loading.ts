@@ -1,17 +1,23 @@
 // Loading UseCase & Store Example
 import { Context, Store, Dispatcher, UseCase, Payload } from "../../src/index";
+
 // custom payload
 class LoadingPayload extends Payload {
+    type = "MyPayload";
+
     constructor(public isLoading: boolean) {
-        super({ type: "MyPayload" });
+        super();
     }
 }
+
 type UpdateLoadingUseCaseArg = boolean;
+
 class UpdateLoadingUseCase extends UseCase {
     execute(isLoading: UpdateLoadingUseCaseArg) {
         this.dispatch(new LoadingPayload(isLoading));
     }
 }
+
 class LoadingState {
     constructor(public isLoading: boolean) {}
 
@@ -19,6 +25,7 @@ class LoadingState {
         return new LoadingState(isLoading);
     }
 }
+
 class LoadingStore extends Store<LoadingState> {
     state: LoadingState;
 

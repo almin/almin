@@ -13,6 +13,7 @@ export const TYPE = "Almin__InitializedPayload__";
  * DO NOT USE THIS in your application.
  */
 export class InitializedPayload extends Payload {
+    type: typeof TYPE;
     constructor() {
         super({ type: TYPE });
     }

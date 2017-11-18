@@ -11,6 +11,7 @@ export const TYPE = "ALMIN_ENF_OF_TRANSACTION__";
  * TransactionEndedPayload is end of transaction
  */
 export class TransactionEndedPayload extends Payload {
+    type: typeof TYPE;
     // transaction name
     name: string;
 

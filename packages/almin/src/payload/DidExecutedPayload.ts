@@ -9,6 +9,7 @@ import { Payload } from "./Payload";
 export const TYPE = "ALMIN__DID_EXECUTED_EACH_USECASE__";
 
 export class DidExecutedPayload extends Payload {
+    type: typeof TYPE;
     /**
      * the value is returned by the useCase
      * Maybe Promise or some value or undefined.
