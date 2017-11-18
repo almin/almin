@@ -72,7 +72,7 @@
     "sinon": "^2.3.8",
     "size-limit": "^0.11.4",
     "source-map-support": "^0.4.15",
-    "typescript": "~2.3.1",
+    "typescript": "~2.6.1",
     "zuul": "^3.10.1"
   },
   "dependencies": {

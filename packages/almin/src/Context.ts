@@ -14,7 +14,6 @@ import { WillExecutedPayload } from "./payload/WillExecutedPayload";
 import { UseCaseFunction } from "./FunctionalUseCaseContext";
 import { FunctionalUseCase } from "./FunctionalUseCase";
 import { StateMap } from "./UILayer/StoreGroupTypes";
-import { UseCaseLike } from "./UseCaseLike";
 import { UseCaseUnitOfWork } from "./UnitOfWork/UseCaseUnitOfWork";
 import { StoreGroup } from "./UILayer/StoreGroup";
 import { createUseCaseExecutor } from "./UseCaseExecutorFactory";
@@ -25,6 +24,7 @@ import { LifeCycleEventHub } from "./LifeCycleEventHub";
 import { StoreChangedPayload } from "./payload/StoreChangedPayload";
 import AlminInstruments from "./instrument/AlminInstruments";
 import { ContextConfig } from "./ContextConfig";
+import { UseCase } from "./UseCase";
 
 const deprecateWarning = (methodName: string) => {
     console.warn(`Deprecated: Context.prototype.${methodName} is deprecated.
@@ -147,8 +147,7 @@ export class Context<T> {
 
         // life-cycle event hub
         this.lifeCycleEventHub = new LifeCycleEventHub({
-            dispatcher: this.dispatcher,
-            storeGroup: this.storeGroup
+            dispatcher: this.dispatcher
         });
 
         const options = args.options || {};
@@ -288,8 +287,8 @@ export class Context<T> {
      * context.useCase(awesomeUseCase).execute([1, 2, 3]);
      * ```
      */
+    useCase<T extends UseCase>(useCase: T): UseCaseExecutor<T>;
     useCase(useCase: UseCaseFunction): UseCaseExecutor<FunctionalUseCase>;
-    useCase<T extends UseCaseLike>(useCase: T): UseCaseExecutor<T>;
     useCase(useCase: any): UseCaseExecutor<any> {
         const useCaseExecutor = createUseCaseExecutor(useCase, this.dispatcher);
         const unitOfWork = new UseCaseUnitOfWork({
@@ -424,7 +423,7 @@ Please enable strict mode via \`new Context({ dispatcher, store, options: { stri
             storeGroup: this.storeGroup,
             options: { autoCommit: false }
         });
-        const createUseCaseExecutorAndOpenUoW = <T extends UseCaseLike>(useCase: T): UseCaseExecutor<T> => {
+        const createUseCaseExecutorAndOpenUoW = <T extends UseCase>(useCase: T): UseCaseExecutor<T> => {
             const useCaseExecutor = createUseCaseExecutor(useCase, this.dispatcher);
             unitOfWork.open(useCaseExecutor);
             return useCaseExecutor;

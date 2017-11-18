@@ -2,6 +2,7 @@
 import { MapLike } from "map-like";
 import { Store } from "../Store";
 import { StoreMap } from "./StoreGroupTypes";
+
 /**
  * TODO: make strong type
  */
@@ -31,7 +32,8 @@ export class StoreStateMap extends MapLike<Store, string> {
  */
 export function createStoreStateMap<T>(mappingObject: StoreMap<T>): StoreStateMap {
     const map = new StoreStateMap();
-    const keys = Object.keys(mappingObject);
+    // Suppress: Element implicitly has an 'any' type because type 'StoreMap<T>' has no index signature.
+    const keys = Object.keys(mappingObject) as (keyof T)[];
     for (let i = 0; i < keys.length; i++) {
         const stateName = keys[i];
         const store = mappingObject[stateName];

@@ -13,14 +13,11 @@ import { StoreLike } from "../StoreLike";
  */
 export class SingleStoreGroup<T extends Store> extends Dispatcher implements StoreGroupLike {
     private storeGroup: StoreGroup<{ target: T }>;
-    private store: T;
-
-    name: string;
+    readonly name: string;
 
     constructor(store: T) {
         super();
         this.name = `SingleStoreGroup(${store.name})`;
-        this.store = store;
         this.storeGroup = new StoreGroup({
             target: store
         });

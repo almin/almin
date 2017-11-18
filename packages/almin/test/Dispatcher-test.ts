@@ -30,7 +30,7 @@ describe("Dispatcher", function() {
         it("when dispatch Payload instance that have not type, should throw error", function() {
             const dispatcher = new Dispatcher();
 
-            // @ts-ignore
+            // @ts-ignore: missing type
             class MyPayload extends Payload {}
 
             try {
