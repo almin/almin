@@ -6,8 +6,8 @@ export default class ColorHistoryState {
         this.colorList = colorList;
     }
     /**
-     * 
-     * @param {ColorHistory} history 
+     *
+     * @param {ColorHistory} history
      */
     update(history) {
         return new ColorHistoryState({
