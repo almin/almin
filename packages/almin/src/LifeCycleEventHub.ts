@@ -5,14 +5,12 @@ import { DispatcherPayloadMeta } from "./DispatcherPayloadMeta";
 import { DidExecutedPayload, isDidExecutedPayload } from "./payload/DidExecutedPayload";
 import { CompletedPayload, isCompletedPayload } from "./payload/CompletedPayload";
 import { ErrorPayload, isErrorPayload } from "./payload/ErrorPayload";
-import { StoreGroupLike } from "./UILayer/StoreGroupLike";
-import { TransactionBeganPayload, isTransactionBeganPayload } from "./payload/TransactionBeganPayload";
-import { TransactionEndedPayload, isTransactionEndedPayload } from "./payload/TransactionEndedPayload";
+import { isTransactionBeganPayload, TransactionBeganPayload } from "./payload/TransactionBeganPayload";
+import { isTransactionEndedPayload, TransactionEndedPayload } from "./payload/TransactionEndedPayload";
 import { isStoreChangedPayload, StoreChangedPayload } from "./payload/StoreChangedPayload";
 
 export interface LifeCycleEventHubArgs {
     dispatcher: Dispatcher;
-    storeGroup: StoreGroupLike;
 }
 
 /**
@@ -29,11 +27,9 @@ export class LifeCycleEventHub {
      */
     private releaseHandlers: (() => void)[];
     private dispatcher: Dispatcher;
-    private storeGroup: StoreGroupLike;
 
     constructor(args: LifeCycleEventHubArgs) {
         this.dispatcher = args.dispatcher;
-        this.storeGroup = args.storeGroup;
         this.releaseHandlers = [];
     }
 

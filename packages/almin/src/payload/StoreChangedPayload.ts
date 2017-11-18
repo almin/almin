@@ -12,6 +12,7 @@ export const TYPE = "ALMIN_STORE_IS_CHANGED__";
  * ChangePayload is that represent a store is changed.
  */
 export class StoreChangedPayload extends Payload {
+    type: typeof TYPE;
     store: StoreLike<any>;
 
     constructor(store: StoreLike<any>) {

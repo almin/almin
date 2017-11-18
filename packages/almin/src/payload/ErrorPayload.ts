@@ -12,6 +12,7 @@ export const TYPE = "ALMIN__ErrorPayload__";
  * This payload is executed
  */
 export class ErrorPayload extends Payload {
+    type: typeof TYPE;
     /**
      * the `error` in the UseCase
      */

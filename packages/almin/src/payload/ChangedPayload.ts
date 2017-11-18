@@ -13,6 +13,7 @@ export const TYPE = "ALMIN__ChangedPayload__";
  * @deprecated
  */
 export class ChangedPayload extends Payload {
+    type: typeof TYPE;
     constructor() {
         super({ type: TYPE });
         console.warn("ChangedPayload will be removed.");

@@ -11,7 +11,14 @@ import { Payload } from "./payload/Payload";
  * }
  * ```
  */
-export type UseCaseFunction = (context?: FunctionalUseCaseContext) => (...args: Array<any>) => any;
+export type UseCaseFunction = (context: FunctionalUseCaseContext) => (...args: Array<any>) => any;
+
+/**
+ * Is `v` is UseCaseFunction?
+ */
+export const isUseCaseFunction = (v: any): v is UseCaseFunction => {
+    return typeof v === "function";
+};
 
 /**
  * Send only dispatcher
