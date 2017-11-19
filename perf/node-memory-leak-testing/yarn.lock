@@ -2,21 +2,6 @@
 # yarn lockfile v1
 
 
-almin@^0.14.0:
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/almin/-/almin-0.14.0.tgz#c625feddbf4739c4bd3079d819c9e25a92451aba"
-  dependencies:
-    map-like "^2.0.0"
-    shallow-equal-object "^1.0.1"
-
-map-like@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/map-like/-/map-like-2.0.0.tgz#94496d49ad333c0dc3234b27adbbd1e8535953b4"
-
 prettysize@0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/prettysize/-/prettysize-0.1.0.tgz#38ee534e2d298bc945fb7243203dd873cefc9679"
-
-shallow-equal-object@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/shallow-equal-object/-/shallow-equal-object-1.0.1.tgz#a402410fb4b7c15370ec7e78701e9280f1c1d1e4"
