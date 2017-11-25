@@ -11,6 +11,7 @@ For more information about logging, see [Logging tips](./logging.md).
 |--------------------------|----------------------------------------|
 | onBeginTransaction       | A transaction begin                    |
 | onEndTransaction         | A transaction end                      |
+| onWillNotExecuteEachUseCase | A UseCase will not Execute          |
 | onWillExecuteEachUseCase | Each UseCase will Execute              |
 | onDispatch @1            | UseCase call `this.dispatch(payload)`  |
 | onErrorDispatch @1       | UseCase call `this.throwError(new Error())` |

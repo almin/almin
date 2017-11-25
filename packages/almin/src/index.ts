@@ -12,6 +12,7 @@ export { StoreChangedPayload } from "./payload/StoreChangedPayload";
 export { ErrorPayload } from "./payload/ErrorPayload";
 export { TransactionBeganPayload } from "./payload/TransactionBeganPayload";
 export { TransactionEndedPayload } from "./payload/TransactionEndedPayload";
+export { WillNotExecutedPayload } from "./payload/WillNotExecutedPayload";
 export { WillExecutedPayload } from "./payload/WillExecutedPayload";
 export { DidExecutedPayload } from "./payload/DidExecutedPayload";
 export { CompletedPayload } from "./payload/CompletedPayload";
