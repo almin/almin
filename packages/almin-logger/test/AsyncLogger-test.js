@@ -2,24 +2,25 @@
 "use strict";
 const assert = require("assert");
 import {
-    Context,
-    Store,
-    Dispatcher,
     CompletedPayload,
+    Context,
     DidExecutedPayload,
+    Dispatcher,
     ErrorPayload,
+    Store,
     WillExecutedPayload
 } from "almin";
+import AlminLogger from "../src/AlminLogger";
 import AsyncLogger from "../src/AsyncLogger";
 import { LogGroup } from "../src/log/LogGroup";
-import AlminLogger from "../src/AlminLogger";
 import ConsoleMock from "./helper/ConsoleMock";
-import NoDispatchUseCase from "./usecase/NoDispatchUseCase";
-import ErrorUseCase from "./usecase/ErrorUseCase";
-import WrapUseCase from "./usecase/WrapUseCase";
-import DispatchUseCase from "./usecase/DispatchUseCase";
-import { ParentUseCase, ChildUseCase } from "./usecase/NestingUseCase";
 import { createStore } from "./store/create-store";
+import DispatchUseCase from "./usecase/DispatchUseCase";
+import ErrorUseCase from "./usecase/ErrorUseCase";
+import { ParentUseCase } from "./usecase/NestingUseCase";
+import NoDispatchUseCase from "./usecase/NoDispatchUseCase";
+import { NotExecuteUseCase } from "./usecase/NotExecuteUseCase";
+import WrapUseCase from "./usecase/WrapUseCase";
 
 describe("AsyncLogger", function() {
     it("can start and stop", () => {
@@ -284,6 +285,41 @@ describe("AsyncLogger", function() {
                     assert(childThird.payload instanceof CompletedPayload);
                 });
         });
+    });
+
+    it("should log willNotExecute event", function() {
+        const consoleMock = ConsoleMock.create();
+        const logger = new AsyncLogger({
+            console: consoleMock
+        });
+        const dispatcher = new Dispatcher();
+        const store = createStore();
+        const context = new Context({
+            store,
+            dispatcher
+        });
+        const useCase = new NotExecuteUseCase();
+        logger.startLogging(context);
+        // yet not called
+        assert(!consoleMock.groupCollapsed.called);
+        assert(!consoleMock.log.called);
+        // Then
+        let actualLogGroup = null;
+        logger.on(AlminLogger.Events.output, function(logGroup) {
+            actualLogGroup = logGroup;
+        });
+        // When
+        return context
+            .useCase(useCase)
+            .execute()
+            .then(() => {
+                assert(consoleMock.groupCollapsed.called);
+                const expectOutput = `NotExecuteUseCase`;
+                const isContain = consoleMock.log.calls.some(call => {
+                    return call.arg && call.arg.indexOf(expectOutput) !== -1;
+                });
+                assert.ok(isContain, `${expectOutput} is not found.`);
+            });
     });
     it("should log dispatch event", function() {
         const consoleMock = ConsoleMock.create();

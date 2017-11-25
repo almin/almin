@@ -103,6 +103,19 @@ export abstract class UseCase extends Dispatcher implements UseCaseLike {
     }
 
     /**
+     * Should does the UseCase execute?
+     * Return `true` by default
+     *
+     * shouldExecute() is invoked before execute() when Executor execute the UseCase.
+     * Currently, if shouldExecute() returns false, then execute() will not be invoked.
+     *
+     * @returns {boolean}
+     */
+    shouldExecute(..._: Array<any>): boolean {
+        return true;
+    }
+
+    /**
      * `UseCase#execute()` method should be overwrite by subclass.
      *
      * ### Example

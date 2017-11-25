@@ -168,6 +168,111 @@ describe("UseCaseExecutor", function() {
             });
         });
     });
+    describe("#shouldExecute", () => {
+        describe("when implemented shouldExecute()", function() {
+            it("should called before execute", function() {
+                const called = [];
+
+                class TestUseCase extends UseCase {
+                    shouldExecute() {
+                        called.push("shouldExecute");
+                        return true;
+                    }
+
+                    execute() {
+                        called.push("execute");
+                    }
+                }
+
+                const dispatcher = new Dispatcher();
+                const executor = new UseCaseExecutorImpl({
+                    useCase: new TestUseCase(),
+                    dispatcher
+                });
+                return executor.execute().then(() => {
+                    assert.deepEqual(called, ["shouldExecute", "execute"]);
+                });
+            });
+        });
+        describe("when shouldExecute() => false", function() {
+            it("should not call UseCase#execute", function() {
+                const called = [];
+
+                class TestUseCase extends UseCase {
+                    shouldExecute() {
+                        called.push("shouldExecute");
+                        return false;
+                    }
+
+                    execute() {
+                        called.push("execute");
+                    }
+                }
+
+                const dispatcher = new Dispatcher();
+                const executor = new UseCaseExecutorImpl({
+                    useCase: new TestUseCase(),
+                    dispatcher
+                });
+                return executor.execute().then(() => {
+                    assert.deepEqual(called, ["shouldExecute"]);
+                });
+            });
+            it("should call onWillNotExecuteEachUseCase handler", function() {
+                const called = [];
+
+                class TestUseCase extends UseCase {
+                    shouldExecute() {
+                        called.push("shouldExecute");
+                        return false;
+                    }
+
+                    execute() {
+                        called.push("execute");
+                    }
+                }
+
+                const dispatcher = new Dispatcher();
+                const executor = new UseCaseExecutorImpl({
+                    useCase: new TestUseCase(),
+                    dispatcher
+                });
+                return executor.execute().then(() => {
+                    assert.deepEqual(called, ["shouldExecute"]);
+                });
+            });
+        });
+        describe("when shouldExecute() => undefined", function() {
+            it("should throw error", function() {
+                const called = [];
+
+                class TestUseCase extends UseCase {
+                    shouldExecute() {
+                        called.push("shouldExecute");
+                    }
+
+                    execute() {
+                        called.push("execute");
+                    }
+                }
+
+                const dispatcher = new Dispatcher();
+                const executor = new UseCaseExecutorImpl({
+                    useCase: new TestUseCase(),
+                    dispatcher
+                });
+                return executor.execute().then(
+                    () => {
+                        assert.fail("SHOULD NOT RESOLVED");
+                    },
+                    error => {
+                        assert.ok(error instanceof Error);
+                        assert.deepEqual(called, ["shouldExecute"]);
+                    }
+                );
+            });
+        });
+    });
     describe("#execute", function() {
         it("should catch sync throwing error in UseCase", () => {
             const dispatcher = new Dispatcher();

@@ -11,6 +11,11 @@ import { DidExecutedPayload } from "./payload/DidExecutedPayload";
 import { WillExecutedPayload } from "./payload/WillExecutedPayload";
 import { UseCaseLike } from "./UseCaseLike";
 import { Payload } from "./payload/Payload";
+import { WillNotExecutedPayload } from "./payload/WillNotExecutedPayload";
+
+interface onWillNotExecuteArgs {
+    (...args: Array<any>): void;
+}
 
 interface onWillExecuteArgs {
     (...args: Array<any>): void;
@@ -20,19 +25,15 @@ interface onDidExecuteArgs {
     (value?: any): void;
 }
 
-interface onCompleteArgs {
-    (value?: any): void;
-}
-
 /**
  * Create wrapper object of a UseCase.
  * This wrapper object only has `execute()` method.
  */
 const proxifyUseCase = <T extends UseCaseLike>(
     useCase: T,
+    onWillNotExecute: onWillNotExecuteArgs,
     onWillExecute: onWillExecuteArgs,
-    onDidExecute: onDidExecuteArgs,
-    onComplete: onCompleteArgs
+    onDidExecute: onDidExecuteArgs
 ): T => {
     let isExecuted = false;
     const execute = (...args: Array<any>) => {
@@ -42,13 +43,28 @@ const proxifyUseCase = <T extends UseCaseLike>(
             }
         }
         isExecuted = true;
-        // before execute
+        // should the useCase execute?
+        if (typeof useCase.shouldExecute === "function") {
+            const shouldExecute = useCase.shouldExecute(args);
+            if (typeof shouldExecute !== "boolean") {
+                return Promise.reject(
+                    new Error(
+                        `${useCase.name}>#shouldExecute should return boolean value. Actual result: ${shouldExecute}`
+                    )
+                );
+            }
+            if (!shouldExecute) {
+                return onWillNotExecute(args);
+            }
+        }
+        // will execute
         onWillExecute(args);
         // execute
         const result = useCase.execute(...args);
-        // after execute
+        // did execute
         onDidExecute(result);
-        return onComplete(result);
+        // plain result
+        return result;
     };
     // Add debug displayName
     if (process.env.NODE_ENV !== "production") {
@@ -159,6 +175,20 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
             const unListenUseCaseExecutorToDispatcherHandler = this.pipe(this._parentUseCase);
             this._releaseHandlers.push(unListenUseCaseExecutorToDispatcherHandler);
         }
+    }
+
+    private willNotExecuteUseCase(args?: any[]): void {
+        const payload = new WillNotExecutedPayload({
+            args
+        });
+        const meta = new DispatcherPayloadMetaImpl({
+            useCase: this.useCase,
+            dispatcher: this._dispatcher,
+            parentUseCase: this._parentUseCase,
+            isTrusted: true,
+            isUseCaseFinished: true
+        });
+        this.dispatch(payload, meta);
     }
 
     /**
@@ -292,7 +322,7 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
      * You should not relay on the data of the command result.
      */
     executor(executor: (useCase: Pick<T, "execute">) => any): Promise<void> {
-        const startingExecutor = (resolve: Function, reject: Function): void => {
+        const startingExecutor = new Promise((resolve, reject) => {
             if (typeof executor !== "function") {
                 console.error(
                     "Warning(UseCase): executor argument should be function. But this argument is not function: ",
@@ -305,18 +335,20 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
             const proxyfiedUseCase = proxifyUseCase<T>(
                 this.useCase,
                 args => {
+                    this.willNotExecuteUseCase(args);
+                },
+                args => {
                     this.willExecuteUseCase(args);
                 },
                 value => {
                     this.didExecuteUseCase(value);
-                },
-                value => {
-                    resolve(value);
                 }
             );
-            return executor(proxyfiedUseCase);
-        };
-        return new Promise(startingExecutor)
+            const executedResult = executor(proxyfiedUseCase);
+            // always put promise wrap on executed result
+            return Promise.resolve(executedResult).then(resolve, reject);
+        });
+        return startingExecutor
             .then(result => {
                 this.completeUseCase(result);
                 this.release();

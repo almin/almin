@@ -19,7 +19,8 @@ import {
     TransactionEndedPayload,
     UseCase,
     UseCaseLike,
-    WillExecutedPayload
+    WillExecutedPayload,
+    WillNotExecutedPayload
 } from "almin";
 import { MapLike } from "map-like";
 // FIXME: Almin 0.12 support pull-based Store
@@ -48,6 +49,10 @@ const tryGetState = (store: StoreLike) => {
  * AUseCase did
  * CUseCase Complete
  * AUseCase Complete
+ *
+ * -----
+ *
+ * AUseCase will not execute
  *
  */
 export default class AsyncLogger extends EventEmitter {
@@ -143,6 +148,39 @@ export default class AsyncLogger extends EventEmitter {
                 outputLogging(logGroup);
             }
             this._transactionMap.delete(meta.transaction.id);
+        };
+        const onWillNptExecuteEachUseCase = (payload: WillNotExecutedPayload, meta: DispatcherPayloadMeta) => {
+            const useCase = meta.useCase;
+            if (!useCase) {
+                return;
+            }
+            const parentUseCase =
+                meta.parentUseCase !== useCase && meta.parentUseCase instanceof UseCase ? meta.parentUseCase : null;
+            const parentSuffix = parentUseCase ? ` <- ${parentUseCase.name}` : "";
+            const useCaseName = useCase ? useCase.name : "<no-name>";
+            const title = `${useCaseName}${parentSuffix}`;
+            const args = payload.args.length && payload.args.length > 0 ? payload.args : [undefined];
+            const log = [`${useCaseName} not execute:`].concat(args);
+            const useCases = this.useCaseLogGroupMap.keys();
+            const existWorkingUseCase = useCases.length !== 0;
+            if (existWorkingUseCase) {
+                const logGroup = this.useCaseLogGroupMap.get(useCase);
+                if (!logGroup) {
+                    return;
+                }
+                logGroup.addChunk(
+                    new LogChunk({
+                        log: [log],
+                        payload,
+                        useCase: meta.useCase,
+                        timeStamp: meta.timeStamp
+                    })
+                );
+            } else {
+                // immediately dump log
+                const logGroup = new LogGroup({ title, useCaseName: useCaseName });
+                this.printLogger.printLogGroup(logGroup);
+            }
         };
         /**
          * @param {WillExecutedPayload} payload
@@ -364,6 +402,9 @@ export default class AsyncLogger extends EventEmitter {
             context.events.onCompleteEachUseCase(onCompleteUseCase),
             context.events.onErrorDispatch(onErrorHandler)
         ];
+        if (context.events.onWillNotExecuteEachUseCase) {
+            this._releaseHandlers.push(context.events.onWillNotExecuteEachUseCase(onWillNptExecuteEachUseCase));
+        }
     }
 
     stopLogging() {
