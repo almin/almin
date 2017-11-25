@@ -103,6 +103,15 @@ export abstract class UseCase extends Dispatcher implements UseCaseLike {
     }
 
     /**
+     * Should useCase execute?
+     * Return true by default
+     * @returns {boolean}
+     */
+    shouldExecute(..._: Array<any>): boolean {
+        return true;
+    }
+
+    /**
      * `UseCase#execute()` method should be overwrite by subclass.
      *
      * ### Example

@@ -27,12 +27,14 @@ describe("UseCase", function() {
             class ExampleUseCase extends UseCase {
                 execute() {}
             }
+
             const useCase = new ExampleUseCase();
             assert(useCase.name === "ExampleUseCase");
         });
         describe("when define displayName", () => {
             it("#name is same with displayName", () => {
                 class MyUseCase extends UseCase {}
+
                 const expectedName = "Expected UseCase";
                 MyUseCase.displayName = expectedName;
                 const store = new MyUseCase();
@@ -47,6 +49,7 @@ describe("UseCase", function() {
                     this.throwError(new Error("error"));
                 }
             }
+
             const testUseCase = new TestUseCase();
             // then
             testUseCase.onDispatch(({ type, error }) => {
@@ -65,6 +68,7 @@ describe("UseCase", function() {
                     return "b";
                 }
             }
+
             class AUseCase extends UseCase {
                 execute() {
                     const bUseCase = new BUseCase();
@@ -72,6 +76,7 @@ describe("UseCase", function() {
                     useCaseContext.useCase(bUseCase).execute();
                 }
             }
+
             const aUseCase = new AUseCase();
             // for reference fn.name
             const bUseCase = new BUseCase();
@@ -116,6 +121,7 @@ describe("UseCase", function() {
                     assert(typeof this.dispatch === "function");
                 }
             }
+
             const dispatcher = new Dispatcher();
             const context = new Context({
                 dispatcher,
@@ -129,6 +135,7 @@ describe("UseCase", function() {
     describe("when not implemented execute()", function() {
         it("should assert error on constructor", function() {
             class TestUseCase extends UseCase {}
+
             try {
                 const useCase = new TestUseCase();
                 useCase.execute();
@@ -153,16 +160,19 @@ describe("UseCase", function() {
             const childPayload = {
                 type: "ChildUseCase"
             };
+
             class ChildUseCase extends UseCase {
                 execute() {
                     this.dispatch(childPayload);
                 }
             }
+
             class ParentUseCase extends UseCase {
                 execute() {
                     return this.context.useCase(new ChildUseCase()).execute();
                 }
             }
+
             it("should delegate dispatch to parent -> dispatcher", function() {
                 const dispatcher = new Dispatcher();
                 const context = new Context({
@@ -216,12 +226,14 @@ describe("UseCase", function() {
                     assert(/Warning\(UseCase\):.*?is already released/.test(warningMessage), warningMessage);
                     done();
                 };
+
                 class ChildUseCase extends UseCase {
                     execute() {
                         this.dispatch(childPayload);
                         finishCallBack();
                     }
                 }
+
                 class ParentUseCase extends UseCase {
                     execute() {
                         // ChildUseCase is independent from Parent
