@@ -218,6 +218,29 @@ describe("UseCaseExecutor", function() {
                     assert.deepEqual(called, ["shouldExecute"]);
                 });
             });
+            it("should call onWillNotExecuteEachUseCase handler", function() {
+                const called = [];
+
+                class TestUseCase extends UseCase {
+                    shouldExecute() {
+                        called.push("shouldExecute");
+                        return false;
+                    }
+
+                    execute() {
+                        called.push("execute");
+                    }
+                }
+
+                const dispatcher = new Dispatcher();
+                const executor = new UseCaseExecutorImpl({
+                    useCase: new TestUseCase(),
+                    dispatcher
+                });
+                return executor.execute().then(() => {
+                    assert.deepEqual(called, ["shouldExecute"]);
+                });
+            });
         });
         describe("when shouldExecute() => undefined", function() {
             it("should throw error", function() {

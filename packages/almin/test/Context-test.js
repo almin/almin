@@ -12,6 +12,7 @@ import { createStore } from "./helper/create-new-store";
 import { createEchoStore } from "./helper/EchoStore";
 import { DispatchUseCase } from "./use-case/DispatchUseCase";
 import { ParentUseCase } from "./use-case/NestingUseCase";
+import { NotExecuteUseCase } from "./use-case/NotExecuteUseCase";
 import { SyncNoDispatchUseCase } from "./use-case/SyncNoDispatchUseCase";
 
 const sinon = require("sinon");
@@ -161,7 +162,49 @@ describe("Context", function() {
             storeGroup.emitChange();
         });
     });
+    describe("#onWillNotExecuteEachUseCase", () => {
+        it("should be called when UseCase#shouldExecute() return false", done => {
+            const dispatcher = new Dispatcher();
+            const appContext = new Context({
+                dispatcher,
+                store: createStore({ name: "test" })
+            });
+            const notExecuteUseCase = new NotExecuteUseCase();
+            // then
+            appContext.events.onWillNotExecuteEachUseCase((payload, meta) => {
+                assert.ok(Array.isArray(payload.args));
+                assert.ok(typeof meta.timeStamp === "number");
+                assert.equal(meta.useCase, notExecuteUseCase);
+                assert.equal(meta.dispatcher, dispatcher);
+                assert.equal(meta.parentUseCase, null);
+                assert.equal(meta.isUseCaseFinished, true);
+                done();
+            });
+            // when
+            appContext.useCase(notExecuteUseCase).execute();
+        });
+    });
     describe("#onWillExecuteEachUseCase", function() {
+        it("should not called onWillNotExecuteEachUseCase", function() {
+            const dispatcher = new Dispatcher();
+            const appContext = new Context({
+                dispatcher,
+                store: createStore({ name: "test" })
+            });
+            const testUseCase = new TestUseCase();
+            // then
+            let isOnWillNotExecuteEachUseCaseCalled = false;
+            appContext.events.onWillNotExecuteEachUseCase((payload, meta) => {
+                isOnWillNotExecuteEachUseCaseCalled = true;
+            });
+            // when
+            return appContext
+                .useCase(testUseCase)
+                .execute()
+                .then(() => {
+                    assert.ok(!isOnWillNotExecuteEachUseCaseCalled, "onWillNotExecuteEachUseCase should not called");
+                });
+        });
         it("should called before UseCase will execute", function(done) {
             const dispatcher = new Dispatcher();
             const appContext = new Context({
@@ -370,6 +413,9 @@ describe("Context", function() {
                 doneNotCall();
             });
             context.events.onEndTransaction(() => {
+                doneNotCall();
+            });
+            context.events.onWillNotExecuteEachUseCase(() => {
                 doneNotCall();
             });
             context.events.onWillExecuteEachUseCase(() => {

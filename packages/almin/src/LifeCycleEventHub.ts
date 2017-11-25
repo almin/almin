@@ -8,6 +8,7 @@ import { ErrorPayload, isErrorPayload } from "./payload/ErrorPayload";
 import { isTransactionBeganPayload, TransactionBeganPayload } from "./payload/TransactionBeganPayload";
 import { isTransactionEndedPayload, TransactionEndedPayload } from "./payload/TransactionEndedPayload";
 import { isStoreChangedPayload, StoreChangedPayload } from "./payload/StoreChangedPayload";
+import { isWillNotExecutedPayload, WillNotExecutedPayload } from "./payload/WillNotExecutedPayload";
 
 export interface LifeCycleEventHubArgs {
     dispatcher: Dispatcher;
@@ -93,6 +94,23 @@ export class LifeCycleEventHub {
     onEndTransaction(handler: (payload: TransactionEndedPayload, meta: DispatcherPayloadMeta) => void) {
         const releaseHandler = this.dispatcher.onDispatch(function onEndTransaction(payload, meta) {
             if (isTransactionEndedPayload(payload)) {
+                handler(payload, meta);
+            }
+        });
+        this.releaseHandlers.push(releaseHandler);
+        return releaseHandler;
+    }
+
+    /**
+     * Register `handler` function to Context.
+     * `handler` is called when each useCases will not execute.
+     * In other words, `UseCase#shouldExecute` return false.
+     */
+    onWillNotExecuteEachUseCase(
+        handler: (payload: WillNotExecutedPayload, meta: DispatcherPayloadMeta) => void
+    ): () => void {
+        const releaseHandler = this.dispatcher.onDispatch(function onWillNotExecuteEachUseCase(payload, meta) {
+            if (isWillNotExecutedPayload(payload)) {
                 handler(payload, meta);
             }
         });

@@ -11,6 +11,7 @@ import { DidExecutedPayload } from "./payload/DidExecutedPayload";
 import { WillExecutedPayload } from "./payload/WillExecutedPayload";
 import { UseCaseLike } from "./UseCaseLike";
 import { Payload } from "./payload/Payload";
+import { WillNotExecutedPayload } from "./payload/WillNotExecutedPayload";
 
 interface onWillNotExecuteArgs {
     (...args: Array<any>): void;
@@ -46,8 +47,10 @@ const proxifyUseCase = <T extends UseCaseLike>(
         if (typeof useCase.shouldExecute === "function") {
             const shouldExecute = useCase.shouldExecute(args);
             if (typeof shouldExecute !== "boolean") {
-                throw new Error(
-                    `${useCase.name}>#shouldExecute should return boolean value. Actual result: ${shouldExecute}`
+                return Promise.reject(
+                    new Error(
+                        `${useCase.name}>#shouldExecute should return boolean value. Actual result: ${shouldExecute}`
+                    )
                 );
             }
             if (!shouldExecute) {
@@ -175,7 +178,17 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
     }
 
     private willNotExecuteUseCase(args?: any[]): void {
-        console.log("this is will not args", args);
+        const payload = new WillNotExecutedPayload({
+            args
+        });
+        const meta = new DispatcherPayloadMetaImpl({
+            useCase: this.useCase,
+            dispatcher: this._dispatcher,
+            parentUseCase: this._parentUseCase,
+            isTrusted: true,
+            isUseCaseFinished: true
+        });
+        this.dispatch(payload, meta);
     }
 
     /**
