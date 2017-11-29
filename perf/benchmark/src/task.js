@@ -18,11 +18,11 @@ module.exports = function(Almin, done) {
     const log = () => {
         // nope
     };
-    context.onDispatch(log);
-    context.onWillExecuteEachUseCase(log);
-    context.onDidExecuteEachUseCase(log);
-    context.onCompleteEachUseCase(log);
-    context.onErrorDispatch(log);
+    context.events.onDispatch(log);
+    context.events.onWillExecuteEachUseCase(log);
+    context.events.onDidExecuteEachUseCase(log);
+    context.events.onCompleteEachUseCase(log);
+    context.events.onErrorDispatch(log);
     context.onChange(() => {
         const state = context.getState();
         log(state);

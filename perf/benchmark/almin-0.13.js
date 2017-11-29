@@ -1,11 +1,16 @@
 // MIT © 2017 azu
 "use strict";
-const { Dispatcher, Context, Store, StoreGroup, UseCase } = require("almin-0.9");
+const { Dispatcher, Context, Store, StoreGroup, UseCase } = require("almin-0.13");
+
 module.exports = {
-    createContext: function(stores) {
+    createContext(stores) {
+        const storeMappings = stores.reduce((t, store) => {
+            t[store.name] = store;
+            return t;
+        }, {});
         return new Context({
             dispatcher: new Dispatcher(),
-            store: new StoreGroup(stores)
+            store: new StoreGroup(storeMappings)
         });
     },
     createUseCase() {
@@ -25,24 +30,16 @@ module.exports = {
                 super();
                 this.name = name;
                 this.state = null;
-                this.onDispatch(payload => {
-                    if (payload.type === "update") {
-                        this.updateState(payload.body);
-                    }
-                });
             }
 
-            updateState(newState) {
-                if (this.state !== newState) {
-                    this.state = newState;
-                    this.emitChange();
+            receivePayload(payload) {
+                if (payload.type === "update") {
+                    this.setState(payload.body);
                 }
             }
 
             getState() {
-                return {
-                    [name]: this.state
-                };
+                return this.state;
             }
         }
         return new TestStore();

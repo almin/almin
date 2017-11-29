@@ -9,8 +9,8 @@
   },
   "dependencies": {
     "almin": "^0.14.0",
+    "almin-0.13": "file:pacakges/almin-0.13",
     "almin-0.12": "file:pacakges/almin-0.12",
-    "almin-0.9": "file:pacakges/almin-0.9",
     "json2csv": "^3.7.3",
     "lodash.range": "^3.2.0",
     "p-queue": "^1.0.0"

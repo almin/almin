@@ -18,13 +18,13 @@ function runStore(almin, storeCount) {
         });
         const context = almin.createContext(stores);
         let startTimeStamp, didTimeStamp, completeTimeStamp, onChangeTimeStamp;
-        context.onWillExecuteEachUseCase((payload, meta) => {
+        context.events.onWillExecuteEachUseCase((payload, meta) => {
             startTimeStamp = meta.timeStamp;
         });
-        context.onDidExecuteEachUseCase((payload, meta) => {
+        context.events.onDidExecuteEachUseCase((payload, meta) => {
             didTimeStamp = meta.timeStamp;
         });
-        context.onCompleteEachUseCase((payload, meta) => {
+        context.events.onCompleteEachUseCase((payload, meta) => {
             completeTimeStamp = meta.timeStamp;
         });
         context.onChange(() => {
