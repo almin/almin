@@ -1,6 +1,6 @@
 // MIT © 2017 azu
 "use strict";
-const { Dispatcher, Context, Store, StoreGroup, UseCase } = require("almin-0.12");
+const { Dispatcher, Context, Store, StoreGroup, UseCase } = require("almin-0.14");
 
 module.exports = {
     createContext(stores) {
