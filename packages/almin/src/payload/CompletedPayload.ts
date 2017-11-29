@@ -8,8 +8,8 @@ import { Payload } from "./Payload";
  */
 export const TYPE = "ALMIN__COMPLETED_EACH_USECASE__";
 
-export class CompletedPayload extends Payload {
-    type: typeof TYPE;
+export class CompletedPayload implements Payload {
+    type = TYPE;
     /**
      * the value is returned by the useCase
      * Difference of DidExecutedPayload, the value always is resolved value.
@@ -20,7 +20,6 @@ export class CompletedPayload extends Payload {
     value: any | undefined;
 
     constructor({ value }: { value?: any }) {
-        super({ type: TYPE });
         this.value = value;
     }
 }

@@ -10,13 +10,12 @@ export const TYPE = "ALMIN_BEGAN_OF_TRANSACTION__";
 /**
  * TransactionBeganPayload is begin of transaction
  */
-export class TransactionBeganPayload extends Payload {
-    type: typeof TYPE;
+export class TransactionBeganPayload implements Payload {
+    type = TYPE;
     // transaction name
     name: string;
 
     constructor(name: string) {
-        super({ type: TYPE });
         this.name = name;
     }
 }

@@ -12,11 +12,8 @@ export const TYPE = "Almin__InitializedPayload__";
  * This is exported for an unit testing.
  * DO NOT USE THIS in your application.
  */
-export class InitializedPayload extends Payload {
-    type: typeof TYPE;
-    constructor() {
-        super({ type: TYPE });
-    }
+export class InitializedPayload implements Payload {
+    type = TYPE;
 }
 
 export const isInitializedPayload = (v: any): v is InitializedPayload => {
