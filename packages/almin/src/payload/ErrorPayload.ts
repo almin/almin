@@ -11,15 +11,14 @@ export const TYPE = "ALMIN__ErrorPayload__";
 /**
  * This payload is executed
  */
-export class ErrorPayload extends Payload {
-    type: typeof TYPE;
+export class ErrorPayload implements Payload {
+    type = TYPE;
     /**
      * the `error` in the UseCase
      */
     error: Error | any;
 
     constructor({ error }: { error?: Error | any }) {
-        super({ type: TYPE });
         this.error = error;
     }
 }

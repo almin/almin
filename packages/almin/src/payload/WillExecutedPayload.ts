@@ -8,15 +8,14 @@ import { Payload } from "./Payload";
  */
 export const TYPE = "ALMIN__WILL_EXECUTED_EACH_USECASE__";
 
-export class WillExecutedPayload extends Payload {
-    type: typeof TYPE;
+export class WillExecutedPayload implements Payload {
+    type = TYPE;
     /**
      * a array for argument of the useCase
      */
     args: Array<any>;
 
     constructor({ args = [] }: { args?: Array<any> }) {
-        super({ type: TYPE });
         this.args = args;
     }
 }

@@ -8,8 +8,8 @@ import { Payload } from "./Payload";
  */
 export const TYPE = "ALMIN__DID_EXECUTED_EACH_USECASE__";
 
-export class DidExecutedPayload extends Payload {
-    type: typeof TYPE;
+export class DidExecutedPayload implements Payload {
+    type = TYPE;
     /**
      * the value is returned by the useCase
      * Maybe Promise or some value or undefined.
@@ -18,7 +18,6 @@ export class DidExecutedPayload extends Payload {
     value: any | undefined;
 
     constructor({ value }: { value?: any }) {
-        super({ type: TYPE });
         this.value = value;
     }
 }

@@ -12,10 +12,9 @@ export const TYPE = "ALMIN__ChangedPayload__";
  * Often, Store is changed.
  * @deprecated
  */
-export class ChangedPayload extends Payload {
-    type: typeof TYPE;
+export class ChangedPayload implements Payload {
+    type = TYPE;
     constructor() {
-        super({ type: TYPE });
         console.warn("ChangedPayload will be removed.");
     }
 }

@@ -10,13 +10,12 @@ export const TYPE = "ALMIN_ENF_OF_TRANSACTION__";
 /**
  * TransactionEndedPayload is end of transaction
  */
-export class TransactionEndedPayload extends Payload {
-    type: typeof TYPE;
+export class TransactionEndedPayload implements Payload {
+    type = TYPE;
     // transaction name
     name: string;
 
     constructor(name: string) {
-        super({ type: TYPE });
         this.name = name;
     }
 }
