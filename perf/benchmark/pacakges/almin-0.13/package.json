@@ -1,0 +1,14 @@
+{
+  "private":true,
+  "name": "almin-0.13",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+  },
+  "author": "azu",
+  "license": "MIT",
+  "dependencies": {
+    "almin": "^0.13.0"
+  }
+}
