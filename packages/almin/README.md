@@ -23,7 +23,7 @@ Almin provides Flux/CQRS patterns for JavaScript applications.
 
 It aims to create a scalable app.
 
-![Overview of almin-architecture](./docs/resources/almin-architecture.png)
+![Overview of almin-architecture](/docs/assets/almin-architecture.png)
 
 The above figure is overview of Almin architecture that is similar to CQRS([Command Query Responsibility Segregation](https://martinfowler.com/bliki/CQRS.html "Command Query Responsibility Segregation")).
 

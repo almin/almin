@@ -39,7 +39,7 @@ Almin is an implementation of Read/Write Stack Architecture that is well-known a
 
     npm install almin
 
-You'll also need a Promise polyfill for [older browsers](http://caniuse.com/#feat=promises).
+You'll also need a Promise polyfill for [older browsers](https://caniuse.com/).
 
     npm install es6-promise
 
@@ -56,7 +56,7 @@ Almin provides Flux/CQRS patterns for JavaScript applications.
 
 It aims to create a scalable app.
 
-![Overview of almin-architecture](./docs/resources/almin-architecture.png)
+![Overview of almin-architecture](docs/assets/almin-architecture.png)
 
 The above figure is overview of Almin architecture that is similar to CQRS([Command Query Responsibility Segregation](https://martinfowler.com/bliki/CQRS.html "Command Query Responsibility Segregation")).
 

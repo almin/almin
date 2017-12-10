@@ -7,7 +7,7 @@
     - [Store](./docs/introduction/components.md#store)
 - [Hello World](./docs/introduction/hello-world.md)
 - Tutorial
-    - [Counter App](./docs/tutorial/counter/README.md)
+    - [Counter App](docs/counter/README.md)
         - Apply Flux pattern
     - [Todo App](./docs/tutorial/todomvc/README.md)
         - Apply DDD/CQRS pattern
@@ -25,7 +25,7 @@
     - [Nesting UseCase](./docs/tips/nesting-usecase.md)
     - [LifeCycle of UseCase](./docs/tips/usecase-lifecycle.md)
 - Warnings
-    - [UseCase is already released](docs/warnings/usecase-is-already-released.md)
+    - [UseCase is already released](docs/usecase-is-already-released.md)
 - API Reference
     - [Dispatcher](./docs/api/Dispatcher.md)
     - [DispatcherPayloadMeta](./docs/api/DispatcherPayloadMeta.md)
