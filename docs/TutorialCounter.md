@@ -185,6 +185,7 @@ It means that we can create `CounterState`.
 
 - It is state!
 
+
 ## State
 
 We have created `CounterState.js`.
@@ -193,6 +194,7 @@ We have created `CounterState.js`.
 
 - receive "payload" and return state.
 
+> Source: [`counter/src/store/CounterState.js`](https://github.com/almin/almin/tree/master/examples/counter/src/store/CounterState.js)
 ``` javascript
 "use strict";
 
@@ -234,6 +236,7 @@ Finally, we have added some code to `CounterStore`
 
 A class inherited `Store` has `this.setState()` method that update own state if needed.
 
+> Source: [`counter/src/store/CounterStore.js`](https://github.com/almin/almin/tree/master/examples/counter/src/store/CounterStore.js)
 ``` javascript
 "use strict";
 import { Store } from "almin";
@@ -304,7 +307,8 @@ ReactDOM.render(<App appContext={appContext} />, document.getElementById("js-app
 
 Full code of `index.js`:
 
-``` javascript
+> Source: [`counter/src/index.js`](https://github.com/almin/almin/tree/master/examples/counter/src/index.js)
+``` jsx
 "use strict";
 import React from "react";
 import ReactDOM from "react-dom";
@@ -341,9 +345,8 @@ We will create `App.js` is the root of component aka. Container component.
 
 It receive `appContext` from `index.js` and use it.
 
-Full code of `App.js`:
-
-```` javascript
+> Source: [`counter/src/component/App.js`](https://github.com/almin/almin/tree/master/examples/counter/src/component/App.js)
+``` jsx
 "use strict";
 import React from "react";
 import PropTypes from "prop-types";
@@ -389,7 +392,7 @@ App.propTypes = {
     appContext: PropTypes.instanceOf(Context).isRequired
 };
 
-````
+```
 
 #### App's state
 
@@ -438,9 +441,9 @@ Execute `IncrementalCounterUseCase` and work following:
 3. `App` Component's state is updated via `onChangeHandler`
 4. `Counter` receive new `CounterState`, refresh view
 
-Full code of `Counter.js`:
 
-``` javascript
+> Source: [`counter/src/component/Counter.js`](https://github.com/almin/almin/tree/master/examples/counter/src/component/Counter.js)
+``` jsx
 "use strict";
 import React from "react";
 import PropTypes from "prop-types";

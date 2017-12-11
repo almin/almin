@@ -112,6 +112,7 @@ We going to implement `TodoItem` as value object.
 - `title`: todo title
 - `completed`: true or false
 
+> Source: [`todomvc/src/domain/TodoList/TodoItem.js`](https://github.com/almin/almin/tree/master/examples/todomvc/src/domain/TodoList/TodoItem.js)
 ``` javascript
 "use strict";
 const uuid = require("uuid");
@@ -190,6 +191,7 @@ Repository is simple class that has these feature:
 We want to store `TodoList` instance to the repository.
 As a result, We have created `TodoListRepository`.
 
+> Source: [`todomvc/src/infra/TodoListRepository.js`](https://github.com/almin/almin/tree/master/examples/todomvc/src/infra/TodoListRepository.js)
 ``` javascript
 "use strict";
 const EventEmitter = require("events");
@@ -285,7 +287,7 @@ Execute [CreateDomainUseCase.js](../examples/todomvc/src/usecase/CreateDomainUse
 
 We can put this to `index.js` that is actual entry point of this application.
 
-```js
+```jsx
 // create domain model and store to repository
 appContext.useCase(CreateDomainUseCaseFactory.create()).execute().then(() => {
     // mount app view
@@ -323,6 +325,7 @@ Execution steps:
 
 All of AddTodoItem:
 
+> Source: [`todomvc/src/usecase/AddTodoItem.js`](https://github.com/almin/almin/tree/master/examples/todomvc/src/usecase/AddTodoItem.js)
 ``` javascript
 "use strict";
 import { UseCase } from "almin";
@@ -366,8 +369,8 @@ You notice about `AddTodoItemFactory`.
 `AddTodoItemFactory` is not must, but it help to write tests.
 We can write test for `AddTodoItem` UseCase.
 
+[AddTodoItem-test.js](../examples/todomvc/test/UseCase/AddTodoItem-test.js)
 ``` javascript
-// LICENSE : MIT
 "use strict";
 const assert = require("power-assert");
 import MemoryDB from "../../src/infra/adpter/MemoryDB";
@@ -488,6 +491,7 @@ Because, `Store#receivePayload` is called in the [Almin life-cycle](tips/usecase
 
 So, you can write following:
 
+> Source: [`todomvc/src/store/TodoStore/TodoStore.js`](https://github.com/almin/almin/tree/master/examples/todomvc/src/store/TodoStore/TodoStore.js)
 ``` javascript
 "use strict";
 import { Store } from "almin";
@@ -601,6 +605,7 @@ Almin has `StoreGroup` utility class that collection of stores.
 
 `AppStoreGroup` pass `TodoListRepository` instance to `TodoStore`. 
 
+> Source: [`todomvc/src/store/AppStoreGroup.js`](https://github.com/almin/almin/tree/master/examples/todomvc/src/store/AppStoreGroup.js)
 ``` javascript
 "use strict";
 import { StoreGroup } from "almin";

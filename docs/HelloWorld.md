@@ -7,6 +7,7 @@ Previously, you have seen [components of almin](./Components.md).
 
 [examples/introduction](../examples/introduction) is simple Hello World app that show the components in a single file.
 
+> Source: [`introduction/index.js`](https://github.com/almin/almin/tree/master/examples/introduction/index.js)
 ``` javascript
 "use strict";
 // Hello World in a single file
