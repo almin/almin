@@ -112,7 +112,22 @@ We going to implement `TodoItem` as value object.
 - `title`: todo title
 - `completed`: true or false
 
-[import, TodoItem.js](../examples/todomvc/src/domain/TodoList/TodoItem.js)
+``` javascript
+"use strict";
+const uuid = require("uuid");
+export default class TodoItem {
+    constructor({ id, title, completed }) {
+        this.id = id || uuid();
+        this.title = title;
+        this.completed = completed;
+    }
+
+    updateItem(updated) {
+        return new TodoItem(Object.assign({}, this, updated));
+    }
+}
+
+```
 
 #### TodoList is domain model
 
@@ -175,7 +190,70 @@ Repository is simple class that has these feature:
 We want to store `TodoList` instance to the repository.
 As a result, We have created `TodoListRepository`.
 
-[import, TodoListRepository.js](../examples/todomvc/src/infra/TodoListRepository.js)
+``` javascript
+"use strict";
+const EventEmitter = require("events");
+const REPOSITORY_CHANGE = "REPOSITORY_CHANGE";
+import TodoList from "../domain/TodoList/TodoList";
+import MemoryDB from "./adpter/MemoryDB";
+// Collection repository
+export class TodoListRepository extends EventEmitter {
+    constructor(database = new MemoryDB()) {
+        super();
+        /**
+         * @type {MemoryDB}
+         */
+        this._database = database;
+    }
+
+    /**
+     * @param id
+     * @private
+     */
+    _get(id) {
+        // Domain.<id>
+        return this._database.get(`${TodoList.name}.${id}`);
+    }
+
+    find(todoList) {
+        return this._get(todoList.id);
+    }
+
+    /**
+     * @returns {TodoList|undefined}
+     */
+    lastUsed() {
+        const todoList = this._database.get(`${TodoList.name}.lastUsed`);
+        if (todoList) {
+            return this._get(todoList.id);
+        }
+    }
+
+    /**
+     * @param {TodoList} todoList
+     */
+    save(todoList) {
+        this._database.set(`${TodoList.name}.lastUsed`, todoList);
+        this._database.set(`${TodoList.name}.${todoList.id}`, todoList);
+        this.emit(REPOSITORY_CHANGE, todoList);
+    }
+
+    /**
+     * @param {TodoList} todoList
+     */
+    remove(todoList) {
+        this._database.delete(`${TodoList.name}.${todoList.id}`);
+        this.emit(REPOSITORY_CHANGE);
+    }
+
+    onChange(handler) {
+        this.on(REPOSITORY_CHANGE, handler);
+    }
+}
+// singleton
+export default new TodoListRepository();
+
+```
 
 Repository should be persistence object.
 In other words, create repository instance as singleton.
@@ -245,7 +323,41 @@ Execution steps:
 
 All of AddTodoItem:
 
-[import, AddTodoItem.js](../examples/todomvc/src/usecase/AddTodoItem.js)
+``` javascript
+"use strict";
+import { UseCase } from "almin";
+import todoListRepository, { TodoListRepository } from "../infra/TodoListRepository";
+import TodoItem from "../domain/TodoList/TodoItem";
+export class AddTodoItemFactory {
+    static create() {
+        return new AddTodoItemUseCase({
+            todoListRepository
+        });
+    }
+}
+
+export class AddTodoItemUseCase extends UseCase {
+    /**
+     * @param {TodoListRepository} todoListRepository
+     */
+    constructor({ todoListRepository }) {
+        super();
+        this.todoListRepository = todoListRepository;
+    }
+
+    execute(title) {
+        // Get todoList from repository
+        const todoList = this.todoListRepository.lastUsed();
+        // Create TodoItem
+        const todoItem = new TodoItem({ title });
+        // Add TodoItem
+        todoList.addItem(todoItem);
+        // Save todoList to  repository
+        this.todoListRepository.save(todoList);
+    }
+}
+
+```
 
 #### Factory of UseCase
 
@@ -254,7 +366,38 @@ You notice about `AddTodoItemFactory`.
 `AddTodoItemFactory` is not must, but it help to write tests.
 We can write test for `AddTodoItem` UseCase.
 
-[import, AddTodoItem-test.js](../examples/todomvc/test/UseCase/AddTodoItem-test.js)
+``` javascript
+// LICENSE : MIT
+"use strict";
+const assert = require("power-assert");
+import MemoryDB from "../../src/infra/adpter/MemoryDB";
+import TodoList from "../../src/domain/TodoList/TodoList";
+import { TodoListRepository } from "../../src/infra/TodoListRepository";
+import { AddTodoItemUseCase } from "../../src/usecase/AddTodoItem";
+describe("AddTodoItem", function() {
+    it("should add TodoItem with title", function() {
+        const mockTodoList = new TodoList();
+        // prepare
+        const todoListRepository = new TodoListRepository(new MemoryDB());
+        todoListRepository.save(mockTodoList);
+        // initialize
+        const useCase = new AddTodoItemUseCase({
+            todoListRepository
+        });
+        const titleOfAdding = "ADDING TODO";
+        // Then
+        todoListRepository.onChange(() => {
+            // re-get todoList
+            const storedTodoList = todoListRepository.find(mockTodoList);
+            const todoItem = storedTodoList.getAllTodoItems()[0];
+            assert.equal(todoItem.title, titleOfAdding);
+        });
+        // When
+        useCase.execute(titleOfAdding);
+    });
+});
+
+```
 
 This pattern is well-known as [Dependency injection](https://en.wikipedia.org/wiki/Dependency_injection "Dependency injection")(DI).
 
@@ -345,7 +488,41 @@ Because, `Store#receivePayload` is called in the [Almin life-cycle](tips/usecase
 
 So, you can write following:
 
-[import, TodoStore.js](../examples/todomvc/src/store/TodoStore/TodoStore.js)
+``` javascript
+"use strict";
+import { Store } from "almin";
+import TodoState, { FilterTypes } from "./TodoState";
+export default class TodoStore extends Store {
+    /**
+     * @param {TodoListRepository} todoListRepository
+     */
+    constructor({ todoListRepository }) {
+        super();
+        // Initial State
+        this.state = new TodoState({
+            items: [],
+            filterType: FilterTypes.ALL_TODOS
+        });
+        this.todoListRepository = todoListRepository;
+    }
+
+    // Update state
+    receivePayload(payload) {
+        const todoList = this.todoListRepository.lastUsed();
+        if (!todoList) {
+            return;
+        }
+        const newState = this.state.merge(todoList).reduce(payload);
+        this.setState(newState);
+    }
+
+    // Read state
+    getState() {
+        return this.state;
+    }
+}
+
+```
 
 And you can see the test for `TodoStore.js`
 
@@ -424,7 +601,20 @@ Almin has `StoreGroup` utility class that collection of stores.
 
 `AppStoreGroup` pass `TodoListRepository` instance to `TodoStore`. 
 
-[import, AppStoreGroup.js](../examples/todomvc/src/store/AppStoreGroup.js)
+``` javascript
+"use strict";
+import { StoreGroup } from "almin";
+import TodoStore from "./TodoStore/TodoStore";
+import todoListRepository from "../infra/TodoListRepository";
+export default class AppStoreGroup {
+    static create() {
+        return new StoreGroup({
+            todoState: new TodoStore({ todoListRepository })
+        });
+    }
+}
+
+```
 
 After that, you should initialize Almin's `Context` with `AppStoreGroup`.
 

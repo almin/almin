@@ -98,7 +98,21 @@ In flux:
  
 Return to `IncrementalCounterUseCase` and add "dispatch increment event"
 
-[include, IncrementalCounterUseCase.js](../examples/counter/src/usecase/IncrementalCounterUseCase.js)
+``` javascript
+"use strict";
+import { UseCase } from "almin";
+
+export class IncrementalCounterUseCase extends UseCase {
+    // IncrementalCounterUseCase dispatch "increment" ----> Store
+    // UseCase should implement #execute method
+    execute() {
+        this.dispatch({
+            type: "increment"
+        });
+    }
+}
+
+```
 
 A class inherited `UseCase` has `this.dispatch(payload);` method.
 
@@ -179,7 +193,32 @@ We have created `CounterState.js`.
 
 - receive "payload" and return state.
 
-[include, CounterState.js](../examples/counter/src/store/CounterState.js)
+``` javascript
+"use strict";
+
+// reduce function
+export class CounterState {
+    /**
+     * @param {Number} count
+     */
+    constructor({ count }) {
+        this.count = count;
+    }
+
+    reduce(payload) {
+        switch (payload.type) {
+            // Increment Counter
+            case "increment":
+                return new CounterState({
+                    count: this.count + 1
+                });
+            default:
+                return this;
+        }
+    }
+}
+
+```
 
 You may have seen the pattern. So, It is **reducer** in the Redux.
 
@@ -195,7 +234,32 @@ Finally, we have added some code to `CounterStore`
 
 A class inherited `Store` has `this.setState()` method that update own state if needed.
 
-[include, CounterStore.js](../examples/counter/src/store/CounterStore.js)
+``` javascript
+"use strict";
+import { Store } from "almin";
+import { CounterState } from "./CounterState";
+
+export class CounterStore extends Store {
+    constructor() {
+        super();
+        // initial state
+        this.state = new CounterState({
+            count: 0
+        });
+    }
+
+    // receive event from UseCase, then update state
+    receivePayload(payload) {
+        this.setState(this.state.reduce(payload));
+    }
+
+    // return own state
+    getState() {
+        return this.state;
+    }
+}
+
+```
 
 ### :memo: Note: Testing
 
@@ -240,7 +304,34 @@ ReactDOM.render(<App appContext={appContext} />, document.getElementById("js-app
 
 Full code of `index.js`:
 
-[include, index.js](../examples/counter/src/index.js)
+``` javascript
+"use strict";
+import React from "react";
+import ReactDOM from "react-dom";
+import { Context, Dispatcher, StoreGroup } from "almin";
+import App from "./component/App";
+import { CounterStore } from "./store/CounterStore";
+// a single dispatcher
+const dispatcher = new Dispatcher();
+// a single store
+const counterStore = new CounterStore();
+// create store group
+const storeGroup = new StoreGroup({
+    // stateName : store
+    counter: counterStore
+});
+// create context
+const appContext = new Context({
+    dispatcher,
+    store: storeGroup,
+    options: {
+        // Optional: https://almin.js.org/docs/tips/strict-mode.html
+        strict: true
+    }
+});
+ReactDOM.render(<App appContext={appContext} />, document.getElementById("js-app"));
+
+```
 
 ------
 
@@ -252,7 +343,53 @@ It receive `appContext` from `index.js` and use it.
 
 Full code of `App.js`:
 
-[include, App.js](../examples/counter/src/component/App.js)
+```` javascript
+"use strict";
+import React from "react";
+import PropTypes from "prop-types";
+import { Context } from "almin";
+import { CounterState } from "../store/CounterState";
+import { Counter } from "./Counter";
+
+export default class App extends React.Component {
+    componentWillMount() {
+        const appContext = this.props.appContext;
+        // set initial state
+        this.setState(appContext.getState());
+        // update component's state with store's state when store is changed
+        const onChangeHandler = () => {
+            this.setState(appContext.getState());
+        };
+        this.unSubscribe = appContext.onChange(onChangeHandler);
+    }
+
+    componentWillUnmount() {
+        if (typeof this.unSubscribe === "function") {
+            this.unSubscribe();
+        }
+    }
+
+    render() {
+        /**
+         * Where is "CounterState" come from?
+         * It is a `key` of StoreGroup.
+         *
+         * ```
+         * const storeGroup = new StoreGroup({
+         *   "counter": counterStore
+         * });
+         * ```
+         * @type {CounterState}
+         */
+        const counterState = this.state.counter;
+        return <Counter counterState={counterState} appContext={this.props.appContext} />;
+    }
+}
+App.propTypes = {
+    appContext: PropTypes.instanceOf(Context).isRequired
+};
+
+````
 
 #### App's state
 
@@ -303,7 +440,39 @@ Execute `IncrementalCounterUseCase` and work following:
 
 Full code of `Counter.js`:
 
-[include, Counter.js](../examples/counter/src/component/Counter.js)
+``` javascript
+"use strict";
+import React from "react";
+import PropTypes from "prop-types";
+import { IncrementalCounterUseCase } from "../usecase/IncrementalCounterUseCase";
+import { Context } from "almin";
+import { CounterState } from "../store/CounterState";
+
+export class Counter extends React.Component {
+    incrementCounter() {
+        // execute IncrementalCounterUseCase with new count value
+        const context = this.props.appContext;
+        context.useCase(new IncrementalCounterUseCase()).execute();
+    }
+
+    render() {
+        // execute UseCase ----> Store
+        const counterState = this.props.counterState;
+        return (
+            <div>
+                <button onClick={this.incrementCounter.bind(this)}>Increment Counter</button>
+                <p>Count: {counterState.count}</p>
+            </div>
+        );
+    }
+}
+
+Counter.propTypes = {
+    appContext: PropTypes.instanceOf(Context).isRequired,
+    counterState: PropTypes.instanceOf(CounterState).isRequired
+};
+
+```
 
 
 ## End

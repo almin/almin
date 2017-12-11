@@ -1,4 +1,3 @@
-// LICENSE : MIT
 "use strict";
 
 // reduce function
