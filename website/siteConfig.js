@@ -1,8 +1,14 @@
 const users = [
     {
-        caption: "User1",
-        image: "img/almin.svg",
+        caption: "Almin",
+        image: "img/user/almin.svg",
         infoLink: "https://almin.js.org/",
+        pinned: true
+    },
+    {
+        caption: "Faao",
+        image: "img/user/faao.png",
+        infoLink: "https://github.com/azu/faao",
         pinned: true
     }
 ];
