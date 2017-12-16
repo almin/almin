@@ -1,6 +1,5 @@
 // Old path => New path
 module.exports = function(path, lang) {
-    console.log(path, lang);
     const REDIRECT = {
         "introduction/components": `/docs/${lang}/components.html`,
         "introduction/hello-world": `/docs/${lang}/hello-world.html`,
