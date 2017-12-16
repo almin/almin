@@ -13,7 +13,8 @@
     "packages/*",
     "packages/almin-logger/examples",
     "examples/*",
-    "perf/*"
+    "perf/*",
+    "website"
   ],
   "npmClient": "yarn",
   "version": "independent"
