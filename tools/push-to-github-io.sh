@@ -60,6 +60,8 @@ echo "Update content"
 yarn run build
 echo "Copy files"
 cp -Rf "${distDir}/"* "${tmpDir}/almin.github.io/"
+echo "Copy CNAME"
+cp "${parentDir}/CNAME" "${tmpDir}/almin.github.io/"
 echo "Commit and push"
 cd "${tmpDir}/almin.github.io/"
 commit_and_push_changes  "${toBranch}" "${commitMessage}"
