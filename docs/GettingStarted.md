@@ -3,18 +3,17 @@ id: getting-started
 title: "Getting Started"
 ---
 
-Almin provide Flux/CQRS patterns for JavaScript application.
+Almin provide Flux/CQRS(Command Query Responsibility Segregation) patterns for JavaScript application.
 
 ## Features
 
 Almin provides some patterns, is not a framework.
 
-- Testable
-- Scalable
-- Responsibility Layers patten – well-known as DDD(Domain-Driven Design)/CQRS
+- Scalable – work with Medium-small(1,000LOC) – Large(100,000LOC)
+- Testable – can implement UseCase/Store/Domain as separated components
+- Debuggable – [Logger](GuideLogging.md), [DevTools](https://github.com/almin/almin-devtools), [Performance monitoring](GuidePerformancProfile.md)
+- Support Layered architecture – work with DDD(Domain-Driven Design)/CQRS(Command Query Responsibility Segregation)
 - Support [TypeScript](https://www.typescriptlang.org/ "TypeScript") and [Flow](https://flow.org/ "FlowType")
-
-Almin is an implementation of Read/Write Stack Architecture that is well-known as CQRS.
 
 ## Installation
 
