@@ -48,8 +48,7 @@ This example implement [voronianski/flux-comparison](https://github.com/voronian
 
 shopping-cart example explain the reason we encourage you to normalize your data is to avoid duplication.
 
-- How to set initial data.
-    - See [example/shopping-cart/src/usecase/Initial](https://github.com/almin/almin/tree/master/example/shopping-cart/src/usecase/Initial)
+- How to set initial data
 - How to implement domain model
 - How to implement UseCase
 - How to resolve the issue of transaction updating 
