@@ -34,7 +34,7 @@ class HomeSplash extends React.Component {
     render() {
         const newURL =
             typeof window !== "undefined" && typeof window.location !== "undefined"
-                ? redirectURL(window.location.path, this.props.lang)
+                ? redirectURL(window.location.pathname, this.props.lang)
                 : undefined;
         const message = newURL ? (
             <small>
