@@ -17,7 +17,9 @@ class Help extends React.Component {
     render() {
         const supportLinks = [
             {
-                content: "Learn more using the [documentation on this site.](/test-site/docs/en/doc1.html)",
+                content: `Learn more using the [documentation on this site.](${siteConfig.baseUrl}docs/${
+                    this.props.language
+                }/getting-started.html)`,
                 title: "Browse Docs"
             },
             {
@@ -25,8 +27,9 @@ class Help extends React.Component {
                 title: "Join the community"
             },
             {
-                content: "Find out what's new with this project",
-                title: "Stay up to date"
+                title: "GitHub",
+                content:
+                    "At our [GitHub repo](https://github.com/almin/almin) Browse and submit [issues](https://github.com/almin/almin/issues) or [pull requests](https://github.com/almin/almin/pulls) for bugs you find or any new features you may want implemented. Be sure to also check out our [contributing information](https://github.com/almin/almin/blob/master/.github/CONTRIBUTING.md)."
             }
         ];
 

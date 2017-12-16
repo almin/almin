@@ -2,7 +2,7 @@ const users = [
     {
         caption: "User1",
         image: "img/almin.svg",
-        infoLink: "https://www.example.com",
+        infoLink: "https://almin.js.org/",
         pinned: true
     }
 ];
@@ -15,7 +15,15 @@ const siteConfig = {
     projectName: "almin",
     organizationName: "almin",
     editUrl: "https://github.com/almin/almin/edit/master/docs/",
-    headerLinks: [{ doc: "components", label: "Docs" }, { doc: "api", label: "API" }, { page: "help", label: "Help" }],
+    headerLinks: [
+        { doc: "getting-started", label: "Docs" },
+        { doc: "api", label: "API" },
+        { page: "help", label: "Help" },
+        {
+            href: "https://github.com/almin/almin",
+            label: "GitHub"
+        }
+    ],
     users,
     /* path to images for header/footer */
     headerIcon: "img/almin.svg",

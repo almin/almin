@@ -98,41 +98,54 @@ class Index extends React.Component {
                             contents={[
                                 {
                                     title: "Scalable",
-                                    content: "This is the content of my feature"
+                                    content: "Work with Medium-small(1,000LOC) – Large(100,000LOC)"
                                 },
                                 {
                                     title: "Testable",
-                                    content: "Testable"
+                                    content: "Can Implement UseCase/Store/Domain as separated components"
                                 },
                                 {
                                     title: "Debuggable",
-                                    content: "Testable"
+                                    content: `[Logger](${siteConfig.baseUrl}docs/${
+                                        this.props.language
+                                    }/logging.html), [DevTools](https://github.com/almin/almin-devtools), [Performance monitoring](${
+                                        siteConfig.baseUrl
+                                    }docs/${this.props.language}/logging.html)`
                                 },
                                 {
                                     title: "Layered Architecture",
-                                    content: "DDD CQRS"
+                                    content: "Work with DDD/CQRS architecture"
                                 }
                             ]}
                             layout="twoColumn"
                         />
                     </Container>
 
-                    <div className="productShowcaseSection paddingBottom" style={{ textAlign: "center" }}>
-                        <h2>Feature Callout</h2>
-                        <MarkdownBlock>These are features of this project</MarkdownBlock>
+                    <div className="productShowcaseSection paddingBottom">
+                        <h2>State management library for JavaScript application</h2>
+                        <MarkdownBlock>{`
+Now, We can implement web app with [Flux](https://github.com/facebook/flux),
+[Redux](https://github.com/reactjs/redux), [MobX](https://github.com/mobxjs/mobx) etc.
+But, We often hear a story like following:
+
+> The control flow of *[[LIBRARY]]* is cool, but how to implement domain logic?
+
+Almin aim to help you focus domain logic on your application.
+`}</MarkdownBlock>
                     </div>
                     <Container padding={["bottom", "top"]} background="dark">
                         <GridBlock
                             contents={[
                                 {
                                     title: "The Concept of Almin",
-                                    content:
-                                        "The concept is described in [The Concept of Almin](http://azu.github.io/slide/2017/almin/concept-of-almin.html) slide.\n " +
-                                        "-  Write **Your domain** in **Your code**\n" +
-                                        "- Split up **Read stack** and **Write stack**\n" +
-                                        "- **Unidirectional** data flow\n" +
-                                        "- Prefer **Readable code** to **Writable code**\n" +
-                                        "- **Monitor everything**",
+                                    content: `The concept is described in [The Concept of Almin](http://azu.github.io/slide/2017/almin/concept-of-almin.html) slide.
+
+- Write **Your domain** in **Your code**
+- Split up **Read stack** and **Write stack**
+- **Unidirectional** data flow
+- Prefer **Readable code** to **Writable code**
+- **Monitor everything**
+`,
                                     image: `${siteConfig.baseUrl}img/the-concept-of-almin.png`,
                                     imageAlign: "right",
                                     imageLink: "http://azu.github.io/slide/2017/almin/concept-of-almin.html"
@@ -144,8 +157,20 @@ class Index extends React.Component {
                         <GridBlock
                             contents={[
                                 {
-                                    title: "Large scalable app",
-                                    content: "Large scale app need to read time rather than write time.",
+                                    title: "Focus your domain",
+                                    content: `
+You can write **Your domain** in **Your code**.
+It means that you can control domain layer.
+
+- You can write **your domain** with **Pure JavaScript**
+- Your domain is **not need** to subclass of Almin things
+
+Almin support only application layer.
+
+- Application layer use your domain model
+
+If you stop to use Almin, you **don't need to rewrite** your domain
+`,
                                     image: `${siteConfig.baseUrl}docs/assets/almin-architecture.png`,
                                     imageAlign: "left"
                                 }
