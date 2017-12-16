@@ -6,6 +6,7 @@
       "hello-world"
     ],
     "Tutorial": [
+      "example-projects",
       "tutorial-counter",
       "tutorial-todo-app"
     ],

@@ -15,6 +15,7 @@
     "usecaseexecutor-api": "UseCaseExecutor",
     "api": "API Index",
     "components": "Components of Almin",
+    "example-projects": "Example projects",
     "redux-middleware": "redux-middleware",
     "glossary": "GLOSSARY",
     "logging": "Logging",

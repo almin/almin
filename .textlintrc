@@ -14,10 +14,11 @@
         "executed",
         "execution",
         "failure",
-        "pros"
+        "pros",
+        "color"
       ]
     },
-    "no-dead-link": true,
+    "@textlint-rule/no-dead-link": true,
     "common-misspellings": true
   }
 }

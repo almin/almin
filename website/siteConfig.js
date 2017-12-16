@@ -34,7 +34,7 @@ const siteConfig = {
     },
     scripts: ["https://buttons.github.io/buttons.js"],
     // You may provide arbitrary config keys to be used as needed by your template.
-    repoUrl: "https://github.com/deltice/test-site"
+    repoUrl: "https://github.com/almin/almin"
 };
 
 module.exports = siteConfig;

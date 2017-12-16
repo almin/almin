@@ -1,6 +1,7 @@
 {
   "private": true,
   "scripts": {
+    "init": "docusaurus-init",
     "start": "docusaurus-start",
     "build": "docusaurus-build",
     "publish-gh-pages": "docusaurus-publish",
@@ -9,7 +10,7 @@
     "rename-version": "docusaurus-rename-version"
   },
   "devDependencies": {
-    "docusaurus": "^1.0.0-beta.15"
+    "docusaurus": "^1.0.3"
   },
   "dependencies": {
     "remarkable-emoji": "^0.1.3"

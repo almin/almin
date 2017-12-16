@@ -5,7 +5,7 @@ title: "Hello World"
 
 Previously, you have seen [components of almin](./Components.md).
 
-[examples/introduction](../examples/introduction) is simple Hello World app that show the components in a single file.
+[examples/introduction](https://github.com/almin/almin/tree/master/examples/introduction) is simple Hello World app that show the components in a single file.
 
 > Source: [`introduction/index.js`](https://github.com/almin/almin/tree/master/examples/introduction/index.js)
 ``` javascript
@@ -75,7 +75,7 @@ render();
 
 ### :warning: Real example
 
-[examples/introduction](../examples/introduction) prefer to [concept of components](./Components.md) than correctness for implementation.
+[examples/introduction](https://github.com/almin/almin/tree/master/examples/introduction) prefer to [concept of components](./Components.md) than correctness for implementation.
 
 You want to know real implementation and see other examples.
 

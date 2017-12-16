@@ -26,6 +26,13 @@
   dependencies:
     "@azu/format-text" "^1.0.1"
 
+"@textlint-rule/textlint-rule-no-dead-link@^3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@textlint-rule/textlint-rule-no-dead-link/-/textlint-rule-no-dead-link-3.1.2.tgz#7c7cfa29db0bf8db249771ad7585b1b2fa843314"
+  dependencies:
+    isomorphic-fetch "^2.2.1"
+    textlint-rule-helper "^2.0.0"
+
 "@textlint/ast-node-types@^2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@textlint/ast-node-types/-/ast-node-types-2.0.0.tgz#b927557ecab55fbb8360140b7b6f1de0c160583f"
@@ -2146,13 +2153,9 @@ iconv-lite@0.4.4:
   version "0.4.4"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.4.tgz#e95f2e41db0735fc21652f7827a5ee32e63c83a8"
 
-iconv-lite@^0.4.17:
+iconv-lite@^0.4.17, iconv-lite@~0.4.13:
   version "0.4.19"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.19.tgz#f7468f60135f5e5dad3399c0a81be9a1603a082b"
-
-iconv-lite@~0.4.13:
-  version "0.4.16"
-  resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.16.tgz#65de3beeb39e2960d67f049f1634ffcbcde9014b"
 
 iferr@^0.1.5, iferr@~0.1.5:
   version "0.1.5"
@@ -3288,8 +3291,8 @@ nlcst-to-string@^2.0.0:
   resolved "https://registry.yarnpkg.com/nlcst-to-string/-/nlcst-to-string-2.0.0.tgz#fc9606b8c32d17caa827074f6ea44f83e3c7bd71"
 
 node-fetch@^1.0.1:
-  version "1.6.3"
-  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-1.6.3.tgz#dc234edd6489982d58e8f0db4f695029abcd8c04"
+  version "1.7.3"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-1.7.3.tgz#980f6f72d85211a5347c6b2bc18c5b84c3eb47ef"
   dependencies:
     encoding "^0.1.11"
     is-stream "^1.0.1"
@@ -5127,13 +5130,6 @@ textlint-rule-helper@^2.0.0:
   resolved "https://registry.yarnpkg.com/textlint-rule-helper/-/textlint-rule-helper-2.0.0.tgz#95cb4696c95c4258d2e3389e9e64b849f9721382"
   dependencies:
     unist-util-visit "^1.1.0"
-
-textlint-rule-no-dead-link@^3.0.1:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/textlint-rule-no-dead-link/-/textlint-rule-no-dead-link-3.1.1.tgz#19016ef111c5dfa77c9a883d6cbf67287c62bf56"
-  dependencies:
-    isomorphic-fetch "^2.2.1"
-    textlint-rule-helper "^2.0.0"
 
 textlint-rule-prh@^5.0.1:
   version "5.0.1"

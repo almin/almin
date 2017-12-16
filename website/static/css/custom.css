@@ -1,10 +1,5 @@
 /* your custom css */
-.post p {
-    line-height: 1.5 !important;
-}
-
-.mainContainer .wrapper p,
-.blockElement p {
+.mainContainer .wrapper blockquote p {
     padding: 0;
 }
 
