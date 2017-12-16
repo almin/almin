@@ -145,6 +145,8 @@ Almin aim to help you focus domain logic on your application.
 - **Unidirectional** data flow
 - Prefer **Readable code** to **Writable code**
 - **Monitor everything**
+
+For more details, see [The Concept of Almin](http://azu.github.io/slide/2017/almin/concept-of-almin.html).
 `,
                                     image: `${siteConfig.baseUrl}img/the-concept-of-almin.png`,
                                     imageAlign: "right",
