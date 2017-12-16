@@ -98,14 +98,20 @@ class Index extends React.Component {
                             contents={[
                                 {
                                     title: "Scalable",
+                                    image: `${siteConfig.baseUrl}img/icon/mbri-globe.svg`,
+                                    imageAlign: "top",
                                     content: "Work with Medium-small(1,000LOC) – Large(100,000LOC)"
                                 },
                                 {
                                     title: "Testable",
+                                    image: `${siteConfig.baseUrl}img/icon/mbri-refresh.svg`,
+                                    imageAlign: "top",
                                     content: "Can Implement UseCase/Store/Domain as separated components"
                                 },
                                 {
                                     title: "Debuggable",
+                                    image: `${siteConfig.baseUrl}img/icon/mbri-search.svg`,
+                                    imageAlign: "top",
                                     content: `[Logger](${siteConfig.baseUrl}docs/${
                                         this.props.language
                                     }/logging.html), [DevTools](https://github.com/almin/almin-devtools), [Performance monitoring](${
@@ -114,6 +120,9 @@ class Index extends React.Component {
                                 },
                                 {
                                     title: "Layered Architecture",
+
+                                    image: `${siteConfig.baseUrl}img/icon/mbri-layers.svg`,
+                                    imageAlign: "top",
                                     content: "Work with DDD/CQRS architecture"
                                 }
                             ]}
@@ -128,7 +137,8 @@ Now, We can implement web app with [Flux](https://github.com/facebook/flux),
 [Redux](https://github.com/reactjs/redux), [MobX](https://github.com/mobxjs/mobx) etc.
 But, We often hear a story like following:
 
-> The control flow of *[[LIBRARY]]* is cool, but how to implement domain logic?
+> The control flow of *[[LIBRARY]]* is cool.
+> But how to implement domain logic?
 
 Almin aim to help you focus domain logic on your application.
 `}</MarkdownBlock>
