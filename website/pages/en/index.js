@@ -137,7 +137,7 @@ Now, We can implement web app with [Flux](https://github.com/facebook/flux),
 [Redux](https://github.com/reactjs/redux), [MobX](https://github.com/mobxjs/mobx) etc.
 But, We often hear a story like following:
 
-> The control flow of *[[LIBRARY]]* is cool.
+> The control flow of *[[LIBRARY]]* is cool.<br>
 > But how to implement domain logic?
 
 Almin aim to help you focus domain logic on your application.
