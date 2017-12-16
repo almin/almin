@@ -6,10 +6,10 @@ declare docDir="${projectDir}/docs"
 # add build result
 function addDoc(){
     declare filePath=$1;
-    declare fileName=$(basename ${filePath} "d.ts")
+    declare fileName=$(basename ${filePath} ".d.ts")
     $(npm bin)/docco --blocks -t ${projectDir}/tools/d.ts-markdown.jst ${filePath} --output ${projectDir}/__obj/docs
-    mv ${projectDir}/__obj/docs/**${fileName}*.html ${projectDir}/docs/api/${fileName}md
-    echo "Create: ${docDir}/api/${fileName}md"
+    mv ${projectDir}/__obj/docs/**${fileName}*.html ${projectDir}/docs/_${fileName}API.md
+    echo "Create: ${docDir}/api/_${fileName}API.md"
 }
 cd "${alminDir}"
 npm run build

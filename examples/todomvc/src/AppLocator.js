@@ -1,4 +1,3 @@
-// LICENSE : MIT
 "use strict";
 export class AppContextLocator {
     constructor() {

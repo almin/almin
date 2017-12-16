@@ -5,9 +5,9 @@ declare currentDir=$(cd $(dirname $0);pwd)
 declare parentDir=$(cd $(dirname $(cd $(dirname $0);pwd));pwd)
 declare repositoryUrl="git@github.com:almin/almin.github.io.git"
 declare toBranch="master"
-declare commitMessage="Deploy GitBook build [skip ci]"
+declare commitMessage="Deploy docusaurus build [skip ci]"
 declare commands="npm run build:docs"
-declare distDir="${parentDir}/_book"
+declare distDir="${parentDir}/website/build/almin"
 
 if [ "$TRAVIS_PULL_REQUEST" != "false" ]
 then

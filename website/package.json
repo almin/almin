@@ -1,0 +1,16 @@
+{
+  "private": true,
+  "scripts": {
+    "init": "docusaurus-init",
+    "start": "docusaurus-start",
+    "build": "docusaurus-build",
+    "publish-gh-pages": "docusaurus-publish",
+    "write-translations": "docusaurus-write-translations",
+    "version": "docusaurus-version",
+    "rename-version": "docusaurus-rename-version",
+    "examples": "docusaurus-examples"
+  },
+  "devDependencies": {
+    "docusaurus": "^1.0.3"
+  }
+}

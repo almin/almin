@@ -1,0 +1,40 @@
+{
+  "docs": {
+    "Introduction": [
+      "getting-started",
+      "components",
+      "principles",
+      "hello-world"
+    ],
+    "Tutorial": [
+      "example-projects",
+      "tutorial-counter",
+      "tutorial-todo-app"
+    ],
+    "Guides": [
+      "logging",
+      "nesting-usecase",
+      "performance-profile",
+      "strict-mode",
+      "usecase-lifecycle"
+    ],
+    "Troubleshooting": [
+      "warning-usecase-is-already-released"
+    ],
+    "Appendix": [
+      "glossary"
+    ],
+    "API": [
+      "api",
+      "context-api",
+      "dispatcher-api",
+      "dispatcherpayloadmeta-api",
+      "lifecycleeventhub-api",
+      "store-api",
+      "storegroup-api",
+      "usecase-api",
+      "usecasecontext-api",
+      "usecaseexecutor-api"
+    ]
+  }
+}

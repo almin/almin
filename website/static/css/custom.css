@@ -1,0 +1,24 @@
+/* your custom css */
+.mainContainer .wrapper blockquote p {
+    padding: 0;
+}
+
+a {
+    color: #0080c0;
+    text-decoration: underline !important;
+}
+
+@media only screen and (min-device-width: 360px) and (max-device-width: 736px) {
+}
+
+@media only screen and (min-width: 1024px) {
+}
+
+@media only screen and (max-width: 1023px) {
+}
+
+@media only screen and (min-width: 1400px) {
+}
+
+@media only screen and (min-width: 1500px) {
+}

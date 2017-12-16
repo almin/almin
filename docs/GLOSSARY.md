@@ -1,4 +1,7 @@
-# GLOSSARY
+---
+id: glossary
+title: GLOSSARY
+---
 
 ## UseCase
 

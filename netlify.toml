@@ -1,0 +1,4 @@
+[build]
+  base    = "website"
+  publish = "website/build/almin"
+  command = "yarn run build"
