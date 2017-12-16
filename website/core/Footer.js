@@ -23,31 +23,29 @@ class Footer extends React.Component {
                     </a>
                     <div>
                         <h5>Docs</h5>
-                        <a href={`${this.props.config.baseUrl}docs/${this.props.language}/doc1.html`}>
-                            Getting Started (or other categories)
+                        <a href={`${this.props.config.baseUrl}docs/${this.props.language}/getting-started.html`}>
+                            Getting Started
                         </a>
-                        <a href={`${this.props.config.baseUrl}docs/${this.props.language}/doc2.html`}>
-                            Guides (or other categories)
+                        <a href={`${this.props.config.baseUrl}docs/${this.props.language}/example-projects.html`}>
+                            Tutorial
                         </a>
-                        <a href={`${this.props.config.baseUrl}docs/${this.props.language}/doc3.html`}>
-                            API Reference (or other categories)
-                        </a>
+                        <a href={`${this.props.config.baseUrl}docs/${this.props.language}/api.html`}>API Reference</a>
                     </div>
                     <div>
                         <h5>Community</h5>
                         <a href={`${this.props.config.baseUrl + this.props.language}/users.html`}>User Showcase</a>
-                        <a href="http://stackoverflow.com/questions/tagged/" target="_blank">
+                        <a href="https://stackoverflow.com/questions/tagged/almin" target="_blank">
                             Stack Overflow
                         </a>
-                        <a href="https://discordapp.com/">Project Chat</a>
-                        <a href="https://twitter.com/" target="_blank">
+                        <a href="https://twitter.com/alminjs" target="_blank">
                             Twitter
                         </a>
                     </div>
                     <div>
-                        <h5>More</h5>
-                        <a href={`${this.props.config.baseUrl}blog`}>Blog</a>
-                        <a href="https://github.com/">GitHub</a>
+                        <h5>GitHub</h5>
+                        <a href="https://github.com/almin/almin">GitHub</a>
+                        <a href="https://github.com/almin/almin/releases">Releases</a>
+                        <a href="https://github.com/almin/almin/issues">Issues</a>
                         <a
                             className="github-button"
                             href={this.props.config.repoUrl}
@@ -62,15 +60,7 @@ class Footer extends React.Component {
                     </div>
                 </section>
 
-                <a href="https://code.facebook.com/projects/" target="_blank" className="fbOpenSource">
-                    <img
-                        src={`${this.props.config.baseUrl}img/oss_logo.png`}
-                        alt="Facebook Open Source"
-                        width="170"
-                        height="45"
-                    />
-                </a>
-                <section className="copyright">Copyright &copy; {currentYear} Facebook Inc.</section>
+                <section className="copyright">Copyright &copy; {currentYear} azu</section>
             </footer>
         );
     }

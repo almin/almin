@@ -1,6 +1,7 @@
 {
   "docs": {
     "Introduction": [
+      "getting-started",
       "components",
       "principles",
       "hello-world"

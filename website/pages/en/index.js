@@ -8,7 +8,8 @@
 const React = require("react");
 
 const CompLibrary = require("../../core/CompLibrary.js");
-const MarkdownBlock = CompLibrary.MarkdownBlock; /* Used to read markdown */
+const MarkdownBlock = CompLibrary.MarkdownBlock;
+/* Used to read markdown */
 const Container = CompLibrary.Container;
 const GridBlock = CompLibrary.GridBlock;
 
@@ -47,12 +48,19 @@ class HomeSplash extends React.Component {
                             <div className="section promoSection">
                                 <div className="promoRow">
                                     <div className="pluginRowBlock">
-                                        <Button href="#try">Try It Out</Button>
-                                        <Button href={`${siteConfig.baseUrl}docs/${this.props.language}/doc1.html`}>
-                                            Example Link
+                                        <Button
+                                            href={`${siteConfig.baseUrl}docs/${
+                                                this.props.language
+                                            }/getting-started.html`}
+                                        >
+                                            Getting Started
                                         </Button>
-                                        <Button href={`${siteConfig.baseUrl}docs/${this.props.language}/doc2.html`}>
-                                            Example Link 2
+                                        <Button
+                                            href={`${siteConfig.baseUrl}docs/${
+                                                this.props.language
+                                            }/example-projects.html`}
+                                        >
+                                            Take a tutorial
                                         </Button>
                                     </div>
                                 </div>
@@ -89,19 +97,23 @@ class Index extends React.Component {
                             align="center"
                             contents={[
                                 {
-                                    content: "This is the content of my feature",
-                                    image: `${siteConfig.baseUrl}img/almin.svg`,
-                                    imageAlign: "top",
-                                    title: "Feature One"
+                                    title: "Scalable",
+                                    content: "This is the content of my feature"
                                 },
                                 {
-                                    content: "The content of my second feature",
-                                    image: `${siteConfig.baseUrl}img/almin.svg`,
-                                    imageAlign: "top",
-                                    title: "Feature Two"
+                                    title: "Testable",
+                                    content: "Testable"
+                                },
+                                {
+                                    title: "Debuggable",
+                                    content: "Testable"
+                                },
+                                {
+                                    title: "Layered Architecture",
+                                    content: "DDD CQRS"
                                 }
                             ]}
-                            layout="fourColumn"
+                            layout="twoColumn"
                         />
                     </Container>
 
@@ -109,46 +121,37 @@ class Index extends React.Component {
                         <h2>Feature Callout</h2>
                         <MarkdownBlock>These are features of this project</MarkdownBlock>
                     </div>
-
-                    <Container padding={["bottom", "top"]} background="light">
-                        <GridBlock
-                            contents={[
-                                {
-                                    content: "Talk about learning how to use this",
-                                    image: `${siteConfig.baseUrl}img/almin.svg`,
-                                    imageAlign: "right",
-                                    title: "Learn How"
-                                }
-                            ]}
-                        />
-                    </Container>
-
-                    <Container padding={["bottom", "top"]} id="try">
-                        <GridBlock
-                            contents={[
-                                {
-                                    content: "Talk about trying this out",
-                                    image: `${siteConfig.baseUrl}img/almin.svg`,
-                                    imageAlign: "left",
-                                    title: "Try it Out"
-                                }
-                            ]}
-                        />
-                    </Container>
-
                     <Container padding={["bottom", "top"]} background="dark">
                         <GridBlock
                             contents={[
                                 {
-                                    content: "This is another description of how this project is useful",
-                                    image: `${siteConfig.baseUrl}img/almin.svg`,
+                                    title: "The Concept of Almin",
+                                    content:
+                                        "The concept is described in [The Concept of Almin](http://azu.github.io/slide/2017/almin/concept-of-almin.html) slide.\n " +
+                                        "-  Write **Your domain** in **Your code**\n" +
+                                        "- Split up **Read stack** and **Write stack**\n" +
+                                        "- **Unidirectional** data flow\n" +
+                                        "- Prefer **Readable code** to **Writable code**\n" +
+                                        "- **Monitor everything**",
+                                    image: `${siteConfig.baseUrl}img/the-concept-of-almin.png`,
                                     imageAlign: "right",
-                                    title: "Description"
+                                    imageLink: "http://azu.github.io/slide/2017/almin/concept-of-almin.html"
                                 }
                             ]}
                         />
                     </Container>
-
+                    <Container padding={["bottom", "top"]} background="light">
+                        <GridBlock
+                            contents={[
+                                {
+                                    title: "Large scalable app",
+                                    content: "Large scale app need to read time rather than write time.",
+                                    image: `${siteConfig.baseUrl}docs/assets/almin-architecture.png`,
+                                    imageAlign: "left"
+                                }
+                            ]}
+                        />
+                    </Container>
                     <div className="productShowcaseSection paddingBottom">
                         <h2>{"Who's Using This?"}</h2>
                         <p>This project is used by all these people</p>
