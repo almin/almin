@@ -20,7 +20,7 @@ Almin repository is monorepo top on [lerna](https://github.com/lerna/lerna "lern
 
 ## How to contribute?
 
-You can find suitable issues to contribute on [Issues label:starter](https://github.com/almin/almin/issues?q=is%3Aissue+is%3Aopen+label%3Astarter "Issues · almin/almin").
+You can find suitable issues to contribute on [Issues label:good first issue](https://github.com/almin/almin/labels/good%20first%20issue).
 
 Of course, welcome to fix the other issue or file issue. 
 
