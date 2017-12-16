@@ -34,11 +34,11 @@ class HomeSplash extends React.Component {
     render() {
         const newURL =
             typeof window !== "undefined" && typeof window.location !== "undefined"
-                ? redirectURL(window.location.path, this.props.lang)
+                ? redirectURL(window.location.path, "en")
                 : undefined;
         const message = newURL ? (
             <small>
-                Do you mean: <a href={newURL}>${newURL}</a>
+                Do you mean: <a href={newURL}>{newURL}</a>
             </small>
         ) : (
             <small>This page is not found</small>
