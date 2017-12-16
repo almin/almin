@@ -100,7 +100,7 @@ class Index extends React.Component {
                                     title: "Scalable",
                                     image: `${siteConfig.baseUrl}img/icon/mbri-globe.svg`,
                                     imageAlign: "top",
-                                    content: "Work with Medium-small(1,000LOC) – Large(100,000LOC)"
+                                    content: "Work with Medium-small(1,000LOC) – Large(100,000LOC) site project"
                                 },
                                 {
                                     title: "Testable",
