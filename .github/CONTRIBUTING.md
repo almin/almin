@@ -51,18 +51,20 @@ Run unit tests in Browser:
 
 ## How to fix document?
 
-### Contribute to documents without [docs/api](../docs/api)
+### Contribute to fix documents
 
 1. Fix the issue
 2. Preview documents
 
 ```
-yarn run start:docs # preview
+cd website
+yarn install
+yarn start
 ```
 
 Welcome to fix documents!
 
-### Contribute to API Reference [docs/api](../docs/api)
+### Contribute to fix API Reference
 
 API Reference is automatically generated from source code(`/src/*.ts``)
 
@@ -71,7 +73,6 @@ API Reference is automatically generated from source code(`/src/*.ts``)
 
 ```
 yarn run build:docs:api # build
-yarn run start:docs # preview
 ```
 
 ## How to write document?
