@@ -5,6 +5,30 @@ title: "Components of Almin"
 
 This introduce components of Almin
 
+Almin provides only these components.
+
+- Dispatcher
+- Context
+- UseCase
+- Store
+- StoreGroup
+
+Other components like Domain, Repository and State are written by You!
+
+You may notice that these components are similar to [Flux](https://github.com/facebook/flux) or [Redux](https://github.com/reactjs/redux).
+Almin is also a flux implementation library.
+
+| Almin      | Flux          | Redux                  |
+|------------|---------------|------------------------|
+| Dispatcher | Dispatcher    | store.dispatch         |
+| Context    | Container     | Middleware/React Redux |
+| UseCase    | ActionCreator | Actions                |
+| Store      | Store         | Store                  |
+| StoreGroup | Container     | combineReducers        |
+| (State)    | Store         | Reducer                |
+| (Domain)   |               |                        |
+|(Repository)|               |                        |
+
 ## View
 
 Almin is not View library.

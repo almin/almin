@@ -94,46 +94,6 @@ Almin has not a perfect solution for an application, but we can write code think
 
 We are going to learn two architectures(Flux/CQRS) using Almin :)
 
-## Table of Contents
-
-Truly [Table of Contents](./SUMMARY.md) is here :arrow_left:
-
-- [Overview: Component of Almin](./docs/abstract/README.md)
-    - [View](./docs/abstract/README.md#view)
-    - [UseCase](./docs/abstract/README.md#usecase)
-    - [Context](./docs/abstract/README.md#context)
-    - [Store](./docs/abstract/README.md#store)
-- Tutorial
-    - [Creating Counter App](./examples/counter/)
-        - Apply Flux pattern to Almin
-    - [Creating Todo App](./examples/todomvc/)
-        - Apply CQRS pattern to Almin
-
-## Examples
-
-- [example/counter](https://github.com/almin/almin/tree/master/examples/counter)
-    - Simple Counter example
-    - It uses only state
-- [example/svg-feeling](https://github.com/almin/almin/tree/master/examples/svg-feeling)
-    - Separate Domain and Store/State
-        - Two way update state.
-    - How to implement 60 FPS application?
-        - Component should implement `shouldComponentUpdate()`
-- [example/shopping-cart](https://github.com/almin/almin/tree/master/examples/shopping-cart)
-    - Shopping Cart is a complex example.
-    - This example is implemented of [flux-comparison](https://github.com/voronianski/flux-comparison "flux-comparison").
-    - How to test?
-    - How to implement domain layer?
-- [example/todomvc](https://github.com/almin/almin/tree/master/examples/todomvc)
-    - TodoMVC implementation
-    - DDD/CQRS
-- [example/todomvc-flow](https://github.com/almin/almin/tree/master/examples/todomvc-flow)
-    - TodoMVC implementation
-    - Flow type version
-- [example/todomvc-typescript](https://github.com/almin/almin/tree/master/examples/todomvc-typescript)
-    - TodoMVC implementation
-    - TypeScript version
-
 ## Real Examples
 
 Welcome to pull request!
