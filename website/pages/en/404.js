@@ -9,7 +9,7 @@ const React = require("react");
 
 const siteConfig = require(`${process.cwd()}/siteConfig.js`);
 
-const CompLibrary = require("../core/CompLibrary.js");
+const CompLibrary = require("../../core/CompLibrary.js");
 
 // old path to new path
 const redirectURL = require(`${process.cwd()}/redirect.js`);
@@ -34,7 +34,7 @@ class HomeSplash extends React.Component {
     render() {
         const newURL =
             typeof window !== "undefined" && typeof window.location !== "undefined"
-                ? redirectURL(window.location.path, "en")
+                ? redirectURL(window.location.path, this.props.lang)
                 : undefined;
         const message = newURL ? (
             <small>
