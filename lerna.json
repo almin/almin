@@ -2,19 +2,14 @@
   "lerna": "2.5.1",
   "commands": {
     "publish": {
-      "concurrency": 1,
-      "ignore": [
-        "example-*",
-        "*.md"
-      ]
+      "concurrency": 1
     }
   },
   "packages": [
     "packages/*",
     "packages/almin-logger/examples",
     "examples/*",
-    "perf/*",
-    "website"
+    "perf/*"
   ],
   "npmClient": "yarn",
   "version": "independent"

@@ -6,7 +6,7 @@ declare parentDir=$(cd $(dirname $(cd $(dirname $0);pwd));pwd)
 declare repositoryUrl="git@github.com:almin/almin.github.io.git"
 declare toBranch="master"
 declare commitMessage="Deploy docusaurus build [skip ci]"
-declare commands="npm run build:docs"
+declare websiteDir="${parentDir}/website/"
 declare distDir="${parentDir}/website/build/almin"
 
 if [ "$TRAVIS_PULL_REQUEST" != "false" ]
@@ -53,8 +53,11 @@ git clone ${repositoryUrl} "${tmpDir}/almin.github.io"
 echo "Remove files"
 remove_files_in_dir "${tmpDir}/almin.github.io"
 # execute command
+echo "Install"
+cd "${websiteDir}"
+yarn install
 echo "Update content"
-execute "$commands"
+yarn run build
 echo "Copy files"
 cp -Rf "${distDir}/"* "${tmpDir}/almin.github.io/"
 echo "Commit and push"
