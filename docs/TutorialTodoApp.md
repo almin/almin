@@ -60,9 +60,9 @@ We'll implement following work flow and see it.
 3. ... Loop 1,2
 4. Filter Todo list and show only non-completed todo items.
 
-## Let's creating, before
+## Previous knowledge
 
-Previously, We learn flux pattern to create [counter app](../../counter/README.md).
+Previously, We learn flux pattern to create [counter app](../examples/counter/README.md).
 
 ![almin-architecture-flux](assets/almin-architecture-flux.png)
 
@@ -412,7 +412,7 @@ Next, We want to render this result that new TodoItem is added.
 
 TodoStore is a almin's Store class.
 
-In [Counter app example](../../counter/README.md), you already know about **Store**.
+In [Counter app example](../examples/counter/README.md), you already know about **Store**.
 
 Almin's Store 
 
@@ -480,7 +480,7 @@ export default class TodoStore extends Store {
 ```
 
 In other way, you can implement updating state from changes of `todoListRepository`.
-Because, `Store#receivePayload` is called in the [Almin life-cycle](tips/usecase-lifecycle.md).
+Because, `Store#receivePayload` is called in the [Almin UseCase LifeCycle](./GuideUsecaseLifecycle.md).
 
 - onDispatch
 - onError
@@ -651,7 +651,7 @@ It is **Unidirectional data flow**!
 
 TodoMVC has other UseCases.
 
-You can implement these in a similar way of `AddTodoItem` or [counter app](../../counter/README.md)
+You can implement these in a similar way of `AddTodoItem` or [counter app](../examples/counter/README.md)
 
 - [FilterTodoList.js](https://github.com/almin/almin/blob/master/examples/todomvc/src/usecase/FilterTodoList.js)
 - [RemoveAllCompletedItems.js](https://github.com/almin/almin/blob/master/examples/todomvc/src/usecase/RemoveAllCompletedItems.js)

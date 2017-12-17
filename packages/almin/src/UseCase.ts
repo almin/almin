@@ -76,8 +76,8 @@ export abstract class UseCase extends Dispatcher implements UseCaseLike {
      *
      * See following for more details.
      *
-     * - [UseCaseContext](https://almin.js.org/docs/api/UseCaseContext.html)
-     * - [Nesting UseCase](https://almin.js.org/docs/tips/nesting-usecase.html)
+     * - [UseCaseContext](https://almin.js.org/docs/en/usecase-api.html)
+     * - [Nesting UseCase](https://almin.js.org/docs/en/nesting-usecase.html)
      *
      * ### Example
      *

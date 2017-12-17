@@ -26,9 +26,9 @@
   dependencies:
     "@azu/format-text" "^1.0.1"
 
-"@textlint-rule/textlint-rule-no-dead-link@^3.1.2":
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/@textlint-rule/textlint-rule-no-dead-link/-/textlint-rule-no-dead-link-3.1.2.tgz#7c7cfa29db0bf8db249771ad7585b1b2fa843314"
+"@textlint-rule/textlint-rule-no-dead-link@^3.2.0":
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/@textlint-rule/textlint-rule-no-dead-link/-/textlint-rule-no-dead-link-3.2.0.tgz#6541c76db4ba6b27dd531d2abbd4d8f15ef96d04"
   dependencies:
     isomorphic-fetch "^2.2.1"
     textlint-rule-helper "^2.0.0"
