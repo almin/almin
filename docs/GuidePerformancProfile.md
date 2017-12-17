@@ -30,7 +30,7 @@ Performance profile metrics.
 
 It it expected result. Because each UseCase have been completed by async.
 
-For more details, See [UseCase LifeCycle](./usecase-lifecycle.md) document.
+For more details, See [UseCase LifeCycle](GuideUsecaseLifecycle.md) document.
 
 **Note 2**: Some metrics require strict mode
 
@@ -39,8 +39,8 @@ In other words, you should implement `receivePayload` on your Store.
 
 For more information about life-cycle, see following:
 
-- [Strict mode](./strict-mode.md)
-- [UseCase LifeCycle](./usecase-lifecycle.md)
+- [Strict mode](GuideStrictMode.md)
+- [UseCase LifeCycle](GuideUsecaseLifecycle.md)
 
 ## How to use?
 
@@ -81,7 +81,7 @@ const appContext = new Context({
 
 ## Related
 
-- [UseCase LifeCycle](./usecase-lifecycle.md)
+- [UseCase LifeCycle](GuideUsecaseLifecycle.md)
 
 ## Similar options
 

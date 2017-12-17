@@ -207,7 +207,7 @@ class YourStore extends Store {
 
 If strict mode is enabled, you should implement updating logic here.
 
-See <https://almin.js.org/docs/tips/strict-mode.html>
+See <https://almin.js.org/docs/en/strict-mode.html>
 
 ## Store#receivePayload vs. Store#onDispatch
 

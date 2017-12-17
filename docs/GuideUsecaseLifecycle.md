@@ -6,7 +6,7 @@ title: "UseCase LifeCycle"
 Almin has life-cycle events.
 These events are useful for logging like [almin-logger](https://www.npmjs.com/package/almin-logger "almin-logger").
 
-For more information about logging, see [Logging tips](./logging.md).
+For more information about logging, see [Logging tips](./GuideLogging.md).
 
 ## LifeCycle events
 
@@ -23,7 +23,7 @@ For more information about logging, see [Logging tips](./logging.md).
 
 @1 A single UseCase can call multiple.
 
-For more details, see [LifeCycleEventHub · API Reference](https://almin.js.org/docs/api/LifeCycleEventHub.html "LifeCycleEventHub · Almin.js").
+For more details, see [LifeCycleEventHub · API Reference](https://almin.js.org/docs/en/lifecycleeventhub-api.html).
 
 ## What the difference between `onDidExecuteEachUseCase` and `onCompleteEachUseCase`?
 

@@ -58,7 +58,7 @@ export class StoreGroupChangingStoreStrictChecker {
                 store.name
             }#receivePayload in strict mode.
 If you update the state outside of ${store.name}#receivePayload, please check the ${store.name}.
-See https://almin.js.org/docs/tips/strict-mode.html
+See https://almin.js.org/docs/en/strict-mode.html
 `);
         }
     }

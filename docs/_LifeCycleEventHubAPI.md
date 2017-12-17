@@ -33,8 +33,8 @@ LifeCycleEventHub provide the way for observing almin life-cycle events.
 
 ## See also
 
-- https://almin.js.org/docs/tips/usecase-lifecycle.html
-- almin-logger implementation
+- <https://almin.js.org/docs/en/usecase-lifecycle.html>
+- [almin-logger](https://github.com/almin/almin/tree/master/packages/almin-logger)
 
 ----
 
