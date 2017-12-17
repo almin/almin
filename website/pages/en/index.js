@@ -165,7 +165,7 @@ For more details, see [The Concept of Almin](http://azu.github.io/slide/2017/alm
                             ]}
                         />
                     </Container>
-                    <Container padding={["bottom", "top"]} background="light">
+                    <Container padding={["bottom", "top"]} background="highlight">
                         <GridBlock
                             contents={[
                                 {
