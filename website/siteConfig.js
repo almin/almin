@@ -22,6 +22,7 @@ const siteConfig = {
     organizationName: "almin",
     editUrl: "https://github.com/almin/almin/edit/master/docs/",
     headerLinks: [
+        { search: true },
         { doc: "getting-started", label: "Docs" },
         { doc: "api", label: "API" },
         { page: "help", label: "Help" },
@@ -45,6 +46,12 @@ const siteConfig = {
     highlight: {
         // Highlight.js theme to use for syntax highlighting in code blocks
         theme: "default"
+    },
+    algolia: {
+        // https://community.algolia.com/docsearch/documentation/
+        // https://github.com/algolia/docsearch-configs/blob/master/configs/almin_js.json
+        apiKey: "78de78c8711e82c99d77045672c84dcb",
+        indexName: "almin_js"
     },
     scripts: ["https://buttons.github.io/buttons.js"],
     // You may provide arbitrary config keys to be used as needed by your template.
