@@ -5,7 +5,7 @@ import { Payload } from "./Payload";
  *  XXX: This is exported for an unit testing.
  *  DO NOT USE THIS in your application.
  */
-export const TYPE = "ALMIN_BEGAN_OF_TRANSACTION__";
+export const TYPE = "__ALMIN_BEGAN_OF_TRANSACTION__";
 
 /**
  * TransactionBeganPayload is begin of transaction

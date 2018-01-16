@@ -6,7 +6,7 @@ import { StoreLike } from "../StoreLike";
  *  XXX: This is exported for an unit testing.
  *  DO NOT USE THIS in your application.
  */
-export const TYPE = "ALMIN_STORE_IS_CHANGED__";
+export const TYPE = "__ALMIN_STORE_IS_CHANGED__";
 
 /**
  * ChangePayload is that represent a store is changed.

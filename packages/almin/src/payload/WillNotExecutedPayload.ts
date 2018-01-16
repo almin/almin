@@ -6,7 +6,7 @@ import { Payload } from "./Payload";
  *  XXX: This is exported for an unit testing.
  *  DO NOT USE THIS in your application.
  */
-export const TYPE = "ALMIN__WILL_NOT_EXECUTE_USECASE__";
+export const TYPE = "__ALMIN_WILL_NOT_EXECUTE_USECASE__";
 
 export class WillNotExecutedPayload implements Payload {
     type = TYPE;
