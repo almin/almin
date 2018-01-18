@@ -133,14 +133,14 @@ class Index extends React.Component {
                     <div className="productShowcaseSection paddingBottom">
                         <h2>State management library for JavaScript application</h2>
                         <MarkdownBlock>{`
-Now, We can implement web app with [Flux](https://github.com/facebook/flux),
+Now, We can implement web apps with [Flux](https://github.com/facebook/flux),
 [Redux](https://github.com/reactjs/redux), [MobX](https://github.com/mobxjs/mobx) etc.
 But, We often hear a story like following:
 
 > The control flow of *[[LIBRARY]]* is cool!<br>
 > But how to implement domain logic?
 
-Almin aim to help you focus domain logic on your application.
+Almin aims to help you focus domain logic on your application.
 `}</MarkdownBlock>
                     </div>
                     <Container padding={["bottom", "top"]} background="dark">
@@ -175,13 +175,13 @@ You can write **Your domain** in **Your code**.
 It means that you can control domain layer.
 
 - You can write **your domain** with **Pure JavaScript**
-- Your domain is **not need** to subclass of Almin things
+- Your domain **doesn't need** to be a subclass of Almin things
 
-Almin support only application layer.
+Almin supports only application layer.
 
-- Application layer use your domain model
+- Application layer uses your domain model
 
-If you stop to use Almin, you **don't need to rewrite** your domain
+If you stop to use Almin, you **don't need to rewrite** your domain.
 `,
                                     image: `${siteConfig.baseUrl}docs/assets/almin-architecture.png`,
                                     imageAlign: "left"
