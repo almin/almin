@@ -56,6 +56,7 @@ const RootContainer = AlminReactContainer.create(App, context);
 console.log(RootContainer);
 
 ReactDOM.render(<RootContainer />, document.body);
+ReactDOM.render(<RootContainer custom={"value"} />, document.body);
 // custom is optional
 React.createElement(RootContainer);
 React.createElement(RootContainer, {

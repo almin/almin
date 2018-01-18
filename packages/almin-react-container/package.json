@@ -15,7 +15,7 @@
   "main": "lib/almin-react-container.js",
   "types": "lib/almin-react-container.d.ts",
   "scripts": {
-    "test": "mocha",
+    "test": "mocha \"test/**/*-test.{ts,tsx}\"",
     "build": "cross-env NODE_ENV=production tsc -p .",
     "watch": "tsc -p . --watch",
     "prepublish": "npm run --if-present build",
@@ -54,6 +54,7 @@
     "react": "^16.1.1",
     "react-dom": "^16.1.1",
     "rimraf": "^2.6.2",
+    "ts-node": "^4.1.0",
     "typescript": "~2.6.2"
   },
   "dependencies": {

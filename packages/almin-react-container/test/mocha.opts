@@ -1,2 +1,2 @@
 --require test/setup.js
---require babel-register
+--require ts-node/register/type-check
