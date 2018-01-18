@@ -12,14 +12,13 @@ export type AlminReactContainerDiffKey<T extends string, U extends string> = ({ 
 export type AlminReactContainerOmit<T, K extends keyof T> = Pick<T, AlminReactContainerDiffKey<keyof T, K>>;
 
 export type AlminReactContainerDiff<T, U> = AlminReactContainerOmit<T, keyof U & keyof T>;
-
-export type AlminReactContainerWeakDiff<T, U> = AlminReactContainerDiff<T, U> & { [K in (keyof U & keyof T)]?: T[K] };
+// T - U
+export type AlminReactContainerWeakDiff<T, U> = AlminReactContainerDiff<T, U> & { [K in keyof U & keyof T]?: T[K] };
 
 export class AlminReactContainer {
-    static create<T, P>(
-        WrappedComponent: React.ComponentClass<T>,
-        context: Context<P>
-    ): React.ComponentClass<AlminReactContainerWeakDiff<T, P>> {
+    // T is Custom props
+    // P is Almin state
+    static create<T, P>(WrappedComponent: React.ComponentType<T>, context: Context<P>) {
         if (process.env.NODE_ENV !== "production") {
             assert.ok(
                 typeof WrappedComponent === "function",
@@ -62,7 +61,7 @@ export class AlminReactContainer {
 
             render() {
                 // Workaround TS2.3.1: https://github.com/Microsoft/TypeScript/pull/13288
-                return <WrappedComponent {...this.state as any} {...this.props} />;
+                return <WrappedComponent {...this.state} {...this.props} />;
             }
         };
     }

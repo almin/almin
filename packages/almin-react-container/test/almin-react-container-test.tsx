@@ -1,17 +1,17 @@
-import assert from "assert";
-import { Context, Dispatcher, Store } from "almin";
-import AlminReactContainer from "../lib/almin-react-container";
-import React, { Component } from "react";
-import TestUtils from "react-dom/test-utils";
+import * as assert from "assert";
+import { Context, Dispatcher, Store, StoreGroup } from "almin";
+import AlminReactContainer from "../src/almin-react-container";
+import * as React from "react";
+import * as TestUtils from "react-dom/test-utils";
 
-const createTestStore = initialState => {
+const createTestStore = <T extends {}>(initialState: T) => {
     class TestStore extends Store {
         constructor() {
             super();
             this.state = initialState;
         }
 
-        updateState(newState) {
+        updateState(newState: T) {
             if (this.state !== newState) {
                 this.state = newState;
                 this.emitChange();
@@ -30,7 +30,7 @@ describe("almin-react-container", () => {
         it("should update WrapperComponent with new props", () => {
             let updatedCount = 0;
 
-            class Passthrough extends Component {
+            class Passthrough extends React.Component {
                 componentWillUpdate() {
                     updatedCount++;
                 }
@@ -50,7 +50,7 @@ describe("almin-react-container", () => {
                 store: testStore
             });
             const Container = AlminReactContainer.create(Passthrough, context);
-            const tree = TestUtils.renderIntoDocument(<Container />);
+            const tree = TestUtils.renderIntoDocument(<Container />) as React.Component;
             const container = TestUtils.findRenderedComponentWithType(tree, Container);
             const stub = TestUtils.findRenderedComponentWithType(tree, Passthrough);
             // Initial state
@@ -71,7 +71,7 @@ describe("almin-react-container", () => {
         it("should not update WrapperComponent", () => {
             let updatedCount = 0;
 
-            class Passthrough extends Component {
+            class Passthrough extends React.Component {
                 componentWillUpdate() {
                     updatedCount++;
                 }
@@ -92,8 +92,8 @@ describe("almin-react-container", () => {
             });
             const Container = AlminReactContainer.create(Passthrough, context);
             const tree = TestUtils.renderIntoDocument(<Container />);
-            const container = TestUtils.findRenderedComponentWithType(tree, Container);
-            const stub = TestUtils.findRenderedComponentWithType(tree, Passthrough);
+            const container = TestUtils.findRenderedComponentWithType(tree as any, Container);
+            const stub = TestUtils.findRenderedComponentWithType(tree as any, Passthrough);
             // Initial state
             assert.strictEqual(updatedCount, 0);
             assert.deepEqual(container.state, initialState);
@@ -108,31 +108,47 @@ describe("almin-react-container", () => {
     });
     context("with custom props", () => {
         it("should pass props to Container", () => {
-            let updatedCount = 0;
+            // Store
+            class MyState {
+                value: string;
+                constructor({ value }: { value: string }) {
+                    this.value = value;
+                }
+            }
+            class MyStore extends Store<MyState> {
+                state: MyState;
 
-            class Passthrough extends Component {
-                componentWillUpdate() {
-                    updatedCount++;
+                constructor() {
+                    super();
+                    this.state = new MyState({ value: "initial" });
                 }
 
-                render() {
-                    return <div />;
+                getState() {
+                    return this.state;
                 }
             }
 
-            // initial state
-            const initialState = {
-                testKey: "initial value"
-            };
-            const testStore = createTestStore(initialState);
+            const storeGroup = new StoreGroup({
+                myState: new MyStore()
+            });
             const context = new Context({
                 dispatcher: new Dispatcher(),
-                store: testStore
+                store: storeGroup
             });
+
+            type PassthroughProps = { custom: string } & typeof storeGroup.state;
+            class Passthrough extends React.Component<PassthroughProps> {
+                render() {
+                    return <div>{this.props.custom}</div>;
+                }
+            }
             const Container = AlminReactContainer.create(Passthrough, context);
-            const tree = TestUtils.renderIntoDocument(<Container custom="value" />);
-            const stub = TestUtils.findRenderedComponentWithType(tree, Passthrough);
-            assert.equal(stub.props.custom, "value", "should have custom value");
+            const tree = TestUtils.renderIntoDocument(<Container custom={"value"} />);
+            const stub = TestUtils.findRenderedComponentWithType(
+                (tree as any) as React.Component<typeof Container>,
+                Passthrough as any
+            );
+            assert.equal((stub.props as any).custom, "value", "should have custom value");
         });
     });
 });
