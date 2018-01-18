@@ -3,7 +3,7 @@ id: principles
 title: "Principles"
 ---
 
-This document describe almin's principles:
+This document describes almin's principles:
 
 ## CQRS
 
@@ -12,19 +12,19 @@ Command and Query Responsibility Segregation(CQRS) is a pattern.
 > "CQRS is simply the creation of two objects where there was previously only one. The separation occurs based upon whether the methods are a command or a query (the same definition that is used by Meyer in Command and Query Separation: a command is any method that mutates state and a query is any method that returns a value)."
 > -- [CQRS, Task Based UIs, Event Sourcing agh! | Greg Young](http://codebetter.com/gregyoung/2010/02/16/cqrs-task-based-uis-event-sourcing-agh/ "CQRS, Task Based UIs, Event Sourcing agh! | Greg Young")
 
-CQRS separate "one" model to "two" models.
+CQRS separates "one" model to "two" models.
 CQRS has two models that are Command(Write) model and Query(Read) model.
 
 For example, Flux's store is a "one" model, but it is also Write and Read model. 
 
 ### In Flux
 
-[Flux architecture](https://facebook.github.io/flux/ "Flux") define [Stores](https://facebook.github.io/flux/docs/in-depth-overview.html#stores "Stores") role.
+[Flux architecture](https://facebook.github.io/flux/ "Flux") defines [Stores](https://facebook.github.io/flux/docs/in-depth-overview.html#stores "Stores") role.
 
 > Stores contain the application state and logic. 
 > -- [Stores](https://facebook.github.io/flux/docs/in-depth-overview.html#stores "Stores")
 
-It means that Stores is a single model, but has two task - `state` and `logic`.
+It means that Store is a single model, but has two task - `state` and `logic`.
 
 - On Application Layer: Store has application state
 - On Domain Layer: Store has bossiness logic
@@ -35,20 +35,20 @@ It means that Stores is a single model, but has two task - `state` and `logic`.
 
 The Complexity: **N × M** (multiplication)
 
-Stores is both Write stack and Read stack.
+Store is both Write stack and Read stack.
 
-- **N**: **Store does logic and Update State(Write)**
-- **M**: **Store return state for View(Read)**
+- **N**: **Store does logic and updates State(Write)**
+- **M**: **Store returns State for View(Read)**
 
 ### In Almin/CQRS
 
-Almin separate Store's two task to one task.
-Store has only `state` role and Almin move `logic` to domain model.
+Almin separates Store's two task to one task.
+Store has only `state` role and Almin moves `logic` to domain model.
 (Domain model has business logic)
 
 ![Flux Layering + CQRS](/docs/assets/flux-layer-cqrs.png)
 
-Additionally, Almin introduce domain model for `logic` role.
+Additionally, Almin introduces domain model for `logic` role.
 
 - On Application Layer: Store has application state
 - On Domain Layer: Domain model has bossiness logic
@@ -61,10 +61,10 @@ The Complexity: **N + M** (addition)
 
 Domain model is write stack and Store is read stack.
 
-- **N**: **Domain model does logic and Update State(Write)**
-- **M**: **Store return state for View(Read)**
+- **N**: **Domain model does logic and updates State(Write)**
+- **M**: **Store returns State for View(Read)**
 
-Almin aim to reduce the complexity at large application.
+Almin aims to reduce the complexity at large application.
 
 <!-- textlint-disable -->
 
@@ -82,12 +82,12 @@ Quote from [Microsoft .NET - Architecting Applications for the Enterprise (2nd E
 ## Unit of work
 
 Almin has a [Unit of Work](https://martinfowler.com/eaaCatalog/unitOfWork.html "Unit of Work").
-It is a actual internal class and almin apply Unit of Work pattern.
+It is a actual internal class and Almin applies Unit of Work pattern.
 
 - Unit of Work can stop unintended updating of `StoreGroup`
 - In other word, The user can control updating of `StoreGroup` while a series of UseCase is executing 
 
-Following figure describe it:
+The following figure describes it:
 
 [![unit of work](resources/unit-of-work.png)][unit-of-work]
 

@@ -5,7 +5,7 @@ title: "Hello World"
 
 Previously, you have seen [components of almin](./Components.md).
 
-[examples/introduction](https://github.com/almin/almin/tree/master/examples/introduction) is simple Hello World app that show the components in a single file.
+[examples/introduction](https://github.com/almin/almin/tree/master/examples/introduction) is a simple Hello World app that shows the components in a single file.
 
 > Source: [`introduction/index.js`](https://github.com/almin/almin/tree/master/examples/introduction/index.js)
 ``` javascript
@@ -73,19 +73,19 @@ render();
 
 ```
 
-### :warning: Real example
+### ⚠️ Real example
 
-[examples/introduction](https://github.com/almin/almin/tree/master/examples/introduction) prefer to [concept of components](./Components.md) than correctness for implementation.
+[examples/introduction](https://github.com/almin/almin/tree/master/examples/introduction) prefers to [concept of components](./Components.md) than correctness for implementation.
 
 You want to know real implementation and see other examples.
 
-You can see actual example in [Creating Counter App](counter/README.md) and other examples.
+You can see an actual example in [Creating Counter App](counter/README.md) and other examples.
 
 ## Others
 
 ![Overview of almin-architecture](assets/almin-architecture.png)
 
-This hello world not say all thing of Almin.
+The Hello World app doesn't say all thing of Almin.
 
 - **UseCase** is also entry point of **domain** model
 - **Domain** is business logic on your application

@@ -3,7 +3,7 @@ id: components
 title: "Components of Almin"
 ---
 
-This introduce components of Almin
+This introduces components of Almin
 
 Almin provides only these components.
 
@@ -31,11 +31,11 @@ Almin is also a flux implementation library.
 
 ## View
 
-Almin is not View library.
+Almin is not a View library.
 Almin is not dependent on any view library.
 
-We can create **View** using UI library like [React](https://reactjs.org/ "React").
-Next, We want to add **action** to a component of **View**.
+We can create a **View** using any UI library like [React](https://reactjs.org/ "React").
+Next, We want to add an **action** to a component of **View**.
 
 ```js
 import React from "react";
@@ -52,8 +52,8 @@ class MyComponent extends React.Component {
 
 Almin has `UseCase` class that is similar with ActionCreator.
 
-For example, We want to add **action** to the `<button>Awesome button</button>` and 
-We going to create **UseCase** that `dispatch` action.
+For example, We want to add an **action** to the `<button>Awesome button</button>` and 
+We are going to create a **UseCase** that `dispatch` the **action**.
 
 ```js
 import {UseCase} from "almin";
@@ -67,10 +67,10 @@ class AwesomeUseCase extends UseCase {
 }
 ```
 
-Clicking the button and dispatch **action**.
-In other word, Clicking the button and executing **UseCase** that dispatch **action**.
+Clicking the button and dispatch the **action**.
+In other word, Clicking the button and executing the **UseCase** that dispatch the **action**.
 
-Executing? Directly way is following the code, but we want **logging** the execution.
+Executing? A direct way is following the code, but we want **logging** the execution.
 
 ```js
 const useCase = new AwesomeUseCase();
@@ -79,7 +79,7 @@ useCase.execute();
 
 ### Functional UseCase
 
-It is functional version of UseCase.
+It is a functional version of UseCase.
 
 ```js
 class AwesomeUseCase extends UseCase {
@@ -99,7 +99,7 @@ const awesomeUseCase = ({dispatcher}) => {
 context.useCase(awesomeUseCase).execute([1, 2, 3]);
 ```
 
-The functional use-case is useful when the use-case do only `dispatch` like following.
+The functional use-case is useful when the use-case does only `dispatch` like following.
 
 ```js
 const dispatchUseCase = ({dispatcher}) => {
@@ -145,19 +145,19 @@ class MyComponent extends React.Component {
 
 - Creating **View** using UI library
 - **Action** is dispatched in **UseCase**
-- **Context** connect **View** with **UseCase** 
+- **Context** connects **View** with **UseCase** 
 
 -------
 
 ## Store
 
-We can dispatch **action** from UI events like clicking!
+We can dispatch **actions** from UI events like clicking!
 But, How to update view?
 
 Almin has `Store` that is well-known application state container.
 Store, State and Reducer is just a pattern of application.
 
-We want to update state if `AwesomeUseCase` is dispatched.
+We want to update a state if `AwesomeUseCase` is dispatched.
 Simply write following to `AppStore`.
 
 ```js
@@ -185,16 +185,16 @@ class AppStore extends Store {
 ```
 
 What's the hub between `AwesomeUseCase` and `AppStore`?
-Yes, `Context` have a role of hub.
+Yes, `Context` has a role of hub.
 
-`AwesomeUseCase` dispatch **action** -> Context -> AppStore receive the **action**
+`AwesomeUseCase` dispatches **action** -> Context -> AppStore receives the **action**
 
 ### Store -> View
 
 View to know when store is updated.
 
 What's the hub between `AppStore` and **View**?
-`Context` have the role of hub again!
+`Context` has the role of hub again!
 
 ```js
 import {Context, Dispatcher} from "almin";
@@ -211,21 +211,21 @@ context.onChange((changedStore) => {
 
 ## Conclusion
 
-We learn simply data flow of Almin.
+We learned a simply data flow of Almin.
 
 1. Create View
 2. Click Button
-3. Context execute UseCase
-4. UseCase dispatch action
-5. Context pass the action to Store
-6. Store is updated and the callback of `context.onChange` is called.
+3. Context executes UseCase
+4. UseCase dispatches action
+5. Context passes the action to Store
+6. Store is updated and the callback of `context.onChange` is called
 7. Update View!
-8. :recycle:
+8. ♻️
 
 ### End
 
-Almin don't aim to be framework that contain all things.
-Actually, Almin not contain View and Domain classes.
+Almin does't aim to be a framework that contains all things.
+Actually, Almin doesn't contain View and Domain classes.
 
 We can learn some patterns for JavaScript Application via Almin.
 
@@ -233,4 +233,4 @@ After all, We should write code thinking :)
 
 ## Next
 
-Next is [Hello World](HelloWorld.md) that show concept of the components.
+Next is [Hello World](HelloWorld.md) that shows a concept of the components.

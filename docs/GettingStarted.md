@@ -3,7 +3,7 @@ id: getting-started
 title: "Getting Started"
 ---
 
-Almin provide Flux/CQRS(Command Query Responsibility Segregation) patterns for JavaScript application.
+Almin provides Flux/CQRS(Command Query Responsibility Segregation) patterns for JavaScript application.
 
 ## Features
 
