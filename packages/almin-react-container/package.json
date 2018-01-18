@@ -18,7 +18,8 @@
     "test": "mocha",
     "build": "cross-env NODE_ENV=production tsc -p .",
     "watch": "tsc -p . --watch",
-    "prepublish": "npm run --if-present build"
+    "prepublish": "npm run --if-present build",
+    "clean": "rimraf lib/"
   },
   "keywords": [
     "react",
@@ -35,11 +36,11 @@
   "homepage": "https://github.com/almin/almin/tree/master/packages/almin-react-container",
   "peerDependencies": {
     "almin": "^0.15.0",
-    "react": "^15.0.0"
+    "react": "^15.0.0 || ^16.0.0"
   },
   "devDependencies": {
-    "@types/node": "^7.0.12",
-    "@types/react": "16.0.22",
+    "@types/node": "^9.3.0",
+    "@types/react": "16.0.34",
     "@types/react-dom": "16.0.3",
     "almin": "^0.15.0",
     "babel-preset-env": "^1.6.1",
@@ -52,7 +53,8 @@
     "power-assert": "^1.4.4",
     "react": "^16.1.1",
     "react-dom": "^16.1.1",
-    "typescript": "~2.6.1"
+    "rimraf": "^2.6.2",
+    "typescript": "~2.6.2"
   },
   "dependencies": {
     "shallow-equal-object": "^1.0.1"

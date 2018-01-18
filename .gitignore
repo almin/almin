@@ -85,10 +85,11 @@ crashlytics-build.properties
 
 # Build files
 /examples/**/build/
+/examples/**/yarn.lock
+/examples/**/lib/
 /packages/**/lib/
-__obj/
+/packages/**/yarn.lock
 /perf/**/output/
 # Build cache.
 .eslintcache
 .textlintcache
-/examples/**/lib/

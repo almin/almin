@@ -1,11 +1,14 @@
 sudo: false
 language: node_js
 node_js:
-  - "6"
-before_install:
-  - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 0.27.5
-  - export PATH=$HOME/.yarn/bin:$PATH
+  - "8"
 cache: yarn
+before_install:
+  - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.3.2
+  - export PATH=$HOME/.yarn/bin:$PATH
+install:
+  - yarn install --frozen-lockfile
+  - yarn run bootstrap
 jobs:
   include:
     # Unit Tests
@@ -18,10 +21,9 @@ jobs:
       env:
         - TEST_TARGET="e2e"
       script: cd packages/almin && yarn run test:saucelabs
-    # deploy docusaurus
+    # Deploy Docusaurus
     - stage: deploy
       if: branch = master AND type != pull_request
-      install: yarn install
       before_script:
         - $(npm bin)/set-up-ssh --key "$encrypted_5d98d8341870_key" --iv "$encrypted_5d98d8341870_iv" --path-encrypted-key ".travis/github_deploy_key.enc"
       script: bash ./tools/push-to-github-io.sh

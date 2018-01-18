@@ -23,7 +23,7 @@
     "test": "test"
   },
   "scripts": {
-    "clean": "rimraf lib/ out/",
+    "clean": "rimraf lib/",
     "prebuild": "npm run clean",
     "build": "cross-env NODE_ENV=production tsc -p .",
     "build:test": "tsc -p test/",
@@ -42,14 +42,14 @@
   ],
   "devDependencies": {
     "@types/mocha": "^2.2.44",
-    "@types/node": "^8.0.53",
+    "@types/node": "^9.3.0",
     "almin": "^0.15.0",
     "cross-env": "^5.1.1",
     "mocha": "^4.0.1",
     "power-assert": "^1.4.4",
     "rimraf": "^2.6.2",
     "simple-mock": "^0.8.0",
-    "typescript": "~2.6.1",
+    "typescript": "~2.6.2",
     "webpack": "^3.8.1",
     "zuul": "^3.10.1"
   },
