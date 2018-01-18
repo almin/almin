@@ -66,6 +66,62 @@ const RootContainer = AlminReactContainer.create(App, context);
 ReactDOM.render(<RootContainer />, document.getElementById("js-app"));
 ```
 
+TypeScript example:
+
+```ts
+import * as React from "react";
+import * as ReactDOM from "react-dom";
+import { Dispatcher, Context, Store, StoreGroup } from "almin";
+import { AlminReactContainer } from "almin-react-container";
+
+// Store
+class MyState {
+    value: string;
+
+    constructor({ value }: { value: string }) {
+        this.value = value;
+    }
+}
+
+class MyStore extends Store<MyState> {
+    state: MyState;
+
+    constructor() {
+        super();
+        this.state = new MyState({
+            value: "Hello World!"
+        });
+    }
+
+    getState() {
+        return this.state;
+    }
+}
+
+const storeGroup = new StoreGroup({
+    myState: new MyStore()
+});
+// Context
+const context = new Context({
+    dispatcher: new Dispatcher(),
+    store: storeGroup
+});
+
+// View
+type AppState = typeof storeGroup.state;
+// { myState: MyState }
+class App extends React.Component<AppState> {
+    render() {
+        return <div>{this.props.myState.value}</div>;
+    }
+}
+
+// Create Container
+const RootContainer = AlminReactContainer.create(App, context);
+// Render
+ReactDOM.render(<RootContainer />, document.body);
+```
+
 For more details, see [Example/](./example/).
 
 For TypeScript user, see [almin-react-container-test.tsx](./test/almin-react-container-test.tsx).
