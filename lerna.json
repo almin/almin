@@ -1,16 +1,14 @@
 {
-  "lerna": "2.5.1",
+  "lerna": "2.7.1",
   "commands": {
     "publish": {
       "concurrency": 1
     }
   },
   "packages": [
-    "packages/*",
-    "packages/almin-logger/examples",
-    "examples/*",
-    "perf/*"
+    "packages/*"
   ],
   "npmClient": "yarn",
+  "useWorkspaces": true,
   "version": "independent"
 }

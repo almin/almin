@@ -7,28 +7,30 @@
     "doc": "docs",
     "example": "example"
   },
+  "workspaces": [
+    "packages/*"
+  ],
   "license": "MIT",
   "devDependencies": {
     "@alrra/travis-scripts": "^3.0.1",
     "@azu/docco": "^0.7.2",
     "@textlint-rule/textlint-rule-no-dead-link": "^3.2.0",
-    "eslint-config-prettier": "^2.7.0",
-    "eslint-plugin-prettier": "^2.3.1",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-prettier": "^2.5.0",
     "husky": "^0.14.3",
-    "lerna": "^2.5.1",
-    "lint-staged": "^5.0.0",
-    "prettier": "^1.8.2",
-    "textlint": "^9.1.1",
+    "lerna": "^2.7.1",
+    "lint-staged": "^6.0.0",
+    "prettier": "^1.10.2",
+    "textlint": "^10.1.2",
     "textlint-filter-rule-comments": "^1.2.2",
     "textlint-rule-alex": "^1.0.1",
     "textlint-rule-common-misspellings": "^1.0.1",
     "textlint-rule-prh": "^5.0.1",
-    "typescript": "~2.6.1"
+    "typescript": "~2.6.2"
   },
   "scripts": {
     "precommit": "lint-staged",
     "postcommit": "git reset",
-    "postinstall": "yarn run bootstrap",
     "bootstrap": "lerna bootstrap",
     "prepublishOnly": "npm run build",
     "publish": "lerna publish --concurrency 1 --conventional-commits",
@@ -55,6 +57,5 @@
     "docs/*.md": [
       "textlint --cache -f pretty-error"
     ]
-  },
-  "dependencies": {}
+  }
 }
