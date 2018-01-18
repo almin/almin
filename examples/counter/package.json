@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "example-counter",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Counter example",
   "directories": {
     "test": "test"
@@ -17,7 +17,7 @@
   "author": "azu",
   "license": "MIT",
   "dependencies": {
-    "almin": "^0.14.0",
+    "almin": "^0.15.0",
     "power-assert": "^1.4.4",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",

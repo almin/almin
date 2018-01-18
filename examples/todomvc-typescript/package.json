@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "example-todomvc-typescript",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "TODO MVC example",
   "directories": {
     "test": "test"
@@ -18,8 +18,8 @@
   "author": "azu",
   "license": "MIT",
   "dependencies": {
-    "almin": "^0.14.0",
-    "almin-logger": "^6.0.0",
+    "almin": "^0.15.0",
+    "almin-logger": "^6.1.1",
     "babel-preset-env": "^1.6.1",
     "babel-register": "^6.26.0",
     "classnames": "^2.2.3",

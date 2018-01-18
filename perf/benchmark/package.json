@@ -1,14 +1,14 @@
 {
   "private": true,
   "name": "example-perf-benchmark",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "compare almin versions",
   "main": "index.js",
   "directories": {
     "test": "test"
   },
   "dependencies": {
-    "almin": "^0.14.0",
+    "almin": "^0.15.0",
     "almin-0.13": "file:pacakges/almin-0.13",
     "almin-0.14": "file:pacakges/almin-0.14",
     "json2csv": "^3.7.3",
