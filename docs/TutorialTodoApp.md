@@ -11,7 +11,7 @@ This todo app is based on [TodoMVC](http://todomvc.com/ "TodoMVC").
 
 ## Source Code
 
-You can get source code for counter app from here
+You can get the source code for todo app from here.
 
 - https://github.com/almin/almin/tree/master/examples/todomvc
 
@@ -31,7 +31,7 @@ open http://localhost:8080/
     - POJO(Plain Old JavaScript Object)
 - What is infra layer?
     - Repository
-- Which one should you used repository or store?
+- Which one should you use repository or store?
     - Where is persistent data? - repository
     - Where is data for view? - store
 
@@ -53,12 +53,12 @@ and system UseCase
 
 ## Story
 
-We'll implement following work flow and see it.
+We'll implement the following work flow and see it.
 
 1. Add Todo item
 2. Toggle Todo item's status
 3. ... Loop 1,2
-4. Filter Todo list and show only non-completed todo items.
+4. Filter Todo list and show only non-completed Todo items.
 
 ## Previous knowledge
 
@@ -68,14 +68,14 @@ Previously, We learn flux pattern to create [counter app](../examples/counter/RE
 
 In this guide, We learn basic CQRS(Command Query Responsibility Segregation) pattern using Almin.
 
-CQRS split that conceptual model into separate models - Command(Write) model and Query(Read) model.
+CQRS splits that conceptual model into separate models - Command(Write) model and Query(Read) model.
 
 ![almin-architecture-without-dip](/docs/assets/almin-architecture-without-dip.png)
 
 In the figure, We called
 
 - Command(Write) model "Write Stack" (Left side of the figure)
-    - "Write Stack" get often complex.
+    - "Write Stack" gets often complex.
     - Because, it has business logic that is well-known as **domain model**.
 - Query(Read) model "Read Stack" (Right side of the figure)
     - "Read Stack" is similar concept of ViewModel and Store.
@@ -102,7 +102,7 @@ class TodoList {
 `TodoList` class has business logic and manage todo item.
 
 *Todo item* is also domain model.
-We going to implement `TodoItem` as value object.
+We are going to implement `TodoItem` as value object.
 
 #### TodoItem is value object
 
@@ -161,9 +161,9 @@ export default class TodoList {
 
 We can focus on business logic because domain model is a just plain JavaScript.
 
-### Where domain model are stored?
+### Where domain model is stored?
 
-Now, we can create instance of domain model like this:
+Now, we can create instances of domain model like this:
 
 ```js
 const todoList = new TodoList();
@@ -171,20 +171,20 @@ const todoItem = new TodoItem({ ... });
 todoList.addTodo(todoItem);
 ```
 
-But, How to store instance of domain(`TodoList`) as persistence.
+But, How to store the instance of domain(`TodoList`) as persistence.
 
-We want to introduce **Repository* object.
-Repository store domain model for perpetuation.
+We want to introduce **Repository** object.
+Repository stores domain model for perpetuation.
 
-In the case, repository store domain model into memory database.
+In the case, repository stores domain model into memory database.
 
 Repository is simple class that has these feature:
 
 - Can read/write memory database - memory database is a just `Map` object
 - Write domain instance into memory database
 - Read domain instance from memory database
-- When update memory database, emit "Change" event to subscriber
-    - Repository is a just EventEmitter
+- When memory database is updated, emit "Change" event to subscriber
+    - Repository is just an EventEmitter
 
 ![almin-architecture-repository.png](/docs/assets/almin-architecture-repository.png)
 
@@ -258,25 +258,25 @@ export default new TodoListRepository();
 ```
 
 Repository should be persistence object.
-In other words, create repository instance as singleton.
+In other words, create a repository instance as singleton.
 
-Singleton? Does it may make dependencies problem?
+Singleton? Does it may make dependency problems?
 
-Of course, We can resolve that dependencies issue by DIP([Dependency inversion principle](https://en.wikipedia.org/wiki/Dependency_inversion_principle "Dependency inversion principle")).
+Of course, We can resolve that dependency issues by DIP([Dependency inversion principle](https://en.wikipedia.org/wiki/Dependency_inversion_principle "Dependency inversion principle")).
 
 ### DIP
 
-[Dependency inversion principle](https://en.wikipedia.org/wiki/Dependency_inversion_principle "Dependency inversion principle") is well-known layers pattern.
+[Dependency inversion principle](https://en.wikipedia.org/wiki/Dependency_inversion_principle "Dependency inversion principle") is a well-known layers pattern.
 
 ![DIP](/docs/assets/almin-architecture-dip.png)
 
-Domain should not dependent to repository.
-Because, Domain don't know how to store itself.
-But, Repository can dependent to domain.
+Domain should not depend on repository.
+Because, Domain doesn't know how to store itself.
+But, Repository can depend on domain.
 
 ## When is domain model created?
 
-It is a just System UseCase.
+It is just a System UseCase.
 
 `CreateDomainUseCase` is
 
@@ -362,9 +362,9 @@ export class AddTodoItemUseCase extends UseCase {
 
 #### Factory of UseCase
 
-You notice about `AddTodoItemFactory`.
+You may notice about `AddTodoItemFactory`.
 
-`AddTodoItemFactory` is not must, but it help to write tests.
+`AddTodoItemFactory` is not must, but it helps to write tests.
 We can write test for `AddTodoItem` UseCase.
 
 > Source: [`todomvc/test/UseCase/AddTodoItem-test.js`](https://github.com/almin/almin/tree/master/examples/todomvc/test/UseCase/AddTodoItem-test.js)
@@ -404,9 +404,9 @@ This pattern is well-known as [Dependency injection](https://en.wikipedia.org/wi
 
 #### Conclusion of UseCase
 
-`AddTodoItem` UseCase do that add TodoItem and save it.
+`AddTodoItem` UseCase does adding TodoItem and saving it.
 
-Next, We want to render this result that new TodoItem is added.
+Next, We want to render this result when a new TodoItem is added.
 
 ### TodoStore 
 
@@ -418,14 +418,14 @@ Almin's Store
 
 - has **State** instance
 - can receive the dispatched *event* from a UseCase. 
-- :new: can observe repository.
+- 🆕 can observe repository.
 
 ### TodoStore observe repository
 
 Repository is implemented as a singleton.
-You easy to observe the repository.
+You can observe the repository easily.
 
-But We want to implement Store that it should received repository as a constructor arguments.
+But We want to implement Store that should receive repository as a constructor arguments.
 
 Why? It is a for testing.
 You already know this pattern as Dependency injection.
@@ -530,13 +530,13 @@ And you can see the test for `TodoStore.js`
 
 [examples/todomvc/test/store/TodoStore-test.js](https://github.com/almin/almin/tree/master/examples/todomvc/test/store/TodoStore-test.js)
 
-#### :memo: Which is better?
+#### 📝 Which is better?
 
 Which is better place for updating state?
 
 - `Repository#onChange` vs. `Store#receivePayload`
 
-TL;DR: Case by Case, But we recommended that do update in the `Store#receivePayload`.
+TL;DR: Case by Case, But we recommended to do update in the `Store#receivePayload`.
 
 It is difference that `Repository#onChange` is outside of almin, `Store#receivePayload` is inside of almin.
 To update state should be done in almin life-cycle, because almin can optimize the updating process.
@@ -556,14 +556,14 @@ To update state should be done in almin life-cycle, because almin can optimize t
     - Can put state updating code at one part  
 - Cons:
     - Store implicitly depended on almin
-        - It means that to test the store a bit complex maybe.
-        - We recommended that test State instead of Store class.
+        - It means that testing the store is a bit complex maybe.
+        - We recommended to test State instead of Store class.
 
 ### TodoState
 
 `TodoState` is a State class.
 
-There are **two way** of updating store:
+There are **two ways** of updating store:
 
 - Receive `TodoList` object and return new `TodoState`
 - Receive payload object and return new `TodoState`
@@ -597,11 +597,11 @@ export default class TodoState {
 
 ### StoreGroup
 
-Real application not only have a single state, but have many state.
+Real application not only have a single state, but have many states.
 
-Almin has `StoreGroup` utility class that collection of stores.
+Almin has `StoreGroup` utility class that is a collection of stores.
 
-`AppStoreGroup` pass `TodoListRepository` instance to `TodoStore`. 
+`AppStoreGroup` passes `TodoListRepository` instance to `TodoStore`. 
 
 > Source: [`todomvc/src/store/AppStoreGroup.js`](https://github.com/almin/almin/tree/master/examples/todomvc/src/store/AppStoreGroup.js)
 ``` javascript
@@ -635,7 +635,7 @@ const appContext = new Context({
 
 ## StoreGroup -> View
 
-Entry point of App's view observe `TodoStore` via Almin's `Context`.
+Entry point of App's view observes `TodoStore` via Almin's `Context`.
 
 The entry point is `TodoApp.react.js`.
 
@@ -645,7 +645,7 @@ As a result, when `TodoStore` is changed, `TodoApp` is updated.
 
 > UseCase -> Domain -> Repository -> Store -> (New State) -> View
 
-It is **Unidirectional data flow**!
+It is a **Unidirectional data flow**!
 
 ![almin-architecture-without-dip](/docs/assets/almin-architecture-without-dip.png)
 
@@ -662,7 +662,7 @@ You can implement these in a similar way of `AddTodoItem` or [counter app](../ex
 
 ## Conclusion
 
-Almin provide two way for updating app's state.
+Almin provides two way for updating app's state.
 
 ![two way](/docs/assets/almin-architecture.png)
 
@@ -671,11 +671,11 @@ Almin provide two way for updating app's state.
     - It is well-known as Flux
 - Long path
     - Changes of Domain and Repository
-    - It similar with server side architecture
+    - It is similar with server side architecture
 
-Complex Web application need to both.
+Complex Web application needs to both.
 
-For example, Animation must to use Fast path.
+For example, Animation must use the fast path.
 On the other hand, complex business logic should be written in domain models.
 
 > View -> UseCase -> (Thinking Point) -> Store

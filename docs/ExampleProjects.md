@@ -3,7 +3,7 @@ id: example-projects
 title: "Example projects"
 ---
 
-Almin provide official examples
+Almin provides official examples
 
 ## [examples/counter](https://github.com/almin/almin/tree/master/examples/counter)
 
@@ -42,11 +42,11 @@ Change color of SVG icon and Background Color rapidly.
 
 Shopping Cart
 
-This example implement [voronianski/flux-comparison](https://github.com/voronianski/flux-comparison "voronianski/flux-comparison: Practical comparison of different Flux solutions").
+This example implements [voronianski/flux-comparison](https://github.com/voronianski/flux-comparison "voronianski/flux-comparison: Practical comparison of different Flux solutions").
 
 ### What is learn from this example?
 
-shopping-cart example explain the reason we encourage you to normalize your data is to avoid duplication.
+This shopping-cart example explains the reason we encourage you to normalize your data is to avoid duplication.
 
 - How to set initial data
 - How to implement domain model

@@ -9,7 +9,7 @@ In this guide, we’ll walk through the process of creating a simple Counter app
 
 ## Source Code
 
-You can get source code for counter app from here
+You can get the source code for counter app from here.
 
 - https://github.com/almin/almin/tree/master/examples/counter
 
@@ -25,11 +25,11 @@ open http://localhost:8080/
 
 ## The purpose of counter
 
-1. Press button and count up!
+1. Press a button and count up!
 
 End.
 
-### :memo: Notes: Recommendation
+### 📝 Notes: Recommendation
 
 1 UseCase = 1 file
 
@@ -37,7 +37,7 @@ End.
 
 We start implementing the UseCase.
 
-> 1. Press button and count up!
+> 1. Press a button and count up!
 
 Start to create `IncrementalCounterUseCase` class.
 
@@ -52,9 +52,9 @@ export default class IncrementalCounterUseCase extends UseCase {
 }
 ```
 
-We want to update **counter app state**, if the `IncrementalCounterUseCase` is executed.
+We want to update the **counter app state** when the `IncrementalCounterUseCase` is executed.
 
-Simply, put **counter app state** to a **Store**.
+Simply, put the **counter app state** to a **Store**.
 
 ## Store
 
@@ -80,10 +80,10 @@ export class CounterStore extends Store {
 
 Almin's `Store` can receive the dispatched *event* from a UseCase.
 
-:thought_balloon: Image:
+💭 Image:
 
-1. IncrementalCounterUseCase dispatch "increment" event.
-2. CounterStore receive the dispatched "increment" event and update own state.
+1. `IncrementalCounterUseCase` dispatches "increment" event.
+2. `CounterStore` receives the dispatched "increment" event and updates own state.
 
 This pattern is the same Flux architecture.
 
@@ -92,7 +92,7 @@ This pattern is the same Flux architecture.
 In flux:
 
 1. dispatch "increment" action via ActionCreator
-2. Store receive "increment" action and update own state
+2. Store receives "increment" action and updates own state
 
 ## **UseCase** dispatch -> Store
  
@@ -114,7 +114,7 @@ export class IncrementalCounterUseCase extends UseCase {
 
 ```
 
-A class inherited `UseCase` has `this.dispatch(payload);` method.
+A class inherited `UseCase` has `this.dispatch(payload)` method.
 
 `payload` object must have `type` property.
 
@@ -124,9 +124,9 @@ A class inherited `UseCase` has `this.dispatch(payload);` method.
 }
 ```
 
-is a minimal payload object.
+The above is a minimal payload object.
 
-Of course, you can include other property to the payload.
+Of course, you can include other properties to the payload.
 
 ```json
 {
@@ -135,11 +135,11 @@ Of course, you can include other property to the payload.
 }
 ```
 
-So, `IncrementalCounterUseCase` dispatch "increment" payload.
+So, `IncrementalCounterUseCase` dispatches the "increment" payload.
 
 ## UseCase -> **Store** received
 
-Next, We want to add the feature that can received "increment" payload to `CounterStore`.
+Next, We want to add the feature that can receive the "increment" payload to `CounterStore`.
 
 A class inherited `Store` can implement `receivePayload` method.
 
@@ -183,14 +183,14 @@ It means that we can create `CounterState`.
 
 **State**
 
-- It is state!
+- It is the state!
 
 
 ## State
 
 We have created `CounterState.js`.
 
-`CounterState`s main purpose
+`CounterState`s main purpose is
 
 - receive "payload" and return state.
 
@@ -232,7 +232,7 @@ You may have seen the pattern. So, It is **reducer** in the Redux.
 Finally, we have added some code to `CounterStore`
 
 1. Receive dispatched event, then update `CounterState`
-2. `CounterStore#getState` return the instance of `CounterState`
+2. `CounterStore#getState` returns the instance of `CounterState`
 
 A class inherited `Store` has `this.setState()` method that update own state if needed.
 
@@ -264,21 +264,21 @@ export class CounterStore extends Store {
 
 ```
 
-### :memo: Note: Testing
+### 📝 Note: Testing
 
-We can test above classes independently.
+We can test the above classes independently.
 
 - [almin/examples/counter/test at master · almin/almin](https://github.com/almin/almin/tree/master/examples/counter/test "almin/examples/counter/test at master · almin/almin")
 
 ## View Integration
 
-This example use [React](https://reactjs.org/ "React").
+This example uses [React](https://reactjs.org/ "React").
 
 ### index.js
 
-We will create `index.js` is the root of the application.
+We will create `index.js` that is the root of the application.
 
-First, we create `Context` object that is communicator between Store and UseCase.
+First, we create a `Context` object that is communicator between Store and UseCase.
 
 ```js
 import {Context, Dispatcher} from "almin";
@@ -305,7 +305,7 @@ Second, We will pass the `appContext` to `App` component and render to DOM.
 ReactDOM.render(<App appContext={appContext} />, document.getElementById("js-app"))
 ```
 
-Full code of `index.js`:
+The following is the full code of `index.js`:
 
 > Source: [`counter/src/index.js`](https://github.com/almin/almin/tree/master/examples/counter/src/index.js)
 ``` jsx
@@ -341,9 +341,9 @@ ReactDOM.render(<App appContext={appContext} />, document.getElementById("js-app
 
 ### App.js
 
-We will create `App.js` is the root of component aka. Container component.
+We will create `App.js` that is the root of component aka. Container component.
 
-It receive `appContext` from `index.js` and use it.
+It receives `appContext` from `index.js` and uses it.
 
 > Source: [`counter/src/component/App.js`](https://github.com/almin/almin/tree/master/examples/counter/src/component/App.js)
 ``` jsx
@@ -396,7 +396,7 @@ App.propTypes = {
 
 #### App's state
 
-Root Component has state that sync to almin's state.
+Root Component has state that syncs to almin's state.
 
 Focus on `onChange`:
 
@@ -409,11 +409,11 @@ appContext.onChange(onChangeHandler);
 ```
 
 If `CounterStore`'s state is changed(or `emitChange()`ed), call `onChangeHandler`.
-`onChangeHandler` do update `App` component's state.
+`onChangeHandler` does update `App` component's state.
 
 ### Counter component
 
-Counter component receive `counterState` and `appContext` via `this.props.`.
+Counter component receives `counterState` and `appContext` via `this.props`.
 
 ```js
 CounterComponent.propTypes = {
@@ -439,7 +439,7 @@ Execute `IncrementalCounterUseCase` and work following:
 1. Execute `IncrementalCounterUseCase`
 2. `CounterStore` is updated(create new `CounterState`)
 3. `App` Component's state is updated via `onChangeHandler`
-4. `Counter` receive new `CounterState`, refresh view
+4. `Counter` receives new `CounterState`, refresh view
 
 
 > Source: [`counter/src/component/Counter.js`](https://github.com/almin/almin/tree/master/examples/counter/src/component/Counter.js)
@@ -480,7 +480,7 @@ Counter.propTypes = {
 
 ## End
 
-We have created simple counter app.
+We have created a simple counter app.
 
 Writing the pattern in this guide is the same of Flux pattern.
 
