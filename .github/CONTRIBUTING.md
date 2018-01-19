@@ -75,7 +75,7 @@ API Reference is automatically generated from source code(`/src/*.ts``)
 yarn run build:docs:api # build
 ```
 
-## How to write document?
+### How to write document?
 
 1. Add Markdown document to `docs/` directory.
 2. Add link to [SUMMARY.md](../SUMMARY.md)
@@ -113,6 +113,8 @@ Almin has adopted [Conventional Commits](https://conventionalcommits.org/ "Conve
 - `component`: package name or file name
     - e.g.) `almin`, `almin-logger`
 
+If you commit cross `component` changes in a pull request, separate commits by `component`. 
+
 ### Example: commit message
 
 Example: Add new feature – This is minor update
@@ -144,8 +146,6 @@ BREAKING CHANGE: make `StoreGroup` as default store
 
 fix #42
 ```
-
-
 
 ## How to release?
 
