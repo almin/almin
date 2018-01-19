@@ -6,10 +6,13 @@ import { CounterState } from "../store/CounterState";
 import { Counter } from "./Counter";
 
 export default class App extends React.Component {
-    componentWillMount() {
-        const appContext = this.props.appContext;
+    constructor(props) {
+        super(props);
         // set initial state
-        this.setState(appContext.getState());
+        this.state = props.appContext.getState();
+    }
+    componentDidMount() {
+        const appContext = this.props.appContext;
         // update component's state with store's state when store is changed
         const onChangeHandler = () => {
             this.setState(appContext.getState());
