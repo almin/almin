@@ -46,7 +46,7 @@ export class AlminReactContainer {
                 return !shallowEqual(this.state, nextState);
             }
 
-            componentWillMount() {
+            componentDidMount() {
                 const onChangeHandler = () => {
                     this.setState(context.getState());
                 };
