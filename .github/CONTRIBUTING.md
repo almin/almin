@@ -75,16 +75,77 @@ API Reference is automatically generated from source code(`/src/*.ts``)
 yarn run build:docs:api # build
 ```
 
-## How to write document?
+### How to write document?
 
 1. Add Markdown document to `docs/` directory.
 2. Add link to [SUMMARY.md](../SUMMARY.md)
 
-## How to write git commit message
+## How to write git commit message?
 
 Almin has adopted [Conventional Commits](https://conventionalcommits.org/ "Conventional Commits")
 
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
+
+```
+                       component        commit title
+        commit type       /                /      
+                \        |                |
+                 feat(rule-context): add template url parameter to events
+
+        body ->  The 'src` (i.e. the url of the template to load) is now provided to the
+                 `$includeContentRequested`, `$includeContentLoaded` and `$includeContentError`
+                 events.
+
+ referenced  ->  Closes #8453
+ issues          Closes #8454
+```
+
+- `commit type`:
+    - `BREAKING CHANGE`: breaking change(major update)
+    - `feat`: add new feature(minor update)
+    - `fix`: fix a bug(patch update)
+    - `style`: format style(patch update)
+    - `refactor`: refactoring(patch update)
+    - `perf`: it is related performance(patch update)
+    - `test`: update tests(patch update)
+    - `docs`: update documents(patch update)
+    - `chore`: the other(patch update)
+- `component`: package name or file name
+    - e.g.) `almin`, `almin-logger`
+
+If you commit cross `component` changes in a pull request, separate commits by `component`. 
+
+### Example: commit message
+
+Example: Add new feature – This is minor update
+
+```
+feat(almin): add new feature
+
+Describe in details.
+
+fix #42
+```
+
+Example: Fix a bug
+
+```
+fix(almin): `tryUpdateState` should be called before finished 
+
+Describe in details.
+
+fix #42
+```
+
+Example: BREAKING CHANGE
+
+```
+feat(almin): Change default StoreGroup
+
+BREAKING CHANGE: make `StoreGroup` as default store
+
+fix #42
+```
 
 ## How to release?
 
