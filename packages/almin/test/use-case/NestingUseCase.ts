@@ -1,8 +1,9 @@
 // LICENSE : MIT
 "use strict";
-import { UseCase } from "../../src/UseCase";
+import { UseCase } from "../../src";
 // Parent -> ChildUseCase
 export class ParentUseCase extends UseCase {
+    private childUseCase: ChildUseCase;
     constructor() {
         super();
         this.childUseCase = new ChildUseCase();

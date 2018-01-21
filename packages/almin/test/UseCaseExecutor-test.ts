@@ -1,10 +1,9 @@
 // LICENSE : MIT
 "use strict";
-const sinon = require("sinon");
-const assert = require("assert");
+import * as assert from "assert";
+import sinon = require("sinon");
 import { SyncNoDispatchUseCase } from "./use-case/SyncNoDispatchUseCase";
-import { Dispatcher } from "../src/Dispatcher";
-import { UseCase } from "../src/UseCase";
+import { Dispatcher, Payload, UseCase } from "../src/";
 import { UseCaseExecutorImpl } from "../src/UseCaseExecutor";
 import { CallableUseCase } from "./use-case/CallableUseCase";
 import { ThrowUseCase } from "./use-case/ThrowUseCase";
@@ -14,7 +13,7 @@ import { isCompletedPayload } from "../src/payload/CompletedPayload";
 
 describe("UseCaseExecutor", function() {
     describe("#executor", () => {
-        let consoleErrorStub = null;
+        let consoleErrorStub: any = null;
         beforeEach(() => {
             consoleErrorStub = sinon.stub(console, "error");
         });
@@ -25,7 +24,8 @@ describe("UseCaseExecutor", function() {
             const dispatcher = new Dispatcher();
             const executor = new UseCaseExecutorImpl({
                 useCase: new ThrowUseCase(),
-                dispatcher
+                dispatcher,
+                parent: null
             });
             return executor.executor(useCase => useCase.execute()).then(
                 () => {
@@ -40,9 +40,10 @@ describe("UseCaseExecutor", function() {
             const dispatcher = new Dispatcher();
             const executor = new UseCaseExecutorImpl({
                 useCase: new SyncNoDispatchUseCase(),
-                dispatcher
+                dispatcher,
+                parent: null
             });
-            return executor.executor(" THIS IS WRONG ").then(
+            return executor.executor(" THIS IS WRONG " as any).then(
                 () => {
                     throw new Error("SHOULD NOT CALLED");
                 },
@@ -62,28 +63,24 @@ describe("UseCaseExecutor", function() {
             const callableUseCase = new CallableUseCase();
             const executor = new UseCaseExecutorImpl({
                 useCase: callableUseCase,
-                dispatcher
+                dispatcher,
+                parent: null
             });
-            return executor
-                .executor(useCase =>
-                    useCase.execute({
-                        type: "type"
-                    })
-                )
-                .then(
-                    () => {
-                        assert(callableUseCase.isExecuted, "UseCase#execute should be called");
-                    },
-                    error => {
-                        throw new error();
-                    }
-                );
+            return executor.executor(useCase => useCase.execute()).then(
+                () => {
+                    assert(callableUseCase.isExecuted, "UseCase#execute should be called");
+                },
+                error => {
+                    throw new error();
+                }
+            );
         });
         it("executor(useCase => {}) useCase is actual wrapper object", () => {
             const dispatcher = new Dispatcher();
             const executor = new UseCaseExecutorImpl({
                 useCase: new SyncNoDispatchUseCase(),
-                dispatcher
+                dispatcher,
+                parent: null
             });
             return executor.executor(useCase => {
                 assert(useCase instanceof UseCase === false, "useCase is wrapped object. it is not UseCase");
@@ -96,7 +93,8 @@ describe("UseCaseExecutor", function() {
             const callableUseCase = new CallableUseCase();
             const executor = new UseCaseExecutorImpl({
                 useCase: callableUseCase,
-                dispatcher
+                dispatcher,
+                parent: null
             });
             executor
                 .executor(useCase => {
@@ -115,7 +113,8 @@ describe("UseCaseExecutor", function() {
             const dispatcher = new Dispatcher();
             const executor = new UseCaseExecutorImpl({
                 useCase: new SyncNoDispatchUseCase(),
-                dispatcher
+                dispatcher,
+                parent: null
             });
             return executor
                 .executor(useCase => {
@@ -139,16 +138,17 @@ describe("UseCaseExecutor", function() {
             const dispatcher = new Dispatcher();
 
             class SyncUseCase extends UseCase {
-                execute(payload) {
+                execute(payload: Payload) {
                     this.dispatch(payload);
                 }
             }
 
-            const callStack = [];
+            const callStack: string[] = [];
             const expectedCallStack = ["will", "dispatch", "did", "complete"];
             const executor = new UseCaseExecutorImpl({
                 useCase: new SyncUseCase(),
-                dispatcher
+                dispatcher,
+                parent: null
             });
             // then
             executor.onDispatch(payload => {
@@ -171,7 +171,7 @@ describe("UseCaseExecutor", function() {
     describe("#shouldExecute", () => {
         describe("when implemented shouldExecute()", function() {
             it("should called before execute", function() {
-                const called = [];
+                const called: string[] = [];
 
                 class TestUseCase extends UseCase {
                     shouldExecute() {
@@ -187,7 +187,8 @@ describe("UseCaseExecutor", function() {
                 const dispatcher = new Dispatcher();
                 const executor = new UseCaseExecutorImpl({
                     useCase: new TestUseCase(),
-                    dispatcher
+                    dispatcher,
+                    parent: null
                 });
                 return executor.execute().then(() => {
                     assert.deepEqual(called, ["shouldExecute", "execute"]);
@@ -196,7 +197,7 @@ describe("UseCaseExecutor", function() {
         });
         describe("when shouldExecute() => false", function() {
             it("should not call UseCase#execute", function() {
-                const called = [];
+                const called: string[] = [];
 
                 class TestUseCase extends UseCase {
                     shouldExecute() {
@@ -212,14 +213,15 @@ describe("UseCaseExecutor", function() {
                 const dispatcher = new Dispatcher();
                 const executor = new UseCaseExecutorImpl({
                     useCase: new TestUseCase(),
-                    dispatcher
+                    dispatcher,
+                    parent: null
                 });
                 return executor.execute().then(() => {
                     assert.deepEqual(called, ["shouldExecute"]);
                 });
             });
             it("should call onWillNotExecuteEachUseCase handler", function() {
-                const called = [];
+                const called: string[] = [];
 
                 class TestUseCase extends UseCase {
                     shouldExecute() {
@@ -235,7 +237,8 @@ describe("UseCaseExecutor", function() {
                 const dispatcher = new Dispatcher();
                 const executor = new UseCaseExecutorImpl({
                     useCase: new TestUseCase(),
-                    dispatcher
+                    dispatcher,
+                    parent: null
                 });
                 return executor.execute().then(() => {
                     assert.deepEqual(called, ["shouldExecute"]);
@@ -244,11 +247,12 @@ describe("UseCaseExecutor", function() {
         });
         describe("when shouldExecute() => undefined", function() {
             it("should throw error", function() {
-                const called = [];
+                const called: string[] = [];
 
                 class TestUseCase extends UseCase {
                     shouldExecute() {
                         called.push("shouldExecute");
+                        return undefined as any;
                     }
 
                     execute() {
@@ -259,7 +263,8 @@ describe("UseCaseExecutor", function() {
                 const dispatcher = new Dispatcher();
                 const executor = new UseCaseExecutorImpl({
                     useCase: new TestUseCase(),
-                    dispatcher
+                    dispatcher,
+                    parent: null
                 });
                 return executor.execute().then(
                     () => {
@@ -278,7 +283,8 @@ describe("UseCaseExecutor", function() {
             const dispatcher = new Dispatcher();
             const executor = new UseCaseExecutorImpl({
                 useCase: new ThrowUseCase(),
-                dispatcher
+                dispatcher,
+                parent: null
             });
             return executor.execute().then(
                 () => {
@@ -292,7 +298,7 @@ describe("UseCaseExecutor", function() {
         describe("when UseCase is sync", function() {
             it("execute is called", function(done) {
                 // given
-                const expectedPayload = {
+                const ExpectedPayload = {
                     type: "SyncUseCase",
                     value: "value"
                 };
@@ -300,7 +306,7 @@ describe("UseCaseExecutor", function() {
 
                 class SyncUseCase extends UseCase {
                     // 2
-                    execute(payload) {
+                    execute(payload: typeof ExpectedPayload) {
                         // 3
                         this.dispatch(payload);
                     }
@@ -309,23 +315,24 @@ describe("UseCaseExecutor", function() {
                 // when
                 const executor = new UseCaseExecutorImpl({
                     useCase: new SyncUseCase(),
-                    dispatcher
+                    dispatcher,
+                    parent: null
                 });
                 // 4
-                executor.onDispatch(({ type, value }) => {
-                    if (type === expectedPayload.type) {
-                        assert.equal(value, expectedPayload.value);
+                executor.onDispatch((payload: any) => {
+                    if (payload.type === ExpectedPayload.type) {
+                        assert.equal(payload.value, ExpectedPayload.value);
                         done();
                     }
                 });
                 // then
-                executor.execute(expectedPayload); // 1
+                executor.execute(ExpectedPayload); // 1
             });
         });
         describe("when UseCase is async", function() {
             it("execute is called", function() {
                 // given
-                const expectedPayload = {
+                const ExpectedPayload = {
                     type: "SyncUseCase",
                     value: "value"
                 };
@@ -333,7 +340,7 @@ describe("UseCaseExecutor", function() {
 
                 class AsyncUseCase extends UseCase {
                     // 2
-                    execute(payload) {
+                    execute(payload: Payload) {
                         return Promise.resolve().then(() => {
                             // 3
                             this.dispatch(payload);
@@ -347,20 +354,21 @@ describe("UseCaseExecutor", function() {
                 // when
                 const executor = new UseCaseExecutorImpl({
                     useCase: new AsyncUseCase(),
-                    dispatcher
+                    dispatcher,
+                    parent: null
                 });
                 executor.onDispatch((payload, meta) => {
                     if (isDidExecutedPayload(payload) && meta.useCase instanceof AsyncUseCase) {
                         isCalledDidExecuted = true;
                     } else if (isCompletedPayload(payload) && meta.useCase instanceof AsyncUseCase) {
                         isCalledCompleted = true;
-                    } else if (payload.type === expectedPayload.type) {
-                        assert.equal(payload.value, expectedPayload.value);
+                    } else if (payload.type === ExpectedPayload.type) {
+                        assert.equal((payload as typeof ExpectedPayload).value, ExpectedPayload.value);
                         isCalledUseCase = true;
                     }
                 });
                 // then
-                return executor.execute(expectedPayload).then(() => {
+                return executor.execute(ExpectedPayload).then(() => {
                     assert(isCalledUseCase);
                     assert(isCalledDidExecuted);
                     assert(isCalledCompleted);

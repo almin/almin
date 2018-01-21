@@ -1,6 +1,6 @@
 // LICENSE : MIT
 "use strict";
-import { UseCase } from "../../src/UseCase";
+import { UseCase } from "../../src";
 export class ThrowUseCase extends UseCase {
     execute() {
         // throw Error insteadof returning rejected promise

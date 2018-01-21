@@ -1,6 +1,6 @@
 // MIT © 2017 azu
 "use strict";
-import { UseCase } from "../../src/UseCase";
+import { UseCase } from "../../src";
 
 /**
  * This is AsyncUseCase and this do not dispatch.
