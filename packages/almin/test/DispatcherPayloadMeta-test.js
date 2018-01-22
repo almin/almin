@@ -6,7 +6,7 @@ import { CompletedPayload, Context, DidExecutedPayload } from "../src/";
 import { Dispatcher } from "../src/Dispatcher";
 import { createStore } from "./helper/create-new-store";
 import { DispatchUseCase } from "./use-case/DispatchUseCase";
-import { ErrorUseCase } from "./use-case/ErrorUseCase";
+import { AsyncErrorUseCase } from "./use-case/AsyncErrorUseCase";
 import { ParentUseCase } from "./use-case/NestingUseCase";
 import { SyncNoDispatchUseCase } from "./use-case/SyncNoDispatchUseCase";
 import { AsyncUseCase } from "./use-case/AsyncUseCase";
@@ -140,7 +140,7 @@ describe("DispatcherPayloadMeta", () => {
                 dispatcher,
                 store: createStore({ name: "test" })
             });
-            const useCase = new ErrorUseCase();
+            const useCase = new AsyncErrorUseCase();
             let actualMeta = null;
             context.events.onErrorDispatch((payload, meta) => {
                 actualMeta = meta;

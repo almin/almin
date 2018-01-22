@@ -1,4 +1,3 @@
 --recursive
 --require env-development
 --require ts-node-test-register
---require source-map-support/register

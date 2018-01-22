@@ -13,30 +13,53 @@ import { UseCaseLike } from "./UseCaseLike";
 import { Payload } from "./payload/Payload";
 import { WillNotExecutedPayload } from "./payload/WillNotExecutedPayload";
 
-interface onWillNotExecuteArgs {
-    (...args: Array<any>): void;
+interface InvalidUsage {
+    type: "InvalidUsage";
+    error: Error;
 }
 
-interface onWillExecuteArgs {
-    (...args: Array<any>): void;
+interface ShouldNotExecute {
+    type: "ShouldNotExecute";
 }
 
-interface onDidExecuteArgs {
-    (value?: any): void;
+interface ErrorInExecute {
+    type: "ErrorInExecute";
+    error: Error;
+}
+
+interface SuccessExecuteReturnValue {
+    type: "SuccessExecuteReturnValue";
+    value: any;
+}
+
+interface SuccessExecuteNoReturnValue {
+    type: "SuccessExecuteNoReturnValue";
+}
+
+type EXECUTING_RESULT =
+    | InvalidUsage
+    | ShouldNotExecute
+    | ErrorInExecute
+    | SuccessExecuteReturnValue
+    | SuccessExecuteNoReturnValue;
+
+interface newProxifyUseCaseArgs {
+    onWillNotExecute(args: Array<any>): void;
+
+    onWillExecute(args: Array<any>): void;
+
+    onDidExecute(result?: any): void;
+
+    onError(error: Error): void;
 }
 
 /**
  * Create wrapper object of a UseCase.
  * This wrapper object only has `execute()` method.
  */
-const proxifyUseCase = <T extends UseCaseLike>(
-    useCase: T,
-    onWillNotExecute: onWillNotExecuteArgs,
-    onWillExecute: onWillExecuteArgs,
-    onDidExecute: onDidExecuteArgs
-): T => {
+const proxifyUseCase = <T extends UseCaseLike>(useCase: T, handlers: newProxifyUseCaseArgs): T => {
     let isExecuted = false;
-    const execute = (...args: Array<any>) => {
+    const execute = (...args: Array<any>): EXECUTING_RESULT => {
         if (process.env.NODE_ENV !== "production") {
             if (isExecuted) {
                 console.error(`Warning(UseCase): ${useCase.name}#execute was called more than once.`);
@@ -47,24 +70,40 @@ const proxifyUseCase = <T extends UseCaseLike>(
         if (typeof useCase.shouldExecute === "function") {
             const shouldExecute = useCase.shouldExecute(args);
             if (typeof shouldExecute !== "boolean") {
-                return Promise.reject(
-                    new Error(
-                        `${useCase.name}>#shouldExecute should return boolean value. Actual result: ${shouldExecute}`
-                    )
+                const error = new Error(
+                    `<${useCase.name}>#shouldExecute should return boolean value. Actual return value: ${shouldExecute}`
                 );
+                return {
+                    type: "InvalidUsage",
+                    error
+                };
             }
             if (!shouldExecute) {
-                return onWillNotExecute(args);
+                handlers.onWillNotExecute(args);
+                return {
+                    type: "ShouldNotExecute"
+                };
             }
         }
         // will execute
-        onWillExecute(args);
-        // execute
-        const result = useCase.execute(...args);
-        // did execute
-        onDidExecute(result);
-        // plain result
-        return result;
+        handlers.onWillExecute(args);
+
+        try {
+            // execute
+            const result = useCase.execute(...args);
+            handlers.onDidExecute(result);
+            return {
+                type: "SuccessExecuteReturnValue",
+                value: result
+            };
+        } catch (error) {
+            handlers.onError(error);
+            handlers.onDidExecute();
+            return {
+                type: "ErrorInExecute",
+                error
+            };
+        }
     };
     // Add debug displayName
     if (process.env.NODE_ENV !== "production") {
@@ -74,6 +113,7 @@ const proxifyUseCase = <T extends UseCaseLike>(
         execute: execute
     } as T;
 };
+
 /**
  * When child is completed after parent did completed, display warning warning message
  * @private
@@ -322,31 +362,64 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
      * You should not relay on the data of the command result.
      */
     executor(executor: (useCase: Pick<T, "execute">) => any): Promise<void> {
-        const startingExecutor = new Promise((resolve, reject) => {
-            if (typeof executor !== "function") {
-                console.error(
-                    "Warning(UseCase): executor argument should be function. But this argument is not function: ",
-                    executor
-                );
-                return reject(new Error("executor(fn) arguments should be function"));
-            }
-            // Notes: proxyfiedUseCase has not timeout
-            // proxiedUseCase will resolve by UseCaseWrapper#execute
-            const proxyfiedUseCase = proxifyUseCase<T>(
-                this.useCase,
-                args => {
-                    this.willNotExecuteUseCase(args);
-                },
-                args => {
-                    this.willExecuteUseCase(args);
-                },
-                value => {
-                    this.didExecuteUseCase(value);
-                }
+        if (typeof executor !== "function") {
+            console.error(
+                "Warning(UseCase): executor argument should be function. But this argument is not function: ",
+                executor
             );
-            const executedResult = executor(proxyfiedUseCase);
-            // always put promise wrap on executed result
-            return Promise.resolve(executedResult).then(resolve, reject);
+            return Promise.reject(new Error("executor(fn) arguments should be function"));
+        }
+        // Notes: proxyfiedUseCase has not timeout
+        // proxiedUseCase will resolve by UseCaseWrapper#execute
+        // For more details, see <UseCaseLifeCycle-test.ts>
+        const proxyfiedUseCase = proxifyUseCase<T>(this.useCase, {
+            onWillNotExecute: args => {
+                this.willNotExecuteUseCase(args);
+            },
+            onWillExecute: args => {
+                this.willExecuteUseCase(args);
+            },
+            onDidExecute: (result?: any) => {
+                this.didExecuteUseCase(result);
+            },
+            onError: (error: Error) => {
+                this.useCase.throwError(error);
+            }
+        });
+        // Note: almin disallow to call `executor(useCase => { setTimeout(() => useCase.execute(), 0}})` asynchronously
+        // You should call UseCase#execute synchronously.
+        const executorResult: EXECUTING_RESULT | undefined = executor(proxyfiedUseCase);
+        // `executorResult` is undefined means that the UseCase#execute never return any value
+        // In JavaScript, no return as undefined value
+        const executedResult: EXECUTING_RESULT =
+            executorResult !== undefined
+                ? executorResult
+                : {
+                      type: "SuccessExecuteNoReturnValue"
+                  };
+        // if does not execute, release and resolve as soon as possible
+        if (executedResult.type === "ShouldNotExecute") {
+            this.release();
+            return Promise.resolve();
+        }
+        const startingExecutor = new Promise((resolve, reject) => {
+            switch (executedResult.type) {
+                case "InvalidUsage":
+                    return reject(executedResult.error);
+                case "ErrorInExecute":
+                    return reject(executedResult.error);
+                case "SuccessExecuteReturnValue": {
+                    // try to resolve return value
+                    // if the return promise is reject, report error from UseCase
+                    return Promise.resolve(executedResult.value).then(resolve, error => {
+                        this.useCase.throwError(error);
+                        return reject(error);
+                    });
+                }
+                case "SuccessExecuteNoReturnValue":
+                    // The UseCase#execute just success without return value
+                    return resolve();
+            }
         });
         return startingExecutor
             .then(result => {
@@ -354,7 +427,6 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
                 this.release();
             })
             .catch(error => {
-                this.useCase.throwError(error);
                 this.completeUseCase();
                 this.release();
                 return Promise.reject(error);
