@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.6.2"></a>
+## [0.6.2](https://github.com/almin/almin/compare/almin-react-container@0.6.1...almin-react-container@0.6.2) (2018-01-22)
+
+
+### Bug Fixes
+
+* **almin-react-container:** Use componentDidMount instead of componentWillMount ([7d4d3d6](https://github.com/almin/almin/commit/7d4d3d6))
+
+
+
+
 <a name="0.6.1"></a>
 ## [0.6.1](https://github.com/almin/almin/compare/almin-react-container@0.6.0...almin-react-container@0.6.1) (2018-01-18)
 
