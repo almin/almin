@@ -13,16 +13,37 @@ import { UseCaseLike } from "./UseCaseLike";
 import { Payload } from "./payload/Payload";
 import { WillNotExecutedPayload } from "./payload/WillNotExecutedPayload";
 
+interface InvalidUsage {
+    type: "InvalidUsage";
+    error: Error;
+}
+
+interface ShouldNotExecute {
+    type: "ShouldNotExecute";
+}
+
+interface ErrorInExecute {
+    type: "ErrorInExecute";
+    error: Error;
+}
+
+interface SuccessExecute {
+    type: "SuccessExecute";
+    value: any;
+}
+
+interface SuccessExecuteNoReturn {
+    type: "SuccessExecuteNoReturn";
+}
+
+type EXECUTING_RESULT = InvalidUsage | ShouldNotExecute | ErrorInExecute | SuccessExecute | SuccessExecuteNoReturn;
+
 interface onWillNotExecuteArgs {
     (...args: Array<any>): void;
 }
 
 interface onWillExecuteArgs {
     (...args: Array<any>): void;
-}
-
-interface onDidExecuteArgs {
-    (value?: any): void;
 }
 
 /**
@@ -32,11 +53,10 @@ interface onDidExecuteArgs {
 const proxifyUseCase = <T extends UseCaseLike>(
     useCase: T,
     onWillNotExecute: onWillNotExecuteArgs,
-    onWillExecute: onWillExecuteArgs,
-    onDidExecute: onDidExecuteArgs
+    onWillExecute: onWillExecuteArgs
 ): T => {
     let isExecuted = false;
-    const execute = (...args: Array<any>) => {
+    const execute = (...args: Array<any>): EXECUTING_RESULT => {
         if (process.env.NODE_ENV !== "production") {
             if (isExecuted) {
                 console.error(`Warning(UseCase): ${useCase.name}#execute was called more than once.`);
@@ -47,24 +67,37 @@ const proxifyUseCase = <T extends UseCaseLike>(
         if (typeof useCase.shouldExecute === "function") {
             const shouldExecute = useCase.shouldExecute(args);
             if (typeof shouldExecute !== "boolean") {
-                return Promise.reject(
-                    new Error(
-                        `${useCase.name}>#shouldExecute should return boolean value. Actual result: ${shouldExecute}`
-                    )
+                const error = new Error(
+                    `<${useCase.name}>#shouldExecute should return boolean value. Actual return value: ${shouldExecute}`
                 );
+                return {
+                    type: "InvalidUsage",
+                    error
+                };
             }
             if (!shouldExecute) {
-                return onWillNotExecute(args);
+                onWillNotExecute(args);
+                return {
+                    type: "ShouldNotExecute"
+                };
             }
         }
         // will execute
         onWillExecute(args);
-        // execute
-        const result = useCase.execute(...args);
-        // did execute
-        onDidExecute(result);
-        // plain result
-        return result;
+
+        try {
+            // execute
+            const result = useCase.execute(...args);
+            return {
+                type: "SuccessExecute",
+                value: result
+            };
+        } catch (error) {
+            return {
+                type: "ErrorInExecute",
+                error
+            };
+        }
     };
     // Add debug displayName
     if (process.env.NODE_ENV !== "production") {
@@ -339,14 +372,36 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
                 },
                 args => {
                     this.willExecuteUseCase(args);
-                },
-                value => {
-                    this.didExecuteUseCase(value);
                 }
             );
-            const executedResult = executor(proxyfiedUseCase);
-            // always put promise wrap on executed result
-            return Promise.resolve(executedResult).then(resolve, reject);
+            const executedResult: EXECUTING_RESULT = executor(proxyfiedUseCase) || {
+                type: "SuccessExecuteNoReturn"
+            };
+            // try to execute, but does not execute
+            if (executedResult.type === "InvalidUsage") {
+                this.useCase.throwError(executedResult.error);
+                return reject(executedResult.error);
+            } else if (executedResult.type === "ShouldNotExecute") {
+                this.release();
+                return;
+            }
+            // ↓ did execute ↓
+            if (executedResult.type === "ErrorInExecute") {
+                this.useCase.throwError(executedResult.error);
+                this.didExecuteUseCase();
+                return reject(executedResult.error);
+            }
+            if (executedResult.type === "SuccessExecute") {
+                this.didExecuteUseCase(executedResult.value);
+                // always put promise wrap on executed result
+                return Promise.resolve(executedResult.value).then(resolve, error => {
+                    this.useCase.throwError(error);
+                    return reject(error);
+                });
+            } else {
+                this.didExecuteUseCase();
+                return resolve();
+            }
         });
         return startingExecutor
             .then(result => {
@@ -354,7 +409,6 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
                 this.release();
             })
             .catch(error => {
-                this.useCase.throwError(error);
                 this.completeUseCase();
                 this.release();
                 return Promise.reject(error);

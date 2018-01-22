@@ -10,6 +10,11 @@ import { ThrowUseCase } from "./use-case/ThrowUseCase";
 import { isWillExecutedPayload } from "../src/payload/WillExecutedPayload";
 import { isDidExecutedPayload } from "../src/payload/DidExecutedPayload";
 import { isCompletedPayload } from "../src/payload/CompletedPayload";
+import { isErrorPayload } from "../src/payload/ErrorPayload";
+
+const shouldNotCalled = () => {
+    throw new Error("This should not be called");
+};
 
 describe("UseCaseExecutor", function() {
     describe("#executor", () => {
@@ -128,6 +133,35 @@ describe("UseCaseExecutor", function() {
                 });
         });
     });
+    describe("when UseCase throw error", function() {
+        // Test: https://github.com/almin/almin/issues/310#issuecomment-359249751
+        it("dispatch will -> error -> did -> complete", function() {
+            const callStack: string[] = [];
+            const expectedCallStack = ["will", "error", "did", "complete"];
+            const dispatcher = new Dispatcher();
+            const executor = new UseCaseExecutorImpl({
+                useCase: new ThrowUseCase(),
+                dispatcher,
+                parent: null
+            });
+            // then
+            executor.onDispatch(payload => {
+                if (isWillExecutedPayload(payload)) {
+                    callStack.push("will");
+                } else if (isDidExecutedPayload(payload)) {
+                    callStack.push("did");
+                } else if (isCompletedPayload(payload)) {
+                    callStack.push("complete");
+                } else if (isErrorPayload(payload)) {
+                    callStack.push("error");
+                }
+            });
+            // when
+            return executor.execute().catch(() => {
+                assert.deepStrictEqual(callStack, expectedCallStack);
+            });
+        });
+    });
     describe("when UseCase is successful completion", function() {
         it("dispatch will -> did", function() {
             // given
@@ -216,9 +250,12 @@ describe("UseCaseExecutor", function() {
                     dispatcher,
                     parent: null
                 });
-                return executor.execute().then(() => {
+
+                const notExpected = executor.execute().then(shouldNotCalled, shouldNotCalled);
+                const expected = Promise.resolve().then(() => {
                     assert.deepEqual(called, ["shouldExecute"]);
                 });
+                return Promise.race([notExpected, expected]);
             });
             it("should call onWillNotExecuteEachUseCase handler", function() {
                 const called: string[] = [];
@@ -240,9 +277,11 @@ describe("UseCaseExecutor", function() {
                     dispatcher,
                     parent: null
                 });
-                return executor.execute().then(() => {
+                const notExpected = executor.execute().then(shouldNotCalled, shouldNotCalled);
+                const expected = Promise.resolve().then(() => {
                     assert.deepEqual(called, ["shouldExecute"]);
                 });
+                return Promise.race([notExpected, expected]);
             });
         });
         describe("when shouldExecute() => undefined", function() {
