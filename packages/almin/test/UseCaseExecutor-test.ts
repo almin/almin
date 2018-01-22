@@ -44,15 +44,20 @@ describe("UseCaseExecutor", function() {
                 dispatcher,
                 parent: null
             });
-            return executor.executor(" THIS IS WRONG " as any).catch(error => {
-                assert.ok(consoleErrorStub.called, "should be called console.error");
-                const warningMessage = consoleErrorStub.getCalls()[0].args[0];
-                assert.ok(/executor.*? arguments should be function/.test(error.message));
-                assert.equal(
-                    warningMessage,
-                    "Warning(UseCase): executor argument should be function. But this argument is not function: "
-                );
-            });
+            return executor.executor(" THIS IS WRONG " as any).then(
+                () => {
+                    throw new Error("SHOULD NOT CALLED");
+                },
+                error => {
+                    assert.ok(consoleErrorStub.called, "should be called console.error");
+                    const warningMessage = consoleErrorStub.getCalls()[0].args[0];
+                    assert.ok(/executor.*? arguments should be function/.test(error.message));
+                    assert.equal(
+                        warningMessage,
+                        "Warning(UseCase): executor argument should be function. But this argument is not function: "
+                    );
+                }
+            );
         });
         it("should accept executor(useCase => {}) function arguments", () => {
             const dispatcher = new Dispatcher();
