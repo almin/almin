@@ -158,7 +158,7 @@ describe("UseCaseExecutor", function() {
             });
             // when
             return executor.execute().catch(() => {
-                assert.deepStrictEqual(callStack, expectedCallStack);
+                assert.deepEqual(callStack, expectedCallStack);
             });
         });
     });
