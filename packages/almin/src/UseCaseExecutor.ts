@@ -371,6 +371,7 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
         }
         // Notes: proxyfiedUseCase has not timeout
         // proxiedUseCase will resolve by UseCaseWrapper#execute
+        // For more details, see <UseCaseLifeCycle-test.ts>
         const proxyfiedUseCase = proxifyUseCase<T>(this.useCase, {
             onWillNotExecute: args => {
                 this.willNotExecuteUseCase(args);
@@ -416,7 +417,7 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
                     });
                 }
                 case "SuccessExecuteNoReturnValue":
-                    // just success execute
+                    // The UseCase#execute just success without return value
                     return resolve();
             }
         });
