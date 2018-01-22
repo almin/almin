@@ -22,9 +22,6 @@ import NoDispatchUseCase from "./usecase/NoDispatchUseCase";
 import { NotExecuteUseCase } from "./usecase/NotExecuteUseCase";
 import WrapUseCase from "./usecase/WrapUseCase";
 
-const shouldNotCalled = () => {
-    throw new Error("This should not be called");
-};
 describe("AsyncLogger", function() {
     it("can start and stop", () => {
         const consoleMock = ConsoleMock.create();
@@ -312,19 +309,17 @@ describe("AsyncLogger", function() {
             actualLogGroup = logGroup;
         });
         // When
-        const unExpectedPromise = context
+        return context
             .useCase(useCase)
             .execute()
-            .then(shouldNotCalled, shouldNotCalled);
-        const expected = Promise.resolve().then(() => {
-            assert(consoleMock.groupCollapsed.called);
-            const expectOutput = `NotExecuteUseCase`;
-            const isContain = consoleMock.log.calls.some(call => {
-                return call.arg && call.arg.indexOf(expectOutput) !== -1;
+            .then(() => {
+                assert(consoleMock.groupCollapsed.called);
+                const expectOutput = `NotExecuteUseCase`;
+                const isContain = consoleMock.log.calls.some(call => {
+                    return call.arg && call.arg.indexOf(expectOutput) !== -1;
+                });
+                assert.ok(isContain, `${expectOutput} is not found.`);
             });
-            assert.ok(isContain, `${expectOutput} is not found.`);
-        });
-        return Promise.race([unExpectedPromise, expected]);
     });
     it("should log dispatch event", function() {
         const consoleMock = ConsoleMock.create();

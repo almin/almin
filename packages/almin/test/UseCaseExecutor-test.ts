@@ -12,10 +12,6 @@ import { isDidExecutedPayload } from "../src/payload/DidExecutedPayload";
 import { isCompletedPayload } from "../src/payload/CompletedPayload";
 import { isErrorPayload } from "../src/payload/ErrorPayload";
 
-const shouldNotCalled = () => {
-    throw new Error("This should not be called");
-};
-
 describe("UseCaseExecutor", function() {
     describe("#executor", () => {
         let consoleErrorStub: any = null;
@@ -48,20 +44,15 @@ describe("UseCaseExecutor", function() {
                 dispatcher,
                 parent: null
             });
-            return executor.executor(" THIS IS WRONG " as any).then(
-                () => {
-                    throw new Error("SHOULD NOT CALLED");
-                },
-                error => {
-                    assert.ok(consoleErrorStub.called, "should be called console.error");
-                    const warningMessage = consoleErrorStub.getCalls()[0].args[0];
-                    assert.ok(/executor.*? arguments should be function/.test(error.message));
-                    assert.equal(
-                        warningMessage,
-                        "Warning(UseCase): executor argument should be function. But this argument is not function: "
-                    );
-                }
-            );
+            return executor.executor(" THIS IS WRONG " as any).catch(error => {
+                assert.ok(consoleErrorStub.called, "should be called console.error");
+                const warningMessage = consoleErrorStub.getCalls()[0].args[0];
+                assert.ok(/executor.*? arguments should be function/.test(error.message));
+                assert.equal(
+                    warningMessage,
+                    "Warning(UseCase): executor argument should be function. But this argument is not function: "
+                );
+            });
         });
         it("should accept executor(useCase => {}) function arguments", () => {
             const dispatcher = new Dispatcher();
@@ -251,11 +242,9 @@ describe("UseCaseExecutor", function() {
                     parent: null
                 });
 
-                const notExpected = executor.execute().then(shouldNotCalled, shouldNotCalled);
-                const expected = Promise.resolve().then(() => {
+                return executor.execute().then(() => {
                     assert.deepEqual(called, ["shouldExecute"]);
                 });
-                return Promise.race([notExpected, expected]);
             });
             it("should call onWillNotExecuteEachUseCase handler", function() {
                 const called: string[] = [];
@@ -277,11 +266,10 @@ describe("UseCaseExecutor", function() {
                     dispatcher,
                     parent: null
                 });
-                const notExpected = executor.execute().then(shouldNotCalled, shouldNotCalled);
-                const expected = Promise.resolve().then(() => {
+                // willNotExecute:true => resolve
+                return executor.execute().then(() => {
                     assert.deepEqual(called, ["shouldExecute"]);
                 });
-                return Promise.race([notExpected, expected]);
             });
         });
         describe("when shouldExecute() => undefined", function() {
