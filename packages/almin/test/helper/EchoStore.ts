@@ -1,7 +1,13 @@
 // LICENSE : MIT
 "use strict";
-import { Store } from "../../src/Store";
-export function createEchoStore({ name, echo }) {
+import { Store } from "../../src";
+
+export interface CreateEchoStore {
+    name?: string;
+    echo: any;
+}
+
+export function createEchoStore({ name, echo }: CreateEchoStore) {
     class TestStore extends Store {
         constructor() {
             super();
@@ -15,5 +21,6 @@ export function createEchoStore({ name, echo }) {
             return echo;
         }
     }
+
     return new TestStore();
 }
