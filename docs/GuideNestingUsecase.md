@@ -12,22 +12,22 @@ For example, ParentUseCase -> ChildUseCase.
  
 ```js 
 class ChildUseCase extends UseCase {
- execute() {
- }
+    execute() {
+    }
 }
 class ParentUseCase extends UseCase {
- execute() {
-     const childUseCase = new ChildUseCase();
-     // use `this.context` insteadof the instance of `Context`
-     return this.context.useCase(childUseCase).execute();
- }
+    execute() {
+        const childUseCase = new ChildUseCase();
+        // use `this.context` insteadof the instance of `Context`
+        return this.context.useCase(childUseCase).execute();
+    }
 }
 const parentUseCase = new ParentUseCase();
 const childUseCase = new ChildUseCase();
 const dispatcher = new Dispatcher();
 const context = new Context({
- dispatcher,
- store: new Store()
+    dispatcher,
+    store: new Store()
 });
 context.useCase(parentUseCase).execute().then(() => {
   /*
@@ -47,7 +47,7 @@ It is useful for transaction of application or Toggle UseCase(Play/PauseUseCase)
 
 ## UseCase of Nesting UseCase
 
-For example, We already have `AppUserFetchSearchResultUseCase` that fetch the result of search with search word.
+For example, We already have `AppUserFetchSearchResultUseCase` that fetchs the result of search with a search word.
 
 ```js
 import { UseCase } from "almin";
@@ -62,9 +62,9 @@ export class AppUserFetchSearchResultUseCase extends UseCase {
 }
 ```
 
-Additional, We want to add `AppUserReloadSearchResultUseCase` that fetch the result of current search word again and refresh view.
+Additional, We want to add `AppUserReloadSearchResultUseCase` that fetchs the result of the current search word again and refresh view.
 
-Nesting UseCase help you to reduce duplicated workflow.
+Nesting UseCase helps you to reduce duplicated workflow.
 
 ```js
 import { UseCase } from "almin";
@@ -83,7 +83,7 @@ export class AppUserReloadSearchResultUseCase extends UseCase {
 }
 ```
 
-Almin's nesting UseCase represent **extended use case** in [Use case diagram](https://en.wikipedia.org/wiki/Use_case_diagram "Use case diagram").
+Almin's nesting UseCase represents **extended use case** in [Use case diagram](https://en.wikipedia.org/wiki/Use_case_diagram "Use case diagram").
 
 **Related topics**:
 

@@ -7,14 +7,14 @@ title: "Strict mode"
 
 ## What is this?
 
-Strict mode check that updating store/state in `Store#receivePayload`
-It means that show warning if update store outside of `Store#receivePayload`.
+Strict mode checks whether updating store/state happened in `Store#receivePayload`.
+It means that almin shows a warning if you updated store/state outside of `Store#receivePayload`.
 
-In other word, Strict mode require that your store should be updated in `Store#receivePayload`.
+In other word, Strict mode requires that your store should be updated only in `Store#receivePayload`.
 
 ## How to enable strict mode?
 
-You can enable **Strict mode** to almin.
+You can enable **Strict mode** by `Context`'s options like the following.
 
 ```js
 import { Context, Dispatcher } from "almin";
@@ -35,11 +35,11 @@ const context = new Context({
 Almin will enable strict mode by default in the future.
 A new feature like `Context#transaction` can use only in strict mode.
 
-Strict mode ensure consistency in almin.
+Strict mode ensures consistency in almin.
 
 ## Example
 
-**OK**: Examples of correct code for strict mode:
+**OK**: This example is correct in strict mode:
 
 ```js
 class AStore extends Store {
@@ -88,7 +88,7 @@ context.useCase(updateAStoreUseCase).execute().then(() => {
 
 ```
 
-**NG pattern 1**: Examples of incorrect code for strict mode:
+**NG pattern 1**: This example is incorrect in strict mode:
 
 > Warning(Store): AStore can only update own state in AStore#receivePayload in strict mode.
 > If you update the state outside of AStore#receivePayload, please check the AStore.
@@ -138,11 +138,10 @@ context.useCase(updateStoreUseCase).execute().then(() => {
 });
 ```
 
-**NG pattern 2**: Examples of incorrect code for strict mode:
+**NG pattern 2**: This example is incorrect in strict mode:
 
 This is similar with Pattern 1(Almost same).
 This `Repopository#onChange` is called at different timing with `Store#receivePayload`. 
-
 
 ```js
 import { Context, Dispatcher, Store, StoreGroup, UseCase } from "almin";
@@ -211,5 +210,5 @@ context.useCase(updateStoreUseCase).execute().then(() => {
 
 <!-- textlint-disable -->
 
-If you found unexpected warning, please create [new issue](https://github.com/almin/almin/issues/new).
+If you found an unexpected warning, please create a [new issue](https://github.com/almin/almin/issues/new).
 

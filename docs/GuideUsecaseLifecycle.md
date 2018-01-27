@@ -16,8 +16,8 @@ For more information about logging, see [Logging tips](./GuideLogging.md).
 | onEndTransaction         | A transaction end                      |
 | onWillNotExecuteEachUseCase | A UseCase will not Execute          |
 | onWillExecuteEachUseCase | Each UseCase will Execute              |
-| onDispatch @1            | UseCase call `this.dispatch(payload)`  |
-| onErrorDispatch @1       | UseCase call `this.throwError(new Error())` |
+| onDispatch @1            | UseCase calls `this.dispatch(payload)`  |
+| onErrorDispatch @1       | UseCase calls `this.throwError(new Error())` |
 | onDidExecuteEachUseCase  | Each UseCase did executed              |
 | onCompleteEachUseCase    | Each UseCase is completed              |
 
@@ -46,12 +46,12 @@ export class AsyncUseCase extends UseCase {
 
 The LifeCycle events of `AsyncUseCase`:
 
-1. Sync call `onWillExecuteEachUseCase`
-2. Sync call `onDispatch`
-3. Sync call `onDidExecuteEachUseCase`
-4. Async call `onCompleteEachUseCase`
+1. **Sync** call `onWillExecuteEachUseCase`
+2. **Sync** call `onDispatch`
+3. **Sync** call `onDidExecuteEachUseCase`
+4. **Async** call `onCompleteEachUseCase`
 
-Illustrate the lifecycle in the code.
+The following is to illustrate the lifecycle in the code.
 
 ```js
 // IMAGE CODE!!!
