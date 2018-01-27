@@ -3,7 +3,7 @@
 import { UseCase } from "../../src";
 // Parent -> ChildUseCase
 export class ParentUseCase extends UseCase {
-    private childUseCase: ChildUseCase;
+    public childUseCase: ChildUseCase;
     constructor() {
         super();
         this.childUseCase = new ChildUseCase();

@@ -3,7 +3,7 @@
 const assert = require("assert");
 import { MapLike } from "map-like";
 import { CompletedPayload, Context, DidExecutedPayload } from "../src/";
-import { Dispatcher } from "../src/Dispatcher";
+import { Dispatcher, DispatcherPayloadMeta } from "../src";
 import { createStore } from "./helper/create-new-store";
 import { DispatchUseCase } from "./use-case/DispatchUseCase";
 import { AsyncErrorUseCase } from "./use-case/AsyncErrorUseCase";
@@ -20,8 +20,8 @@ describe("DispatcherPayloadMeta", () => {
                 store: createStore({ name: "test" })
             });
             const useCase = new SyncNoDispatchUseCase();
-            let actualMeta = null;
-            context.events.onWillExecuteEachUseCase((payload, meta) => {
+            let actualMeta: DispatcherPayloadMeta;
+            context.events.onWillExecuteEachUseCase((_payload, meta) => {
                 actualMeta = meta;
             });
             return context
@@ -44,8 +44,8 @@ describe("DispatcherPayloadMeta", () => {
                 store: createStore({ name: "test" })
             });
             const useCase = new DispatchUseCase();
-            let actualMeta = null;
-            context.events.onDispatch((payload, meta) => {
+            let actualMeta: DispatcherPayloadMeta;
+            context.events.onDispatch((_payload, meta) => {
                 actualMeta = meta;
             });
             return context
@@ -68,8 +68,8 @@ describe("DispatcherPayloadMeta", () => {
                 store: createStore({ name: "test" })
             });
             const useCase = new SyncNoDispatchUseCase();
-            let actualMeta = null;
-            context.events.onDidExecuteEachUseCase((payload, meta) => {
+            let actualMeta: DispatcherPayloadMeta;
+            context.events.onDidExecuteEachUseCase((_payload, meta) => {
                 actualMeta = meta;
             });
             return context
@@ -91,8 +91,8 @@ describe("DispatcherPayloadMeta", () => {
                 store: createStore({ name: "test" })
             });
             const useCase = new AsyncUseCase();
-            let actualMeta = null;
-            context.events.onDidExecuteEachUseCase((payload, meta) => {
+            let actualMeta: DispatcherPayloadMeta;
+            context.events.onDidExecuteEachUseCase((_payload, meta) => {
                 actualMeta = meta;
             });
             return context
@@ -116,8 +116,8 @@ describe("DispatcherPayloadMeta", () => {
                 store: createStore({ name: "test" })
             });
             const useCase = new SyncNoDispatchUseCase();
-            let actualMeta = null;
-            context.events.onCompleteEachUseCase((payload, meta) => {
+            let actualMeta: DispatcherPayloadMeta;
+            context.events.onCompleteEachUseCase((_payload, meta) => {
                 actualMeta = meta;
             });
             return context
@@ -141,8 +141,8 @@ describe("DispatcherPayloadMeta", () => {
                 store: createStore({ name: "test" })
             });
             const useCase = new AsyncErrorUseCase();
-            let actualMeta = null;
-            context.events.onErrorDispatch((payload, meta) => {
+            let actualMeta: DispatcherPayloadMeta;
+            context.events.onErrorDispatch((_payload, meta) => {
                 actualMeta = meta;
             });
             return context
@@ -168,14 +168,14 @@ describe("DispatcherPayloadMeta", () => {
             });
             const parentUseCase = new ParentUseCase();
             const childUseCase = parentUseCase.childUseCase;
-            const willMeta = [];
-            const didMeta = [];
-            const completeMeta = [];
-            let childDispatchMeta = null;
-            context.events.onWillExecuteEachUseCase((payload, meta) => willMeta.push(meta));
-            context.events.onDidExecuteEachUseCase((payload, meta) => didMeta.push(meta));
-            context.events.onCompleteEachUseCase((payload, meta) => completeMeta.push(meta));
-            context.events.onDispatch((payload, meta) => (childDispatchMeta = meta));
+            const willMeta: DispatcherPayloadMeta[] = [];
+            const didMeta: DispatcherPayloadMeta[] = [];
+            const completeMeta: DispatcherPayloadMeta[] = [];
+            let childDispatchMeta: DispatcherPayloadMeta;
+            context.events.onWillExecuteEachUseCase((_payload, meta) => willMeta.push(meta));
+            context.events.onDidExecuteEachUseCase((_payload, meta) => didMeta.push(meta));
+            context.events.onCompleteEachUseCase((_payload, meta) => completeMeta.push(meta));
+            context.events.onDispatch((_payload, meta) => (childDispatchMeta = meta));
             return context
                 .useCase(parentUseCase)
                 .execute()
@@ -240,6 +240,7 @@ describe("DispatcherPayloadMeta", () => {
                     }
                     finishedCallback();
                 }
+                return;
             });
             return context
                 .useCase(useCase)
