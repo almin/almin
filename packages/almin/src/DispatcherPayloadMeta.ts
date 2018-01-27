@@ -21,7 +21,7 @@ export interface Transaction {
  */
 export interface DispatcherPayloadMetaArgs {
     useCase?: UseCaseLike;
-    dispatcher?: Dispatcher | Dispatcher;
+    dispatcher?: Dispatcher;
     isUseCaseFinished?: boolean;
     parentUseCase?: UseCase | null;
     isTrusted: boolean;
