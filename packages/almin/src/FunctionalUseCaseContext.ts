@@ -1,6 +1,6 @@
 // LICENSE : MIT
 "use strict";
-import { Payload } from "./payload/Payload";
+import { DispatchedPayload } from "./Dispatcher";
 
 /**
  * ```js
@@ -24,7 +24,7 @@ export const isUseCaseFunction = (v: any): v is UseCaseFunction => {
  * Send only dispatcher
  */
 export interface DispatcherSender {
-    dispatch(payload: Payload): void;
+    dispatch(payload: DispatchedPayload): void;
 }
 
 /**

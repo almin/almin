@@ -1,19 +1,15 @@
 // LICENSE : MIT
 "use strict";
-const sinon = require("sinon");
+import { UseCaseFunction } from "../src/FunctionalUseCaseContext";
 import * as assert from "assert";
-import { Context } from "../src/Context";
-import { Dispatcher } from "../src/Dispatcher";
-import { CompletedPayload } from "../src/payload/CompletedPayload";
-import { DidExecutedPayload } from "../src/payload/DidExecutedPayload";
+import { CompletedPayload, Context, DidExecutedPayload, Dispatcher, Payload, Store, StoreGroup, UseCase } from "../src";
 import { InitializedPayload } from "../src/payload/InitializedPayload";
-import { Payload } from "../src/payload/Payload";
-import { Store } from "../src/Store";
-import { StoreGroup } from "../src/UILayer/StoreGroup";
-import { UseCase } from "../src/UseCase";
-import { createStore } from "./helper/create-new-store";
+import { createStore, MockStore } from "./helper/create-new-store";
+import { SinonStub } from "sinon";
 
-const createAsyncChangeStoreUseCase = store => {
+const sinon = require("sinon");
+
+const createAsyncChangeStoreUseCase = (store: MockStore) => {
     class ChangeTheStoreUseCase extends UseCase {
         execute() {
             return Promise.resolve().then(() => {
@@ -25,7 +21,7 @@ const createAsyncChangeStoreUseCase = store => {
 
     return new ChangeTheStoreUseCase();
 };
-const createChangeStoreUseCase = store => {
+const createChangeStoreUseCase = (store: MockStore) => {
     class ChangeTheStoreUseCase extends UseCase {
         execute() {
             const newState = { a: {} };
@@ -39,9 +35,11 @@ describe("StoreGroup", function() {
     describe("constructor(map)", () => {
         it("throw error when invalid arguments", () => {
             assert.throws(() => {
+                // @ts-ignore
                 new StoreGroup(null);
             });
             assert.throws(() => {
+                // @ts-ignore
                 new StoreGroup();
             });
             assert.throws(() => {
@@ -153,7 +151,7 @@ describe("StoreGroup", function() {
                     AStore: storeA,
                     BStore: storeB
                 });
-                let changedStores = [];
+                let changedStores: Store[] = [];
                 storeGroup.onChange(changingStores => {
                     changedStores = changingStores;
                 });
@@ -603,7 +601,7 @@ describe("StoreGroup", function() {
                     store: storeGroup
                 });
                 // then - called change handler a one-time
-                let actualChangedStores = [];
+                let actualChangedStores: Store[] = [];
                 storeGroup.onChange(changedStores => {
                     actualChangedStores = actualChangedStores.concat(changedStores);
                 });
@@ -619,14 +617,16 @@ describe("StoreGroup", function() {
         });
         describe("When StoreGroup calling Store#receivePayload", function() {
             it("should call count is necessary and sufficient for performance", function() {
-                class AStore extends Store {
+                class AStore extends Store<any> {
+                    public receivedPayloadList: any[];
+
                     constructor() {
                         super();
                         this.state = {};
                         this.receivedPayloadList = [];
                     }
 
-                    receivePayload(payload) {
+                    receivePayload(payload: any) {
                         this.receivedPayloadList.push(payload);
                         if (payload.type === "test") {
                             this.setState({ newKey: "update" });
@@ -647,17 +647,15 @@ describe("StoreGroup", function() {
                 });
 
                 class ExamplePayload extends Payload {
-                    constructor() {
-                        super({ type: "test" });
-                    }
+                    type = "test";
                 }
 
-                const useCaseSync = ({ dispatcher }) => {
+                const useCaseSync: UseCaseFunction = ({ dispatcher }) => {
                     return () => {
                         dispatcher.dispatch(new ExamplePayload());
                     };
                 };
-                const useCaseAsync = ({ dispatcher }) => {
+                const useCaseAsync: UseCaseFunction = ({ dispatcher }) => {
                     return () => {
                         dispatcher.dispatch(new ExamplePayload());
                         return Promise.resolve();
@@ -703,7 +701,7 @@ describe("StoreGroup", function() {
             it("arguments includes the store", function() {
                 const aStore = createStore({ name: "AStore" });
                 const storeGroup = new StoreGroup({ a: aStore });
-                let actualStores = [];
+                let actualStores: Store[] = [];
                 storeGroup.onChange(stores => {
                     actualStores = actualStores.concat(stores);
                 });
@@ -737,7 +735,7 @@ describe("StoreGroup", function() {
                         this.state = { key: "initial" };
                     }
 
-                    receivePayload(payload) {
+                    receivePayload(payload: any) {
                         if (payload instanceof InitializedPayload) {
                             return;
                         }
@@ -751,7 +749,7 @@ describe("StoreGroup", function() {
 
                 const aStore = new AStore();
                 const storeGroup = new StoreGroup({ a: aStore });
-                let actualStores = [];
+                let actualStores: Store[] = [];
                 storeGroup.onChange(stores => {
                     actualStores = actualStores.concat(stores);
                 });
@@ -834,7 +832,7 @@ describe("StoreGroup", function() {
         });
     });
     describe("Warning", () => {
-        let consoleErrorStub = null;
+        let consoleErrorStub: SinonStub;
         beforeEach(() => {
             consoleErrorStub = sinon.stub(console, "error");
         });
@@ -946,7 +944,7 @@ Something wrong implementation of calling Store#emitChange at multiple`
                 store: storeGroup
             });
             // When the store is not changed, but call emitChange
-            const useCase = ({ dispatcher }) => {
+            const useCase: UseCaseFunction = () => {
                 return () => {
                     // reference is change but shall-equal return false
                     store.state = {
@@ -972,7 +970,7 @@ Something wrong implementation of calling Store#emitChange at multiple`
                     }
 
                     // Good: Update this store inside of receivePayload
-                    receivePayload(payload) {
+                    receivePayload(payload: any) {
                         if (payload.type === "UPDATE_A") {
                             this.setState(payload.body);
                         }
@@ -994,7 +992,7 @@ Something wrong implementation of calling Store#emitChange at multiple`
                         strict: true
                     }
                 });
-                const updateAStoreUseCase = ({ dispatcher }) => {
+                const updateAStoreUseCase: UseCaseFunction = ({ dispatcher }) => {
                     return () => {
                         dispatcher.dispatch({
                             type: "UPDATE_A",
@@ -1034,7 +1032,7 @@ Something wrong implementation of calling Store#emitChange at multiple`
                         strict: true
                     }
                 });
-                const updateAStoreUseCase = ({ dispatcher }) => {
+                const updateAStoreUseCase: UseCaseFunction = () => {
                     return () => {
                         // Bad: update state outside of receivePayload
                         store.setState({
@@ -1074,7 +1072,7 @@ Something wrong implementation of calling Store#emitChange at multiple`
                     store: storeGroup
                 });
                 // When the store is not changed, but call emitChange
-                const useCase = ({ dispatcher }) => {
+                const useCase: UseCaseFunction = () => {
                     return () => {
                         // emitChange style
                         store.setState({
@@ -1113,11 +1111,13 @@ Something wrong implementation of calling Store#emitChange at multiple`
     describe("#receivePayload", () => {
         it("UseCase dispatch payload -> Store should receive it", () => {
             class AState {
-                constructor(count) {
+                private count: number;
+
+                constructor(count: number) {
                     this.count = count;
                 }
 
-                reduce(payload) {
+                reduce(payload: any) {
                     switch (payload.type) {
                         case "increment":
                             return new AState(this.count + 1);
@@ -1139,7 +1139,7 @@ Something wrong implementation of calling Store#emitChange at multiple`
                  * update state
                  * @param {Payload} payload
                  */
-                receivePayload(payload) {
+                receivePayload(payload: any) {
                     this.state = this.state.reduce(payload);
                 }
 
