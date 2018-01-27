@@ -1,13 +1,25 @@
 // MIT © 2017 azu
 "use strict";
 import * as assert from "assert";
-import { CompletedPayload, Context, DidExecutedPayload, Dispatcher, Payload, Store, StoreGroup } from "../src/index";
+import {
+    CompletedPayload,
+    Context,
+    DidExecutedPayload,
+    DispatchedPayload,
+    Dispatcher,
+    Payload,
+    Store,
+    StoreGroup
+} from "../src";
 import { InitializedPayload } from "../src/payload/InitializedPayload";
+import { UseCaseFunction } from "../src/FunctionalUseCaseContext";
 
 describe("UseCaseUnitOfWork", function() {
     describe("Integration with Store#onDispatch", () => {
         it("should not dispatch unnecessary payload to each store", function() {
-            class TestStore extends Store {
+            class TestStore extends Store<{ receive: any[]; onDispatchedPayload: DispatchedPayload[] }> {
+                state: { receive: any[]; onDispatchedPayload: DispatchedPayload[] };
+
                 constructor() {
                     super();
                     this.state = {
@@ -19,7 +31,7 @@ describe("UseCaseUnitOfWork", function() {
                     });
                 }
 
-                receivePayload(payload) {
+                receivePayload(payload: any) {
                     this.state.receive = this.state.receive.concat(payload);
                 }
 
@@ -36,13 +48,11 @@ describe("UseCaseUnitOfWork", function() {
                 store: storeGroup
             });
 
-            class MyPayload extends Payload {
-                constructor() {
-                    super({ type: "MyPayload" });
-                }
+            class MyPayload implements Payload {
+                type = "MyPayload";
             }
 
-            const useCase = ({ dispatcher }) => {
+            const useCase: UseCaseFunction = ({ dispatcher }) => {
                 return () => {
                     dispatcher.dispatch(new MyPayload());
                 };
@@ -88,7 +98,7 @@ describe("UseCaseUnitOfWork", function() {
                     });
                 }
 
-                receivePayload(payload) {
+                receivePayload(payload: any) {
                     this.state.receive = this.state.receive.concat(payload);
                 }
 
@@ -105,7 +115,7 @@ describe("UseCaseUnitOfWork", function() {
                 dispatcher: new Dispatcher(),
                 store: storeGroup
             });
-            const useCase = ({ dispatcher }) => {
+            const useCase: UseCaseFunction = ({ dispatcher }) => {
                 return () => {
                     dispatcher.dispatch({
                         type: "dispatch"
