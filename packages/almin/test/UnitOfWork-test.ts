@@ -2,23 +2,29 @@
 "use strict";
 import * as assert from "assert";
 import { DispatcherPayloadMetaImpl } from "../src/DispatcherPayloadMeta";
-import { Payload } from "../src/index";
-import { UnitOfWork } from "../src/UnitOfWork/UnitOfWork";
+import { Commitment, UnitOfWork } from "../src/UnitOfWork/UnitOfWork";
 
 const createMockStoreGroup = () => {
-    const commitments = [];
+    const commitments: Commitment[] = [];
     return {
         commitments,
         mockStoreGroup: {
-            commit(payload) {
-                commitments.push(payload);
+            commit(commitment: Commitment) {
+                commitments.push(commitment);
             }
         }
     };
 };
 let commitmentId = 0;
-const createCommitment = () => {
-    return [new Payload({ type: `Example ${commitmentId++}` }), new DispatcherPayloadMetaImpl({})];
+const createCommitment = (): Commitment => {
+    const commitId = commitmentId++;
+    return {
+        payload: { type: `Example ${commitId}` },
+        meta: new DispatcherPayloadMetaImpl({
+            isTrusted: true
+        }),
+        debugId: String(commitmentId)
+    };
 };
 describe("UnitOfWork", () => {
     describe("id", () => {

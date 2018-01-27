@@ -1,9 +1,9 @@
 // MIT © 2017 azu
 import { EventEmitter } from "events";
-import { Payload } from "../payload/Payload";
 import { DispatcherPayloadMeta } from "../DispatcherPayloadMeta";
 import { generateNewId } from "./UnitOfWorkIdGenerator";
 import { DebugId } from "../instrument/AlminAbstractPerfMarker";
+import { DispatchedPayload } from "../Dispatcher";
 /**
  * Commitment is a tuple of payload and meta.
  * It is a minimal unit of transaction.
@@ -16,7 +16,7 @@ import { DebugId } from "../instrument/AlminAbstractPerfMarker";
  * It is similar reason to why use Dispatcher insteadof EventEmitter.
  */
 export type Commitment = {
-    payload: Payload;
+    payload: DispatchedPayload;
     meta: DispatcherPayloadMeta;
     debugId: DebugId;
 };
