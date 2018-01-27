@@ -466,18 +466,13 @@ But, ${store.name}#getState() was called.`
     /**
      * Observe changes of the store group.
      *
-     * `details` is the reason of changing stores.
-     * If `details` it not found, the reason by system.
-     *
-     * For example, the user can change store using `Store#emitChange` manually.
+     * For example, the user can change store using `Store#setState` manually.
      * In this case, the `details` is defined and report.
      *
-     * Contrast, almin try to update store in a lifecycle.
+     * Contrast, almin try to update store in a lifecycle(didUseCase, completeUseCase etc...).
      * In this case, the `details` is not defined and report.
      *
-     * TODO(azu): we should always define `details`
-     *
-     * onChange workflow: https://code2flow.com/mHFviS
+     * StoreGroup#onChange workflow: https://code2flow.com/mHFviS
      */
     onChange(handler: (stores: Array<Store<T>>, details?: StoreGroupReasonForChange) => void): () => void {
         this.on(CHANGE_STORE_GROUP, handler);

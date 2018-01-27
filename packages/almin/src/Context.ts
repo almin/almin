@@ -158,6 +158,7 @@ export class Context<T> {
         if (this.config.strict) {
             this.storeGroup.useStrict();
         }
+        // If some stores are changed, emit StoreChangedPayload
         // Store -> StoreGroup -> LifeCycleEventHub
         const storeGroupOnChangeToStoreChangedPayload = (
             stores: Array<StoreLike<any>>,
@@ -165,18 +166,21 @@ export class Context<T> {
         ) => {
             stores.forEach(store => {
                 const payload = new StoreChangedPayload(store);
-                // FIXME: store#emitChange -> isTruest:false event
                 // Should not included in StoreChanged Event
-                const meta = details
-                    ? details.meta
-                    : new DispatcherPayloadMetaImpl({
-                          useCase: undefined,
-                          dispatcher: this.dispatcher,
-                          parentUseCase: null,
-                          isTrusted: true,
-                          isUseCaseFinished: false,
-                          transaction: undefined
-                      });
+                // inherit some context from the reason of change details
+                const transaction = details && details.meta && details.meta.transaction;
+                const isUseCaseFinished = details && details.meta && details.meta.isUseCaseFinished;
+                const meta = new DispatcherPayloadMetaImpl({
+                    useCase: undefined,
+                    dispatcher: this.dispatcher,
+                    parentUseCase: null,
+                    // StoreChangedPayload is always trusted.
+                    // Because, StoreChangedPayload is created by almin, not user.
+                    // Related issue: https://github.com/almin/almin/issues/328
+                    isTrusted: true,
+                    isUseCaseFinished: isUseCaseFinished,
+                    transaction: transaction
+                });
                 this.dispatcher.dispatch(payload, meta);
             });
         };
