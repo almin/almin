@@ -174,7 +174,10 @@ export class Context<T> {
                     useCase: undefined,
                     dispatcher: this.dispatcher,
                     parentUseCase: null,
-                    isTrusted: true, // <= StoreChangedPayload is always trusted
+                    // StoreChangedPayload is always trusted.
+                    // Because, StoreChangedPayload is created by almin, not user.
+                    // Related issue: https://github.com/almin/almin/issues/328
+                    isTrusted: true,
                     isUseCaseFinished: isUseCaseFinished,
                     transaction: transaction
                 });
