@@ -16,12 +16,14 @@ export interface MockStore {
 /**
  * This helper is for creating Store
  */
-export function createStore({ name, state }: { name: string; state?: any }) {
-    class MockStore extends Store implements MockStore {
+export function createStore<T>({ name, state }: { name: string; state?: T }) {
+    class MockStore extends Store<T | undefined> implements MockStore {
+        state: T | undefined;
+
         constructor() {
             super();
             this.name = name;
-            this.state = state || "value";
+            this.state = state;
         }
 
         /**

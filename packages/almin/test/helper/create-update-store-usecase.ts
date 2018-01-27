@@ -1,8 +1,7 @@
 // MIT © 2017 azu
 "use strict";
-import { UseCase, Store } from "../../src/index";
+import { Payload, Store, UseCase } from "../../src";
 import { shallowEqual } from "shallow-equal-object";
-import { Payload } from "../../src/payload/Payload";
 
 export function createUpdatableStoreWithUseCase(name: string) {
     let sharedState = {};
@@ -15,6 +14,12 @@ export function createUpdatableStoreWithUseCase(name: string) {
     const requestUpdateState = (newState: any) => {
         sharedState = newState;
     };
+
+    class StoreUpdatePayload implements Payload {
+        type = "StoreUpdatePayload";
+
+        constructor(public state: any) {}
+    }
 
     /**
      * This UseCase can update Store via Store#receivePayload
@@ -32,6 +37,10 @@ export function createUpdatableStoreWithUseCase(name: string) {
         requestUpdateState(newState: any) {
             requestUpdateState(newState);
         }
+
+        dispatchUpdateState(newState: any) {
+            this.dispatch(new StoreUpdatePayload(newState));
+        }
     }
 
     class MockStore extends Store {
@@ -41,8 +50,10 @@ export function createUpdatableStoreWithUseCase(name: string) {
             this.state = {};
         }
 
-        receivePayload(_payload: Payload) {
-            if (!shallowEqual(this.state, sharedState)) {
+        receivePayload(payload: Payload) {
+            if (payload instanceof StoreUpdatePayload) {
+                this.setState(payload.state);
+            } else if (!shallowEqual(this.state, sharedState)) {
                 this.setState(sharedState);
             }
         }
