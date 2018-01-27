@@ -165,6 +165,8 @@ export class Context<T> {
         ) => {
             stores.forEach(store => {
                 const payload = new StoreChangedPayload(store);
+                // FIXME: store#emitChange -> isTruest:false event
+                // Should not included in StoreChanged Event
                 const meta = details
                     ? details.meta
                     : new DispatcherPayloadMetaImpl({
