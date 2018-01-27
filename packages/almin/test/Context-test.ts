@@ -1,19 +1,26 @@
 // LICENSE : MIT
 "use strict";
 import * as assert from "assert";
-import { Context } from "../src/Context";
-import { Dispatcher } from "../src/Dispatcher";
-import { CompletedPayload, DidExecutedPayload, WillExecutedPayload } from "../src/index";
-import { Store } from "../src/Store";
-import { StoreGroup } from "../src/UILayer/StoreGroup";
-import { UseCase } from "../src/UseCase";
+import {
+    CompletedPayload,
+    Context,
+    DidExecutedPayload,
+    DispatchedPayload,
+    Dispatcher,
+    DispatcherPayloadMeta,
+    Store,
+    StoreGroup,
+    UseCase,
+    WillExecutedPayload
+} from "../src";
 import { UseCaseExecutorImpl } from "../src/UseCaseExecutor";
 import { createStore } from "./helper/create-new-store";
 import { createEchoStore } from "./helper/EchoStore";
 import { DispatchUseCase } from "./use-case/DispatchUseCase";
 import { ParentUseCase } from "./use-case/NestingUseCase";
 import { NotExecuteUseCase } from "./use-case/NotExecuteUseCase";
-import { SyncNoDispatchUseCase } from "./use-case/SyncNoDispatchUseCase";
+import { SinonStub } from "sinon";
+import { UseCaseFunction } from "../src/FunctionalUseCaseContext";
 
 const sinon = require("sinon");
 
@@ -35,7 +42,7 @@ class ThrowUseCase extends UseCase {
 
 describe("Context", function() {
     context("Deprecated API", () => {
-        let consoleErrorStub = null;
+        let consoleErrorStub: SinonStub;
         beforeEach(() => {
             consoleErrorStub = sinon.stub(console, "warn");
         });
@@ -70,7 +77,7 @@ describe("Context", function() {
                 }
             }
 
-            const dispatchedPayload = [];
+            const dispatchedPayload: [DispatchedPayload, DispatcherPayloadMeta][] = [];
 
             class ReceiveStore extends Store {
                 constructor() {
@@ -194,7 +201,7 @@ describe("Context", function() {
             const testUseCase = new TestUseCase();
             // then
             let isOnWillNotExecuteEachUseCaseCalled = false;
-            appContext.events.onWillNotExecuteEachUseCase((payload, meta) => {
+            appContext.events.onWillNotExecuteEachUseCase(() => {
                 isOnWillNotExecuteEachUseCaseCalled = true;
             });
             // when
@@ -233,7 +240,7 @@ describe("Context", function() {
             const testUseCase = new TestUseCase();
             const expectedArguments = "param";
             // then
-            appContext.events.onWillExecuteEachUseCase((payload, meta) => {
+            appContext.events.onWillExecuteEachUseCase((payload, _meta) => {
                 assert.ok(payload.args.length === 1);
                 const [arg] = payload.args;
                 assert.ok(arg === expectedArguments);
@@ -261,7 +268,7 @@ describe("Context", function() {
             }
 
             const eventUseCase = new EventUseCase();
-            const isCalled = {
+            const isCalled: { [index: string]: boolean } = {
                 will: false,
                 dispatch: false,
                 did: false,
@@ -276,7 +283,7 @@ describe("Context", function() {
                 assert.equal(meta.parentUseCase, null);
             });
             // onDispatch should not called when UseCase will/did execute.
-            appContext.events.onDispatch((payload, meta) => {
+            appContext.events.onDispatch((payload, _meta) => {
                 isCalled.dispatch = true;
                 assert.ok(typeof payload === "object");
                 assert.equal(payload, expectedPayload);
@@ -315,7 +322,7 @@ describe("Context", function() {
             });
             const testUseCase = new TestUseCase();
             // then
-            appContext.events.onDidExecuteEachUseCase((payload, meta) => {
+            appContext.events.onDidExecuteEachUseCase((_payload, meta) => {
                 assert.equal(meta.useCase, testUseCase);
                 done();
             });
@@ -333,7 +340,7 @@ describe("Context", function() {
             const testUseCase = new TestUseCase();
             // then
             let isCalled = false;
-            appContext.events.onCompleteEachUseCase((payload, meta) => {
+            appContext.events.onCompleteEachUseCase(() => {
                 isCalled = true;
             });
             // when
@@ -387,6 +394,7 @@ describe("Context", function() {
                     store: createEchoStore({ echo: { "1": 1 } })
                 });
                 assert.throws(() => {
+                    // @ts-ignore
                     appContext.useCase(TestUseCase);
                 });
             });
@@ -465,11 +473,11 @@ describe("Context", function() {
             dispatcher,
             store: createEchoStore({ echo: { "1": 1 } })
         });
-        const callStack = [];
-        appContext.events.onDispatch((payload, meta) => {
+        const callStack: DispatchedPayload[] = [];
+        appContext.events.onDispatch((payload, _meta) => {
             callStack.push(payload);
         });
-        const useCase = ({ dispatcher }) => {
+        const useCase: UseCaseFunction = ({ dispatcher }) => {
             return value => {
                 dispatcher.dispatch({
                     type: "Example",
@@ -495,20 +503,20 @@ describe("Context", function() {
             dispatcher,
             store: createEchoStore({ echo: { "1": 1 } })
         });
-        const callStack = [];
-        appContext.events.onDispatch((payload, meta) => {
+        const callStack: DispatchedPayload[] = [];
+        appContext.events.onDispatch((payload, _meta) => {
             callStack.push(payload);
         });
-        appContext.events.onWillExecuteEachUseCase((payload, meta) => {
+        appContext.events.onWillExecuteEachUseCase((payload, _meta) => {
             callStack.push(payload);
         });
-        appContext.events.onDidExecuteEachUseCase((payload, meta) => {
+        appContext.events.onDidExecuteEachUseCase((payload, _meta) => {
             callStack.push(payload);
         });
-        appContext.events.onCompleteEachUseCase((payload, meta) => {
+        appContext.events.onCompleteEachUseCase((payload, _meta) => {
             callStack.push(payload);
         });
-        const useCase = ({ dispatcher }) => {
+        const useCase: UseCaseFunction = ({ dispatcher }) => {
             return value => {
                 dispatcher.dispatch({
                     type: "Example",
@@ -530,7 +538,7 @@ describe("Context", function() {
                     CompletedPayload
                 ];
                 assert.equal(callStack.length, expectedCallStackOfAUseCase.length);
-                expectedCallStackOfAUseCase.forEach((payload, index) => {
+                expectedCallStackOfAUseCase.forEach((_payload, index) => {
                     const ExpectedPayloadConstructor = expectedCallStackOfAUseCase[index];
                     assert.ok(callStack[index] instanceof ExpectedPayloadConstructor);
                 });
@@ -540,12 +548,14 @@ describe("Context", function() {
     describe("Constructor with Store instance", () => {
         it("should Context delegate payload to Store#receivePayload", () => {
             class CounterStore extends Store {
+                public receivePayloadList: any[];
+
                 constructor() {
                     super();
                     this.receivePayloadList = [];
                 }
 
-                receivePayload(payload) {
+                receivePayload(payload: any) {
                     this.receivePayloadList.push(payload);
                 }
 

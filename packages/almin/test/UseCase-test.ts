@@ -1,22 +1,26 @@
 // LICENSE : MIT
 "use strict";
-const assert = require("assert");
-const sinon = require("sinon");
-import { Context } from "../src/Context";
-import { Dispatcher } from "../src/Dispatcher";
+import { SinonStub } from "sinon";
+import { Context, DispatchedPayload, Dispatcher, ErrorPayload, UseCase } from "../src";
 import { TYPE as CompletedPayloadType } from "../src/payload/CompletedPayload";
 import { TYPE as DidExecutedPayloadType } from "../src/payload/DidExecutedPayload";
 import { TYPE as WillExecutedPayloadType } from "../src/payload/WillExecutedPayload";
-import { UseCase } from "../src/UseCase";
 import { UseCaseContext } from "../src/UseCaseContext";
 import { createStore } from "./helper/create-new-store";
+
+const assert = require("assert");
+const sinon = require("sinon");
 
 describe("UseCase", function() {
     describe("id", () => {
         it("should have unique id in instance", () => {
-            const aUseCase = new UseCase();
+            class ExampleUseCase extends UseCase {
+                execute(..._: Array<any>): any {}
+            }
+
+            const aUseCase = new ExampleUseCase();
             assert(typeof aUseCase.id === "string");
-            const bUseCase = new UseCase();
+            const bUseCase = new ExampleUseCase();
             assert(typeof bUseCase.id === "string");
             assert(aUseCase.id !== bUseCase.id);
         });
@@ -33,7 +37,9 @@ describe("UseCase", function() {
         });
         describe("when define displayName", () => {
             it("#name is same with displayName", () => {
-                class MyUseCase extends UseCase {}
+                class MyUseCase extends UseCase {
+                    execute(..._: Array<any>): any {}
+                }
 
                 const expectedName = "Expected UseCase";
                 MyUseCase.displayName = expectedName;
@@ -52,8 +58,11 @@ describe("UseCase", function() {
 
             const testUseCase = new TestUseCase();
             // then
-            testUseCase.onDispatch(({ type, error }) => {
-                assert(error instanceof Error);
+            testUseCase.onDispatch(payload => {
+                assert.ok(payload instanceof ErrorPayload, "should be instance of ErrorPayload");
+                if (payload instanceof ErrorPayload) {
+                    assert(payload.error instanceof Error);
+                }
                 done();
             });
             // when
@@ -80,7 +89,7 @@ describe("UseCase", function() {
             const aUseCase = new AUseCase();
             // for reference fn.name
             const bUseCase = new BUseCase();
-            const callStack = [];
+            const callStack: string[] = [];
             const expectedCallStackOfAUseCase = [WillExecutedPayloadType, DidExecutedPayloadType, CompletedPayloadType];
             const expectedCallStack = [
                 `${aUseCase.name}:will`,
@@ -99,11 +108,11 @@ describe("UseCase", function() {
                 const expectedType = expectedCallStackOfAUseCase.shift();
                 assert.equal(type, expectedType);
             });
-            context.events.onWillExecuteEachUseCase((payload, meta) => {
-                callStack.push(`${meta.useCase.name}:will`);
+            context.events.onWillExecuteEachUseCase((_payload, meta) => {
+                callStack.push(`${meta.useCase && meta.useCase.name}:will`);
             });
-            context.events.onDidExecuteEachUseCase((payload, meta) => {
-                callStack.push(`${meta.useCase.name}:did`);
+            context.events.onDidExecuteEachUseCase((_payload, meta) => {
+                callStack.push(`${meta.useCase && meta.useCase.name}:did`);
             });
             // when
             return context
@@ -134,14 +143,15 @@ describe("UseCase", function() {
     });
     describe("when not implemented execute()", function() {
         it("should assert error on constructor", function() {
-            class TestUseCase extends UseCase {}
+            // @ts-ignore
+            class WrongImplementUseCase extends UseCase {}
 
             try {
-                const useCase = new TestUseCase();
+                const useCase = new WrongImplementUseCase();
                 useCase.execute();
                 throw new Error("unreachable");
             } catch (error) {
-                assert(error.name === "TypeError");
+                assert.equal(error.name, "TypeError");
             }
         });
     });
@@ -179,7 +189,7 @@ describe("UseCase", function() {
                     dispatcher,
                     store: createStore({ name: "test" })
                 });
-                const dispatchedPayloads = [];
+                const dispatchedPayloads: DispatchedPayload[] = [];
                 dispatcher.onDispatch(payload => {
                     dispatchedPayloads.push(payload);
                 });
@@ -205,7 +215,7 @@ describe("UseCase", function() {
 
          */
         describe("when child is completed after parent did completed", function() {
-            let consoleErrorStub = null;
+            let consoleErrorStub: SinonStub;
             beforeEach(() => {
                 consoleErrorStub = sinon.stub(console, "error");
             });
@@ -216,7 +226,7 @@ describe("UseCase", function() {
                 const childPayload = {
                     type: "ChildUseCase"
                 };
-                const dispatchedPayloads = [];
+                const dispatchedPayloads: DispatchedPayload[] = [];
                 const finishCallBack = () => {
                     // childPayload should not be delegated to dispatcher(root)
                     assert(dispatchedPayloads.indexOf(childPayload) === -1);

@@ -2,9 +2,7 @@
 import { AlminPerfMarker } from "../src/instrument/AlminPerfMarker";
 import * as assert from "assert";
 import { createUpdatableStoreWithUseCase } from "./helper/create-update-store-usecase";
-import { StoreGroup } from "../src/UILayer/StoreGroup";
-import { Dispatcher } from "../src/Dispatcher";
-import { Context } from "../src/Context";
+import { Context, Dispatcher, StoreGroup } from "../src";
 import AlminInstruments from "../src/instrument/AlminInstruments";
 
 describe("AlminPerfMarker", () => {

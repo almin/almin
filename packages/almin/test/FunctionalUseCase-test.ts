@@ -1,14 +1,14 @@
 // LICENSE : MIT
 "use strict";
-const assert = require("assert");
-const sinon = require("sinon");
-import { Context } from "../src/Context";
-import { Dispatcher } from "../src/Dispatcher";
-import { UseCase } from "../src/UseCase";
+import * as assert from "assert";
+import { Context, Dispatcher, UseCase } from "../src";
 import { createEchoStore } from "./helper/EchoStore";
+import { SinonStub } from "sinon";
+
+const sinon = require("sinon");
 
 describe("FunctionalUseCase", function() {
-    let consoleErrorStub = null;
+    let consoleErrorStub: SinonStub;
     beforeEach(() => {
         consoleErrorStub = sinon.stub(console, "error");
     });
@@ -28,12 +28,14 @@ describe("FunctionalUseCase", function() {
 
                 execute() {}
             }
+
             const dispatcher = new Dispatcher();
             const context = new Context({
                 dispatcher,
-                store: createEchoStore({ echo: { a: "a" } })
+                store: createEchoStore({ name: "test", echo: { a: "a" } })
             });
             assert.throws(() => {
+                // @ts-ignore
                 context.useCase(WriteToTextlintrcUseCase.create).execute();
                 //                                            ~~
                 //                                         missing call ()
