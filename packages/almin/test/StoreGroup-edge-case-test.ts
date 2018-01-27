@@ -1,7 +1,6 @@
 // LICENSE : MIT
 "use strict";
 const assert = require("assert");
-const sinon = require("sinon");
 import { Context, Dispatcher, Store, StoreGroup, UseCase } from "../src/";
 import { createUpdatableStoreWithUseCase } from "./helper/create-update-store-usecase";
 import { AsyncUseCase } from "./use-case/AsyncUseCase";
@@ -108,7 +107,7 @@ describe("StoreGroup edge case", function() {
                 store: storeGroup
             });
 
-            const callStack = [];
+            const callStack: string[] = [];
             context.onChange(() => {
                 callStack.push("change");
             });
