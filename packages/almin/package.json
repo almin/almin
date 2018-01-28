@@ -37,7 +37,6 @@
     "test:js": "cross-env NODE_ENV=development mocha \"test/**/*.{js,ts}\"",
     "test:saucelabs": "npm run build:test && zuul -- out/test/*-test.js",
     "test:browser": "npm run build:test && zuul --local 8080 --ui mocha-bdd -- out/test/*-test.js",
-    "posttest": "npm run clean",
     "presize": "npm-run-all -s clean build",
     "size": "size-limit",
     "ci": "npm test && npm run size",
