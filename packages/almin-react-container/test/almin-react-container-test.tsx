@@ -5,7 +5,8 @@ import * as React from "react";
 import * as TestUtils from "react-dom/test-utils";
 
 const createTestStore = <T extends {}>(initialState: T) => {
-    class TestStore extends Store {
+    class TestStore extends Store<T> {
+        state: T;
         constructor() {
             super();
             this.state = initialState;

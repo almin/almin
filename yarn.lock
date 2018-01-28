@@ -5364,9 +5364,9 @@ markdown-table@^1.1.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/markdown-table/-/markdown-table-1.1.1.tgz#4b3dd3a133d1518b8ef0dbc709bf2a1b4824bc8c"
 
-"marked@github:gerhobbelt/marked#master":
+marked@GerHobbelt/marked#master:
   version "0.3.6-2"
-  resolved "https://codeload.github.com/gerhobbelt/marked/tar.gz/15e137e836033daf7b697ac987b50f27f61b3ada"
+  resolved "https://codeload.github.com/GerHobbelt/marked/tar.gz/15e137e836033daf7b697ac987b50f27f61b3ada"
 
 math-expression-evaluator@^1.2.14:
   version "1.2.17"
