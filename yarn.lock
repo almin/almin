@@ -37,17 +37,23 @@
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/@textlint/ast-node-types/-/ast-node-types-4.0.1.tgz#7a051bf87b33d592c370a9fa11f6b72a14833fdc"
 
+"@textlint/ast-traverse@^2.0.5":
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/@textlint/ast-traverse/-/ast-traverse-2.0.5.tgz#9a19202da705d4f8649367387129dd5a493c9f42"
+  dependencies:
+    "@textlint/ast-node-types" "^4.0.1"
+
 "@textlint/feature-flag@^3.0.4":
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/@textlint/feature-flag/-/feature-flag-3.0.4.tgz#4290a4bb53da28c1f5f1d5ce0f4ae6630ab939ea"
   dependencies:
     map-like "^2.0.0"
 
-"@textlint/fixer-formatter@^3.0.3":
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/@textlint/fixer-formatter/-/fixer-formatter-3.0.3.tgz#66bba19f131623d81e0286579035be83a7d8af96"
+"@textlint/fixer-formatter@^3.0.4":
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/@textlint/fixer-formatter/-/fixer-formatter-3.0.4.tgz#e6e74347b96c2a563be0b67ba008a7b43d5896c1"
   dependencies:
-    "@textlint/kernel" "^2.0.5"
+    "@textlint/kernel" "^2.0.6"
     chalk "^1.1.3"
     debug "^2.1.0"
     diff "^2.2.2"
@@ -57,11 +63,12 @@
     text-table "^0.2.0"
     try-resolve "^1.0.1"
 
-"@textlint/kernel@^2.0.5":
-  version "2.0.5"
-  resolved "https://registry.yarnpkg.com/@textlint/kernel/-/kernel-2.0.5.tgz#7ce8215a47e9753949ebd3132eabec65df81bcc5"
+"@textlint/kernel@^2.0.6":
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/@textlint/kernel/-/kernel-2.0.6.tgz#5d1630915261a038d15ef44b1da0b5275d481090"
   dependencies:
     "@textlint/ast-node-types" "^4.0.1"
+    "@textlint/ast-traverse" "^2.0.5"
     "@textlint/feature-flag" "^3.0.4"
     "@types/bluebird" "^3.5.18"
     bluebird "^3.5.1"
@@ -69,15 +76,14 @@
     deep-equal "^1.0.1"
     object-assign "^4.1.1"
     structured-source "^3.0.2"
-    txt-ast-traverse "^2.0.4"
 
-"@textlint/linter-formatter@^3.0.3":
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/@textlint/linter-formatter/-/linter-formatter-3.0.3.tgz#20d144ee5d469651db9e6da5a208828dc1337429"
+"@textlint/linter-formatter@^3.0.4":
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/@textlint/linter-formatter/-/linter-formatter-3.0.4.tgz#78937749c7e3d4fdac5812f1845c565d9dbb6a57"
   dependencies:
     "@azu/format-text" "^1.0.1"
     "@azu/style-format" "^1.0.0"
-    "@textlint/kernel" "^2.0.5"
+    "@textlint/kernel" "^2.0.6"
     chalk "^1.0.0"
     concat-stream "^1.5.1"
     js-yaml "^3.2.4"
@@ -91,9 +97,9 @@
     try-resolve "^1.0.1"
     xml-escape "^1.0.0"
 
-"@textlint/markdown-to-ast@^6.0.4":
-  version "6.0.4"
-  resolved "https://registry.yarnpkg.com/@textlint/markdown-to-ast/-/markdown-to-ast-6.0.4.tgz#e0a7da156e70e08ff39e82d4097733827d521c30"
+"@textlint/markdown-to-ast@^6.0.5":
+  version "6.0.5"
+  resolved "https://registry.yarnpkg.com/@textlint/markdown-to-ast/-/markdown-to-ast-6.0.5.tgz#6151ee8eb799d4dac1930c86ab255833cc94d2f0"
   dependencies:
     "@textlint/ast-node-types" "^4.0.1"
     debug "^2.1.3"
@@ -101,23 +107,35 @@
     structured-source "^3.0.2"
     traverse "^0.6.6"
 
-"@textlint/text-to-ast@^3.0.4":
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/@textlint/text-to-ast/-/text-to-ast-3.0.4.tgz#6e2f3cf5fcc09ed0bcfecca70ca7523c7dc4631a"
+"@textlint/text-to-ast@^3.0.5":
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/@textlint/text-to-ast/-/text-to-ast-3.0.5.tgz#1bd198752059a93f9957381c9f663d3ea3132bd4"
   dependencies:
     "@textlint/ast-node-types" "^4.0.1"
 
+"@textlint/textlint-plugin-markdown@^4.0.7":
+  version "4.0.7"
+  resolved "https://registry.yarnpkg.com/@textlint/textlint-plugin-markdown/-/textlint-plugin-markdown-4.0.7.tgz#d1608e62767abf1b394001a057b3a3791bef0f87"
+  dependencies:
+    "@textlint/markdown-to-ast" "^6.0.5"
+
+"@textlint/textlint-plugin-text@^3.0.7":
+  version "3.0.7"
+  resolved "https://registry.yarnpkg.com/@textlint/textlint-plugin-text/-/textlint-plugin-text-3.0.7.tgz#4e50f1c1834f1b28bf646331c95f1fc34a101970"
+  dependencies:
+    "@textlint/text-to-ast" "^3.0.5"
+
 "@types/bluebird@^3.5.18":
-  version "3.5.19"
-  resolved "https://registry.yarnpkg.com/@types/bluebird/-/bluebird-3.5.19.tgz#1a47308819ac2d1d6d1ca4f5d800ac84924100de"
+  version "3.5.20"
+  resolved "https://registry.yarnpkg.com/@types/bluebird/-/bluebird-3.5.20.tgz#f6363172add6f4eabb8cada53ca9af2781e8d6a1"
 
 "@types/mocha@^2.2.41", "@types/mocha@^2.2.44":
-  version "2.2.46"
-  resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-2.2.46.tgz#b04713f7759d1cf752effdaae7b3969e285ebc16"
+  version "2.2.47"
+  resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-2.2.47.tgz#30bbd880834d4af0f609025f282a69b8d4458f06"
 
 "@types/node@*", "@types/node@^9.3.0":
-  version "9.3.0"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-9.3.0.tgz#3a129cda7c4e5df2409702626892cb4b96546dd5"
+  version "9.4.0"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-9.4.0.tgz#b85a0bcf1e1cc84eb4901b7e96966aedc6f078d1"
 
 "@types/react-dom@16.0.3":
   version "16.0.3"
@@ -126,9 +144,9 @@
     "@types/node" "*"
     "@types/react" "*"
 
-"@types/react@*", "@types/react@16.0.34":
-  version "16.0.34"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.0.34.tgz#7a8f795afd8a404a9c4af9539b24c75d3996914e"
+"@types/react@*", "@types/react@16.0.35":
+  version "16.0.35"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.0.35.tgz#7ce8a83cad9690fd965551fc513217a74fc9e079"
 
 "@types/sinon@^4.1.3":
   version "4.1.3"
@@ -1607,8 +1625,8 @@ caniuse-api@^1.5.2:
     lodash.uniq "^4.5.0"
 
 caniuse-db@^1.0.30000529, caniuse-db@^1.0.30000634, caniuse-db@^1.0.30000639:
-  version "1.0.30000793"
-  resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30000793.tgz#3c00c66e423a7a1907c7dd96769a78b2afa8a72e"
+  version "1.0.30000798"
+  resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30000798.tgz#92f26f77f89cc2a4d60487f41e0b3d2a6c3fe341"
 
 caniuse-lite@^1.0.30000792:
   version "1.0.30000792"
@@ -2718,7 +2736,11 @@ doctrine@^2.1.0:
   dependencies:
     esutils "^2.0.2"
 
-domain-browser@^1.1.1, domain-browser@~1.1.0:
+domain-browser@^1.1.1:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/domain-browser/-/domain-browser-1.2.0.tgz#3d31f50191a6749dd1375a7f522e823d42e54eda"
+
+domain-browser@~1.1.0:
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/domain-browser/-/domain-browser-1.1.7.tgz#867aa4b093faa05f1de08c06f4d7b21fdf8698bc"
 
@@ -3873,8 +3895,8 @@ global-dirs@^0.1.0:
     ini "^1.3.4"
 
 globals@^11.0.1:
-  version "11.1.0"
-  resolved "https://registry.yarnpkg.com/globals/-/globals-11.1.0.tgz#632644457f5f0e3ae711807183700ebf2e4633e4"
+  version "11.2.0"
+  resolved "https://registry.yarnpkg.com/globals/-/globals-11.2.0.tgz#aa2ece052a787563ba70a3dcd9dc2eb8a9a0488c"
 
 globals@^9.18.0:
   version "9.18.0"
@@ -4735,8 +4757,8 @@ jest-validate@^21.1.0:
     pretty-format "^21.2.1"
 
 js-base64@^2.1.9:
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-2.4.1.tgz#e02813181cd53002888e918935467acb2910e596"
+  version "2.4.3"
+  resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-2.4.3.tgz#2e545ec2b0f2957f41356510205214e98fad6582"
 
 js-tokens@^3.0.0, js-tokens@^3.0.2:
   version "3.0.2"
@@ -4761,8 +4783,8 @@ jsbn@~0.1.0:
   resolved "https://registry.yarnpkg.com/jsbn/-/jsbn-0.1.1.tgz#a5e654c2e5a2deb5f201d96cefbca80c0ef2f513"
 
 jsdom@^11.3.0:
-  version "11.6.0"
-  resolved "https://registry.yarnpkg.com/jsdom/-/jsdom-11.6.0.tgz#7334781595ee8bdeea9742fc33fab5cdad6d195f"
+  version "11.6.1"
+  resolved "https://registry.yarnpkg.com/jsdom/-/jsdom-11.6.1.tgz#43fffc10072597a8ee9680cba46900d9e4dbeba2"
   dependencies:
     abab "^1.0.4"
     acorn "^5.3.0"
@@ -4986,8 +5008,8 @@ limit-spawn@0.0.3:
   resolved "https://registry.yarnpkg.com/limit-spawn/-/limit-spawn-0.0.3.tgz#cc09c24467a0f0a1ed10a5196dba597cad3f65dc"
 
 lint-staged@^6.0.1:
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-6.0.1.tgz#855f2993ab4a265430e2fd9828427e648d65e6b4"
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-6.1.0.tgz#28f600c10a6cbd249ceb003118a1552e53544a93"
   dependencies:
     app-root-path "^2.0.0"
     chalk "^2.1.0"
@@ -5591,8 +5613,8 @@ minimist@~0.0.1:
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-0.0.10.tgz#de3f98543dbf96082be48ad1a0c7cda836301dcf"
 
 mississippi@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/mississippi/-/mississippi-1.3.0.tgz#d201583eb12327e3c5c1642a404a9cacf94e34f5"
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/mississippi/-/mississippi-1.3.1.tgz#2a8bb465e86550ac8b36a7b6f45599171d78671e"
   dependencies:
     concat-stream "^1.5.0"
     duplexify "^3.4.2"
@@ -6835,8 +6857,8 @@ pump@^1.0.0, pump@^1.0.1:
     once "^1.3.1"
 
 pump@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/pump/-/pump-2.0.0.tgz#7946da1c8d622b098e2ceb2d3476582470829c9d"
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/pump/-/pump-2.0.1.tgz#12399add6e4cf7526d973cbc8b5ce2e2908b3909"
   dependencies:
     end-of-stream "^1.1.0"
     once "^1.3.1"
@@ -7172,8 +7194,8 @@ regexpu-core@^2.0.0:
     regjsparser "^0.1.4"
 
 registry-auth-token@^3.0.1:
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/registry-auth-token/-/registry-auth-token-3.3.1.tgz#fb0d3289ee0d9ada2cbb52af5dfe66cb070d3006"
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/registry-auth-token/-/registry-auth-token-3.3.2.tgz#851fd49038eecb586911115af845260eec983f20"
   dependencies:
     rc "^1.1.6"
     safe-buffer "^5.0.1"
@@ -7195,13 +7217,12 @@ regjsparser@^0.1.4:
     jsesc "~0.5.0"
 
 remark-message-control@^4.0.0:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/remark-message-control/-/remark-message-control-4.0.2.tgz#103d277418ce747fc0143542596c82c853990d51"
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/remark-message-control/-/remark-message-control-4.1.0.tgz#60bc7700a87381404c956dc04e688518d3830cff"
   dependencies:
     mdast-comment-marker "^1.0.0"
-    trim "0.0.1"
-    unist-util-visit "^1.0.0"
-    vfile-location "^2.0.0"
+    unified-message-control "^1.0.0"
+    xtend "^4.0.1"
 
 remark-parse@^3.0.0:
   version "3.0.1"
@@ -7792,8 +7813,8 @@ source-map-support@^0.4.15:
     source-map "^0.5.6"
 
 source-map-support@^0.5.0:
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.2.tgz#1a6297fd5b2e762b39688c7fc91233b60984f0a5"
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.3.tgz#2b3d5fff298cfa4d1afd7d4352d569e9a0158e76"
   dependencies:
     source-map "^0.6.0"
 
@@ -8367,18 +8388,6 @@ textlint-filter-rule-comments@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/textlint-filter-rule-comments/-/textlint-filter-rule-comments-1.2.2.tgz#3a72c494994e068e0e4aaad0f24ea7cfe338503a"
 
-textlint-plugin-markdown@^4.0.6:
-  version "4.0.6"
-  resolved "https://registry.yarnpkg.com/textlint-plugin-markdown/-/textlint-plugin-markdown-4.0.6.tgz#80cde048a14761e26a98c339ce6faaee35a988e2"
-  dependencies:
-    "@textlint/markdown-to-ast" "^6.0.4"
-
-textlint-plugin-text@^3.0.6:
-  version "3.0.6"
-  resolved "https://registry.yarnpkg.com/textlint-plugin-text/-/textlint-plugin-text-3.0.6.tgz#05f4c1d3c6fb6b5322b91752ccbb9ed547688872"
-  dependencies:
-    "@textlint/text-to-ast" "^3.0.4"
-
 textlint-rule-alex@^1.0.1:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/textlint-rule-alex/-/textlint-rule-alex-1.2.0.tgz#b1a105971b2d9e69cc05c9ae42768f03b7202b5d"
@@ -8414,14 +8423,17 @@ textlint-rule-prh@^5.0.1:
     untildify "^3.0.2"
 
 textlint@^10.1.3:
-  version "10.1.3"
-  resolved "https://registry.yarnpkg.com/textlint/-/textlint-10.1.3.tgz#8be8776010b49024d332811182dadc995d78f892"
+  version "10.1.4"
+  resolved "https://registry.yarnpkg.com/textlint/-/textlint-10.1.4.tgz#980ad55b09328bd8a4c040a103a469c6297f0bc7"
   dependencies:
     "@textlint/ast-node-types" "^4.0.1"
+    "@textlint/ast-traverse" "^2.0.5"
     "@textlint/feature-flag" "^3.0.4"
-    "@textlint/fixer-formatter" "^3.0.3"
-    "@textlint/kernel" "^2.0.5"
-    "@textlint/linter-formatter" "^3.0.3"
+    "@textlint/fixer-formatter" "^3.0.4"
+    "@textlint/kernel" "^2.0.6"
+    "@textlint/linter-formatter" "^3.0.4"
+    "@textlint/textlint-plugin-markdown" "^4.0.7"
+    "@textlint/textlint-plugin-text" "^3.0.7"
     "@types/bluebird" "^3.5.18"
     bluebird "^3.0.5"
     debug "^2.1.0"
@@ -8442,10 +8454,7 @@ textlint@^10.1.3:
     read-pkg "^1.1.0"
     read-pkg-up "^3.0.0"
     structured-source "^3.0.2"
-    textlint-plugin-markdown "^4.0.6"
-    textlint-plugin-text "^3.0.6"
     try-resolve "^1.0.1"
-    txt-ast-traverse "^2.0.4"
     unique-concat "^0.2.2"
     utf-8-validate "^4.0.0"
 
@@ -8486,8 +8495,8 @@ timers-browserify@^1.0.1:
     process "~0.11.0"
 
 timers-browserify@^2.0.4:
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/timers-browserify/-/timers-browserify-2.0.4.tgz#96ca53f4b794a5e7c0e1bd7cc88a372298fa01e6"
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/timers-browserify/-/timers-browserify-2.0.6.tgz#241e76927d9ca05f4d959819022f5b3664b64bae"
   dependencies:
     setimmediate "^1.0.4"
 
@@ -8586,9 +8595,13 @@ tsconfig@^7.0.0:
     strip-bom "^3.0.0"
     strip-json-comments "^2.0.0"
 
-tty-browserify@0.0.0, tty-browserify@~0.0.0:
+tty-browserify@0.0.0:
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/tty-browserify/-/tty-browserify-0.0.0.tgz#a157ba402da24e9bf957f9aa69d524eed42901a6"
+
+tty-browserify@~0.0.0:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/tty-browserify/-/tty-browserify-0.0.1.tgz#3f05251ee17904dfd0677546670db9651682b811"
 
 tunnel-agent@^0.6.0:
   version "0.6.0"
@@ -8603,12 +8616,6 @@ tunnel-agent@~0.4.0:
 tweetnacl@^0.14.3, tweetnacl@~0.14.0:
   version "0.14.5"
   resolved "https://registry.yarnpkg.com/tweetnacl/-/tweetnacl-0.14.5.tgz#5ae68177f192d4456269d108afa93ff8743f4f64"
-
-txt-ast-traverse@^2.0.4:
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/txt-ast-traverse/-/txt-ast-traverse-2.0.4.tgz#1d6f7eae7faf93fcd1a498531c2d8bffc6b7105b"
-  dependencies:
-    "@textlint/ast-node-types" "^4.0.1"
 
 type-check@~0.3.2:
   version "0.3.2"
@@ -8644,8 +8651,8 @@ ua-parser-js@^0.7.9:
   resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.17.tgz#e9ec5f9498b9ec910e7ae3ac626a805c4d09ecac"
 
 uglify-es@^3.3.4:
-  version "3.3.8"
-  resolved "https://registry.yarnpkg.com/uglify-es/-/uglify-es-3.3.8.tgz#f2c68e6cff0d0f9dc9577e4da207151c2e753b7e"
+  version "3.3.9"
+  resolved "https://registry.yarnpkg.com/uglify-es/-/uglify-es-3.3.9.tgz#0c1c4f0700bed8dbc124cdb304d2592ca203e677"
   dependencies:
     commander "~2.13.0"
     source-map "~0.6.1"
@@ -8762,6 +8769,14 @@ unified-engine@^3.1.0:
     x-is-function "^1.0.4"
     x-is-string "^0.1.0"
     xtend "^4.0.1"
+
+unified-message-control@^1.0.0:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/unified-message-control/-/unified-message-control-1.0.3.tgz#fbe4372a933a95ad71820a9a0da155956d3d42d5"
+  dependencies:
+    trim "0.0.1"
+    unist-util-visit "^1.0.0"
+    vfile-location "^2.0.0"
 
 unified@^6.0.0, unified@^6.1.0:
   version "6.1.6"
@@ -9321,8 +9336,8 @@ yargs-parser@^8.1.0:
     camelcase "^4.1.0"
 
 yargs@^10.1.1:
-  version "10.1.1"
-  resolved "https://registry.yarnpkg.com/yargs/-/yargs-10.1.1.tgz#5fe1ea306985a099b33492001fa19a1e61efe285"
+  version "10.1.2"
+  resolved "https://registry.yarnpkg.com/yargs/-/yargs-10.1.2.tgz#454d074c2b16a51a43e2fb7807e4f9de69ccb5c5"
   dependencies:
     cliui "^4.0.0"
     decamelize "^1.1.1"
