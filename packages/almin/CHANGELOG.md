@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.15.3"></a>
+## [0.15.3](https://github.com/almin/almin/compare/almin@0.15.2...almin@0.15.3) (2018-02-05)
+
+
+### Bug Fixes
+
+* **almin:** fix CHANGELOG file ([8cd63a0](https://github.com/almin/almin/commit/8cd63a0))
+* **almin:** fix test scripts ([52b9125](https://github.com/almin/almin/commit/52b9125))
+* **almin:** fix trouble emit `StoreChangedPayload` ([6aaaec9](https://github.com/almin/almin/commit/6aaaec9)), closes [#328](https://github.com/almin/almin/issues/328) [#328](https://github.com/almin/almin/issues/328)
+
+
+
+
 <a name="0.15.2"></a>
 ## 0.15.2 (2018-01-22)
 
