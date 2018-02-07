@@ -7,8 +7,9 @@ This document note some need-to-know things for TypeScript User.
 
 ## Type Definition
 
-Almin has built-in `.d.ts` for typing.
-If you use TypeScript, you can use Almin's type definition by default.
+Almin has built-in Type definition file(`.d.ts`).
+If you use almin with TypeScript, you just install Almin.
+Type definition file(`.d.ts`) will be loaded automatically.
 
 ## Payload
 
@@ -46,6 +47,10 @@ export class ExampleStore extends Store {
 }
 ```
 
+### Further reading
+
+- [Tackling State – Angular](https://vsavkin.com/managing-state-in-angular-2-applications-caf78d123d02)
+- [Redux & Typescript typed Actions with less keystrokes](https://medium.com/@martin_hotell/redux-typescript-typed-actions-with-less-keystrokes-d984063901d)
 
 ## UseCase
 
