@@ -8,7 +8,8 @@ This document note some need-to-know things for TypeScript User.
 ## Type Definition
 
 Almin has built-in Type definition file(`.d.ts`).
-If you use almin with TypeScript, you just install Almin.
+
+If you want to use almin with TypeScript, you just install Almin.
 Type definition file(`.d.ts`) will be loaded automatically.
 
 ## Payload
