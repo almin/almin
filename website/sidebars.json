@@ -16,7 +16,8 @@
       "nesting-usecase",
       "performance-profile",
       "strict-mode",
-      "usecase-lifecycle"
+      "usecase-lifecycle",
+      "typescript"
     ],
     "Troubleshooting": [
       "warning-usecase-is-already-released"
