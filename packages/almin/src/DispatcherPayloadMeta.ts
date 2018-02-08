@@ -81,7 +81,7 @@ export interface DispatcherPayloadMeta {
      * If the payload object is dispatched in a transaction, to be transaction object
      * otherwise, to be undefined
      */
-    readonly transaction?: Transaction;
+    transaction?: Transaction;
 }
 
 /**
@@ -94,7 +94,7 @@ export class DispatcherPayloadMetaImpl implements DispatcherPayloadMeta {
     readonly timeStamp: number;
     readonly isTrusted: boolean;
     readonly isUseCaseFinished: boolean;
-    readonly transaction?: Transaction;
+    transaction?: Transaction;
 
     constructor(args: DispatcherPayloadMetaArgs) {
         this.useCase = args.useCase || null;
