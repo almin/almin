@@ -77,7 +77,13 @@ shouldStateUpdate(prevState, nextState) {
 
 Observe changes of the store group.
 
-onChange workflow: https://code2flow.com/mHFviS
+For example, the user can change store using `Store#setState` manually.
+In this case, the `details` is defined and report.
+
+Contrast, almin try to update store in a lifecycle(didUseCase, completeUseCase etc...).
+In this case, the `details` is not defined and report.
+
+StoreGroup#onChange workflow: https://code2flow.com/mHFviS
 
 ----
 
