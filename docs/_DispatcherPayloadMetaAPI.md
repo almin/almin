@@ -16,7 +16,6 @@ export interface Transaction {
 }
 export interface DispatcherPayloadMeta {
     readonly useCase: UseCaseLike | null;
-    readonly dispatcher: UseCase | Dispatcher | null;
     readonly parentUseCase: UseCase | Dispatcher | null;
     readonly timeStamp: number;
     readonly isTrusted: boolean;
@@ -52,7 +51,6 @@ dispatcher.onDispatch((payload, meta) => {
    console.log(meta); // instance of DispatcherPayloadMeta
    console.log(meta.useCase); // reference to UseCase
    console.log(meta.parentUseCase); // reference to Parent UseCase
-   console.log(meta.dispatcher); // reference to Dispatcher
    console.log(meta.timeStamp); // Timestamp
    console.log(meta.isTrusted); // Is it system payload?
 });
@@ -64,28 +62,6 @@ dispatcher.onDispatch((payload, meta) => {
 
 
 A reference to the useCase/dispatcher to which the payload was originally dispatched.
-
-----
-
-### `readonly dispatcher: UseCase | Dispatcher | null;`
-
-
-A dispatcher of the payload
-In other word, the payload is dispatched by `this.dispatcher`
-
-## Dispatcher in a useCase
-
-In following example, this.dispatcher is same with this.useCase.
-
-```js
-class Example extends UseCase {
-    execute(){
-       this.dispatch({ type })
-    // ^^^^
-    // === this dispatcher === this.useCase
-    }
-}
-```
 
 ----
 
