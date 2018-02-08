@@ -15,8 +15,7 @@ export function createUseCaseExecutor(useCase: any, dispatcher: Dispatcher): Use
     if (isUseCase(useCase)) {
         return new UseCaseExecutorImpl({
             useCase,
-            parent: isUseCase(dispatcher) ? dispatcher : null,
-            dispatcher
+            parent: isUseCase(dispatcher) ? dispatcher : null
         });
     } else if (isUseCaseFunction(useCase)) {
         // When pass UseCase constructor itself, throw assertion error
@@ -29,8 +28,7 @@ The argument is UseCase constructor itself: ${useCase}`
         const functionalUseCase = new FunctionalUseCase(useCase);
         return new UseCaseExecutorImpl({
             useCase: functionalUseCase,
-            parent: isUseCase(dispatcher) ? dispatcher : null,
-            dispatcher
+            parent: isUseCase(dispatcher) ? dispatcher : null
         });
     }
     throw new Error(`Context#useCase argument should be UseCase: ${useCase}`);

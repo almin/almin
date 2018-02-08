@@ -467,7 +467,6 @@ describe("Context#transaction", () => {
             beginTransactions.push(payload);
             assert.strictEqual(meta.isTrusted, true, "meta.isTrusted should be true");
             assert.strictEqual(meta.useCase, null, "meta.useCase should be null");
-            assert.strictEqual(meta.dispatcher, dispatcher, "meta.dispatcher should be dispatcher");
             assert.strictEqual(meta.parentUseCase, null, "meta.parentUseCase should be null");
             assert.strictEqual(typeof meta.timeStamp, "number");
             assert.strictEqual(typeof meta.transaction, "object", "transaction object");
@@ -477,7 +476,6 @@ describe("Context#transaction", () => {
             endTransaction.push(payload);
             assert.strictEqual(meta.isTrusted, true, "meta.isTrusted should be true");
             assert.strictEqual(meta.useCase, null, "meta.useCase should be null");
-            assert.strictEqual(meta.dispatcher, dispatcher, "meta.dispatcher should be dispatcher");
             assert.strictEqual(meta.parentUseCase, null, "meta.parentUseCase should be null");
             assert.strictEqual(typeof meta.timeStamp, "number");
             assert.strictEqual(typeof meta.transaction, "object", "transaction object");

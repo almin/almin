@@ -87,7 +87,6 @@ export class UseCaseUnitOfWork {
         this.isTransactionWorking = true;
         const payload = new TransactionBeganPayload(this.name);
         const meta = new DispatcherPayloadMetaImpl({
-            dispatcher: this.dispatcher,
             isTrusted: true,
             transaction: transaction
         });
@@ -163,7 +162,6 @@ Not to allow to do multiple commits in a transaction`);
         // payload, meta
         const payload = new TransactionEndedPayload(this.name);
         const meta = new DispatcherPayloadMetaImpl({
-            dispatcher: this.dispatcher,
             isTrusted: true,
             transaction: transaction
         });

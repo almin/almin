@@ -174,7 +174,6 @@ export class Context<T> {
                 const transaction = details && details.meta && details.meta.transaction;
                 const isUseCaseFinished = details && details.meta && details.meta.isUseCaseFinished;
                 const meta = new DispatcherPayloadMetaImpl({
-                    dispatcher: this.dispatcher,
                     // StoreChangedPayload is always trusted.
                     // Because, StoreChangedPayload is created by almin, not user.
                     // Related issue: https://github.com/almin/almin/issues/328
