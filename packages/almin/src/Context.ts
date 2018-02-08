@@ -51,11 +51,15 @@ See https://github.com/almin/almin/releases/tag/almin%400.13.10 for more details
  */
 export interface ContextArgs<T> {
     /**
-     * Pass Dispatcher instance
+     * Dispatcher instance.
+     *
+     * Notes: Almin 0.16+
+     *
+     * It it optional parameter.
      */
-    dispatcher: Dispatcher;
+    dispatcher?: Dispatcher;
     /**
-     * Pass StoreGroup instance
+     * StoreGroup instance
      */
     store: StoreLike<T>;
     /**
@@ -100,8 +104,7 @@ export class Context<T> {
     private config: ContextConfig;
 
     /**
-     * `dispatcher` is an instance of `Dispatcher`.
-     * `store` is an instance of StoreLike implementation
+     * Context should be initialized with `store` that is an instance of StoreLike implementation
      *
      * ### Example
      *
@@ -109,7 +112,6 @@ export class Context<T> {
      *
      * ```js
      * const context = new Context({
-     *   dispatcher: new Dispatcher(),
      *   store: new MyStore()
      * });
      * ```
@@ -121,7 +123,6 @@ export class Context<T> {
      *   new AStore(), new BStore(), new CStore()
      * ]);
      * const context = new Context({
-     *   dispatcher: new Dispatcher(),
      *   store: storeGroup
      * });
      * ```
@@ -129,8 +130,10 @@ export class Context<T> {
     constructor(args: ContextArgs<T>) {
         const store = args.store;
         StoreGroupValidator.validateInstance(store);
-        // central dispatcher
-        this.dispatcher = args.dispatcher;
+        // Central dispatcher
+        // Almin 0.16+: dispatcher is optional.
+        // https://github.com/almin/almin/issues/185
+        this.dispatcher = args.dispatcher || new Dispatcher();
         // Implementation Note:
         // Delegate dispatch event to Store|StoreGroup from Dispatcher
         // StoreGroup call each Store#receivePayload, but pass directly Store is not.
