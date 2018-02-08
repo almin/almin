@@ -21,6 +21,7 @@ import { ParentUseCase } from "./use-case/NestingUseCase";
 import { NotExecuteUseCase } from "./use-case/NotExecuteUseCase";
 import { SinonStub } from "sinon";
 import { UseCaseFunction } from "../src/FunctionalUseCaseContext";
+import { createUpdatableStoreWithUseCase } from "./helper/create-update-store-usecase";
 
 const sinon = require("sinon");
 
@@ -543,6 +544,40 @@ describe("Context", function() {
                     assert.ok(callStack[index] instanceof ExpectedPayloadConstructor);
                 });
             });
+    });
+
+    describe("Dispatcher", () => {
+        it("`dispatcher` is optional", () => {
+            const { MockStore, MockUseCase } = createUpdatableStoreWithUseCase("test");
+
+            class UpdateUseCase extends MockUseCase {
+                execute() {
+                    this.dispatchUpdateState({
+                        value: "update"
+                    });
+                }
+            }
+
+            // Context class provide observing and communicating with **Store** and **UseCase**
+            const store = new MockStore();
+            const storeGroup = new StoreGroup({
+                test: store
+            });
+            const context = new Context({
+                dispatcher: new Dispatcher(),
+                store: storeGroup
+            });
+            return context
+                .useCase(new UpdateUseCase())
+                .execute()
+                .then(() => {
+                    assert.deepEqual(storeGroup.getState(), {
+                        test: {
+                            value: "update"
+                        }
+                    });
+                });
+        });
     });
 
     describe("Constructor with Store instance", () => {

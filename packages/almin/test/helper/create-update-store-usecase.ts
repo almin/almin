@@ -4,6 +4,7 @@ import { Payload, Store, UseCase } from "../../src";
 import { shallowEqual } from "shallow-equal-object";
 
 export function createUpdatableStoreWithUseCase(name: string) {
+    let isSharedStateChanged = false;
     let sharedState = {};
 
     /**
@@ -13,6 +14,7 @@ export function createUpdatableStoreWithUseCase(name: string) {
      */
     const requestUpdateState = (newState: any) => {
         sharedState = newState;
+        isSharedStateChanged = true;
     };
 
     class StoreUpdatePayload implements Payload {
@@ -53,8 +55,9 @@ export function createUpdatableStoreWithUseCase(name: string) {
         receivePayload(payload: Payload) {
             if (payload instanceof StoreUpdatePayload) {
                 this.setState(payload.state);
-            } else if (!shallowEqual(this.state, sharedState)) {
+            } else if (isSharedStateChanged && !shallowEqual(this.state, sharedState)) {
                 this.setState(sharedState);
+                isSharedStateChanged = false;
             }
         }
 

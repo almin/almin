@@ -11,7 +11,7 @@ title: Context
 
 ```typescript
 export interface ContextArgs<T> {
-    dispatcher: Dispatcher;
+    dispatcher?: Dispatcher;
     store: StoreLike<T>;
     options?: {
         strict?: boolean;
@@ -57,17 +57,21 @@ const appContext = new Context({
 
 ----
 
-### `dispatcher: Dispatcher;`
+### `dispatcher?: Dispatcher;`
 
 
-Pass Dispatcher instance
+Dispatcher instance.
+
+Notes: Almin 0.16+
+
+It it optional parameter.
 
 ----
 
 ### `store: StoreLike<T>;`
 
 
-Pass StoreGroup instance
+StoreGroup instance
 
 ----
 
@@ -116,8 +120,7 @@ Context class provide observing and communicating with **Store** and **UseCase**
 ### `constructor(args: ContextArgs<T>);`
 
 
-`dispatcher` is an instance of `Dispatcher`.
-`store` is an instance of StoreLike implementation
+Context should be initialized with `store` that is an instance of StoreLike implementation
 
 ### Example
 
@@ -125,7 +128,6 @@ It is minimal initialization.
 
 ```js
 const context = new Context({
-  dispatcher: new Dispatcher(),
   store: new MyStore()
 });
 ```
@@ -137,7 +139,6 @@ const storeGroup = new StoreGroup([
   new AStore(), new BStore(), new CStore()
 ]);
 const context = new Context({
-  dispatcher: new Dispatcher(),
   store: storeGroup
 });
 ```
