@@ -167,11 +167,6 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
     private _parentUseCase: UseCase | null;
 
     /**
-     * A dispatcher instance
-     */
-    private _dispatcher: Dispatcher;
-
-    /**
      * callable release handlers that are called in release()
      */
     private _releaseHandlers: Array<() => void>;
@@ -185,7 +180,7 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
      *
      * **internal** documentation
      */
-    constructor({ useCase, parent, dispatcher }: { useCase: T; parent: UseCase | null; dispatcher: Dispatcher }) {
+    constructor({ useCase, parent }: { useCase: T; parent: UseCase | null }) {
         super();
         if (process.env.NODE_ENV !== "production") {
             // execute and finish =>
@@ -199,7 +194,6 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
 
         this.useCase = useCase;
         this._parentUseCase = parent;
-        this._dispatcher = dispatcher;
         this._releaseHandlers = [];
         /**
          * ## Delegating Payload
@@ -223,7 +217,6 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
         });
         const meta = new DispatcherPayloadMetaImpl({
             useCase: this.useCase,
-            dispatcher: this._dispatcher,
             parentUseCase: this._parentUseCase,
             isTrusted: true,
             isUseCaseFinished: true
@@ -243,7 +236,6 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
         });
         const meta = new DispatcherPayloadMetaImpl({
             useCase: this.useCase,
-            dispatcher: this._dispatcher,
             parentUseCase: this._parentUseCase,
             isTrusted: true,
             isUseCaseFinished: false
@@ -270,7 +262,6 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
         });
         const meta = new DispatcherPayloadMetaImpl({
             useCase: this.useCase,
-            dispatcher: this._dispatcher,
             parentUseCase: this._parentUseCase,
             isTrusted: true,
             isUseCaseFinished
@@ -288,7 +279,6 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
         });
         const meta = new DispatcherPayloadMetaImpl({
             useCase: this.useCase,
-            dispatcher: this._dispatcher,
             parentUseCase: this._parentUseCase,
             isTrusted: true,
             isUseCaseFinished: true

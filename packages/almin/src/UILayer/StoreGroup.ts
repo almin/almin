@@ -231,7 +231,6 @@ export class StoreGroup<T> extends Dispatcher implements StoreGroupLike {
         // InitializedPayload for passing to Store if the state change is not related payload.
         const payload = new InitializedPayload();
         const meta = new DispatcherPayloadMetaImpl({
-            dispatcher: this,
             isTrusted: true
         });
         // 1. write in read

@@ -1,9 +1,8 @@
 // LICENSE : MIT
 "use strict";
 import * as assert from "assert";
-import sinon = require("sinon");
 import { SyncNoDispatchUseCase } from "./use-case/SyncNoDispatchUseCase";
-import { Dispatcher, Payload, UseCase } from "../src/";
+import { Payload, UseCase } from "../src/";
 import { UseCaseExecutorImpl } from "../src/UseCaseExecutor";
 import { CallableUseCase } from "./use-case/CallableUseCase";
 import { ThrowUseCase } from "./use-case/ThrowUseCase";
@@ -11,6 +10,7 @@ import { isWillExecutedPayload } from "../src/payload/WillExecutedPayload";
 import { isDidExecutedPayload } from "../src/payload/DidExecutedPayload";
 import { isCompletedPayload } from "../src/payload/CompletedPayload";
 import { isErrorPayload } from "../src/payload/ErrorPayload";
+import sinon = require("sinon");
 
 describe("UseCaseExecutor", function() {
     describe("#executor", () => {
@@ -22,10 +22,8 @@ describe("UseCaseExecutor", function() {
             consoleErrorStub.restore();
         });
         it("should catch sync throwing error in UseCase", () => {
-            const dispatcher = new Dispatcher();
             const executor = new UseCaseExecutorImpl({
                 useCase: new ThrowUseCase(),
-                dispatcher,
                 parent: null
             });
             return executor.executor(useCase => useCase.execute()).then(
@@ -38,10 +36,8 @@ describe("UseCaseExecutor", function() {
             );
         });
         it("should throw error when pass non-executor function and output console.error", () => {
-            const dispatcher = new Dispatcher();
             const executor = new UseCaseExecutorImpl({
                 useCase: new SyncNoDispatchUseCase(),
-                dispatcher,
                 parent: null
             });
             return executor.executor(" THIS IS WRONG " as any).then(
@@ -60,11 +56,9 @@ describe("UseCaseExecutor", function() {
             );
         });
         it("should accept executor(useCase => {}) function arguments", () => {
-            const dispatcher = new Dispatcher();
             const callableUseCase = new CallableUseCase();
             const executor = new UseCaseExecutorImpl({
                 useCase: callableUseCase,
-                dispatcher,
                 parent: null
             });
             return executor.executor(useCase => useCase.execute()).then(
@@ -77,10 +71,8 @@ describe("UseCaseExecutor", function() {
             );
         });
         it("executor(useCase => {}) useCase is actual wrapper object", () => {
-            const dispatcher = new Dispatcher();
             const executor = new UseCaseExecutorImpl({
                 useCase: new SyncNoDispatchUseCase(),
-                dispatcher,
                 parent: null
             });
             return executor.executor(useCase => {
@@ -90,11 +82,9 @@ describe("UseCaseExecutor", function() {
             });
         });
         it("can call useCase.execute() by async", done => {
-            const dispatcher = new Dispatcher();
             const callableUseCase = new CallableUseCase();
             const executor = new UseCaseExecutorImpl({
                 useCase: callableUseCase,
-                dispatcher,
                 parent: null
             });
             executor
@@ -111,10 +101,8 @@ describe("UseCaseExecutor", function() {
             assert(callableUseCase.isExecuted === false, "UseCase#execute is not called yet.");
         });
         it("should show warning when UseCase#execute twice", () => {
-            const dispatcher = new Dispatcher();
             const executor = new UseCaseExecutorImpl({
                 useCase: new SyncNoDispatchUseCase(),
-                dispatcher,
                 parent: null
             });
             return executor
@@ -134,10 +122,8 @@ describe("UseCaseExecutor", function() {
         it("dispatch will -> error -> did -> complete", function() {
             const callStack: string[] = [];
             const expectedCallStack = ["will", "error", "did", "complete"];
-            const dispatcher = new Dispatcher();
             const executor = new UseCaseExecutorImpl({
                 useCase: new ThrowUseCase(),
-                dispatcher,
                 parent: null
             });
             // then
@@ -165,7 +151,6 @@ describe("UseCaseExecutor", function() {
                 type: "SyncUseCase",
                 value: "value"
             };
-            const dispatcher = new Dispatcher();
 
             class SyncUseCase extends UseCase {
                 execute(payload: Payload) {
@@ -177,7 +162,6 @@ describe("UseCaseExecutor", function() {
             const expectedCallStack = ["will", "dispatch", "did", "complete"];
             const executor = new UseCaseExecutorImpl({
                 useCase: new SyncUseCase(),
-                dispatcher,
                 parent: null
             });
             // then
@@ -214,10 +198,8 @@ describe("UseCaseExecutor", function() {
                     }
                 }
 
-                const dispatcher = new Dispatcher();
                 const executor = new UseCaseExecutorImpl({
                     useCase: new TestUseCase(),
-                    dispatcher,
                     parent: null
                 });
                 return executor.execute().then(() => {
@@ -240,10 +222,8 @@ describe("UseCaseExecutor", function() {
                     }
                 }
 
-                const dispatcher = new Dispatcher();
                 const executor = new UseCaseExecutorImpl({
                     useCase: new TestUseCase(),
-                    dispatcher,
                     parent: null
                 });
 
@@ -265,10 +245,8 @@ describe("UseCaseExecutor", function() {
                     }
                 }
 
-                const dispatcher = new Dispatcher();
                 const executor = new UseCaseExecutorImpl({
                     useCase: new TestUseCase(),
-                    dispatcher,
                     parent: null
                 });
                 // willNotExecute:true => resolve
@@ -292,10 +270,8 @@ describe("UseCaseExecutor", function() {
                     }
                 }
 
-                const dispatcher = new Dispatcher();
                 const executor = new UseCaseExecutorImpl({
                     useCase: new TestUseCase(),
-                    dispatcher,
                     parent: null
                 });
                 return executor.execute().then(
@@ -312,10 +288,8 @@ describe("UseCaseExecutor", function() {
     });
     describe("#execute", function() {
         it("should catch sync throwing error in UseCase", () => {
-            const dispatcher = new Dispatcher();
             const executor = new UseCaseExecutorImpl({
                 useCase: new ThrowUseCase(),
-                dispatcher,
                 parent: null
             });
             return executor.execute().then(
@@ -334,7 +308,6 @@ describe("UseCaseExecutor", function() {
                     type: "SyncUseCase",
                     value: "value"
                 };
-                const dispatcher = new Dispatcher();
 
                 class SyncUseCase extends UseCase {
                     // 2
@@ -347,7 +320,6 @@ describe("UseCaseExecutor", function() {
                 // when
                 const executor = new UseCaseExecutorImpl({
                     useCase: new SyncUseCase(),
-                    dispatcher,
                     parent: null
                 });
                 // 4
@@ -368,7 +340,6 @@ describe("UseCaseExecutor", function() {
                     type: "SyncUseCase",
                     value: "value"
                 };
-                const dispatcher = new Dispatcher();
 
                 class AsyncUseCase extends UseCase {
                     // 2
@@ -386,7 +357,6 @@ describe("UseCaseExecutor", function() {
                 // when
                 const executor = new UseCaseExecutorImpl({
                     useCase: new AsyncUseCase(),
-                    dispatcher,
                     parent: null
                 });
                 executor.onDispatch((payload, meta) => {

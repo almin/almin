@@ -29,7 +29,6 @@ describe("DispatcherPayloadMeta", () => {
                 .execute()
                 .then(() => {
                     assert(actualMeta.useCase === useCase);
-                    assert(actualMeta.dispatcher === dispatcher);
                     assert(actualMeta.parentUseCase === null);
                     assert(actualMeta.transaction === undefined);
                     assert(typeof actualMeta.timeStamp === "number");
@@ -53,7 +52,6 @@ describe("DispatcherPayloadMeta", () => {
                 .execute({ type: "test" })
                 .then(() => {
                     assert(actualMeta.useCase === useCase);
-                    assert(actualMeta.dispatcher === useCase);
                     assert(actualMeta.parentUseCase === null);
                     assert(actualMeta.transaction === undefined);
                     assert(typeof actualMeta.timeStamp === "number");
@@ -77,7 +75,6 @@ describe("DispatcherPayloadMeta", () => {
                 .execute()
                 .then(() => {
                     assert(actualMeta.useCase === useCase);
-                    assert(actualMeta.dispatcher === dispatcher);
                     assert(actualMeta.parentUseCase === null);
                     assert(actualMeta.isUseCaseFinished === true);
                     assert(actualMeta.transaction === undefined);
@@ -100,7 +97,6 @@ describe("DispatcherPayloadMeta", () => {
                 .execute()
                 .then(() => {
                     assert(actualMeta.useCase === useCase);
-                    assert(actualMeta.dispatcher === dispatcher);
                     assert(actualMeta.parentUseCase === null);
                     assert(actualMeta.isUseCaseFinished === false);
                     assert(actualMeta.transaction === undefined);
@@ -125,7 +121,6 @@ describe("DispatcherPayloadMeta", () => {
                 .execute()
                 .then(() => {
                     assert(actualMeta.useCase === useCase);
-                    assert(actualMeta.dispatcher === dispatcher);
                     assert(actualMeta.parentUseCase === null);
                     assert(actualMeta.isUseCaseFinished === true);
                     assert(actualMeta.transaction === undefined);
@@ -150,7 +145,6 @@ describe("DispatcherPayloadMeta", () => {
                 .execute()
                 .catch(() => {
                     assert(actualMeta.useCase === useCase);
-                    assert(actualMeta.dispatcher === useCase);
                     assert(actualMeta.parentUseCase === null);
                     assert(actualMeta.isUseCaseFinished === false);
                     assert(actualMeta.transaction === undefined);
@@ -185,33 +179,26 @@ describe("DispatcherPayloadMeta", () => {
                     const [childCompleteMeta, parentCompleteMeta] = completeMeta;
                     // parent
                     assert(parentWillMeta.useCase === parentUseCase);
-                    assert(parentWillMeta.dispatcher === dispatcher);
                     assert(parentWillMeta.parentUseCase === null);
                     assert(typeof parentWillMeta.timeStamp === "number");
                     assert(parentDidMeta.useCase === parentUseCase);
-                    assert(parentDidMeta.dispatcher === dispatcher);
                     assert(parentDidMeta.parentUseCase === null);
                     assert(typeof parentDidMeta.timeStamp === "number");
                     assert(parentCompleteMeta.useCase === parentUseCase);
-                    assert(parentCompleteMeta.dispatcher === dispatcher);
                     assert(parentCompleteMeta.parentUseCase === null);
                     assert(typeof parentCompleteMeta.timeStamp === "number");
                     // child
                     assert(childWillMeta.useCase === childUseCase);
-                    assert(childWillMeta.dispatcher === parentUseCase);
                     assert(childWillMeta.parentUseCase === parentUseCase);
                     assert(typeof childWillMeta.timeStamp === "number");
                     assert(childDidMeta.useCase === childUseCase);
-                    assert(childDidMeta.dispatcher === parentUseCase);
                     assert(childDidMeta.parentUseCase === parentUseCase);
                     assert(typeof childDidMeta.timeStamp === "number");
                     assert(childCompleteMeta.useCase === childUseCase);
-                    assert(childCompleteMeta.dispatcher === parentUseCase);
                     assert(childCompleteMeta.parentUseCase === parentUseCase);
                     assert(typeof childCompleteMeta.timeStamp === "number");
                     // childDispatchMeta
                     assert(childDispatchMeta.useCase === childUseCase);
-                    assert(childDispatchMeta.dispatcher === childUseCase);
                     assert(childDispatchMeta.parentUseCase === null);
                     assert(typeof childDispatchMeta.timeStamp === "number");
                 });
