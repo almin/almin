@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.16.0"></a>
+# [0.16.0](https://github.com/almin/almin/compare/almin@0.15.3...almin@0.16.0) (2018-02-24)
+
+
+### Bug Fixes
+
+* **almin:** Add readonly modifier to `transaction` ([7a666b7](https://github.com/almin/almin/commit/7a666b7))
+* **almin:** remove `dispatcher` from DispatchPayloadMeta ([9e7a776](https://github.com/almin/almin/commit/9e7a776))
+
+
+### Features
+
+* **almin:** Make `dispatcher` optional ([92cdcf9](https://github.com/almin/almin/commit/92cdcf9))
+
+
+
+
 <a name="0.15.3"></a>
 ## [0.15.3](https://github.com/almin/almin/compare/almin@0.15.2...almin@0.15.3) (2018-02-05)
 

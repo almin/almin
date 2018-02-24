@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.6.4"></a>
+## [0.6.4](https://github.com/almin/almin/compare/almin-react-container@0.6.3...almin-react-container@0.6.4) (2018-02-24)
+
+
+### Bug Fixes
+
+* **react-container:** should initialize before other component ([f12cef3](https://github.com/almin/almin/commit/f12cef3)), closes [#321](https://github.com/almin/almin/issues/321)
+
+
+
+
 <a name="0.6.3"></a>
 ## [0.6.3](https://github.com/almin/almin/compare/almin-react-container@0.6.2...almin-react-container@0.6.3) (2018-02-05)
 
