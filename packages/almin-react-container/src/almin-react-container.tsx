@@ -35,22 +35,20 @@ export class AlminReactContainer {
             state: P;
             unSubscribe: () => void | null;
 
+            onChangeHandler = () => {
+                this.setState(context.getState());
+            };
+
             constructor(props: any) {
                 super(props);
                 this.state = context.getState();
+                this.unSubscribe = context.onChange(this.onChangeHandler);
             }
 
             shouldComponentUpdate(_nextProps: any, nextState: any) {
                 // Almin StoreGroup use Object.assign merging by default
                 // It means that theses states are not strict equal always.
                 return !shallowEqual(this.state, nextState);
-            }
-
-            componentDidMount() {
-                const onChangeHandler = () => {
-                    this.setState(context.getState());
-                };
-                this.unSubscribe = context.onChange(onChangeHandler);
             }
 
             componentWillUnmount() {
