@@ -3,23 +3,96 @@ import { UseCase, Context } from "almin";
 export type Construct<T> = {
     new (...args: any[]): T;
 };
+export type Factory<T, Command = any> = (command: Command) => T;
 
-export class UseCaseBinder<P extends UseCase, Command> {
-    constructor(
-        private context: Context<any>,
-        public CommandConstructors: Construct<Command>[] = [],
-        public useCases: P[] = []
-    ) {}
+export class DuplicateChecker {
+    private Commands: Construct<{}>[] = [];
+    private useCases: UseCase[] = [];
+    private useCaseFactories: Factory<UseCase>[] = [];
 
-    bind<V extends UseCase, K extends Construct<Command>>(
+    addCommand(command: Construct<{}>) {
+        this.Commands.push(command);
+    }
+
+    addUseCase(useCase: UseCase) {
+        this.useCases.push(useCase);
+    }
+
+    addUseCaseFactory(useCaseFactory: Factory<UseCase>) {
+        this.useCaseFactories.push(useCaseFactory);
+    }
+
+    hasCommand(command: Construct<{}>) {
+        return this.Commands.indexOf(command) !== -1;
+    }
+
+    hasUseCase(useCase: UseCase) {
+        return this.useCases.indexOf(useCase) !== -1;
+    }
+
+    hasUseCaseFactory(useCaseFactory: Factory<UseCase>) {
+        return this.useCaseFactories.indexOf(useCaseFactory) !== -1;
+    }
+}
+
+export interface UseCaseBinderArgs<T, P> {
+    context: Context<any>;
+    CommandConstructors: T[];
+    useCases: P[];
+    duplicateChecker: DuplicateChecker;
+}
+
+export class UseCaseBinder<Command, P extends Factory<UseCase, any>> {
+    private context: Context<any>;
+    private CommandConstructors: Construct<Command>[] = [];
+    private useCases: P[] = [];
+    private duplicateChecker: DuplicateChecker;
+
+    constructor(args: UseCaseBinderArgs<Construct<Command>, P>) {
+        this.context = args.context;
+        this.CommandConstructors = args.CommandConstructors;
+        this.useCases = args.useCases;
+        this.duplicateChecker = args.duplicateChecker;
+    }
+
+    bind<K extends Construct<Command>, V extends UseCase>(
         CommandConstructor: K,
         useCase: V
-    ): UseCaseBinder<V | P, K | Command> {
-        return new UseCaseBinder(
-            this.context,
-            [...this.CommandConstructors, CommandConstructor],
-            [...this.useCases, useCase]
-        );
+    ): UseCaseBinder<K | Command, Factory<V> | P> {
+        if (this.duplicateChecker.hasCommand(CommandConstructor)) {
+            throw new Error(`This Command is already bound. One Command to One UseCase. ${CommandConstructor}`);
+        }
+        if (this.duplicateChecker.hasUseCase(useCase)) {
+            throw new Error(`This UseCase is already bound. One Command to One UseCase. ${useCase}`);
+        }
+        this.duplicateChecker.addCommand(CommandConstructor);
+        this.duplicateChecker.addUseCase(useCase);
+        return new UseCaseBinder({
+            context: this.context,
+            CommandConstructors: [...this.CommandConstructors, CommandConstructor],
+            useCases: [...this.useCases, () => useCase],
+            duplicateChecker: this.duplicateChecker
+        });
+    }
+
+    bindFactory<K extends Construct<Command>, V extends Factory<UseCase, any>>(
+        CommandConstructor: K,
+        useCaseFactory: V
+    ): UseCaseBinder<K | Command, V | P> {
+        if (this.CommandConstructors.indexOf(CommandConstructor) !== -1) {
+            throw new Error(`This Command is already bound. One Command to One UseCase. ${CommandConstructor}`);
+        }
+        if (this.duplicateChecker.hasUseCaseFactory(useCaseFactory)) {
+            throw new Error(`This UseCaseFactory is already bound. One Command to One UseCase. ${useCaseFactory}`);
+        }
+        this.duplicateChecker.addCommand(CommandConstructor);
+        this.duplicateChecker.addUseCaseFactory(useCaseFactory);
+        return new UseCaseBinder({
+            context: this.context,
+            CommandConstructors: [...this.CommandConstructors, CommandConstructor],
+            useCases: [...this.useCases, useCaseFactory],
+            duplicateChecker: this.duplicateChecker
+        });
     }
 
     send(command: Command) {
@@ -27,19 +100,12 @@ export class UseCaseBinder<P extends UseCase, Command> {
         if (!CommandConstructor) {
             throw new Error(`This command have not .constructor property: ${command}`);
         }
-        const useCases: UseCase[] = [];
-        this.CommandConstructors.forEach((TargetCommandConstructor, index) => {
-            if (CommandConstructor === TargetCommandConstructor) {
-                useCases.push(this.useCases[index]);
-            }
-        });
-        if (useCases.length === 0) {
+        const index = this.CommandConstructors.indexOf(CommandConstructor);
+        if (index === -1) {
             throw new Error(`This command have not mapped any UseCase: ${command}`);
         }
-        const executedPromises = useCases.map(useCase => {
-            this.context.useCase(useCase).executor(useCase => useCase.execute(command));
-        });
-        return Promise.all(executedPromises);
+        const useCase = this.useCases[index](command);
+        return this.context.useCase(useCase).executor(useCase => useCase.execute(command));
     }
 }
 
@@ -55,7 +121,9 @@ export class UseCaseBinder<P extends UseCase, Command> {
  *   .create(context)
  *   .bind(TestCommandA, new TestUseCase())
  *   .bind(TestCommandB, new TestUseCase());
- * container.send(new TestCommandA());
+ * container.send(new TestCommandA())
+ *   .then(() => {})
+ *   .catch(error => {});
  * ```
  *
  *
@@ -63,8 +131,35 @@ export class UseCaseBinder<P extends UseCase, Command> {
 export class UseCaseContainer {
     static create(context: Context<any>) {
         return {
-            bind: function<V extends UseCase, K>(CommandConstructor: Construct<K>, useCase: V): UseCaseBinder<V, K> {
-                return new UseCaseBinder(context, [CommandConstructor], [useCase]);
+            bind: function<K, V extends UseCase>(
+                CommandConstructor: Construct<K>,
+                useCase: V
+            ): UseCaseBinder<K, () => V> {
+                const duplicateChecker = new DuplicateChecker();
+
+                duplicateChecker.addCommand(CommandConstructor);
+                duplicateChecker.addUseCase(useCase);
+                return new UseCaseBinder({
+                    context,
+                    CommandConstructors: [CommandConstructor],
+                    useCases: [() => useCase],
+                    duplicateChecker
+                });
+            },
+            bindFactory: function<K, V extends Factory<UseCase, K>>(
+                CommandConstructor: Construct<K>,
+                useCaseFactory: V
+            ): UseCaseBinder<K, V> {
+                const duplicateChecker = new DuplicateChecker();
+
+                duplicateChecker.addCommand(CommandConstructor);
+                duplicateChecker.addUseCaseFactory(useCaseFactory);
+                return new UseCaseBinder({
+                    context,
+                    CommandConstructors: [CommandConstructor],
+                    useCases: [useCaseFactory],
+                    duplicateChecker
+                });
             }
         };
     }

@@ -2,10 +2,33 @@
 
 A mediator for UseCase and Command.
 
+- CommandBus
+
 ## What is Command and Command handler pattern?
 
 - [Implementing the microservice application layer using the Web API | Microsoft Docs](https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/microservice-ddd-cqrs-patterns/microservice-application-layer-implementation-web-api "Implementing the microservice application layer using the Web API | Microsoft Docs")
     - [日本語訳](https://docs.microsoft.com/ja-jp/dotnet/standard/microservices-architecture/microservice-ddd-cqrs-patterns/microservice-application-layer-implementation-web-api "Web API を使用したマイクロサービス アプリケーション レイヤーの実装 | Microsoft Docs")
+
+### Command
+
+- A bus send Command to a single Command Handler
+- Command may be rejected by system
+- Command may be failed during executing in Handler
+- Command may be various effect in system state
+- Command does not be over the boundary
+- Command should have imperative named.
+
+## What is merits?
+
+- Flexible
+- Retry the UseCase
+- Logging
+- Adoptable
+- Additional Event
+
+## What is de-merits?
+
+- Add new Layer(CommandBus)
 
 ## Install
 
@@ -18,48 +41,51 @@ Install with [npm](https://www.npmjs.com/):
 ```ts
 import { UseCase, Context } from "almin";
 import { UseCaseContainer } from "@almin/usecase-container"
-const context = new Context({
-    store: new NopeStore()
-});
-
-class TestCommandA {
-    type = "TestCommandA";
-}
-class TestCommandB {
-    type = "TestCommandB";
-}
-
-const executed: (TestCommandA | TestCommandB)[] = [];
-
-class TestUseCaseA extends UseCase {
-    execute(command: TestCommandA) {
-        executed.push(command);
-    }
-}
-class TestUseCaseB extends UseCase {
-    execute(command: TestCommandB) {
-        executed.push(command);
-    }
-}
-
-const container = UseCaseContainer
-    .create(context)
-    .bind(TestCommandA, new TestUseCaseA())
-    .bind(TestCommandB, new TestUseCaseB());
-// send "TestCommandA", then execute "TestUseCaseA"
-container.send(new TestCommandA())
-    .then(() => {
-        assert.strictEqual(executed.length, 1);
-        assert.ok(executed[0] instanceof TestCommandA);
-    })
-    .then(() => {
-        // send "TestCommandB", then execute "TestUseCaseB"
-        return container.send(new TestCommandB());
-    }).
-    then(() => {
-        assert.strictEqual(executed.length, 2);
-        assert.ok(executed[1] instanceof TestCommandB);
+// async code
+(async () => {
+    const context = new Context({
+        store: new NopeStore()
     });
+
+    class CommandA {
+        type = "CommandA";
+    }
+
+    class CommandB {
+        type = "CommandB";
+    }
+
+    const executed: (CommandA | CommandB)[] = [];
+
+    class TestUseCaseA extends UseCase {
+        execute(command: CommandA) {
+            executed.push(command);
+        }
+    }
+
+    class TestUseCaseB extends UseCase {
+        execute(command: CommandB) {
+            executed.push(command);
+        }
+    }
+
+    const createTestUseCaseB = (_command: CommandB) => {
+        return new TestUseCaseB();
+    };
+
+    // create binding between Command Constructor and UseCase/UseCaseFactory.
+    const container = UseCaseContainer.create(context)
+        .bind(CommandA, new TestUseCaseA())
+        .bindFactory(CommandB, createTestUseCaseB);
+    // send CommandA => execute TestUseCaseA
+    await container.send(new CommandA());
+    assert.strictEqual(executed.length, 1);
+    assert.ok(executed[0] instanceof CommandA);
+    // send CommandB => execute createTestUseCaseB()
+    await container.send(new CommandB());
+    assert.strictEqual(executed.length, 2);
+    assert.ok(executed[1] instanceof CommandB);
+})()
 ```
 
 ## Changelog
