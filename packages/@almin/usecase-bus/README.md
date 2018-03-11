@@ -1,8 +1,7 @@
-# @almin/usecase-container
+# @almin/usecase-bus
 
 A mediator for UseCase and Command.
-
-- CommandBus
+This library provide Command Bus.
 
 ## What is Command and Command handler pattern?
 
@@ -34,13 +33,13 @@ A mediator for UseCase and Command.
 
 Install with [npm](https://www.npmjs.com/):
 
-    npm install @almin/usecase-container
+    npm install @almin/usecase-bus
 
 ## Usage
 
 ```ts
 import { UseCase, Context } from "almin";
-import { UseCaseContainer } from "@almin/usecase-container"
+import { UseCaseBus } from "@almin/usecase-bus"
 // async code
 (async () => {
     const context = new Context({
@@ -74,15 +73,15 @@ import { UseCaseContainer } from "@almin/usecase-container"
     };
 
     // create binding between Command Constructor and UseCase/UseCaseFactory.
-    const container = UseCaseContainer.create(context)
+    const bus = UseCaseBus.create(context)
         .bind(CommandA, new TestUseCaseA())
         .bindFactory(CommandB, createTestUseCaseB);
     // send CommandA => execute TestUseCaseA
-    await container.send(new CommandA());
+    await bus.send(new CommandA());
     assert.strictEqual(executed.length, 1);
     assert.ok(executed[0] instanceof CommandA);
     // send CommandB => execute createTestUseCaseB()
-    await container.send(new CommandB());
+    await bus.send(new CommandB());
     assert.strictEqual(executed.length, 2);
     assert.ok(executed[1] instanceof CommandB);
 })()
@@ -92,11 +91,13 @@ import { UseCaseContainer } from "@almin/usecase-container"
 
 See [Releases page](https://github.com/almin/almin/releases).
 
-## Running tests
 
-Install devDependencies and Run `npm test`:
+## Reference
 
-    npm i -d && npm test
+- [Implementing the microservice application layer using the Web API | Microsoft Docs](https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/microservice-ddd-cqrs-patterns/microservice-application-layer-implementation-web-api "Implementing the microservice application layer using the Web API | Microsoft Docs")
+    - [日本語訳](https://docs.microsoft.com/ja-jp/dotnet/standard/microservices-architecture/microservice-ddd-cqrs-patterns/microservice-application-layer-implementation-web-api "Web API を使用したマイクロサービス アプリケーション レイヤーの実装 | Microsoft Docs")
+- [predaddy/src/predaddy/messagehandling at 3.0 · szjani/predaddy](https://github.com/szjani/predaddy/tree/3.0/src/predaddy/messagehandling#messagebus "predaddy/src/predaddy/messagehandling at 3.0 · szjani/predaddy")
+- [jbogard/MediatR: Simple, unambitious mediator implementation in .NET](https://github.com/jbogard/MediatR "jbogard/MediatR: Simple, unambitious mediator implementation in .NET")
 
 ## Contributing
 

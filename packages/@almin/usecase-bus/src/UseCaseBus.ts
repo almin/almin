@@ -1,39 +1,10 @@
-import { UseCase, Context } from "almin";
+import { Context, UseCase } from "almin";
+import { DuplicateChecker } from "./DuplicateChecker";
 
 export type Construct<T> = {
     new (...args: any[]): T;
 };
 export type Factory<T, Command = any> = (command: Command) => T;
-
-export class DuplicateChecker {
-    private Commands: Construct<{}>[] = [];
-    private useCases: UseCase[] = [];
-    private useCaseFactories: Factory<UseCase>[] = [];
-
-    addCommand(command: Construct<{}>) {
-        this.Commands.push(command);
-    }
-
-    addUseCase(useCase: UseCase) {
-        this.useCases.push(useCase);
-    }
-
-    addUseCaseFactory(useCaseFactory: Factory<UseCase>) {
-        this.useCaseFactories.push(useCaseFactory);
-    }
-
-    hasCommand(command: Construct<{}>) {
-        return this.Commands.indexOf(command) !== -1;
-    }
-
-    hasUseCase(useCase: UseCase) {
-        return this.useCases.indexOf(useCase) !== -1;
-    }
-
-    hasUseCaseFactory(useCaseFactory: Factory<UseCase>) {
-        return this.useCaseFactories.indexOf(useCaseFactory) !== -1;
-    }
-}
 
 export interface UseCaseBinderArgs<T, P> {
     context: Context<any>;
@@ -128,7 +99,7 @@ export class UseCaseBinder<Command, P extends Factory<UseCase, any>> {
  *
  *
  */
-export class UseCaseContainer {
+export class UseCaseBus {
     static create(context: Context<any>) {
         return {
             bind: function<K, V extends UseCase>(

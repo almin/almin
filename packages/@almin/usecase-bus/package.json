@@ -1,5 +1,5 @@
 {
-  "name": "usecase-container",
+  "name": "usecase-bus",
   "version": "1.0.0",
   "description": "A mediator for UseCase and Command.",
   "keywords": [
@@ -7,7 +7,7 @@
     "command",
     "usecase"
   ],
-  "homepage": "https://github.com/almin/almin/tree/master/packages/@almin/usecase-container/",
+  "homepage": "https://github.com/almin/almin/tree/master/packages/@almin/usecase-bus/",
   "bugs": {
     "url": "https://github.com/almin/almin/issues"
   },
@@ -18,8 +18,8 @@
     "lib/",
     "src/"
   ],
-  "main": "lib/usecase-container.js",
-  "types": "lib/usecase-container.d.ts",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "directories": {
     "lib": "lib",
     "test": "test"
