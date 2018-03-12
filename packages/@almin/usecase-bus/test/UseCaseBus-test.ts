@@ -166,6 +166,32 @@ describe("UseCaseBus", () => {
         assert.ok(executed[1] instanceof CommandB);
     });
     context("Limitation case", () => {
+        it("could not use old binding instance", () => {
+            const context = new Context({
+                store: new NopeStore()
+            });
+
+            class TestCommandA {
+                type = "TestCommandA";
+            }
+
+            class TestCommandB {
+                type = "TestCommandB";
+            }
+            class TestUseCaseA extends UseCase {
+                execute() {}
+            }
+
+            class TestUseCaseB extends UseCase {
+                execute() {}
+            }
+
+            assert.throws(() => {
+                const container = UseCaseBus.create(context).bind(TestCommandA, new TestUseCaseA());
+                container.bind(TestCommandB, new TestUseCaseB());
+                container.send(TestCommandA);
+            }, /You should use last return value of bind/);
+        });
         it("could not bind with same Command", () => {
             const context = new Context({
                 store: new NopeStore()
@@ -175,18 +201,12 @@ describe("UseCaseBus", () => {
                 type = "TestCommand";
             }
 
-            const executed: TestCommand[] = [];
-
             class TestUseCaseA extends UseCase {
-                execute(command: TestCommand) {
-                    executed.push(command);
-                }
+                execute() {}
             }
 
             class TestUseCaseB extends UseCase {
-                execute(command: TestCommand) {
-                    executed.push(command);
-                }
+                execute() {}
             }
 
             assert.throws(() => {
