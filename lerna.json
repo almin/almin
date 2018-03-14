@@ -6,7 +6,8 @@
     }
   },
   "packages": [
-    "packages/*"
+    "packages/*",
+    "packages/@almin/*"
   ],
   "npmClient": "yarn",
   "useWorkspaces": true,
