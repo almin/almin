@@ -7,8 +7,7 @@ import { FunctionalUseCase } from "./FunctionalUseCase";
 import { UseCaseFunction } from "./FunctionalUseCaseContext";
 import { UseCaseLike } from "./UseCaseLike";
 import { createUseCaseExecutor } from "./UseCaseExecutorFactory";
-
-const assert = require("assert");
+import { assertOK } from "./util/assert";
 
 /**
  * Maybe, `UseCaseContext` is invisible from Public API.
@@ -75,7 +74,7 @@ export class UseCaseContext {
     useCase<T extends UseCaseLike>(useCase: T): UseCaseExecutor<T>;
     useCase(useCase: any): UseCaseExecutor<any> {
         if (process.env.NODE_ENV !== "production") {
-            assert(
+            assertOK(
                 useCase !== this._dispatcher,
                 `the useCase(${useCase}) should not equal this useCase(${this._dispatcher})`
             );

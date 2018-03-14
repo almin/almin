@@ -1,6 +1,5 @@
 // LICENSE : MIT
 "use strict";
-import * as assert from "assert";
 import { Dispatcher } from "./Dispatcher";
 import { UseCase } from "./UseCase";
 import { DispatcherPayloadMeta, DispatcherPayloadMetaImpl } from "./DispatcherPayloadMeta";
@@ -12,6 +11,7 @@ import { WillExecutedPayload } from "./payload/WillExecutedPayload";
 import { UseCaseLike } from "./UseCaseLike";
 import { Payload } from "./payload/Payload";
 import { WillNotExecutedPayload } from "./payload/WillNotExecutedPayload";
+import { assertOK } from "./util/assert";
 
 interface InvalidUsage {
     type: "InvalidUsage";
@@ -185,8 +185,8 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
         if (process.env.NODE_ENV !== "production") {
             // execute and finish =>
             const useCaseName = useCase.name;
-            assert.ok(typeof useCaseName === "string", `UseCase instance should have constructor.name ${useCase}`);
-            assert.ok(
+            assertOK(typeof useCaseName === "string", `UseCase instance should have constructor.name ${useCase}`);
+            assertOK(
                 typeof useCase.execute === "function",
                 `UseCase instance should have #execute function: ${useCaseName}`
             );

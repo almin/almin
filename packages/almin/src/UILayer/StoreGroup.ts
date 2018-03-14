@@ -1,6 +1,5 @@
 // MIT © 2017 azu
 "use strict";
-import * as assert from "assert";
 import { MapLike } from "map-like";
 import { Payload } from "../payload/Payload";
 import { DispatcherPayloadMeta, DispatcherPayloadMetaImpl } from "../DispatcherPayloadMeta";
@@ -24,6 +23,7 @@ import { isTransactionEndedPayload } from "../payload/TransactionEndedPayload";
 import AlminInstruments from "../instrument/AlminInstruments";
 import { DebugId } from "../instrument/AlminAbstractPerfMarker";
 import { generateNewId } from "./StoreGroupIdGenerator";
+import { assertOK } from "../util/assert";
 
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
 
@@ -47,14 +47,14 @@ const storeGroup = new StoreGroup({
 console.log(storeGroup.getState());
 // { a: "a value", b: "b value" }
 `;
-    assert.ok(typeof arg === "object" && arg !== null && !Array.isArray(arg), message);
+    assertOK(typeof arg === "object" && arg !== null && !Array.isArray(arg), message);
     const keys = Object.keys(arg);
     for (let i = 0; i < keys.length; i++) {
         const key = keys[i];
         const value = arg[key];
         // Don't checking for accepting string or symbol.
         // assert.ok(typeof key === "string", `key should be string type: ${key}: ${value}` + "\n" + message);
-        assert.ok(Store.isStore(value), `value should be instance of Store: ${key}: ${value}` + "\n" + message);
+        assertOK(Store.isStore(value), `value should be instance of Store: ${key}: ${value}` + "\n" + message);
     }
 };
 
@@ -316,7 +316,7 @@ export class StoreGroup<T> extends Dispatcher implements StoreGroupLike {
             // if the prev/next state is same, not update the state.
             const stateName = this._storeStateMap.get(store);
             if (process.env.NODE_ENV !== "production") {
-                assert.ok(
+                assertOK(
                     stateName !== undefined,
                     `Store:${store.name} is not registered in constructor.
 But, ${store.name}#getState() was called.`
