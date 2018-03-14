@@ -2,8 +2,8 @@ import { UseCaseExecutorImpl } from "./UseCaseExecutor";
 import { isUseCaseFunction, UseCaseFunction } from "./FunctionalUseCaseContext";
 import { FunctionalUseCase } from "./FunctionalUseCase";
 import { isUseCase, UseCase } from "./UseCase";
-import * as assert from "assert";
 import { Dispatcher } from "./Dispatcher";
+import { assertOK } from "./util/assert";
 
 export function createUseCaseExecutor(
     useCase: UseCaseFunction,
@@ -19,7 +19,7 @@ export function createUseCaseExecutor(useCase: any, dispatcher: Dispatcher): Use
         });
     } else if (isUseCaseFunction(useCase)) {
         // When pass UseCase constructor itself, throw assertion error
-        assert.ok(
+        assertOK(
             Object.getPrototypeOf && Object.getPrototypeOf(useCase) !== UseCase,
             `Context#useCase argument should be instance of UseCase.
 The argument is UseCase constructor itself: ${useCase}`

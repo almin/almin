@@ -6,8 +6,8 @@ import { Dispatcher } from "./Dispatcher";
 import { generateNewId } from "./UseCaseIdGenerator";
 import { DispatcherPayloadMetaImpl } from "./DispatcherPayloadMeta";
 import { ErrorPayload } from "./payload/ErrorPayload";
-import * as assert from "assert";
 import { Payload } from "./payload/Payload";
+import { assertOK } from "./util/assert";
 
 export const defaultUseCaseName = "<Functiona-UseCase>";
 export type UseCaseArgs = (context: FunctionalUseCaseContext) => Function;
@@ -15,7 +15,7 @@ const getFunctionalExecute = (functionalUseCase: UseCaseArgs, context: Functiona
     try {
         const execute = functionalUseCase(context);
         if (process.env.NODE_ENV !== "production") {
-            assert.ok(typeof execute === "function", "Functional UseCase should return a executor function.");
+            assertOK(typeof execute === "function", "Functional UseCase should return a executor function.");
         }
         return execute;
     } catch (error) {

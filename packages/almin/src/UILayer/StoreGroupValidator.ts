@@ -1,7 +1,7 @@
 // LICENSE : MIT
 "use strict";
-import * as assert from "assert";
 import { Dispatcher } from "../Dispatcher";
+import { assertOK } from "../util/assert";
 /*
  StoreGroup
 
@@ -16,12 +16,12 @@ export class StoreGroupValidator {
      * Context treat StoreGroup like object as StoreGroup.
      */
     static validateInstance(storeGroup: any): void {
-        assert.ok(storeGroup !== undefined, "store should not be undefined");
-        assert.ok(Dispatcher.isDispatcher(storeGroup), "storeGroup should be inherited Dispatcher");
-        assert.ok(typeof storeGroup.onChange === "function", "StoreGroup should have #onChange method");
-        assert.ok(typeof storeGroup.getState === "function", "StoreGroup should have #getState method");
+        assertOK(storeGroup !== undefined, "store should not be undefined");
+        assertOK(Dispatcher.isDispatcher(storeGroup), "storeGroup should be inherited Dispatcher");
+        assertOK(typeof storeGroup.onChange === "function", "StoreGroup should have #onChange method");
+        assertOK(typeof storeGroup.getState === "function", "StoreGroup should have #getState method");
         // #release is optional
-        assert.ok(
+        assertOK(
             typeof storeGroup.release === "undefined" || typeof storeGroup.release === "function",
             "StoreGroup may have #release method"
         );
