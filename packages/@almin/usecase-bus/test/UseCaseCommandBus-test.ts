@@ -1,5 +1,5 @@
 import { UseCase, Context } from "almin";
-import { UseCaseBus } from "../src";
+import { UseCaseCommandBus } from "../src";
 import { NopeStore } from "./helper/NopeStore";
 import * as assert from "assert";
 
@@ -21,7 +21,7 @@ describe("UseCaseBus", () => {
             }
         }
 
-        const bus = UseCaseBus.create(context).bind(TestCommand, new TestUseCase());
+        const bus = UseCaseCommandBus.create(context).bind(TestCommand, new TestUseCase());
         await bus.send(new TestCommand());
         assert.strictEqual(executed.length, 1);
         assert.ok(executed[0] instanceof TestCommand);
@@ -53,7 +53,7 @@ describe("UseCaseBus", () => {
             }
         }
 
-        const bus = UseCaseBus.create(context)
+        const bus = UseCaseCommandBus.create(context)
             .bind(TestCommandA, new TestUseCaseA())
             .bind(TestCommandB, new TestUseCaseB());
         // A =>
@@ -82,7 +82,7 @@ describe("UseCaseBus", () => {
             }
         }
 
-        const bus = UseCaseBus.create(context).bind(TestCommand, new TestUseCase());
+        const bus = UseCaseCommandBus.create(context).bind(TestCommand, new TestUseCase());
         // send
         await bus.send(new TestCommand());
         await bus.send(new TestCommand());
@@ -114,7 +114,7 @@ describe("UseCaseBus", () => {
             return new TestUseCase();
         };
 
-        const container = UseCaseBus.create(context).bindFactory(TestCommand, createTestUseCase);
+        const container = UseCaseCommandBus.create(context).bindFactory(TestCommand, createTestUseCase);
         // send TestCommand => createTestUseCase()#execute
         await container.send(new TestCommand());
         assert.strictEqual(executed.length, 1);
@@ -153,7 +153,7 @@ describe("UseCaseBus", () => {
             return new TestUseCaseB();
         };
 
-        const bus = UseCaseBus.create(context)
+        const bus = UseCaseCommandBus.create(context)
             .bind(CommandA, new TestUseCaseA())
             .bindFactory(CommandB, createTestUseCaseB);
         // send CommandA => execute TestUseCaseA
@@ -187,7 +187,7 @@ describe("UseCaseBus", () => {
             }
 
             assert.throws(() => {
-                const container = UseCaseBus.create(context).bind(TestCommandA, new TestUseCaseA());
+                const container = UseCaseCommandBus.create(context).bind(TestCommandA, new TestUseCaseA());
                 container.bind(TestCommandB, new TestUseCaseB());
                 container.send(TestCommandA);
             }, /You should use last return value of bind/);
@@ -210,7 +210,7 @@ describe("UseCaseBus", () => {
             }
 
             assert.throws(() => {
-                UseCaseBus.create(context)
+                UseCaseCommandBus.create(context)
                     .bind(TestCommand, new TestUseCaseA())
                     .bind(TestCommand, new TestUseCaseB());
             }, /This Command is already bound/);
@@ -235,7 +235,7 @@ describe("UseCaseBus", () => {
             const createTestUseCase = () => new TestUseCase();
 
             assert.throws(() => {
-                UseCaseBus.create(context)
+                UseCaseCommandBus.create(context)
                     .bindFactory(TestCommandA, createTestUseCase)
                     .bindFactory(TestCommandB, createTestUseCase);
             }, /This UseCaseFactory is already bound/);

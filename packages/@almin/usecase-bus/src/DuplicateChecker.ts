@@ -1,4 +1,4 @@
-import { Construct, Factory } from "./UseCaseBus";
+import { Construct, Factory } from "./UseCaseCommandBus";
 import { UseCase } from "almin";
 
 /**

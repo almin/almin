@@ -39,7 +39,7 @@ Install with [npm](https://www.npmjs.com/):
 
 ```ts
 import { UseCase, Context } from "almin";
-import { UseCaseBus } from "@almin/usecase-bus"
+import { UseCaseCommandBus } from "@almin/usecase-bus"
 // async code
 (async () => {
     const context = new Context({
@@ -73,7 +73,7 @@ import { UseCaseBus } from "@almin/usecase-bus"
     };
 
     // create binding between Command Constructor and UseCase/UseCaseFactory.
-    const bus = UseCaseBus.create(context)
+    const bus = UseCaseCommandBus.create(context)
         .bind(CommandA, new TestUseCaseA())
         .bindFactory(CommandB, createTestUseCaseB);
     // send CommandA => execute TestUseCaseA

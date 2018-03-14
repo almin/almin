@@ -128,7 +128,7 @@ container.send(CommandA);
  * @example
  *
  * ```
- * const container = UseCaseContainer
+ * const container = UseCaseCommandBus
  *      .create(context)
  *      .bind(CommandA, new UseCaseA())
  *      .bind(CommandB, new UseCaseB());
@@ -139,7 +139,7 @@ container.send(CommandA);
  *
  *
  */
-export class UseCaseBus {
+export class UseCaseCommandBus {
     static create(context: Context<any>) {
         const duplicateChecker = new DuplicateChecker();
         return new UseCaseBinder({

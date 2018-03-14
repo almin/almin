@@ -1,1 +1,1 @@
-export { UseCaseBus } from "./UseCaseBus";
+export { UseCaseCommandBus } from "./UseCaseCommandBus";
