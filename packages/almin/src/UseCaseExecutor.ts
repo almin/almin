@@ -13,6 +13,13 @@ import { Payload } from "./payload/Payload";
 import { WillNotExecutedPayload } from "./payload/WillNotExecutedPayload";
 import { assertOK } from "./util/assert";
 
+// Conditional Typing in TS 2.8 >=
+// Get Argument of T function and return tuple
+export type A0<T> = T extends () => any ? T : never;
+export type A1<T> = T extends (a1: infer R1) => any ? [R1] : [never];
+export type A2<T> = T extends (a1: infer R1, a2: infer R2) => any ? [R1, R2] : [never, never];
+export type A3<T> = T extends (a1: infer R1, a2: infer R2, a3: infer R3) => any ? [R1, R2, R3] : [never, never, never];
+
 interface InvalidUsage {
     type: "InvalidUsage";
     error: Error;
@@ -139,11 +146,14 @@ export interface UseCaseExecutor<T extends UseCaseLike> extends Dispatcher {
 
     executor(executor: (useCase: Pick<T, "execute">) => any): Promise<void>;
 
-    execute(): Promise<void>;
+    // FIXME: should fix `execute()` pattern
+    execute<P extends A0<T["execute"]>>(): P extends never ? never : Promise<void>;
 
-    execute<T>(args: T): Promise<void>;
+    execute<P extends A1<T["execute"]>>(a1: P[0]): Promise<void>;
 
-    execute(...args: Array<any>): Promise<void>;
+    execute<P extends A2<T["execute"]>>(a1: P[0], a2: P[1]): Promise<void>;
+
+    execute<P extends A3<T["execute"]>>(a1: P[0], a2: P[1], a3: P[2]): Promise<void>;
 
     release(): void;
 }
@@ -363,10 +373,10 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
         // proxiedUseCase will resolve by UseCaseWrapper#execute
         // For more details, see <UseCaseLifeCycle-test.ts>
         const proxyfiedUseCase = proxifyUseCase<T>(this.useCase, {
-            onWillNotExecute: args => {
+            onWillNotExecute: (args: any[]) => {
                 this.willNotExecuteUseCase(args);
             },
-            onWillExecute: args => {
+            onWillExecute: (args: any[]) => {
                 this.willExecuteUseCase(args);
             },
             onDidExecute: (result?: any) => {
@@ -435,8 +445,10 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
      * The `execute(arguments)` is shortcut of `executor(useCase => useCase.execute(arguments)`
      *
      */
-    execute(): Promise<void>;
-    execute<T>(args: T): Promise<void>;
+    execute<P extends A0<T["execute"]>>(this: P extends never ? never : this): Promise<void>;
+    execute<P extends A1<T["execute"]>>(a1: P[0]): Promise<void>;
+    execute<P extends A2<T["execute"]>>(a1: P[0], a2: P[1]): Promise<void>;
+    execute<P extends A3<T["execute"]>>(a1: P[0], a2: P[1], a3: P[2]): Promise<void>;
     execute(...args: Array<any>): Promise<void> {
         return this.executor(useCase => useCase.execute(...args));
     }

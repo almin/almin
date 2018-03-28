@@ -2,9 +2,18 @@ import * as assert from "assert";
 import * as path from "path";
 import { check } from "typings-tester";
 
-describe("typings", () => {
-    it("pass", () => {
-        assert.doesNotThrow(() => check([path.join(__dirname, "typescript/almin.ts")], "tsconfig.json"));
+const test = (fileName: string) => {
+    it(`${fileName} should be passed`, () => {
+        try {
+            check([path.join(__dirname, `typing-fixtures/${fileName}`)], "tsconfig.json");
+        } catch (error) {
+            assert.fail(error.stack);
+        }
     });
-    it("fail", () => {});
+};
+describe("typings", () => {
+    test("almin.ts");
+    test("almin-loading.ts");
+    test("non-execute-arguments.ts");
+    test("mismatch-execute-arguments.ts");
 });

@@ -54,7 +54,7 @@ const context = new Context({
 });
 context
     .useCase(loadingUseCase)
-    .execute<UpdateLoadingUseCaseArg>(true)
+    .execute(true)
     .then(() => {
         // nope
     });

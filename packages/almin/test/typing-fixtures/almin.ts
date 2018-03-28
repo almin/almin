@@ -126,7 +126,7 @@ const functionalUseCase = (context: FunctionalUseCaseContext) => {
 // execute - functional execute with ArgT
 context
     .useCase(functionalUseCase)
-    .execute<functionUseCaseArgs>("1")
+    .execute("1")
     .then(() => {
         const state = context.getState();
         log(state.aState.a);
@@ -143,7 +143,7 @@ context
 // execute: usecase with T
 context
     .useCase(parentUseCase)
-    .execute<ParentUseCaseArgs>("value")
+    .execute("value")
     .then(() => {
         const state = context.getState();
         log(state.aState.a);
