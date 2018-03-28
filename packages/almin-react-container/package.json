@@ -54,8 +54,8 @@
     "react": "^16.1.1",
     "react-dom": "^16.1.1",
     "rimraf": "^2.6.2",
-    "ts-node": "^4.1.0",
-    "typescript": "~2.6.2"
+    "ts-node": "^5.0.1",
+    "typescript": "~2.8.1"
   },
   "dependencies": {
     "shallow-equal-object": "^1.0.1"
