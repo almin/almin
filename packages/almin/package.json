@@ -74,6 +74,7 @@
     "ts-node": "^5.0.1",
     "ts-node-test-register": "^2.0.0",
     "typescript": "~2.8.1",
+    "typings-tester": "^0.3.1",
     "zuul": "^3.10.1"
   },
   "dependencies": {

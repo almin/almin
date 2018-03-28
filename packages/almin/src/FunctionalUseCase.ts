@@ -60,11 +60,6 @@ export class FunctionalUseCase extends Dispatcher implements UseCaseLike {
     executor: Function;
 
     /**
-     * Dispatcher
-     */
-    dispatcher: Dispatcher;
-
-    /**
      * The default is UseCase name
      */
     name: string;
