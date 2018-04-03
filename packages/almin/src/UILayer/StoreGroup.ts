@@ -388,7 +388,7 @@ But, ${store.name}#getState() was called.`
      * Almin can control all transaction to StoreGroup.
      *
      * It means that StoreGroup doesn't use `this.onDispatch`.
-     * It use `commit` insteadof receive data vis `this.onDispatch`.
+     * It use `commit` insteadof receive data via `this.onDispatch`.
      */
     commit(commitment: Commitment): void {
         const payload = commitment.payload;
