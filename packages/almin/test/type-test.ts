@@ -14,6 +14,5 @@ const test = (fileName: string) => {
 describe("typings", () => {
     test("almin.ts");
     test("almin-loading.ts");
-    test("non-execute-arguments.ts");
-    test("mismatch-execute-arguments.ts");
+    test("execute-argument.ts");
 });

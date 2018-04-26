@@ -180,8 +180,8 @@ context
 
 context
     .transaction("my work", async transactionContext => {
-        await transactionContext.useCase(new MyUseCase()).execute();
-        await transactionContext.useCase(new ParentUseCase()).execute();
+        await transactionContext.useCase(new MyUseCase()).execute("string");
+        await transactionContext.useCase(new ParentUseCase()).execute("string");
         transactionContext.commit();
     })
     .then(() => {
