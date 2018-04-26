@@ -13,6 +13,7 @@ import { Payload } from "./payload/Payload";
 import { WillNotExecutedPayload } from "./payload/WillNotExecutedPayload";
 import { assertOK } from "./util/assert";
 
+// prettier-ignore-start
 // Conditional Typing in TS 2.8 >=
 // Get Arguments of T function and return tuple
 export type A0<T> = T extends () => any ? T : never;
@@ -71,6 +72,7 @@ export type A9<T> = T extends (
 ) => any
     ? [R1, R2, R3, R4, R5, R6, R7, R8, R9]
     : [never, never, never, never, never, never, never, never, never];
+// prettier-ignore-end
 
 interface InvalidUsage {
     type: "InvalidUsage";
@@ -515,6 +517,7 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
             });
     }
 
+    // prettier-ignore-start
     /**
      * Execute UseCase instance.
      * UseCase is a executable object that has `execute` method.
@@ -574,6 +577,7 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
     execute(...args: Array<any>): Promise<void> {
         return this.executor(useCase => useCase.execute(...args));
     }
+    // prettier-ignore-end
 
     /**
      * release all events handler.
