@@ -459,7 +459,7 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
      * 
      * `execute()` support type check in Almin 0.17.0.
      * However, it has a limitation about argument lengths.
-     * For more details, please see <URL>
+     * For more details, please see <https://github.com/almin/almin/issues/107#issuecomment-384993458>
      */
     execute<P extends A0<T["execute"]>>(this: P extends never ? never : this): Promise<void>;
     execute<P extends A1<T["execute"]>>(a1: P[0]): Promise<void>;

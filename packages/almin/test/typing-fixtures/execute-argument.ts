@@ -59,3 +59,5 @@ context.useCase(new MyUseCaseDefault()).execute(1);
 // more arguments
 
 context.useCase(new MyUseCaseA()).execute("A", 1, 1);
+// typings:expect-error
+context.useCase(new MyUseCaseA()).executor(useCase => useCase.execute("A", 1, 1));
