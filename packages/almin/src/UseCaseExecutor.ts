@@ -25,7 +25,6 @@ export type A6<T> = T extends (a1: infer R1, a2: infer R2, a3: infer R3, a4: inf
 export type A7<T> = T extends (a1: infer R1, a2: infer R2, a3: infer R3, a4: infer R4, a5: infer R5, a6: infer R6, a7: infer R7) => any ? [R1, R2, R3, R4, R5, R6, R7] : [never, never, never, never, never, never, never];
 export type A8<T> = T extends (a1: infer R1, a2: infer R2, a3: infer R3, a4: infer R4, a5: infer R5, a6: infer R6, a7: infer R7, a8: infer R8) => any ? [R1, R2, R3, R4, R5, R6, R7, R8] : [never, never, never, never, never, never, never, never];
 export type A9<T> = T extends (a1: infer R1, a2: infer R2, a3: infer R3, a4: infer R4, a5: infer R5, a6: infer R6, a7: infer R7, a8: infer R8, a9: infer R9) => any ? [R1, R2, R3, R4, R5, R6, R7, R8, R9] : [never, never, never, never, never, never, never, never, never];
-// prettier-ignore-end
 
 interface InvalidUsage {
     type: "InvalidUsage";
