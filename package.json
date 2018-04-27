@@ -12,6 +12,10 @@
     "packages/@almin/*"
   ],
   "license": "MIT",
+  "resolutions": {
+    "@types/react": "16.3.13",
+    "@types/react-dom": "16.0.5"
+  },
   "devDependencies": {
     "@alrra/travis-scripts": "^3.0.1",
     "@azu/docco": "^0.7.2",
@@ -27,7 +31,7 @@
     "textlint-rule-common-misspellings": "^1.0.1",
     "textlint-rule-no-dead-link": "^4.3.0",
     "textlint-rule-prh": "^5.0.1",
-    "typescript": "~2.8.1"
+    "typescript": "~2.8.3"
   },
   "scripts": {
     "precommit": "lint-staged",

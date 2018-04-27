@@ -40,8 +40,8 @@
   },
   "devDependencies": {
     "@types/node": "^9.3.0",
-    "@types/react": "16.0.35",
-    "@types/react-dom": "16.0.3",
+    "@types/react": "16.3.13",
+    "@types/react-dom": "16.0.5",
     "almin": "^0.16.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-power-assert": "^1.0.0",
@@ -51,17 +51,13 @@
     "jsdom": "^11.3.0",
     "mocha": "^4.0.1",
     "power-assert": "^1.4.4",
-    "react": "^16.1.1",
-    "react-dom": "^16.1.1",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2",
     "rimraf": "^2.6.2",
     "ts-node": "^6.0.1",
     "typescript": "~2.8.3"
   },
   "dependencies": {
     "shallow-equal-object": "^1.0.1"
-  },
-  "resolutions": {
-    "@types/react": "16.0.35",
-    "@types/react-dom": "16.0.3"
   }
 }
