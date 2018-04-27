@@ -442,7 +442,6 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
             });
     }
 
-    // prettier-ignore-start
     /**
      * Execute UseCase instance.
      * UseCase is a executable object that has `execute` method.
@@ -475,7 +474,6 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
     execute(...args: Array<any>): Promise<void> {
         return this.executor(useCase => useCase.execute(...args));
     }
-    // prettier-ignore-end
 
     /**
      * release all events handler.
