@@ -5,3 +5,6 @@ lib/
 *.min.js
 *.min.css
 _book
+
+# Prettier does not support flexible ignore
+/packages/almin/src/UseCaseExecutor.ts
