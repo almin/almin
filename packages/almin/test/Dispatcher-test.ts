@@ -44,12 +44,7 @@ describe("Dispatcher", function() {
             const dispatcher = new Dispatcher();
 
             class MyPayload extends Payload {
-                type: string;
-
-                // Not have type
-                constructor() {
-                    super({ type: "MyPayload" });
-                }
+                type = "MyPayload";
             }
 
             dispatcher.onDispatch(payload => {

@@ -12,6 +12,10 @@
     "packages/@almin/*"
   ],
   "license": "MIT",
+  "resolutions": {
+    "@types/react": "16.3.13",
+    "@types/react-dom": "16.0.5"
+  },
   "devDependencies": {
     "@alrra/travis-scripts": "^3.0.1",
     "@azu/docco": "^0.7.2",
@@ -20,14 +24,14 @@
     "husky": "^0.14.3",
     "lerna": "^2.8.0",
     "lint-staged": "^6.0.1",
-    "prettier": "^1.10.2",
+    "prettier": "^1.12.1",
     "textlint": "^10.1.3",
     "textlint-filter-rule-comments": "^1.2.2",
     "textlint-rule-alex": "^1.0.1",
     "textlint-rule-common-misspellings": "^1.0.1",
     "textlint-rule-no-dead-link": "^4.3.0",
     "textlint-rule-prh": "^5.0.1",
-    "typescript": "~2.6.2"
+    "typescript": "~2.8.3"
   },
   "scripts": {
     "precommit": "lint-staged",

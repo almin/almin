@@ -43,13 +43,13 @@ describe("StoreGroup", function() {
                 new StoreGroup();
             });
             assert.throws(() => {
-                new StoreGroup([]);
+                new StoreGroup([] as any);
             });
             assert.throws(() => {
                 new StoreGroup({
                     a: 1,
                     b: 2
-                });
+                } as any);
             });
         });
         it("support stateName and store mapping ", () => {
