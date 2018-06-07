@@ -8,6 +8,50 @@ Install with [npm](https://www.npmjs.com/):
 
     npm install @almin/react-context
 
+## Example
+
+This is a example of `@almin/react-context`.
+
+:memo: Note: [create-test-store.ts](./test/helper/create-test-store.ts) is a test helper
+
+```ts
+import { Context, StoreGroup } from "almin";
+import { createReactContext } from "@almin/react-context";
+// Create Almin context
+const context = new Context({
+    // StoreGroup has {a, b, c} state
+    store: new StoreGroup({
+        // createTestStore is a test helper that create Store instance of Almin
+        // See /test/helper/create-test-store.ts
+        a: createTestStore({ value: "a" }),
+        b: createTestStore({ value: "b" }),
+        c: createTestStore({ value: "c" }),
+    })
+});
+// Create React Context that wrap Almin Context
+const { Consumer, Provider } = createReactContext(context);
+// Use Provider 
+class App extends React.Component {
+    render() {
+        return (
+            // You should wrap Consumer with Provider
+            <Provider>
+                {/* Consumer children props is called when Almin's context is changed */}
+                <Consumer>
+                    {state => {
+                        return <ul>
+                            <li>{state.a.value}</li>;
+                            <li>{state.b.value}</li>;
+                            <li>{state.c.value}</li>;
+                        </ul>
+                    }}
+                </Consumer>
+            </Provider>
+        );
+    }
+}
+```
+
 ## Usage
 
 ## `createReactContext(AlminContext): { Provider, Consumer, ConsumerQuery }`

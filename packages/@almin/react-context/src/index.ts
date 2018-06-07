@@ -1,1 +1,1 @@
-export { createReactContext, ConsumerProps, ProviderProps, SubscribeProps } from "./react-context";
+export { createReactContext, ConsumerProps, ProviderProps, ConsumerQueryProps } from "./react-context";

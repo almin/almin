@@ -1,7 +1,5 @@
 import { Context } from "almin";
 import * as React from "react";
-
-let StateContext: null | React.Context<any> = null;
 // Provider
 export type ProviderProps<T> = {
     initialState?: T;
@@ -27,7 +25,7 @@ export function createReactContext<T>(
     ConsumerQuery: React.ComponentType<ConsumerQueryProps<T>>;
 } {
     const initialState = alminContext.getState();
-    StateContext = React.createContext(initialState);
+    const StateContext: React.Context<any> = React.createContext(initialState);
 
     // Provider
     class Provider extends React.PureComponent<ProviderProps<T>> {
