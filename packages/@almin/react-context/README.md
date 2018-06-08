@@ -17,6 +17,8 @@ This is a example of `@almin/react-context`.
 ```ts
 import { Context, StoreGroup } from "almin";
 import { createReactContext } from "@almin/react-context";
+// THIS IS TEST HELPER
+import { createTestStore } from "./helper/create-test-store";
 // Create Almin context
 const context = new Context({
     // StoreGroup has {a, b, c} state
@@ -61,6 +63,7 @@ class App extends React.Component {
 ```ts
 import { Context, StoreGroup } from "almin";
 import { createReactContext } from "@almin/react-context";
+import { createTestStore } from "./helper/create-test-store";
 // Create Almin context
 const context = new Context({
     store: createTestStore({
@@ -72,14 +75,125 @@ const context = new Context({
 const { Provider, Consumer, ConsumerQuery } = createReactContext(context);
 ```
 
-### Provider
+### `<Provider>`
+
+`<Provider>` component allows `<Consumers>` to subscribe to Almin's context changes.
+It is a just wrapper of React Context's Provider.
+
+- [React Context: Provider](https://reactjs.org/docs/context.html#provider)
+
+```ts
+class App extends React.Component {
+    render() {
+        return (
+            // You should wrap Consumer with Provider
+            <Provider>
+                {/* Consumer should be under the Provider */}
+                <Consumer>
+                    {state => { /* state is result of context.getState() */ }}
+                </Consumer>
+                <Consumer>
+                    {state => { /* state is result of context.getState() */ }}
+                </Consumer>
+            </Provider>
+        );
+    }
+}
+```
+
+Also, you can pass `initialState` to `Provider`.
+If you does not pass `initialState`, `Consumer`'s state is `context.getState()` value by default.
+
+```tsx
+const context = new Context({
+    store: createTestStore({
+        value: "store-initial"
+    })
+});
+const { Consumer, Provider } = createReactContext(context);
+
+class App extends React.Component {
+    render() {
+        return (
+            <Provider initialState={{ value: "props-initial" }}>
+                <Consumer>
+                    {state => {
+                        // value is "props-initial"(not "store-initial")
+                        return <p>{state.value}</p>;
+                    }}
+                </Consumer>
+            </Provider>
+        );
+    }
+}
+```
 
 ### Consumer
+
+`<Consumer>` component subscribes to Almin's context changes.
+It is a just wrapper of React Context's Consumer.
+
+- [React Context: Consumer](https://reactjs.org/docs/context.html#consumer)
+
+`<Consumer>` requires a [function as a child](https://reactjs.org/docs/render-props.html#using-props-other-than-render). The function receives the current context value and returns a React node.
+
+```tsx
+class App extends React.Component {
+    render() {
+        return (
+            // You should wrap Consumer with Provider
+            <Provider>
+                {/* Consumer require a function as a children */}
+                <Consumer>
+                    {state => { 
+                        /* render something based on the context value */
+                         return <p>{state.value}</p>;
+                    }}
+                </Consumer>
+            </Provider>
+        );
+    }
+}
+```
 
 ### ConsumerQuery
 
 `ConsumerQuery` is Consumer + Query component.
-It can select some state from whole state.
+It can select some state from whole state. Other things are same with `<Consumer>`.
+
+```tsx
+import { Context, StoreGroup } from "almin";
+import { createReactContext } from "@almin/react-context";
+import { createTestStore } from "./helper/create-test-store";
+// Create Almin Context
+const context = new Context({
+    store: new StoreGroup({
+        aState: createTestStore({
+            value: "aState"
+        }),
+        bState: createTestStore({
+            value: "bState"
+        })
+    })
+});
+// Create React Context
+const { ConsumerQuery, Provider } = createReactContext(context);
+
+class App extends React.Component {
+    render() {
+        return (
+            <Provider>
+                {/* select aState from whole state */}
+                <ConsumerQuery selector={(state) => state.aState}>
+                    {aState => { // <= receive aState instead of whole state
+                        return <p>{aState.value}</p>;
+                    }}
+                </ConsumerQuery>
+            </Provider>
+        );
+    }
+}
+```
 
 ## Changelog
 
