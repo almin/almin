@@ -1,0 +1,2 @@
+--require test/setup.js
+--require ts-node-test-register
