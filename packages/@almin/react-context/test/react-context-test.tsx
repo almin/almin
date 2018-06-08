@@ -3,7 +3,7 @@ import { Context } from "almin";
 import { createReactContext } from "../src";
 import * as React from "react";
 import * as TestUtils from "react-dom/test-utils";
-import { createTestStore } from "./helper/create-test-store";
+import { createStore } from "@almin/store-test-helper";
 
 function render<P>(element: React.ReactElement<P>): React.Component<P> {
     return TestUtils.renderIntoDocument(element) as React.Component<P>;
@@ -12,7 +12,7 @@ describe("@almin/react-context", () => {
     describe("Provider/Consumer", () => {
         it("should render with initialState props", () => {
             const context = new Context({
-                store: createTestStore({
+                store: createStore({
                     value: "store-initial"
                 })
             });
@@ -38,7 +38,7 @@ describe("@almin/react-context", () => {
         });
         it("should render with initial getState() result", () => {
             const context = new Context({
-                store: createTestStore({
+                store: createStore({
                     value: "initial"
                 })
             });
@@ -63,7 +63,7 @@ describe("@almin/react-context", () => {
             assert.strictEqual(element.textContent, "initial");
         });
         it("should re-render with updated state", () => {
-            const testStore = createTestStore({
+            const testStore = createStore({
                 value: "initial"
             });
             const context = new Context({
