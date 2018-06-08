@@ -36,8 +36,7 @@ describe("@almin/react-context", () => {
                                 {state => {
                                     return (
                                         <ul>
-                                            <li>{state.a.value}</li>
-                                            ;
+                                            <li>{state.a.value}</li>;
                                             <li>{state.b.value}</li>;
                                             <li>{state.c.value}</li>;
                                         </ul>
