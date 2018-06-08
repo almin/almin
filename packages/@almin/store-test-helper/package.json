@@ -33,7 +33,8 @@
     "test": "mocha \"test/**/*.ts\"",
     "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,css}\"",
     "watch": "tsc -p . --watch",
-    "clean": "rimraf lib/"
+    "clean": "rimraf lib/",
+    "ci": "npm run test"
   },
   "prettier": {
     "printWidth": 120,
