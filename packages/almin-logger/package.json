@@ -41,6 +41,7 @@
     "log"
   ],
   "devDependencies": {
+    "@almin/store-test-helper": "^1.0.0",
     "@types/mocha": "^5.2.1",
     "@types/node": "^9.3.0",
     "almin": "^0.16.0",

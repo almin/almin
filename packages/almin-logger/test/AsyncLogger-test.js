@@ -14,7 +14,7 @@ import AlminLogger from "../src/AlminLogger";
 import AsyncLogger from "../src/AsyncLogger";
 import { LogGroup } from "../src/log/LogGroup";
 import ConsoleMock from "./helper/ConsoleMock";
-import { createStore } from "./store/create-store";
+import { createStore } from "@almin/store-test-helper";
 import DispatchUseCase from "./usecase/DispatchUseCase";
 import ErrorUseCase from "./usecase/ErrorUseCase";
 import { ParentUseCase } from "./usecase/NestingUseCase";

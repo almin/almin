@@ -1,13 +1,12 @@
 {
-  "name": "@almin/react-context",
+  "name": "@almin/store-test-helper",
   "version": "1.0.0",
-  "description": "React Context wrapper for almin.",
+  "description": "Create Store helper for testing.",
   "keywords": [
     "almin",
-    "context",
-    "react"
+    "testing"
   ],
-  "homepage": "https://github.com/almin/almin/tree/master/packages/@almin/react-context/",
+  "homepage": "https://github.com/almin/almin/tree/master/packages/@almin/store-test-helper/",
   "bugs": {
     "url": "https://github.com/almin/almin/issues"
   },
@@ -18,8 +17,8 @@
     "lib/",
     "src/"
   ],
-  "main": "lib/react-context.js",
-  "types": "lib/react-context.d.ts",
+  "main": "lib/store-test-helper.js",
+  "types": "lib/store-test-helper.d.ts",
   "directories": {
     "lib": "lib",
     "test": "test"
@@ -31,9 +30,10 @@
   "scripts": {
     "build": "cross-env NODE_ENV=production tsc -p .",
     "prepublish": "npm run --if-present build",
-    "test": "mocha \"test/**/*.tsx\"",
+    "test": "mocha \"test/**/*.ts\"",
     "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,css}\"",
     "watch": "tsc -p . --watch",
+    "clean": "rimraf lib/",
     "ci": "npm run test"
   },
   "prettier": {
@@ -41,28 +41,21 @@
     "singleQuote": false,
     "tabWidth": 4
   },
-  "peerDependencies": {
-    "react": ">=16.3.0"
+  "dependencies": {
+    "almin": "^0.16.0"
   },
   "devDependencies": {
-    "@almin/store-test-helper": "^1.0.0",
     "@types/mocha": "^5.2.1",
-    "@types/node": "^9.0.0",
-    "@types/react": "^16.3.13",
-    "@types/react-dom": "^16.0.5",
-    "almin": "^0.16.0",
-    "cross-env": "^5.1.4",
-    "jsdom": "^11.9.0",
+    "@types/node": "^10.3.2",
+    "cross-env": "^5.1.6",
     "mocha": "^5.2.0",
-    "raf": "^3.4.0",
-    "react": "^16.4.0",
-    "react-dom": "^16.4.0",
+    "prettier": "^1.13.4",
+    "rimraf": "^2.6.2",
     "ts-node": "^6.1.0",
     "ts-node-test-register": "^3.0.0",
     "typescript": "^2.9.1"
   },
-  "resolutions": {
-    "@types/react": "16.3.13",
-    "@types/react-dom": "16.0.5"
+  "publishConfig": {
+    "access": "public"
   }
 }

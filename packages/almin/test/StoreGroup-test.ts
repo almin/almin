@@ -9,23 +9,23 @@ import { SinonStub } from "sinon";
 
 const sinon = require("sinon");
 
-const createAsyncChangeStoreUseCase = (store: MockStore) => {
+const createAsyncChangeStoreUseCase = (store: MockStore<any>) => {
     class ChangeTheStoreUseCase extends UseCase {
         execute() {
             return Promise.resolve().then(() => {
                 const newState = { a: {} };
-                store.mutableStateWithoutEmit(newState);
+                store.updateStateWithoutEmit(newState);
             });
         }
     }
 
     return new ChangeTheStoreUseCase();
 };
-const createChangeStoreUseCase = (store: MockStore) => {
+const createChangeStoreUseCase = (store: MockStore<any>) => {
     class ChangeTheStoreUseCase extends UseCase {
         execute() {
             const newState = { a: {} };
-            store.mutableStateWithoutEmit(newState);
+            store.updateStateWithoutEmit(newState);
         }
     }
 
@@ -449,9 +449,9 @@ describe("StoreGroup", function() {
 
                 class ChangeABUseCase extends UseCase {
                     execute() {
-                        aStore.mutableStateWithoutEmit({ a: 1 });
+                        aStore.updateStateWithoutEmit({ a: 1 });
                         aStore.emitChange(); // *1
-                        bStore.mutableStateWithoutEmit({ b: 1 });
+                        bStore.updateStateWithoutEmit({ b: 1 });
                         bStore.emitChange(); // *2
                     }
                 }

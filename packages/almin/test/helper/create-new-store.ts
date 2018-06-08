@@ -2,45 +2,53 @@
 "use strict";
 import { Store } from "../../src";
 
-export interface MockStore {
+export interface MockStore<T> {
     // mutate state
-    mutableStateWithoutEmit(newState: any): void;
+    updateStateWithoutEmit(newState: T): void;
 
     // setState
-    updateState(newState: any): void;
+    updateState(newState: T): void;
 
     // state
     getState(): any;
 }
 
+export interface createStoreArg<T> {
+    name: string;
+    state?: T;
+}
+
 /**
  * This helper is for creating Store
  */
-export function createStore<T>({ name, state }: { name: string; state?: T }) {
+export function createStore<T>(arg: createStoreArg<T>) {
     class MockStore extends Store<T | undefined> implements MockStore {
         state: T | undefined;
 
         constructor() {
             super();
-            this.name = name;
-            this.state = state;
+            this.name = arg.name;
+            this.state = arg.state;
         }
 
         /**
-         * Directly modify state
+         * Update state without emitting
          */
-        mutableStateWithoutEmit(newState: any) {
+        updateStateWithoutEmit(newState: any) {
             this.state = newState;
         }
 
         /**
-         * setState
-         * @param {*} newState
+         * Update Store's state
+         * alias to setState
          */
         updateState(newState: any) {
             this.setState(newState);
         }
 
+        /**
+         * Return current statei
+         */
         getState() {
             return this.state;
         }

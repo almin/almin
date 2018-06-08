@@ -16,27 +16,26 @@ Requirements:
 
 This is a example of `@almin/react-context`.
 
-:memo: Note: [create-test-store.ts](./test/helper/create-test-store.ts) is a test helper
+:memo: Note: [@almin/store-test-helper](../@almin/store-test-helper) is a test helper for creating almin's `Store`.
 
 ```ts
 import { Context, StoreGroup } from "almin";
+import { createStore } from "@almin/store-test-helper";
 import { createReactContext } from "@almin/react-context";
-// THIS IS TEST HELPER
-import { createTestStore } from "./helper/create-test-store";
 // Create Almin context
 const context = new Context({
     // StoreGroup has {a, b, c} state
     store: new StoreGroup({
-        // createTestStore is a test helper that create Store instance of Almin
-        // See /test/helper/create-test-store.ts
-        a: createTestStore({ value: "a" }),
-        b: createTestStore({ value: "b" }),
-        c: createTestStore({ value: "c" }),
+        // createStore is a test helper that create Store instance of Almin
+        // initial state of `a` is { value: "a" }
+        a: createStore({ value: "a" }),
+        b: createStore({ value: "b" }),
+        c: createStore({ value: "c" }),
     })
 });
 // Create React Context that wrap Almin Context
 const { Consumer, Provider } = createReactContext(context);
-// Use Provider 
+// Use Provider
 class App extends React.Component {
     render() {
         return (
@@ -66,11 +65,11 @@ class App extends React.Component {
 
 ```ts
 import { Context, StoreGroup } from "almin";
+import { createStore } from "@almin/store-test-helper";
 import { createReactContext } from "@almin/react-context";
-import { createTestStore } from "./helper/create-test-store";
 // Create Almin context
 const context = new Context({
-    store: createTestStore({
+    store: createStore({
         value: "store-initial"
     })
 });
@@ -110,10 +109,10 @@ If you does not pass `initialState`, `Consumer`'s state is `context.getState()` 
 
 ```tsx
 import { Context, StoreGroup } from "almin";
+import { createStore } from "@almin/store-test-helper";
 import { createReactContext } from "@almin/react-context";
-import { createTestStore } from "./helper/create-test-store";
 const context = new Context({
-    store: createTestStore({
+    store: createStore({
         value: "store-initial"
     })
 });
@@ -152,7 +151,7 @@ class App extends React.Component {
             <Provider>
                 {/* Consumer require a function as a children */}
                 <Consumer>
-                    {state => { 
+                    {state => {
                         /* render something based on the context value */
                         return <p>{state.value}</p>;
                     }}
