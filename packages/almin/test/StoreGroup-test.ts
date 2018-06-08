@@ -14,7 +14,7 @@ const createAsyncChangeStoreUseCase = (store: MockStore) => {
         execute() {
             return Promise.resolve().then(() => {
                 const newState = { a: {} };
-                store.mutableStateWithoutEmit(newState);
+                store.updateStateWithoutEmit(newState);
             });
         }
     }
@@ -25,7 +25,7 @@ const createChangeStoreUseCase = (store: MockStore) => {
     class ChangeTheStoreUseCase extends UseCase {
         execute() {
             const newState = { a: {} };
-            store.mutableStateWithoutEmit(newState);
+            store.updateStateWithoutEmit(newState);
         }
     }
 
@@ -449,9 +449,9 @@ describe("StoreGroup", function() {
 
                 class ChangeABUseCase extends UseCase {
                     execute() {
-                        aStore.mutableStateWithoutEmit({ a: 1 });
+                        aStore.updateStateWithoutEmit({ a: 1 });
                         aStore.emitChange(); // *1
-                        bStore.mutableStateWithoutEmit({ b: 1 });
+                        bStore.updateStateWithoutEmit({ b: 1 });
                         bStore.emitChange(); // *2
                     }
                 }
