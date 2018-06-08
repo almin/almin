@@ -1,8 +1,19 @@
-import { UseCase, Context } from "../../src/index";
-import { createStore } from "../helper/create-new-store";
+import { UseCase, Context, Store } from "../../src";
+
+class MyStore extends Store<{}> {
+    constructor(args: { name: string }) {
+        super();
+        this.name = args.name;
+    }
+    getState() {
+        return {};
+    }
+}
+
 class MyUseCaseNoArgument extends UseCase {
     execute() {}
 }
+
 class MyUseCaseA extends UseCase {
     execute(_a: string) {}
 }
@@ -22,8 +33,9 @@ class MyUseCaseOptional extends UseCase {
 class MyUseCaseDefault extends UseCase {
     execute(_value: string = "string") {}
 }
+
 const context = new Context({
-    store: createStore({ name: "test" })
+    store: new MyStore({ name: "test" })
 });
 
 // valid
