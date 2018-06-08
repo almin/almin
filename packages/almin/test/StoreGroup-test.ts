@@ -9,7 +9,7 @@ import { SinonStub } from "sinon";
 
 const sinon = require("sinon");
 
-const createAsyncChangeStoreUseCase = (store: MockStore) => {
+const createAsyncChangeStoreUseCase = (store: MockStore<any>) => {
     class ChangeTheStoreUseCase extends UseCase {
         execute() {
             return Promise.resolve().then(() => {
@@ -21,7 +21,7 @@ const createAsyncChangeStoreUseCase = (store: MockStore) => {
 
     return new ChangeTheStoreUseCase();
 };
-const createChangeStoreUseCase = (store: MockStore) => {
+const createChangeStoreUseCase = (store: MockStore<any>) => {
     class ChangeTheStoreUseCase extends UseCase {
         execute() {
             const newState = { a: {} };

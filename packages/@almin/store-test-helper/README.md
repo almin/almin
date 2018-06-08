@@ -10,7 +10,38 @@ Install with [npm](https://www.npmjs.com/):
 
 ## Usage
 
-- [ ] Write usage instructions
+```ts
+import { Store } from "almin";
+export interface MockStore<T> extends Store<T> {
+    updateStateWithoutEmit(newState: T): void;
+    updateState(newState: T): void;
+    getState(): any;
+}
+/**
+ * This helper is for creating Store
+ * @example
+ * // state only
+ * // name is increment number automatically
+ * createStore({ value: "state" });
+ * // with name
+ * createStore("Store Name", { value: "state" });
+ *
+ */
+export declare function createStore<T>(storeName: string, initialState: T): MockStore<T>;
+export declare function createStore<T>(initialState: T): MockStore<T>;
+```
+
+### Example
+
+```ts
+const initialState = {
+    value: "value"
+};
+const store = createStore("TestStore", initialState);
+assert.ok(store instanceof Store);
+assert.strictEqual(store.name, "TestStore");
+assert.deepStrictEqual(store.getState(), initialState);
+```
 
 ## Changelog
 

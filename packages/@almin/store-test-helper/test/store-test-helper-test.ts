@@ -4,14 +4,11 @@ import { Store } from "almin";
 
 describe("@almin/store-test-helper", () => {
     describe("createStore", () => {
-        it("create({ name, state })", () => {
+        it("create(name, state)", () => {
             const initialState = {
                 value: "value"
             };
-            const store = createStore({
-                name: "TestStore",
-                state: initialState
-            });
+            const store = createStore("TestStore", initialState);
             assert.ok(store instanceof Store);
             assert.strictEqual(store.name, "TestStore");
             assert.deepStrictEqual(store.getState(), initialState);
