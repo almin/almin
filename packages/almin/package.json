@@ -74,7 +74,7 @@
     "source-map-support": "^0.5.5",
     "ts-node": "^6.1.0",
     "ts-node-test-register": "^3.0.0",
-    "typescript": "~2.8.3",
+    "typescript": "~2.9.1",
     "typings-tester": "^0.3.1",
     "zuul": "^3.10.1"
   },

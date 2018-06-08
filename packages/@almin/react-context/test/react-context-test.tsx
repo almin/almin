@@ -1,5 +1,5 @@
 import * as assert from "assert";
-import { Context, StoreGroup } from "almin";
+import { Context } from "almin";
 import { createReactContext } from "../src";
 import * as React from "react";
 import * as TestUtils from "react-dom/test-utils";
@@ -95,118 +95,6 @@ describe("@almin/react-context", () => {
             });
             const element = TestUtils.findRenderedDOMComponentWithTag(tree, "p");
             assert.strictEqual(element.textContent, "second");
-        });
-    });
-    describe("Provider/ConsumerQuery", () => {
-        it("should render with the result state of selector", () => {
-            const context = new Context({
-                store: new StoreGroup({
-                    aState: createTestStore({
-                        value: "aState"
-                    }),
-                    bState: createTestStore({
-                        value: "bState"
-                    })
-                })
-            });
-            const { ConsumerQuery, Provider } = createReactContext(context);
-
-            class App extends React.Component {
-                render() {
-                    return (
-                        <Provider>
-                            <ConsumerQuery selector={state => state.aState}>
-                                {aState => {
-                                    return <p>{aState.value}</p>;
-                                }}
-                            </ConsumerQuery>
-                        </Provider>
-                    );
-                }
-            }
-            const tree = render(<App />);
-            const element = TestUtils.findRenderedDOMComponentWithTag(tree, "p");
-            assert.strictEqual(element.textContent, "aState");
-        });
-        it("should re-render with updated state", () => {
-            const aStore = createTestStore({
-                value: "aState"
-            });
-            const context = new Context({
-                store: new StoreGroup({
-                    aState: aStore,
-                    bState: createTestStore({
-                        value: "bState"
-                    })
-                })
-            });
-            const { ConsumerQuery, Provider } = createReactContext(context);
-
-            class App extends React.Component {
-                render() {
-                    return (
-                        <Provider>
-                            <ConsumerQuery selector={state => state.aState}>
-                                {aState => {
-                                    return <p>{aState.value}</p>;
-                                }}
-                            </ConsumerQuery>
-                        </Provider>
-                    );
-                }
-            }
-            const tree = render(<App />);
-            // update
-            aStore.updateState({
-                value: "newState"
-            });
-            const element = TestUtils.findRenderedDOMComponentWithTag(tree, "p");
-            assert.strictEqual(element.textContent, "newState");
-        });
-        it("should not re-render without updated state", () => {
-            const aStore = createTestStore({
-                value: "aState"
-            });
-            const bStore = createTestStore({
-                value: "bState"
-            });
-            const context = new Context({
-                store: new StoreGroup({
-                    aState: aStore,
-                    bState: bStore
-                })
-            });
-            const { ConsumerQuery, Provider } = createReactContext(context);
-
-            let renderCount = 0;
-            class App extends React.Component {
-                render() {
-                    return (
-                        <Provider>
-                            <ConsumerQuery selector={state => state.aState}>
-                                {aState => {
-                                    renderCount++;
-                                    return <p>{aState.value}</p>;
-                                }}
-                            </ConsumerQuery>
-                        </Provider>
-                    );
-                }
-            }
-            const tree = render(<App />);
-            // bStore is updated, but aStore is used
-            bStore.updateState({
-                value: "1"
-            });
-            bStore.updateState({
-                value: "2"
-            });
-            bStore.updateState({
-                value: "3"
-            });
-            const element = TestUtils.findRenderedDOMComponentWithTag(tree, "p");
-            assert.strictEqual(element.textContent, "aState");
-            assert.strictEqual(renderCount, 1);
         });
     });
 });

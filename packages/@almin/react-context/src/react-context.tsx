@@ -11,18 +11,11 @@ export type ConsumerProps<T> = {
     children: (props: T) => React.ReactNode;
 };
 
-// ConsumerQuery
-export type ConsumerQueryProps<T, K = any> = {
-    selector: (state: T) => K;
-    children: (props: K) => React.ReactNode;
-};
-
-export function createReactContext<T>(
+export function createReactContext<T, P>(
     alminContext: Context<T>
 ): {
     Provider: React.ComponentType<ProviderProps<T>>;
     Consumer: React.ComponentType<ConsumerProps<T>>;
-    ConsumerQuery: React.ComponentType<ConsumerQueryProps<T>>;
 } {
     const initialState = alminContext.getState();
     const StateContext: React.Context<any> = React.createContext(initialState);
@@ -74,30 +67,8 @@ export function createReactContext<T>(
         }
     }
 
-    //　Consumer with Selcector
-    class ConsumerQuery extends React.PureComponent<ConsumerQueryProps<T>> {
-        private prevState: T | null = null;
-        private renderedElement: React.ReactNode | null = null;
-        render() {
-            return (
-                <Consumer>
-                    {value => {
-                        const stateValue = this.props.selector(value);
-                        if (this.prevState === stateValue && this.renderedElement) {
-                            return this.renderedElement;
-                        }
-                        this.renderedElement = this.props.children(stateValue);
-                        this.prevState = stateValue;
-                        return this.renderedElement;
-                    }}
-                </Consumer>
-            );
-        }
-    }
-
     return {
         Provider,
-        Consumer,
-        ConsumerQuery
+        Consumer
     };
 }

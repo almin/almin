@@ -56,7 +56,7 @@ class App extends React.Component {
 
 ## Usage
 
-## `createReactContext(AlminContext): { Provider, Consumer, ConsumerQuery }`
+## `createReactContext(AlminContext): { Provider, Consumer }`
 
 `createReactContext` create thee React Components from Almin's `Context` instance.
 
@@ -72,7 +72,7 @@ const context = new Context({
 });
 // Create React Context from Almin Context
 // It return these React Components
-const { Provider, Consumer, ConsumerQuery } = createReactContext(context);
+const { Provider, Consumer } = createReactContext(context);
 ```
 
 ### `<Provider>`
@@ -105,6 +105,9 @@ Also, you can pass `initialState` to `Provider`.
 If you does not pass `initialState`, `Consumer`'s state is `context.getState()` value by default.
 
 ```tsx
+import { Context, StoreGroup } from "almin";
+import { createReactContext } from "@almin/react-context";
+import { createTestStore } from "./helper/create-test-store";
 const context = new Context({
     store: createTestStore({
         value: "store-initial"
@@ -147,48 +150,9 @@ class App extends React.Component {
                 <Consumer>
                     {state => { 
                         /* render something based on the context value */
-                         return <p>{state.value}</p>;
+                        return <p>{state.value}</p>;
                     }}
                 </Consumer>
-            </Provider>
-        );
-    }
-}
-```
-
-### ConsumerQuery
-
-`ConsumerQuery` is Consumer + Query component.
-It can select some state from whole state. Other things are same with `<Consumer>`.
-
-```tsx
-import { Context, StoreGroup } from "almin";
-import { createReactContext } from "@almin/react-context";
-import { createTestStore } from "./helper/create-test-store";
-// Create Almin Context
-const context = new Context({
-    store: new StoreGroup({
-        aState: createTestStore({
-            value: "aState"
-        }),
-        bState: createTestStore({
-            value: "bState"
-        })
-    })
-});
-// Create React Context
-const { ConsumerQuery, Provider } = createReactContext(context);
-
-class App extends React.Component {
-    render() {
-        return (
-            <Provider>
-                {/* select aState from whole state */}
-                <ConsumerQuery selector={(state) => state.aState}>
-                    {aState => { // <= receive aState instead of whole state
-                        return <p>{aState.value}</p>;
-                    }}
-                </ConsumerQuery>
             </Provider>
         );
     }

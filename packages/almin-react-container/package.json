@@ -55,7 +55,7 @@
     "react-dom": "^16.4.0",
     "rimraf": "^2.6.2",
     "ts-node": "^6.1.0",
-    "typescript": "~2.8.3"
+    "typescript": "~2.9.1"
   },
   "dependencies": {
     "shallow-equal-object": "^1.0.1"

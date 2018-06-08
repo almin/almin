@@ -31,7 +31,7 @@
     "textlint-rule-common-misspellings": "^1.0.1",
     "textlint-rule-no-dead-link": "^4.3.0",
     "textlint-rule-prh": "^5.0.1",
-    "typescript": "~2.8.3"
+    "typescript": "~2.9.1"
   },
   "scripts": {
     "precommit": "lint-staged",
