@@ -11,7 +11,7 @@ export type ConsumerProps<T> = {
     children: (props: T) => React.ReactNode;
 };
 
-export function createReactContext<T, P>(
+export function createReactContext<T>(
     alminContext: Context<T>
 ): {
     Provider: React.ComponentType<ProviderProps<T>>;
