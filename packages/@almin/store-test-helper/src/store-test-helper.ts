@@ -16,7 +16,7 @@ export interface MockStore<T> extends Store<T> {
 }
 
 export const isCreateStoreArg = (arg: any): arg is createStoreArg<any> => {
-    return typeof arg === "object" && typeof arg.name === "string" && !("state" in arg);
+    return typeof arg === "object" && typeof arg.name === "string";
 };
 
 export interface createStoreArg<T> {
