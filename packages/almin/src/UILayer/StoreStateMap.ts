@@ -37,7 +37,7 @@ export function createStoreStateMap<T>(mappingObject: StoreMap<T>): StoreStateMa
     for (let i = 0; i < keys.length; i++) {
         const stateName = keys[i];
         const store = mappingObject[stateName];
-        map.set(store, stateName);
+        map.set(store, String(stateName));
     }
     return map;
 }
