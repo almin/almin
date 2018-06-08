@@ -8,6 +8,10 @@ Install with [npm](https://www.npmjs.com/):
 
     npm install @almin/react-context
 
+Requirements:
+
+- React 16.3 >=
+
 ## Example
 
 This is a example of `@almin/react-context`.

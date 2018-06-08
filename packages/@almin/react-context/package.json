@@ -40,6 +40,9 @@
     "singleQuote": false,
     "tabWidth": 4
   },
+  "peerDependencies": {
+    "react": ">=16.3.0"
+  },
   "devDependencies": {
     "@types/mocha": "^5.2.1",
     "@types/node": "^9.0.0",
