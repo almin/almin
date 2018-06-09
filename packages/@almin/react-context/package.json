@@ -30,19 +30,16 @@
   },
   "scripts": {
     "build": "cross-env NODE_ENV=production tsc -p .",
+    "ci": "npm run test",
     "prepublish": "npm run --if-present build",
     "test": "mocha \"test/**/*.tsx\"",
     "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,css}\"",
-    "watch": "tsc -p . --watch",
-    "ci": "npm run test"
+    "watch": "tsc -p . --watch"
   },
   "prettier": {
     "printWidth": 120,
     "singleQuote": false,
     "tabWidth": 4
-  },
-  "peerDependencies": {
-    "react": ">=16.3.0"
   },
   "devDependencies": {
     "@almin/store-test-helper": "^1.0.0",
@@ -60,6 +57,12 @@
     "ts-node": "^6.1.0",
     "ts-node-test-register": "^3.0.0",
     "typescript": "^2.9.1"
+  },
+  "peerDependencies": {
+    "react": ">=16.3.0"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "resolutions": {
     "@types/react": "16.3.13",

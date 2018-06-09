@@ -1,42 +1,41 @@
 {
-  "directories": {
-    "test": "test"
+  "name": "almin-react-container",
+  "version": "0.6.4",
+  "description": "React bindings for Almin",
+  "keywords": [
+    "almin",
+    "component",
+    "react"
+  ],
+  "homepage": "https://github.com/almin/almin/tree/master/packages/almin-react-container",
+  "bugs": {
+    "url": "https://github.com/almin/almin/issues"
   },
-  "author": "azu",
   "license": "MIT",
+  "author": "azu",
   "files": [
     "bin/",
     "lib/",
     "src/"
   ],
-  "name": "almin-react-container",
-  "version": "0.6.4",
-  "description": "React bindings for Almin",
   "main": "lib/almin-react-container.js",
   "types": "lib/almin-react-container.d.ts",
-  "scripts": {
-    "test": "mocha \"test/**/*-test.{ts,tsx}\"",
-    "build": "cross-env NODE_ENV=production tsc -p .",
-    "watch": "tsc -p . --watch",
-    "prepublish": "npm run --if-present build",
-    "clean": "rimraf lib/"
+  "directories": {
+    "test": "test"
   },
-  "keywords": [
-    "react",
-    "almin",
-    "component"
-  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/almin/almin.git"
   },
-  "bugs": {
-    "url": "https://github.com/almin/almin/issues"
+  "scripts": {
+    "build": "cross-env NODE_ENV=production tsc -p .",
+    "clean": "rimraf lib/",
+    "prepublish": "npm run --if-present build",
+    "test": "mocha \"test/**/*-test.{ts,tsx}\"",
+    "watch": "tsc -p . --watch"
   },
-  "homepage": "https://github.com/almin/almin/tree/master/packages/almin-react-container",
-  "peerDependencies": {
-    "almin": "^0.15.0",
-    "react": "^15.0.0 || ^16.0.0"
+  "dependencies": {
+    "shallow-equal-object": "^1.0.1"
   },
   "devDependencies": {
     "@types/node": "^9.3.0",
@@ -57,7 +56,8 @@
     "ts-node": "^6.1.0",
     "typescript": "~2.9.1"
   },
-  "dependencies": {
-    "shallow-equal-object": "^1.0.1"
+  "peerDependencies": {
+    "almin": "^0.15.0",
+    "react": "^15.0.0 || ^16.0.0"
   }
 }

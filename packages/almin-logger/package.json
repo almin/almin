@@ -1,45 +1,47 @@
 {
   "name": "almin-logger",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/almin/almin.git"
-  },
-  "author": "azu",
-  "email": "azuciao@gmail.com",
+  "version": "6.1.5",
+  "description": "logger for Almin.js",
+  "keywords": [
+    "almin",
+    "log",
+    "logger"
+  ],
   "homepage": "https://github.com/almin/almin/tree/master/packages/almin-logger",
+  "bugs": {
+    "url": "https://github.com/almin/almin/issues"
+  },
   "license": "MIT",
+  "author": "azu",
   "files": [
     "src/",
     "lib/"
   ],
-  "bugs": {
-    "url": "https://github.com/almin/almin/issues"
-  },
-  "version": "6.1.5",
-  "description": "logger for Almin.js",
   "main": "lib/src/AlminLogger.js",
   "types": "lib/src/AlminLogger.d.ts",
   "directories": {
     "test": "test"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/almin/almin.git"
+  },
   "scripts": {
-    "clean": "rimraf lib/",
     "prebuild": "npm run clean",
     "build": "cross-env NODE_ENV=production tsc -p .",
     "build:test": "tsc -p test/",
-    "watch": "tsc -p . --watch",
+    "ci": "npm run test",
+    "clean": "rimraf lib/",
     "prepublish": "npm run --if-present build",
-    "test:saucelabs": "zuul -- lib/test/*-test.js",
-    "test:browser": "npm run build:test && zuul --local 8080 --ui mocha-bdd -- lib/test/*-test.js",
     "test": "rimraf out/ && npm run build:test && mocha out/test/",
     "posttest": "rimraf out/",
-    "ci": "npm run test"
+    "test:browser": "npm run build:test && zuul --local 8080 --ui mocha-bdd -- lib/test/*-test.js",
+    "test:saucelabs": "zuul -- lib/test/*-test.js",
+    "watch": "tsc -p . --watch"
   },
-  "keywords": [
-    "almin",
-    "logger",
-    "log"
-  ],
+  "dependencies": {
+    "map-like": "^2.0.0"
+  },
   "devDependencies": {
     "@almin/store-test-helper": "^1.0.0",
     "@types/mocha": "^5.2.1",
@@ -57,7 +59,5 @@
   "peerDependencies": {
     "almin": "^0.15.0"
   },
-  "dependencies": {
-    "map-like": "^2.0.0"
-  }
+  "email": "azuciao@gmail.com"
 }

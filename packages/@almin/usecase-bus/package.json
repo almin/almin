@@ -35,8 +35,10 @@
     "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,css}\"",
     "watch": "tsc -p . --watch"
   },
-  "peerDependencies": {
-    "almin": "^0.16.0"
+  "prettier": {
+    "printWidth": 120,
+    "singleQuote": false,
+    "tabWidth": 4
   },
   "devDependencies": {
     "@types/mocha": "^5.2.1",
@@ -49,9 +51,10 @@
     "ts-node-test-register": "^3.0.0",
     "typescript": "^2.9.1"
   },
-  "prettier": {
-    "singleQuote": false,
-    "printWidth": 120,
-    "tabWidth": 4
+  "peerDependencies": {
+    "almin": "^0.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

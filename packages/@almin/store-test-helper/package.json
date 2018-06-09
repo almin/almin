@@ -29,12 +29,12 @@
   },
   "scripts": {
     "build": "cross-env NODE_ENV=production tsc -p .",
+    "ci": "npm run test",
+    "clean": "rimraf lib/",
     "prepublish": "npm run --if-present build",
     "test": "mocha \"test/**/*.ts\"",
     "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,css}\"",
-    "watch": "tsc -p . --watch",
-    "clean": "rimraf lib/",
-    "ci": "npm run test"
+    "watch": "tsc -p . --watch"
   },
   "prettier": {
     "printWidth": 120,
