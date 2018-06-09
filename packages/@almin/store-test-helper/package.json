@@ -49,7 +49,7 @@
     "@types/node": "^10.3.2",
     "cross-env": "^5.1.6",
     "mocha": "^5.2.0",
-    "prettier": "^1.13.4",
+    "prettier": "^1.13.5",
     "rimraf": "^2.6.2",
     "ts-node": "^6.1.0",
     "ts-node-test-register": "^3.0.0",
