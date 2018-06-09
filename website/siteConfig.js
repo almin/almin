@@ -25,6 +25,7 @@ const siteConfig = {
         { search: true },
         { doc: "getting-started", label: "Docs" },
         { doc: "api", label: "API" },
+        { blog: true, label: "Blog" },
         { page: "help", label: "Help" },
         {
             href: "https://github.com/almin/almin",
