@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.7.0"></a>
+# [0.7.0](https://github.com/almin/almin/compare/almin-react-container@0.6.4...almin-react-container@0.7.0) (2018-06-09)
+
+
+### Bug Fixes
+
+* **almin-react-container:** support TypeScript 2.9 ([66a773d](https://github.com/almin/almin/commit/66a773d))
+
+
+### Features
+
+* **react-context:** add [@almin](https://github.com/almin)/react-context ([1ee6e65](https://github.com/almin/almin/commit/1ee6e65))
+
+
+
+
 <a name="0.6.4"></a>
 ## [0.6.4](https://github.com/almin/almin/compare/almin-react-container@0.6.3...almin-react-container@0.6.4) (2018-02-24)
 

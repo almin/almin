@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="6.2.0"></a>
+# [6.2.0](https://github.com/almin/almin/compare/almin-logger@6.1.5...almin-logger@6.2.0) (2018-06-09)
+
+
+### Features
+
+* **react-context:** add [@almin](https://github.com/almin)/react-context ([1ee6e65](https://github.com/almin/almin/commit/1ee6e65))
+
+
+
+
 <a name="6.1.5"></a>
 ## [6.1.5](https://github.com/almin/almin/compare/almin-logger@6.1.4...almin-logger@6.1.5) (2018-02-24)
 

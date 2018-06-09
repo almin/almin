@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.17.0"></a>
+# [0.17.0](https://github.com/almin/almin/compare/almin@0.16.0...almin@0.17.0) (2018-06-09)
+
+
+### Bug Fixes
+
+* **almin:** fix typing test ([c46a091](https://github.com/almin/almin/commit/c46a091))
+* **almin:** Make `Payload` abstract class completely ([0231f42](https://github.com/almin/almin/commit/0231f42))
+* **almin:** upgrade TypeScript 2.9 ([2454e60](https://github.com/almin/almin/commit/2454e60))
+
+
+### Features
+
+* **almin:** Support `context.useCase#execute` typing ([9881793](https://github.com/almin/almin/commit/9881793))
+* **react-context:** add [@almin](https://github.com/almin)/react-context ([1ee6e65](https://github.com/almin/almin/commit/1ee6e65))
+
+
+### BREAKING CHANGES
+
+* **almin:** You can not call `super({ type: "type" })` anymore.
+`Payload` does not accept arguments
+
+
+
+
 <a name="0.16.0"></a>
 # [0.16.0](https://github.com/almin/almin/compare/almin@0.15.3...almin@0.16.0) (2018-02-24)
 
