@@ -60,8 +60,8 @@ export default class ColorMixer {
         assert(typeof x === "number" && typeof y === "number");
         assert(typeof width === "number" && typeof height === "number");
         const alpha = y / height;
-        const xTen = x / width * 255;
-        const yTen = y / height * 255;
+        const xTen = (x / width) * 255;
+        const yTen = (y / height) * 255;
         const rgba = `rgba(${parseInt(xTen, 10)}, ${parseInt(yTen, 10)}, ${parseInt(xTen, 10)}, ${alpha})`;
         return new RGBAColor({ rgba });
     }
