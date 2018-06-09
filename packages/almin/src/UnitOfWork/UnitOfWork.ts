@@ -1,9 +1,8 @@
 // MIT © 2017 azu
-import { EventEmitter } from "events";
 import { DispatcherPayloadMeta } from "../DispatcherPayloadMeta";
 import { generateNewId } from "./UnitOfWorkIdGenerator";
 import { DebugId } from "../instrument/AlminAbstractPerfMarker";
-import { DispatchedPayload } from "../Dispatcher";
+import { Dispatcher, DispatchedPayload } from "../Dispatcher";
 /**
  * Commitment is a tuple of payload and meta.
  * It is a minimal unit of transaction.
@@ -28,7 +27,12 @@ export interface Committable {
     commit(commitment: Commitment): void;
 }
 
-export class UnitOfWork extends EventEmitter {
+export type UnitOfWorkPayload = {
+    type: "ON_ADD_NEW_EVENT";
+    commitment: Commitment;
+};
+
+export class UnitOfWork extends Dispatcher<UnitOfWorkPayload> {
     private commitments: Commitment[];
     private committable: Committable;
     // unique identifier
@@ -52,11 +56,18 @@ export class UnitOfWork extends EventEmitter {
 
     addCommitment(commitment: Commitment) {
         this.commitments.push(commitment);
-        this.emit("ON_ADD_NEW_EVENT", commitment);
+        this.dispatch({
+            type: "ON_ADD_NEW_EVENT",
+            commitment
+        });
     }
 
     onAddedCommitment(handler: (commitment: Commitment) => void) {
-        this.on("ON_ADD_NEW_EVENT", handler);
+        this.onDispatch(payload => {
+            if (payload.type === "ON_ADD_NEW_EVENT") {
+                handler(payload.commitment);
+            }
+        });
     }
 
     commit() {

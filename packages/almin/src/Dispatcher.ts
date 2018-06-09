@@ -74,11 +74,11 @@ export type DispatchedPayload =
  * If apply emit style, we should cast `...args` for passing other dispatcher at every time.
  * So, Almin use `payload` object instead of it without casting.
  */
-export class Dispatcher extends EventEmitter {
+export class Dispatcher<Action extends AnyPayload = DispatchedPayload> extends EventEmitter {
     /**
      * if `v` is instance of Dispatcher, return true
      */
-    static isDispatcher(v: any): v is Dispatcher {
+    static isDispatcher(v: any): v is Dispatcher<any> {
         if (v instanceof Dispatcher) {
             return true;
         } else if (typeof v === "object" && typeof v.onDispatch === "function" && typeof v.dispatch === "function") {
@@ -108,7 +108,7 @@ export class Dispatcher extends EventEmitter {
      * unsubscribe(); // release handler
      * ```
      */
-    onDispatch(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => void): () => void {
+    onDispatch(handler: (payload: Action, meta: DispatcherPayloadMeta) => void): () => void {
         this.on(ON_DISPATCH, handler);
         return this.removeListener.bind(this, ON_DISPATCH, handler);
     }
@@ -116,7 +116,7 @@ export class Dispatcher extends EventEmitter {
     /**
      * Dispatch `payload` to subscribers.
      */
-    dispatch(payload: DispatchedPayload, meta?: DispatcherPayloadMeta): void {
+    dispatch(payload: Action, meta?: DispatcherPayloadMeta): void {
         if (process.env.NODE_ENV !== "production") {
             assertOK(payload !== undefined && payload !== null, "payload should not null or undefined");
             assertOK(typeof payload.type !== "undefined", "payload's `type` should be required");
@@ -150,16 +150,16 @@ export class Dispatcher extends EventEmitter {
      * a.dispatch({ type : "a" });
      * ```
      */
-    pipe(toDispatcher: Dispatcher): () => void {
+    pipe(toDispatcher: Dispatcher<Action>): () => void {
         const fromName = this.constructor.name;
         const toName = toDispatcher.constructor.name;
         const displayName = `delegate-payload:${fromName}-to-${toName}`;
 
         type DelegatePayloadFn = {
-            (payload: DispatchedPayload, meta: DispatcherPayloadMeta): void;
+            (payload: Action, meta: DispatcherPayloadMeta): void;
             displayName: string;
         };
-        const delegatePayload = function delegatePayload(payload: DispatchedPayload, meta: DispatcherPayloadMeta) {
+        const delegatePayload = function delegatePayload(payload: Action, meta: DispatcherPayloadMeta) {
             (delegatePayload as DelegatePayloadFn).displayName = displayName;
             toDispatcher.dispatch(payload, meta);
         };
