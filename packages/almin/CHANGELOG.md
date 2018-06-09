@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.17.1"></a>
+## [0.17.1](https://github.com/almin/almin/compare/almin@0.17.0...almin@0.17.1) (2018-06-09)
+
+
+
+
+**Note:** Version bump only for package almin
+
 <a name="0.17.0"></a>
 # [0.17.0](https://github.com/almin/almin/compare/almin@0.16.0...almin@0.17.0) (2018-06-09)
 

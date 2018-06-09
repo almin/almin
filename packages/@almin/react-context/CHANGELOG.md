@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="1.1.1"></a>
+## [1.1.1](https://github.com/almin/almin/compare/@almin/react-context@1.1.0...@almin/react-context@1.1.1) (2018-06-09)
+
+
+
+
+**Note:** Version bump only for package @almin/react-context
+
 <a name="1.1.0"></a>
 # 1.1.0 (2018-06-09)
 

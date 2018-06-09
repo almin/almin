@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="6.2.1"></a>
+## [6.2.1](https://github.com/almin/almin/compare/almin-logger@6.2.0...almin-logger@6.2.1) (2018-06-09)
+
+
+
+
+**Note:** Version bump only for package almin-logger
+
 <a name="6.2.0"></a>
 # [6.2.0](https://github.com/almin/almin/compare/almin-logger@6.1.5...almin-logger@6.2.0) (2018-06-09)
 
