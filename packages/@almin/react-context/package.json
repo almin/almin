@@ -34,7 +34,8 @@
     "prepublish": "npm run --if-present build",
     "test": "mocha \"test/**/*.tsx\"",
     "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,css}\"",
-    "watch": "tsc -p . --watch"
+    "watch": "tsc -p . --watch",
+    "clean": "rimraf lib/"
   },
   "prettier": {
     "printWidth": 120,
@@ -54,6 +55,7 @@
     "raf": "^3.4.0",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
+    "rimraf": "^2.6.2",
     "ts-node": "^6.1.0",
     "ts-node-test-register": "^3.0.0",
     "typescript": "^2.9.1"

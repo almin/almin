@@ -35,7 +35,7 @@
     "build:src": "tsc --project .",
     "build:test": "tsc --project test/",
     "ci": "npm test && npm run size",
-    "clean": "rimraf lib/",
+    "clean": "rimraf lib/ out/",
     "lint": "npm-run-all -p lint:*",
     "lint:fix": "npm-run-all -p lint:*:fix",
     "lint:js": "eslint --config ../../.eslintrc.json --cache test/",

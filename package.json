@@ -52,6 +52,7 @@
     "build:docs": "cd website && yarn run build",
     "build:docs:api": "bash ./tools/update-api-reference.sh",
     "ci": "lerna run ci --ignore benchmark",
+    "clean": "lerna run clean",
     "prettier": "prettier --write '**/*.{js,jsx,ts,tsx,css}'"
   },
   "lint-staged": {

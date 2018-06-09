@@ -1,5 +1,5 @@
 {
-  "name": "usecase-bus",
+  "name": "@almin/usecase-bus",
   "version": "1.1.0",
   "description": "A mediator for UseCase and Command.",
   "keywords": [
@@ -33,7 +33,8 @@
     "prepublish": "npm run --if-present build",
     "test": "mocha \"test/**/*.ts\"",
     "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,css}\"",
-    "watch": "tsc -p . --watch"
+    "watch": "tsc -p . --watch",
+    "clean": "rimraf lib/"
   },
   "prettier": {
     "printWidth": 120,
@@ -47,6 +48,7 @@
     "cross-env": "^5.1.4",
     "mocha": "^5.2.0",
     "prettier": "^1.13.5",
+    "rimraf": "^2.6.2",
     "ts-node": "^6.1.0",
     "ts-node-test-register": "^3.0.0",
     "typescript": "^2.9.1"

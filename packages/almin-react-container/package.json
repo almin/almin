@@ -29,7 +29,7 @@
   },
   "scripts": {
     "build": "cross-env NODE_ENV=production tsc -p .",
-    "clean": "rimraf lib/",
+    "clean": "rimraf lib/ out/",
     "prepublish": "npm run --if-present build",
     "test": "mocha \"test/**/*-test.{ts,tsx}\"",
     "watch": "tsc -p . --watch"
