@@ -11,7 +11,7 @@ module.exports = function(Almin, done) {
         viewState = state;
     };
     // use-case
-    const stores = Array.from(new Array(500), (_, i) => i).map(index => {
+    const stores = Array.from(new Array(50), (_, i) => i).map(index => {
         return createStore(`Store${index}`);
     });
     const context = createContext(stores);

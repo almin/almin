@@ -3,11 +3,7 @@
 require("babel-polyfill");
 const assert = require("assert");
 const bench = require("../src/index");
-
-const AlminVersions = {
-    "0.9": require("../almin-0.9"),
-    current: require("../almin-current")
-};
+const AlminVersions = require("../versions.js").AlminVersions;
 describe("benchmark", function() {
     const orginalEnv = process.env.NODE_ENV;
     beforeEach(() => {
