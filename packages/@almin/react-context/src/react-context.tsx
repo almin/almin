@@ -53,7 +53,7 @@ export function createReactContext<T>(
         render() {
             if (StateContext === null) {
                 throw new Error(
-                    "You must wrap your <ConsumerQuery> components with a <Provider> component.\n" +
+                    "You must wrap your <Consumer> components with a <Provider> component.\n" +
                         "You can get <Provider> component via `createContext()` API."
                 );
             }
