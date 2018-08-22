@@ -53,8 +53,8 @@
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
     "rimraf": "^2.6.2",
-    "ts-node": "^6.1.0",
-    "typescript": "~2.9.1"
+    "ts-node": "^7.0.1",
+    "typescript": "~3.0.1"
   },
   "peerDependencies": {
     "almin": "^0.15.0",

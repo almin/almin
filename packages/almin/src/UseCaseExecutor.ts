@@ -58,6 +58,7 @@ interface newProxifyUseCaseArgs {
     onDidExecute(result?: any): void;
 
     onError(error: Error): void;
+
 }
 
 /**
@@ -149,6 +150,8 @@ export interface UseCaseExecutor<T extends UseCaseLike> extends Dispatcher {
     executor(executor: (useCase: Pick<T, "execute">) => any): Promise<void>;
 
     release(): void;
+
+    onRelease(handler: () => void): void;
 }
 
 /**
@@ -299,7 +302,8 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
     }
 
     /**
-     * @private like
+     * Call handler when this UseCaseExecutor will be released
+     * @param handler
      */
     onRelease(handler: () => void): void {
         this.on("USECASE_EXECUTOR_RELEASE", handler);

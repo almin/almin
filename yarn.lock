@@ -163,17 +163,43 @@
   version "9.4.7"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-9.4.7.tgz#57d81cd98719df2c9de118f2d5f3b1120dcd7275"
 
-"@types/react-dom@16.0.5", "@types/react-dom@16.0.6", "@types/react-dom@^16.0.6":
-  version "16.0.5"
-  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-16.0.5.tgz#a757457662e3819409229e8f86795ff37b371f96"
+"@types/prop-types@*":
+  version "15.5.5"
+  resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.5.5.tgz#17038dd322c2325f5da650a94d5f9974943625e3"
+  dependencies:
+    "@types/react" "*"
+
+"@types/react-dom@16.0.6":
+  version "16.0.6"
+  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-16.0.6.tgz#f1a65a4e7be8ed5d123f8b3b9eacc913e35a1a3c"
   dependencies:
     "@types/node" "*"
     "@types/react" "*"
 
-"@types/react@*", "@types/react@16.3.13", "@types/react@16.3.17", "@types/react@^16.3.17":
+"@types/react-dom@^16.0.6":
+  version "16.0.7"
+  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-16.0.7.tgz#54d0f867a76b90597e8432030d297982f25c20ba"
+  dependencies:
+    "@types/node" "*"
+    "@types/react" "*"
+
+"@types/react@*":
   version "16.3.13"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-16.3.13.tgz#47d466462b774556c1174ea0eda22c0578643362"
   dependencies:
+    csstype "^2.2.0"
+
+"@types/react@16.3.17":
+  version "16.3.17"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.3.17.tgz#d59d1a632570b0713946ed9c2949d994773633c5"
+  dependencies:
+    csstype "^2.2.0"
+
+"@types/react@^16.3.17":
+  version "16.4.11"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.4.11.tgz#330f3d864300f71150dc2d125e48644c098f8770"
+  dependencies:
+    "@types/prop-types" "*"
     csstype "^2.2.0"
 
 "@types/sinon@^4.3.1":
@@ -1615,6 +1641,10 @@ buffer-crc32@~0.2.1:
 buffer-from@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/buffer-from/-/buffer-from-1.0.0.tgz#4cb8832d23612589b0406e9e2956c17f06fdf531"
+
+buffer-from@^1.1.0:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/buffer-from/-/buffer-from-1.1.1.tgz#32713bc028f75c02fdb710d7c7bcec1f2c6070ef"
 
 buffer-xor@^1.0.3:
   version "1.0.3"
@@ -9286,17 +9316,18 @@ tryer@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/tryer/-/tryer-1.0.0.tgz#027b69fa823225e551cace3ef03b11f6ab37c1d7"
 
-ts-node-test-register@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/ts-node-test-register/-/ts-node-test-register-3.0.0.tgz#6b0397a7e3153dcfb9bf6cad48bd79a90674fe2a"
+ts-node-test-register@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/ts-node-test-register/-/ts-node-test-register-4.0.0.tgz#dcf35a1eb6d0608a799886108311d3654a2b1fb9"
   dependencies:
     read-pkg "^3.0.0"
 
-ts-node@^6.1.0:
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-6.1.0.tgz#a2c37a11fdb58e60eca887a1269b025cf4d2f8b8"
+ts-node@^7.0.1:
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-7.0.1.tgz#9562dc2d1e6d248d24bc55f773e3f614337d9baf"
   dependencies:
     arrify "^1.0.0"
+    buffer-from "^1.1.0"
     diff "^3.1.0"
     make-error "^1.1.1"
     minimist "^1.2.0"
@@ -9355,7 +9386,11 @@ typedarray@^0.0.6, typedarray@~0.0.5:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
-typescript@^2.9.1, typescript@~2.9.1:
+typescript@^3.0.1, typescript@~3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.0.1.tgz#43738f29585d3a87575520a4b93ab6026ef11fdb"
+
+typescript@~2.9.1:
   version "2.9.1"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.9.1.tgz#fdb19d2c67a15d11995fd15640e373e09ab09961"
 
