@@ -13,18 +13,12 @@ import { Payload } from "./payload/Payload";
 import { WillNotExecutedPayload } from "./payload/WillNotExecutedPayload";
 import { assertOK } from "./util/assert";
 
-// Conditional Typing in TS 2.8 >=
+// TS 2.8+: Conditional Typing
+// TS 3.0+: Tuple rest Generics
 // Get Arguments of T function and return tuple
-export type A0<T> = T extends () => any ? T : never;
-export type A1<T> = T extends (a1: infer R1) => any ? [R1] : [never];
-export type A2<T> = T extends (a1: infer R1, a2: infer R2) => any ? [R1, R2] : [never, never];
-export type A3<T> = T extends (a1: infer R1, a2: infer R2, a3: infer R3) => any ? [R1, R2, R3] : [never, never, never];
-export type A4<T> = T extends (a1: infer R1, a2: infer R2, a3: infer R3, a4: infer R4) => any ? [R1, R2, R3, R4] : [never, never, never, never];
-export type A5<T> = T extends (a1: infer R1, a2: infer R2, a3: infer R3, a4: infer R4, a5: infer R5) => any ? [R1, R2, R3, R4, R5] : [never, never, never, never, never];
-export type A6<T> = T extends (a1: infer R1, a2: infer R2, a3: infer R3, a4: infer R4, a5: infer R5, a6: infer R6) => any ? [R1, R2, R3, R4, R5, R6] : [never, never, never, never, never, never];
-export type A7<T> = T extends (a1: infer R1, a2: infer R2, a3: infer R3, a4: infer R4, a5: infer R5, a6: infer R6, a7: infer R7) => any ? [R1, R2, R3, R4, R5, R6, R7] : [never, never, never, never, never, never, never];
-export type A8<T> = T extends (a1: infer R1, a2: infer R2, a3: infer R3, a4: infer R4, a5: infer R5, a6: infer R6, a7: infer R7, a8: infer R8) => any ? [R1, R2, R3, R4, R5, R6, R7, R8] : [never, never, never, never, never, never, never, never];
-export type A9<T> = T extends (a1: infer R1, a2: infer R2, a3: infer R3, a4: infer R4, a5: infer R5, a6: infer R6, a7: infer R7, a8: infer R8, a9: infer R9) => any ? [R1, R2, R3, R4, R5, R6, R7, R8, R9] : [never, never, never, never, never, never, never, never, never];
+// https://github.com/Microsoft/TypeScript/issues/5453#issuecomment-414768143
+type Arguments<F extends (...x: any[]) => any> =
+    F extends (...x: infer A) => any ? A : never;
 
 interface InvalidUsage {
     type: "InvalidUsage";
@@ -150,19 +144,9 @@ https://almin.js.org/docs/warnings/usecase-is-already-released.html
 export interface UseCaseExecutor<T extends UseCaseLike> extends Dispatcher {
     useCase: T;
 
-    executor(executor: (useCase: Pick<T, "execute">) => any): Promise<void>;
+    execute<P extends Arguments<T["execute"]>>(...args: P): Promise<void>;
 
-    // FIXME: `execute()` pattern without hack
-    execute<P extends A0<T["execute"]>>(this: P extends never ? never : this): Promise<void>;
-    execute<P extends A1<T["execute"]>>(a1: P[0]): Promise<void>;
-    execute<P extends A2<T["execute"]>>(a1: P[0], a2: P[1]): Promise<void>;
-    execute<P extends A3<T["execute"]>>(a1: P[0], a2: P[1], a3: P[2]): Promise<void>;
-    execute<P extends A4<T["execute"]>>(a1: P[0], a2: P[1], a3: P[2], a4: P[3]): Promise<void>;
-    execute<P extends A5<T["execute"]>>(a1: P[0], a2: P[1], a3: P[2], a4: P[3], a5: P[4]): Promise<void>;
-    execute<P extends A6<T["execute"]>>(a1: P[0], a2: P[1], a3: P[2], a4: P[3], a5: P[4], a6: P[5]): Promise<void>;
-    execute<P extends A7<T["execute"]>>(a1: P[0], a2: P[1], a3: P[2], a4: P[3], a5: P[4], a6: P[5], a7: P[6]): Promise<void>;
-    execute<P extends A8<T["execute"]>>(a1: P[0], a2: P[1], a3: P[2], a4: P[3], a5: P[4], a6: P[5], a7: P[6], a8: P[7]): Promise<void>;
-    execute<P extends A9<T["execute"]>>(a1: P[0], a2: P[1], a3: P[2], a4: P[3], a5: P[4], a6: P[5], a7: P[6], a8: P[7], a9: P[8]): Promise<void>;
+    executor(executor: (useCase: Pick<T, "execute">) => any): Promise<void>;
 
     release(): void;
 }
@@ -249,7 +233,7 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
     private willExecuteUseCase(args?: any[]): void {
         // Add instance to manager
         // It should be removed when it will be completed.
-        UseCaseInstanceMap.set(this.useCase, this);
+        UseCaseInstanceMap.set(this.useCase, this as UseCaseExecutor<T>);
         const payload = new WillExecutedPayload({
             args
         });
@@ -454,24 +438,14 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
      * The `execute(arguments)` is shortcut of `executor(useCase => useCase.execute(arguments)`
      *
      * ### `execute()` typing for TypeScript
-     * 
+     *
      * > Added: Almin 0.17.0 >=
-     * 
+     *
      * `execute()` support type check in Almin 0.17.0.
      * However, it has a limitation about argument lengths.
      * For more details, please see <https://github.com/almin/almin/issues/107#issuecomment-384993458>
      */
-    execute<P extends A0<T["execute"]>>(this: P extends never ? never : this): Promise<void>;
-    execute<P extends A1<T["execute"]>>(a1: P[0]): Promise<void>;
-    execute<P extends A2<T["execute"]>>(a1: P[0], a2: P[1]): Promise<void>;
-    execute<P extends A3<T["execute"]>>(a1: P[0], a2: P[1], a3: P[2]): Promise<void>;
-    execute<P extends A4<T["execute"]>>(a1: P[0], a2: P[1], a3: P[2], a4: P[3]): Promise<void>;
-    execute<P extends A5<T["execute"]>>(a1: P[0], a2: P[1], a3: P[2], a4: P[3], a5: P[4]): Promise<void>;
-    execute<P extends A6<T["execute"]>>(a1: P[0], a2: P[1], a3: P[2], a4: P[3], a5: P[4], a6: P[5]): Promise<void>;
-    execute<P extends A7<T["execute"]>>(a1: P[0], a2: P[1], a3: P[2], a4: P[3], a5: P[4], a6: P[5], a7: P[6]): Promise<void>;
-    execute<P extends A8<T["execute"]>>(a1: P[0], a2: P[1], a3: P[2], a4: P[3], a5: P[4], a6: P[5], a7: P[6], a8: P[7]): Promise<void>;
-    execute<P extends A9<T["execute"]>>(a1: P[0], a2: P[1], a3: P[2], a4: P[3], a5: P[4], a6: P[5], a7: P[6], a8: P[7], a9: P[8]): Promise<void>;
-    execute(...args: Array<any>): Promise<void> {
+    execute<P extends Arguments<T["execute"]>>(...args: P): Promise<void> {
         return this.executor(useCase => useCase.execute(...args));
     }
 

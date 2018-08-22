@@ -5,6 +5,7 @@ class MyStore extends Store<{}> {
         super();
         this.name = args.name;
     }
+
     getState() {
         return {};
     }
@@ -31,7 +32,7 @@ class MyUseCaseOptional extends UseCase {
 }
 
 class MyUseCaseDefault extends UseCase {
-    execute(_value: string = "string") {}
+    execute(_value: string = "default value") {}
 }
 
 const context = new Context({
@@ -63,13 +64,8 @@ context.useCase(new MyUseCaseObj()).execute({ a: 1, b: 2 });
 // typings:expect-error
 context.useCase(new MyUseCaseOptional()).execute(1, 1);
 // typings:expect-error
-context.useCase(new MyUseCaseDefault()).execute(1);
-
-// =====
-// FIXME: These are should be Error, but current not support
-// =====
-// more arguments
-
 context.useCase(new MyUseCaseA()).execute("A", 1, 1);
 // typings:expect-error
 context.useCase(new MyUseCaseA()).executor(useCase => useCase.execute("A", 1, 1));
+// typings:expect-error
+context.useCase(new MyUseCaseDefault()).execute({ "incompatible type": 1 });
