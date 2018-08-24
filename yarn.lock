@@ -9364,10 +9364,6 @@ typescript@^3.0.1, typescript@~3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.0.1.tgz#43738f29585d3a87575520a4b93ab6026ef11fdb"
 
-typescript@~2.9.1:
-  version "2.9.1"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.9.1.tgz#fdb19d2c67a15d11995fd15640e373e09ab09961"
-
 typings-tester@^0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/typings-tester/-/typings-tester-0.3.1.tgz#53bb9784b0ebd7b93192e6fcd908f14501af3878"
