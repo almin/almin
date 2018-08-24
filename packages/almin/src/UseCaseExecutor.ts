@@ -67,7 +67,7 @@ interface newProxifyUseCaseArgs {
  */
 const proxifyUseCase = <T extends UseCaseLike>(useCase: T, handlers: newProxifyUseCaseArgs): T => {
     let isExecuted = false;
-    const execute = (...args: Array<any>): EXECUTING_RESULT => {
+    const execute = (...args: Arguments<T["execute"]>): EXECUTING_RESULT => {
         if (process.env.NODE_ENV !== "production") {
             if (isExecuted) {
                 console.error(`Warning(UseCase): ${useCase.name}#execute was called more than once.`);
@@ -310,7 +310,7 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
     }
 
     /**
-     * - **Stability**: Experimental
+     * - **Stability**: Deprecated(Previously experimental)
      * - This feature is subject to change. It may change or be removed in future versions.
      * - If you inserting in this, please see <https://github.com/almin/almin/issues/193>
      *
@@ -343,22 +343,24 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
      *  .executor(useCase => useCase.execute("value"))
      * ```
      *
-     * ### I'm use TypeScript, Should I use `executor`?
-     *
-     * Yes. It is type-safe by default.
-     * In other words, JavaScript User have not benefits.
-     *
      * ### Why executor's result always to be undefined?
      *
-     * UseCaseExecutor always resolve `undefined` data by design.
+     * `execute()` return a Promise that will resolve `undefined` by design.
      * In CQRS, the command always have returned void type.
      *
      * - http://cqrs.nu/Faq
      *
-     * So, Almin return only command result that is success or failure.
-     * You should not relay on the data of the command result.
+     * So, `execute()` only return command result that is success or failure.
+     * You should not relay on the result value of the useCase#execute.
+     *
+     * @deprecated Use `execute()` instead of `executor()`
+     * Almin 0.18+ make `execute` type complete.
      */
     executor(executor: (useCase: Pick<T, "execute">) => any): Promise<void> {
+        // TODO: executor() is duplication function of execute()
+        // It will be removed in the future.
+        // Show deprecated waring
+        console.warn("`executor(useCase => useCase.execute(args))` is deprecated. Use `execute(args) insteadof it.");
         if (typeof executor !== "function") {
             console.error(
                 "Warning(UseCase): executor argument should be function. But this argument is not function: ",
@@ -366,6 +368,91 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
             );
             return Promise.reject(new Error("executor(fn) arguments should be function"));
         }
+        const proxyfiedUseCase = proxifyUseCase<T>(this.useCase, {
+            onWillNotExecute: (args: any[]) => {
+                this.willNotExecuteUseCase(args);
+            },
+            onWillExecute: (args: any[]) => {
+                this.willExecuteUseCase(args);
+            },
+            onDidExecute: (result?: any) => {
+                this.didExecuteUseCase(result);
+            },
+            onError: (error: Error) => {
+                this.useCase.throwError(error);
+            }
+        });
+        const executorResult: EXECUTING_RESULT | undefined = executor(proxyfiedUseCase);
+        const executedResult: EXECUTING_RESULT =
+            executorResult !== undefined
+                ? executorResult
+                : {
+                    type: "SuccessExecuteNoReturnValue"
+                };
+        if (executedResult.type === "ShouldNotExecute") {
+            this.release();
+            return Promise.resolve();
+        }
+        const startingExecutor = new Promise((resolve, reject) => {
+            switch (executedResult.type) {
+                case "InvalidUsage":
+                    return reject(executedResult.error);
+                case "ErrorInExecute":
+                    return reject(executedResult.error);
+                case "SuccessExecuteReturnValue": {
+                    return Promise.resolve(executedResult.value).then(resolve, error => {
+                        this.useCase.throwError(error);
+                        return reject(error);
+                    });
+                }
+                case "SuccessExecuteNoReturnValue":
+                    return resolve();
+            }
+        });
+        return startingExecutor
+            .then(result => {
+                this.completeUseCase(result);
+                this.release();
+            })
+            .catch(error => {
+                this.completeUseCase();
+                this.release();
+                return Promise.reject(error);
+            });
+    }
+
+    /**
+     * Execute UseCase instance.
+     * UseCase is a executable object that has `execute` method.
+     *
+     * This method invoke UseCase's `execute` method and return a promise<void>.
+     * The promise will be resolved when the UseCase is completed finished.
+     *
+     * ### Why executor's result always to be undefined?
+     *
+     * `execute()` return a Promise that will resolve `undefined` by design.
+     * In CQRS, the command always have returned void type.
+     *
+     * - http://cqrs.nu/Faq
+     *
+     * So, `execute()` only return command result that is success or failure.
+     * You should not relay on the result value of the useCase#execute.
+     *
+     * ## Notes
+     *
+     * > Added: Almin 0.17.0+
+     *
+     * `execute()` support type check in Almin 0.17.0.
+     * However, it has a limitation about argument lengths.
+     * For more details, please see <https://github.com/almin/almin/issues/107#issuecomment-384993458>
+     *
+     * > Added: Almin 0.18.0+
+     *
+     * `execute()` support type check completely.
+     * No more need to use `executor()` for typing.
+     *
+     */
+    execute<P extends Arguments<T["execute"]>>(...args: P): Promise<void> {
         // Notes: proxyfiedUseCase has not timeout
         // proxiedUseCase will resolve by UseCaseWrapper#execute
         // For more details, see <UseCaseLifeCycle-test.ts>
@@ -385,7 +472,7 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
         });
         // Note: almin disallow to call `executor(useCase => { setTimeout(() => useCase.execute(), 0}})` asynchronously
         // You should call UseCase#execute synchronously.
-        const executorResult: EXECUTING_RESULT | undefined = executor(proxyfiedUseCase);
+        const executorResult: EXECUTING_RESULT | undefined = proxyfiedUseCase.execute(...args);
         // `executorResult` is undefined means that the UseCase#execute never return any value
         // In JavaScript, no return as undefined value
         const executedResult: EXECUTING_RESULT =
@@ -428,29 +515,6 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
                 this.release();
                 return Promise.reject(error);
             });
-    }
-
-    /**
-     * Execute UseCase instance.
-     * UseCase is a executable object that has `execute` method.
-     *
-     * This method invoke UseCase's `execute` method and return a promise<void>.
-     * The promise will be resolved when the UseCase is completed finished.
-     *
-     * ## Notes
-     *
-     * The `execute(arguments)` is shortcut of `executor(useCase => useCase.execute(arguments)`
-     *
-     * ### `execute()` typing for TypeScript
-     *
-     * > Added: Almin 0.17.0 >=
-     *
-     * `execute()` support type check in Almin 0.17.0.
-     * However, it has a limitation about argument lengths.
-     * For more details, please see <https://github.com/almin/almin/issues/107#issuecomment-384993458>
-     */
-    execute<P extends Arguments<T["execute"]>>(...args: P): Promise<void> {
-        return this.executor(useCase => useCase.execute(...args));
     }
 
     /**
