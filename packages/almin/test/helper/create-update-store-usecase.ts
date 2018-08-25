@@ -45,7 +45,7 @@ export function createUpdatableStoreWithUseCase(name: string) {
         }
     }
 
-    class MockStore extends Store {
+    class MockStore extends Store<any> {
         constructor() {
             super();
             this.name = `${name}Store`;

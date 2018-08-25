@@ -24,8 +24,7 @@ import AlminInstruments from "../instrument/AlminInstruments";
 import { DebugId } from "../instrument/AlminAbstractPerfMarker";
 import { generateNewId } from "./StoreGroupIdGenerator";
 import { assertOK } from "../util/assert";
-
-const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
+import { Events } from "../Events";
 
 // { stateName: state }
 export interface StoreGroupState {
@@ -56,6 +55,11 @@ console.log(storeGroup.getState());
         // assert.ok(typeof key === "string", `key should be string type: ${key}: ${value}` + "\n" + message);
         assertOK(Store.isStore(value), `value should be instance of Store: ${key}: ${value}` + "\n" + message);
     }
+};
+
+type StoreGroupChangeEvent<T> = {
+    stores: Array<Store<T>>;
+    details: StoreGroupReasonForChange | undefined;
 };
 
 /**
@@ -152,6 +156,7 @@ export class StoreGroup<T> extends Dispatcher implements StoreGroupLike {
     // checker
     private storeGroupEmitChangeChecker = new StoreGroupEmitChangeChecker();
     private storeGroupChangingStoreStrictChecker = new StoreGroupChangingStoreStrictChecker();
+    private storeGroupChangeEvent = new Events<StoreGroupChangeEvent<T>>();
 
     /**
      * Initialize this StoreGroup with a stateName-store mapping object.
@@ -451,7 +456,10 @@ But, ${store.name}#getState() was called.`
                   }
                 : undefined;
         // emit changes
-        this.emit(CHANGE_STORE_GROUP, changingStores, details);
+        this.storeGroupChangeEvent.emit({
+            stores: changingStores,
+            details
+        });
     }
 
     /**
@@ -466,10 +474,9 @@ But, ${store.name}#getState() was called.`
      * StoreGroup#onChange workflow: https://code2flow.com/mHFviS
      */
     onChange(handler: (stores: Array<Store<T>>, details?: StoreGroupReasonForChange) => void): () => void {
-        this.on(CHANGE_STORE_GROUP, handler);
-        const releaseHandler = () => {
-            this.removeListener(CHANGE_STORE_GROUP, handler);
-        };
+        const releaseHandler = this.storeGroupChangeEvent.addEventListener(event =>
+            handler(event.stores, event.details)
+        );
         this._releaseHandlers.push(releaseHandler);
         return releaseHandler;
     }
