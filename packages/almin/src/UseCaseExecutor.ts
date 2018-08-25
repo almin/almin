@@ -364,7 +364,9 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
         // TODO: executor() is duplication function of execute()
         // It will be removed in the future.
         // Show deprecated waring
-        console.warn("`executor(useCase => useCase.execute(args))` is deprecated. Use `execute(args) insteadof it.");
+        console.warn(`Warning(UseCase): \`executor(useCase => useCase.execute(args))\` is deprecated. Use \`execute(args) insteadof it.
+        
+See https://github.com/almin/almin/issues/356`);
         if (typeof executor !== "function") {
             console.error(
                 "Warning(UseCase): executor argument should be function. But this argument is not function: ",
