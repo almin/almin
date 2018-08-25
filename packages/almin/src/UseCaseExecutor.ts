@@ -12,6 +12,7 @@ import { UseCaseLike } from "./UseCaseLike";
 import { Payload } from "./payload/Payload";
 import { WillNotExecutedPayload } from "./payload/WillNotExecutedPayload";
 import { assertOK } from "./util/assert";
+import { Events } from "./Events";
 
 // TS 2.8+: Conditional Typing
 // TS 3.0+: Tuple rest Generics
@@ -151,7 +152,7 @@ export interface UseCaseExecutor<T extends UseCaseLike> extends Dispatcher {
 
     release(): void;
 
-    onRelease(handler: () => void): void;
+    onReleaseOnce(handler: () => void): void;
 }
 
 /**
@@ -176,6 +177,7 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
      * callable release handlers that are called in release()
      */
     private _releaseHandlers: Array<() => void>;
+    private releaseEvents: Events<void>;
 
     /**
      * @param   useCase
@@ -215,6 +217,8 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
             const unListenUseCaseExecutorToDispatcherHandler = this.pipe(this._parentUseCase);
             this._releaseHandlers.push(unListenUseCaseExecutorToDispatcherHandler);
         }
+
+        this.releaseEvents = new Events<void>();
     }
 
     private willNotExecuteUseCase(args?: any[]): void {
@@ -305,8 +309,8 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
      * Call handler when this UseCaseExecutor will be released
      * @param handler
      */
-    onRelease(handler: () => void): void {
-        this.on("USECASE_EXECUTOR_RELEASE", handler);
+    onReleaseOnce(handler: () => void): void {
+        this.releaseEvents.addEventListenerOnce(handler);
     }
 
     /**
@@ -360,7 +364,9 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
         // TODO: executor() is duplication function of execute()
         // It will be removed in the future.
         // Show deprecated waring
-        console.warn("`executor(useCase => useCase.execute(args))` is deprecated. Use `execute(args) insteadof it.");
+        console.warn(`Warning(UseCase): \`executor(useCase => useCase.execute(args))\` is deprecated. Use \`execute(args) insteadof it.
+        
+See https://github.com/almin/almin/issues/356`);
         if (typeof executor !== "function") {
             console.error(
                 "Warning(UseCase): executor argument should be function. But this argument is not function: ",
@@ -524,7 +530,6 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
     release(): void {
         this._releaseHandlers.forEach(releaseHandler => releaseHandler());
         this._releaseHandlers.length = 0;
-        this.emit("USECASE_EXECUTOR_RELEASE");
-        this.removeAllListeners();
+        this.releaseEvents.emit(undefined);
     }
 }

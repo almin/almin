@@ -1,9 +1,9 @@
 // MIT © 2017 azu
-import { EventEmitter } from "events";
 import { DispatcherPayloadMeta } from "../DispatcherPayloadMeta";
 import { generateNewId } from "./UnitOfWorkIdGenerator";
 import { DebugId } from "../instrument/AlminAbstractPerfMarker";
 import { DispatchedPayload } from "../Dispatcher";
+import { Events } from "../Events";
 /**
  * Commitment is a tuple of payload and meta.
  * It is a minimal unit of transaction.
@@ -13,7 +13,6 @@ import { DispatchedPayload } from "../Dispatcher";
  * Pass it StoreGroup directly.
  * If use ...arguments, it has spread cost by transpiler.
  *
- * It is similar reason to why use Dispatcher insteadof EventEmitter.
  */
 export type Commitment = {
     payload: DispatchedPayload;
@@ -28,7 +27,9 @@ export interface Committable {
     commit(commitment: Commitment): void;
 }
 
-export class UnitOfWork extends EventEmitter {
+export type UnitOfWorkEvent = Commitment;
+
+export class UnitOfWork extends Events<UnitOfWorkEvent> {
     private commitments: Commitment[];
     private committable: Committable;
     // unique identifier
@@ -52,11 +53,11 @@ export class UnitOfWork extends EventEmitter {
 
     addCommitment(commitment: Commitment) {
         this.commitments.push(commitment);
-        this.emit("ON_ADD_NEW_EVENT", commitment);
+        this.emit(commitment);
     }
 
     onAddedCommitment(handler: (commitment: Commitment) => void) {
-        this.on("ON_ADD_NEW_EVENT", handler);
+        return this.addEventListener(handler);
     }
 
     commit() {
@@ -76,6 +77,6 @@ export class UnitOfWork extends EventEmitter {
     release() {
         this.commitments.length = 0;
         this.isDisposed = true;
-        this.removeAllListeners();
+        this.removeAllEventListeners();
     }
 }

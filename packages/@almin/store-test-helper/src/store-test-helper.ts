@@ -28,8 +28,8 @@ export interface MockStore<T> extends Store<T> {
 export function createStore<T>(storeName: string, initialState: T): MockStore<T>;
 export function createStore<T>(initialState: T): MockStore<T>;
 export function createStore<T>(...args: any[]): MockStore<T> {
-    class MockStoreImpl extends Store<T | undefined> implements MockStore<T> {
-        state: T | undefined;
+    class MockStoreImpl extends Store<T> implements MockStore<T> {
+        state: T;
         name: string;
 
         constructor() {

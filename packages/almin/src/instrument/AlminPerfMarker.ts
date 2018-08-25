@@ -4,7 +4,7 @@ import { StoreLike } from "../StoreLike";
 import { StoreGroupLike } from "../UILayer/StoreGroupLike";
 import { AlminPerfMarkerAbstract, DebugId, MarkType } from "./AlminAbstractPerfMarker";
 import { Transaction } from "../DispatcherPayloadMeta";
-import { EventEmitter } from "events";
+import { Events } from "../Events";
 
 const canUsePerformanceMeasure: boolean =
     typeof performance !== "undefined" &&
@@ -13,7 +13,48 @@ const canUsePerformanceMeasure: boolean =
     typeof performance.measure === "function" &&
     typeof performance.clearMeasures === "function";
 
-export class AlminPerfMarker extends EventEmitter implements AlminPerfMarkerAbstract {
+export type AlminPerfMarkerActions =
+    | {
+          type: "beforeStoreGroupReadPhase";
+      }
+    | {
+          type: "afterStoreGroupReadPhase";
+      }
+    | {
+          type: "beforeStoreGroupWritePhase";
+      }
+    | {
+          type: "afterStoreGroupWritePhase";
+      }
+    | {
+          type: "beforeStoreGetState";
+      }
+    | {
+          type: "afterStoreGetState";
+      }
+    | {
+          type: "beforeStoreReceivePayload";
+      }
+    | {
+          type: "afterStoreReceivePayload";
+      }
+    | {
+          type: "willUseCaseExecute";
+      }
+    | {
+          type: "didUseCaseExecute";
+      }
+    | {
+          type: "completeUseCaseExecute";
+      }
+    | {
+          type: "beginTransaction";
+      }
+    | {
+          type: "endTransaction";
+      };
+
+export class AlminPerfMarker extends Events<AlminPerfMarkerActions> implements AlminPerfMarkerAbstract {
     private _isProfiling = false;
 
     beginProfile(): void {
@@ -26,7 +67,7 @@ export class AlminPerfMarker extends EventEmitter implements AlminPerfMarkerAbst
 
     endProfile(): void {
         this._isProfiling = false;
-        this.removeAllListeners();
+        this.removeAllEventListeners();
     }
 
     shouldMark(_debugId: DebugId) {
@@ -58,51 +99,51 @@ export class AlminPerfMarker extends EventEmitter implements AlminPerfMarkerAbst
 
     beforeStoreGroupReadPhase(debugId: DebugId, _storeGroup: StoreGroupLike): void {
         this.markBegin(debugId, "StoreGroup#read");
-        this.emit("beforeStoreGroupReadPhase");
+        this.emit({ type: "beforeStoreGroupReadPhase" });
     }
 
     afterStoreGroupReadPhase(debugId: DebugId, storeGroup: StoreGroupLike): void {
         const displayName = storeGroup.name;
         this.markEnd(debugId, "StoreGroup#read", displayName);
-        this.emit("afterStoreGroupReadPhase");
+        this.emit({ type: "afterStoreGroupReadPhase" });
     }
 
     beforeStoreGroupWritePhase(debugId: DebugId, _storeGroup: StoreGroupLike): void {
         this.markBegin(debugId, "StoreGroup#write");
-        this.emit("beforeStoreGroupWritePhase");
+        this.emit({ type: "beforeStoreGroupWritePhase" });
     }
 
     afterStoreGroupWritePhase(debugId: DebugId, storeGroup: StoreGroupLike): void {
         const displayName = storeGroup.name;
         this.markEnd(debugId, "StoreGroup#write", displayName);
-        this.emit("afterStoreGroupWritePhase");
+        this.emit({ type: "afterStoreGroupWritePhase" });
     }
 
     beforeStoreGetState(debugId: DebugId, _store: StoreLike): void {
         this.markBegin(debugId, "Store#getState");
-        this.emit("beforeStoreGetState");
+        this.emit({ type: "beforeStoreGetState" });
     }
 
     afterStoreGetState(debugId: DebugId, store: StoreLike): void {
         const displayName = store.name;
         this.markEnd(debugId, "Store#getState", displayName);
-        this.emit("afterStoreGetState");
+        this.emit({ type: "afterStoreGetState" });
     }
 
     beforeStoreReceivePayload(debugId: DebugId, _store: StoreLike): void {
         this.markBegin(debugId, "Store#receivePayload");
-        this.emit("beforeStoreReceivePayload");
+        this.emit({ type: "beforeStoreReceivePayload" });
     }
 
     afterStoreReceivePayload(debugId: DebugId, store: StoreLike): void {
         const displayName = store.name;
         this.markEnd(debugId, "Store#receivePayload", displayName);
-        this.emit("afterStoreReceivePayload");
+        this.emit({ type: "afterStoreReceivePayload" });
     }
 
     willUseCaseExecute(debugId: DebugId, _useCase: UseCaseLike): void {
         this.markBegin(debugId, "UserCase#execute");
-        this.emit("willUseCaseExecute");
+        this.emit({ type: "willUseCaseExecute" });
     }
 
     didUseCaseExecute(debugId: DebugId, useCase: UseCaseLike): void {
@@ -110,23 +151,23 @@ export class AlminPerfMarker extends EventEmitter implements AlminPerfMarkerAbst
         this.markEnd(debugId, "UserCase#execute", displayName);
         // did -> complete
         this.markBegin(debugId, "UserCase#complete");
-        this.emit("didUseCaseExecute");
+        this.emit({ type: "didUseCaseExecute" });
     }
 
     completeUseCaseExecute(debugId: DebugId, useCase: UseCaseLike): void {
         const displayName = useCase.name;
         this.markEnd(debugId, "UserCase#complete", displayName);
-        this.emit("completeUseCaseExecute");
+        this.emit({ type: "completeUseCaseExecute" });
     }
 
     beginTransaction(debugId: string, _transaction: Transaction): void {
         this.markBegin(debugId, "Transaction");
-        this.emit("beginTransaction");
+        this.emit({ type: "beginTransaction" });
     }
 
     endTransaction(debugId: string, transaction: Transaction): void {
         const displayName = transaction.name;
         this.markEnd(debugId, "Transaction", displayName);
-        this.emit("endTransaction");
+        this.emit({ type: "endTransaction" });
     }
 }

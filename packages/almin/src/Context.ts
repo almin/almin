@@ -304,7 +304,7 @@ export class Context<T> {
             options: { autoCommit: true }
         });
         unitOfWork.open(useCaseExecutor);
-        useCaseExecutor.onRelease(() => {
+        useCaseExecutor.onReleaseOnce(() => {
             unitOfWork.close(useCaseExecutor);
             unitOfWork.release();
         });
