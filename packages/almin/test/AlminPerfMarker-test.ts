@@ -28,21 +28,6 @@ describe("AlminPerfMarker", () => {
             }
         });
 
-        const events = [
-            "beforeStoreGroupReadPhase",
-            "afterStoreGroupReadPhase",
-            "beforeStoreGroupWritePhase",
-            "afterStoreGroupWritePhase",
-            "beforeStoreGetState",
-            "afterStoreGetState",
-            "beforeStoreReceivePayload",
-            "afterStoreReceivePayload",
-            "willUseCaseExecute",
-            "didUseCaseExecute",
-            "completeUseCaseExecute",
-            "beginTransaction",
-            "endTransaction"
-        ];
         const expected = [
             "beginTransaction",
             "willUseCaseExecute",
@@ -61,10 +46,8 @@ describe("AlminPerfMarker", () => {
         const markedEvents: string[] = [];
         const debugTool = AlminInstruments.debugTool as AlminPerfMarker;
         if (debugTool) {
-            events.forEach(event => {
-                debugTool.on(event, () => {
-                    markedEvents.push(event);
-                });
+            debugTool.onDispatch(action => {
+                markedEvents.push(action.type);
             });
         }
 
