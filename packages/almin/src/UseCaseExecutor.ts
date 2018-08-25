@@ -152,7 +152,7 @@ export interface UseCaseExecutor<T extends UseCaseLike> extends Dispatcher {
 
     release(): void;
 
-    onRelease(handler: () => void): void;
+    onReleaseOnce(handler: () => void): void;
 }
 
 /**
@@ -309,8 +309,8 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
      * Call handler when this UseCaseExecutor will be released
      * @param handler
      */
-    onRelease(handler: () => void): void {
-        this.releaseEvents.addEventListener(handler);
+    onReleaseOnce(handler: () => void): void {
+        this.releaseEvents.addEventListenerOnce(handler);
     }
 
     /**
