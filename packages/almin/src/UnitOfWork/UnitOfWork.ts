@@ -77,6 +77,6 @@ export class UnitOfWork extends Events<UnitOfWorkEvent> {
     release() {
         this.commitments.length = 0;
         this.isDisposed = true;
-        this.removeEventListenerAll();
+        this.removeAllEventListeners();
     }
 }

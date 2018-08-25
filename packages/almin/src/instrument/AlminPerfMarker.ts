@@ -67,7 +67,7 @@ export class AlminPerfMarker extends Events<AlminPerfMarkerActions> implements A
 
     endProfile(): void {
         this._isProfiling = false;
-        this.removeEventListenerAll();
+        this.removeAllEventListeners();
     }
 
     shouldMark(_debugId: DebugId) {

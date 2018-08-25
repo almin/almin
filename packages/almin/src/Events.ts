@@ -33,7 +33,7 @@ export class Events<T> {
         }
     }
 
-    removeEventListenerAll(): void {
+    removeAllEventListeners(): void {
         this.listeners = [];
         this.listenersOnce = [];
     }
@@ -43,11 +43,9 @@ export class Events<T> {
         this.listeners.forEach(listener => listener(payload));
 
         /** Clear the `once` queue */
-        this.listenersOnce.forEach(listener => listener(payload));
-        this.listenersOnce = [];
-    }
-
-    pipe(event: Events<T>): EventDisposable {
-        return this.addEventListener(payload => event.emit(payload));
+        if (this.listenersOnce.length > 0) {
+            this.listenersOnce.forEach(listener => listener(payload));
+            this.listenersOnce = [];
+        }
     }
 }

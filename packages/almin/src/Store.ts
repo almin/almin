@@ -76,9 +76,7 @@ export abstract class Store<State = any> extends Dispatcher implements StoreLike
      * Set debuggable name if needed.
      */
     static displayName?: string;
-    private stateChangeEvents = new Events<{
-        stores: Array<Store>;
-    }>();
+    private stateChangeEvents = new Events<Array<Store>>();
 
     /**
      * Return true if the `v` is store like.
@@ -263,7 +261,7 @@ export abstract class Store<State = any> extends Dispatcher implements StoreLike
      * ```
      */
     onChange(handler: (changingStores: Array<Store<State>>) => void): () => void {
-        return this.stateChangeEvents.addEventListener(event => handler(event.stores));
+        return this.stateChangeEvents.addEventListener(handler);
     }
 
     /**
@@ -273,16 +271,14 @@ export abstract class Store<State = any> extends Dispatcher implements StoreLike
      * Basically, you should use `this.setState` insteadof `this.emitChange`
      */
     emitChange(): void {
-        this.stateChangeEvents.emit({
-            stores: [this]
-        });
+        this.stateChangeEvents.emit([this]);
     }
 
     /**
      * Release all event handlers
      */
     release(): void {
-        this.stateChangeEvents.removeEventListenerAll();
+        this.stateChangeEvents.removeAllEventListeners();
     }
 }
 
