@@ -236,7 +236,12 @@ describe("Context", function() {
                 dispatcher,
                 store: createStore({ name: "test" })
             });
-            const testUseCase = new TestUseCase();
+
+            class OneArgumentUseCase extends UseCase {
+                execute(_oneArgument: string) {}
+            }
+
+            const oneArgumentUseCase = new OneArgumentUseCase();
             const expectedArguments = "param";
             // then
             appContext.events.onWillExecuteEachUseCase((payload, _meta) => {
@@ -246,7 +251,7 @@ describe("Context", function() {
                 done();
             });
             // when
-            appContext.useCase(testUseCase).execute(expectedArguments);
+            return appContext.useCase(oneArgumentUseCase).execute(expectedArguments);
         });
     });
     describe("#onDispatch", function() {

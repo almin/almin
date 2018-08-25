@@ -13,18 +13,12 @@ import { Payload } from "./payload/Payload";
 import { WillNotExecutedPayload } from "./payload/WillNotExecutedPayload";
 import { assertOK } from "./util/assert";
 
-// Conditional Typing in TS 2.8 >=
+// TS 2.8+: Conditional Typing
+// TS 3.0+: Tuple rest Generics
 // Get Arguments of T function and return tuple
-export type A0<T> = T extends () => any ? T : never;
-export type A1<T> = T extends (a1: infer R1) => any ? [R1] : [never];
-export type A2<T> = T extends (a1: infer R1, a2: infer R2) => any ? [R1, R2] : [never, never];
-export type A3<T> = T extends (a1: infer R1, a2: infer R2, a3: infer R3) => any ? [R1, R2, R3] : [never, never, never];
-export type A4<T> = T extends (a1: infer R1, a2: infer R2, a3: infer R3, a4: infer R4) => any ? [R1, R2, R3, R4] : [never, never, never, never];
-export type A5<T> = T extends (a1: infer R1, a2: infer R2, a3: infer R3, a4: infer R4, a5: infer R5) => any ? [R1, R2, R3, R4, R5] : [never, never, never, never, never];
-export type A6<T> = T extends (a1: infer R1, a2: infer R2, a3: infer R3, a4: infer R4, a5: infer R5, a6: infer R6) => any ? [R1, R2, R3, R4, R5, R6] : [never, never, never, never, never, never];
-export type A7<T> = T extends (a1: infer R1, a2: infer R2, a3: infer R3, a4: infer R4, a5: infer R5, a6: infer R6, a7: infer R7) => any ? [R1, R2, R3, R4, R5, R6, R7] : [never, never, never, never, never, never, never];
-export type A8<T> = T extends (a1: infer R1, a2: infer R2, a3: infer R3, a4: infer R4, a5: infer R5, a6: infer R6, a7: infer R7, a8: infer R8) => any ? [R1, R2, R3, R4, R5, R6, R7, R8] : [never, never, never, never, never, never, never, never];
-export type A9<T> = T extends (a1: infer R1, a2: infer R2, a3: infer R3, a4: infer R4, a5: infer R5, a6: infer R6, a7: infer R7, a8: infer R8, a9: infer R9) => any ? [R1, R2, R3, R4, R5, R6, R7, R8, R9] : [never, never, never, never, never, never, never, never, never];
+// https://github.com/Microsoft/TypeScript/issues/5453#issuecomment-414768143
+type Arguments<F extends (...x: any[]) => any> =
+    F extends (...x: infer A) => any ? A : never;
 
 interface InvalidUsage {
     type: "InvalidUsage";
@@ -64,6 +58,7 @@ interface newProxifyUseCaseArgs {
     onDidExecute(result?: any): void;
 
     onError(error: Error): void;
+
 }
 
 /**
@@ -72,7 +67,7 @@ interface newProxifyUseCaseArgs {
  */
 const proxifyUseCase = <T extends UseCaseLike>(useCase: T, handlers: newProxifyUseCaseArgs): T => {
     let isExecuted = false;
-    const execute = (...args: Array<any>): EXECUTING_RESULT => {
+    const execute = (...args: Arguments<T["execute"]>): EXECUTING_RESULT => {
         if (process.env.NODE_ENV !== "production") {
             if (isExecuted) {
                 console.error(`Warning(UseCase): ${useCase.name}#execute was called more than once.`);
@@ -150,21 +145,13 @@ https://almin.js.org/docs/warnings/usecase-is-already-released.html
 export interface UseCaseExecutor<T extends UseCaseLike> extends Dispatcher {
     useCase: T;
 
+    execute<P extends Arguments<T["execute"]>>(...args: P): Promise<void>;
+
     executor(executor: (useCase: Pick<T, "execute">) => any): Promise<void>;
 
-    // FIXME: `execute()` pattern without hack
-    execute<P extends A0<T["execute"]>>(this: P extends never ? never : this): Promise<void>;
-    execute<P extends A1<T["execute"]>>(a1: P[0]): Promise<void>;
-    execute<P extends A2<T["execute"]>>(a1: P[0], a2: P[1]): Promise<void>;
-    execute<P extends A3<T["execute"]>>(a1: P[0], a2: P[1], a3: P[2]): Promise<void>;
-    execute<P extends A4<T["execute"]>>(a1: P[0], a2: P[1], a3: P[2], a4: P[3]): Promise<void>;
-    execute<P extends A5<T["execute"]>>(a1: P[0], a2: P[1], a3: P[2], a4: P[3], a5: P[4]): Promise<void>;
-    execute<P extends A6<T["execute"]>>(a1: P[0], a2: P[1], a3: P[2], a4: P[3], a5: P[4], a6: P[5]): Promise<void>;
-    execute<P extends A7<T["execute"]>>(a1: P[0], a2: P[1], a3: P[2], a4: P[3], a5: P[4], a6: P[5], a7: P[6]): Promise<void>;
-    execute<P extends A8<T["execute"]>>(a1: P[0], a2: P[1], a3: P[2], a4: P[3], a5: P[4], a6: P[5], a7: P[6], a8: P[7]): Promise<void>;
-    execute<P extends A9<T["execute"]>>(a1: P[0], a2: P[1], a3: P[2], a4: P[3], a5: P[4], a6: P[5], a7: P[6], a8: P[7], a9: P[8]): Promise<void>;
-
     release(): void;
+
+    onRelease(handler: () => void): void;
 }
 
 /**
@@ -249,7 +236,7 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
     private willExecuteUseCase(args?: any[]): void {
         // Add instance to manager
         // It should be removed when it will be completed.
-        UseCaseInstanceMap.set(this.useCase, this);
+        UseCaseInstanceMap.set(this.useCase, this as UseCaseExecutor<T>);
         const payload = new WillExecutedPayload({
             args
         });
@@ -315,14 +302,15 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
     }
 
     /**
-     * @private like
+     * Call handler when this UseCaseExecutor will be released
+     * @param handler
      */
     onRelease(handler: () => void): void {
         this.on("USECASE_EXECUTOR_RELEASE", handler);
     }
 
     /**
-     * - **Stability**: Experimental
+     * - **Stability**: Deprecated(Previously experimental)
      * - This feature is subject to change. It may change or be removed in future versions.
      * - If you inserting in this, please see <https://github.com/almin/almin/issues/193>
      *
@@ -355,22 +343,24 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
      *  .executor(useCase => useCase.execute("value"))
      * ```
      *
-     * ### I'm use TypeScript, Should I use `executor`?
-     *
-     * Yes. It is type-safe by default.
-     * In other words, JavaScript User have not benefits.
-     *
      * ### Why executor's result always to be undefined?
      *
-     * UseCaseExecutor always resolve `undefined` data by design.
+     * `execute()` return a Promise that will resolve `undefined` by design.
      * In CQRS, the command always have returned void type.
      *
      * - http://cqrs.nu/Faq
      *
-     * So, Almin return only command result that is success or failure.
-     * You should not relay on the data of the command result.
+     * So, `execute()` only return command result that is success or failure.
+     * You should not relay on the result value of the useCase#execute.
+     *
+     * @deprecated Use `execute()` instead of `executor()`
+     * Almin 0.18+ make `execute` type complete.
      */
     executor(executor: (useCase: Pick<T, "execute">) => any): Promise<void> {
+        // TODO: executor() is duplication function of execute()
+        // It will be removed in the future.
+        // Show deprecated waring
+        console.warn("`executor(useCase => useCase.execute(args))` is deprecated. Use `execute(args) insteadof it.");
         if (typeof executor !== "function") {
             console.error(
                 "Warning(UseCase): executor argument should be function. But this argument is not function: ",
@@ -378,6 +368,91 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
             );
             return Promise.reject(new Error("executor(fn) arguments should be function"));
         }
+        const proxyfiedUseCase = proxifyUseCase<T>(this.useCase, {
+            onWillNotExecute: (args: any[]) => {
+                this.willNotExecuteUseCase(args);
+            },
+            onWillExecute: (args: any[]) => {
+                this.willExecuteUseCase(args);
+            },
+            onDidExecute: (result?: any) => {
+                this.didExecuteUseCase(result);
+            },
+            onError: (error: Error) => {
+                this.useCase.throwError(error);
+            }
+        });
+        const executorResult: EXECUTING_RESULT | undefined = executor(proxyfiedUseCase);
+        const executedResult: EXECUTING_RESULT =
+            executorResult !== undefined
+                ? executorResult
+                : {
+                    type: "SuccessExecuteNoReturnValue"
+                };
+        if (executedResult.type === "ShouldNotExecute") {
+            this.release();
+            return Promise.resolve();
+        }
+        const startingExecutor = new Promise((resolve, reject) => {
+            switch (executedResult.type) {
+                case "InvalidUsage":
+                    return reject(executedResult.error);
+                case "ErrorInExecute":
+                    return reject(executedResult.error);
+                case "SuccessExecuteReturnValue": {
+                    return Promise.resolve(executedResult.value).then(resolve, error => {
+                        this.useCase.throwError(error);
+                        return reject(error);
+                    });
+                }
+                case "SuccessExecuteNoReturnValue":
+                    return resolve();
+            }
+        });
+        return startingExecutor
+            .then(result => {
+                this.completeUseCase(result);
+                this.release();
+            })
+            .catch(error => {
+                this.completeUseCase();
+                this.release();
+                return Promise.reject(error);
+            });
+    }
+
+    /**
+     * Execute UseCase instance.
+     * UseCase is a executable object that has `execute` method.
+     *
+     * This method invoke UseCase's `execute` method and return a promise<void>.
+     * The promise will be resolved when the UseCase is completed finished.
+     *
+     * ### Why executor's result always to be undefined?
+     *
+     * `execute()` return a Promise that will resolve `undefined` by design.
+     * In CQRS, the command always have returned void type.
+     *
+     * - http://cqrs.nu/Faq
+     *
+     * So, `execute()` only return command result that is success or failure.
+     * You should not relay on the result value of the useCase#execute.
+     *
+     * ## Notes
+     *
+     * > Added: Almin 0.17.0+
+     *
+     * `execute()` support type check in Almin 0.17.0.
+     * However, it has a limitation about argument lengths.
+     * For more details, please see <https://github.com/almin/almin/issues/107#issuecomment-384993458>
+     *
+     * > Added: Almin 0.18.0+
+     *
+     * `execute()` support type check completely.
+     * No more need to use `executor()` for typing.
+     *
+     */
+    execute<P extends Arguments<T["execute"]>>(...args: P): Promise<void> {
         // Notes: proxyfiedUseCase has not timeout
         // proxiedUseCase will resolve by UseCaseWrapper#execute
         // For more details, see <UseCaseLifeCycle-test.ts>
@@ -397,7 +472,7 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
         });
         // Note: almin disallow to call `executor(useCase => { setTimeout(() => useCase.execute(), 0}})` asynchronously
         // You should call UseCase#execute synchronously.
-        const executorResult: EXECUTING_RESULT | undefined = executor(proxyfiedUseCase);
+        const executorResult: EXECUTING_RESULT | undefined = proxyfiedUseCase.execute(...args);
         // `executorResult` is undefined means that the UseCase#execute never return any value
         // In JavaScript, no return as undefined value
         const executedResult: EXECUTING_RESULT =
@@ -440,39 +515,6 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
                 this.release();
                 return Promise.reject(error);
             });
-    }
-
-    /**
-     * Execute UseCase instance.
-     * UseCase is a executable object that has `execute` method.
-     *
-     * This method invoke UseCase's `execute` method and return a promise<void>.
-     * The promise will be resolved when the UseCase is completed finished.
-     *
-     * ## Notes
-     *
-     * The `execute(arguments)` is shortcut of `executor(useCase => useCase.execute(arguments)`
-     *
-     * ### `execute()` typing for TypeScript
-     * 
-     * > Added: Almin 0.17.0 >=
-     * 
-     * `execute()` support type check in Almin 0.17.0.
-     * However, it has a limitation about argument lengths.
-     * For more details, please see <https://github.com/almin/almin/issues/107#issuecomment-384993458>
-     */
-    execute<P extends A0<T["execute"]>>(this: P extends never ? never : this): Promise<void>;
-    execute<P extends A1<T["execute"]>>(a1: P[0]): Promise<void>;
-    execute<P extends A2<T["execute"]>>(a1: P[0], a2: P[1]): Promise<void>;
-    execute<P extends A3<T["execute"]>>(a1: P[0], a2: P[1], a3: P[2]): Promise<void>;
-    execute<P extends A4<T["execute"]>>(a1: P[0], a2: P[1], a3: P[2], a4: P[3]): Promise<void>;
-    execute<P extends A5<T["execute"]>>(a1: P[0], a2: P[1], a3: P[2], a4: P[3], a5: P[4]): Promise<void>;
-    execute<P extends A6<T["execute"]>>(a1: P[0], a2: P[1], a3: P[2], a4: P[3], a5: P[4], a6: P[5]): Promise<void>;
-    execute<P extends A7<T["execute"]>>(a1: P[0], a2: P[1], a3: P[2], a4: P[3], a5: P[4], a6: P[5], a7: P[6]): Promise<void>;
-    execute<P extends A8<T["execute"]>>(a1: P[0], a2: P[1], a3: P[2], a4: P[3], a5: P[4], a6: P[5], a7: P[6], a8: P[7]): Promise<void>;
-    execute<P extends A9<T["execute"]>>(a1: P[0], a2: P[1], a3: P[2], a4: P[3], a5: P[4], a6: P[5], a7: P[6], a8: P[7], a9: P[8]): Promise<void>;
-    execute(...args: Array<any>): Promise<void> {
-        return this.executor(useCase => useCase.execute(...args));
     }
 
     /**
