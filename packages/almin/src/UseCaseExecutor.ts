@@ -314,7 +314,8 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
     }
 
     /**
-     * - **Stability**: Deprecated(Previously experimental)
+     * **Stability**: Deprecated(Previously: experimental)
+     *
      * - This feature is subject to change. It may change or be removed in future versions.
      * - If you inserting in this, please see <https://github.com/almin/almin/issues/193>
      *
@@ -359,6 +360,11 @@ export class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatcher imple
      *
      * @deprecated Use `execute()` instead of `executor()`
      * Almin 0.18+ make `execute` type complete.
+     * It will be remove in the future.
+     *
+     * Please apply migration scripts:
+     * https://github.com/almin/almin/issues/356
+     *
      */
     executor(executor: (useCase: Pick<T, "execute">) => any): Promise<void> {
         // TODO: executor() is duplication function of execute()

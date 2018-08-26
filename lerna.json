@@ -1,15 +1,14 @@
 {
-  "lerna": "2.8.0",
-  "commands": {
-    "publish": {
-      "concurrency": 1
-    }
-  },
   "packages": [
     "packages/*",
     "packages/@almin/*"
   ],
   "npmClient": "yarn",
   "useWorkspaces": true,
-  "version": "independent"
+  "version": "independent",
+  "command": {
+    "publish": {
+      "concurrency": 1
+    }
+  }
 }
