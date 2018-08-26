@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="6.2.2"></a>
+## [6.2.2](https://github.com/almin/almin/compare/almin-logger@6.2.1...almin-logger@6.2.2) (2018-08-26)
+
+
+### Bug Fixes
+
+* **almin-logger:** fix peerDependencies of almin ([6408835](https://github.com/almin/almin/commit/6408835))
+
+
+
+
+
 <a name="6.2.1"></a>
 ## [6.2.1](https://github.com/almin/almin/compare/almin-logger@6.2.0...almin-logger@6.2.1) (2018-06-09)
 

@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.7.2"></a>
+## [0.7.2](https://github.com/almin/almin/compare/almin-react-container@0.7.1...almin-react-container@0.7.2) (2018-08-26)
+
+**Note:** Version bump only for package almin-react-container
+
+
+
+
+
 <a name="0.7.1"></a>
 ## [0.7.1](https://github.com/almin/almin/compare/almin-react-container@0.7.0...almin-react-container@0.7.1) (2018-06-09)
 

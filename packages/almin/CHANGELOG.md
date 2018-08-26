@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.18.0"></a>
+# [0.18.0](https://github.com/almin/almin/compare/almin@0.17.1...almin@0.18.0) (2018-08-26)
+
+
+### Bug Fixes
+
+* **almin:** make `UseCaseExecutor#execute` type complete ([dd69712](https://github.com/almin/almin/commit/dd69712))
+
+
+### Features
+
+* **almin:** Add migration notes ([e422a5b](https://github.com/almin/almin/commit/e422a5b))
+
+
+
+
+
 <a name="0.17.1"></a>
 ## [0.17.1](https://github.com/almin/almin/compare/almin@0.17.0...almin@0.17.1) (2018-06-09)
 
