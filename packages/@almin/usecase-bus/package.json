@@ -1,6 +1,6 @@
 {
   "name": "@almin/usecase-bus",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "A mediator for UseCase and Command.",
   "keywords": [
     "almin",
@@ -44,7 +44,7 @@
   "devDependencies": {
     "@types/mocha": "^5.2.1",
     "@types/node": "^9.4.7",
-    "almin": "^0.18.0",
+    "almin": "^0.18.1",
     "cross-env": "^5.1.4",
     "mocha": "^5.2.0",
     "prettier": "^1.13.5",

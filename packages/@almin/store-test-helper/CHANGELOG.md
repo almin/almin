@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="1.1.3"></a>
+## [1.1.3](https://github.com/almin/almin/compare/@almin/store-test-helper@1.1.2...@almin/store-test-helper@1.1.3) (2018-08-30)
+
+**Note:** Version bump only for package @almin/store-test-helper
+
+
+
+
+
 <a name="1.1.2"></a>
 ## [1.1.2](https://github.com/almin/almin/compare/@almin/store-test-helper@1.1.1...@almin/store-test-helper@1.1.2) (2018-08-26)
 
