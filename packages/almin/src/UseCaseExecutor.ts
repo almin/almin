@@ -533,6 +533,8 @@ See https://github.com/almin/almin/issues/356`);
     /**
      * release all events handler.
      * You can call this when no more call event handler
+     *
+     * **internal**
      */
     release(): void {
         this._releaseHandlers.forEach(releaseHandler => releaseHandler());

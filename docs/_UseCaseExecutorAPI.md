@@ -15,9 +15,6 @@ export declare class UseCaseExecutorImpl<T extends UseCaseLike> extends Dispatch
     onReleaseOnce(handler: () => void): void;
     executor(executor: (useCase: Pick<T, "execute">) => any): Promise<void>;
     execute<P extends Arguments<T["execute"]>>(...args: P): Promise<void>;
-    release(): void;
-}
-export {};
 ```
 
 ----
@@ -136,19 +133,6 @@ For more details, please see <https://github.com/almin/almin/issues/107#issuecom
 
 `execute()` support type check completely.
 No more need to use `executor()` for typing.
-
-----
-
-### Interface 
-```typescript
-release(): void;
-}
-export {
-```
-
-
-release all events handler.
-You can call this when no more call event handler
 
 ----
 
