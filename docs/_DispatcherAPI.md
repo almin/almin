@@ -10,18 +10,18 @@ title: Dispatcher
 ## Interface
 
 ```typescript
-export declare class Dispatcher extends EventEmitter {
+export declare class Dispatcher extends Events<DispatcherEvent> {
     static isDispatcher(v: any): v is Dispatcher;
-    constructor();
     onDispatch(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => void): () => void;
     dispatch(payload: DispatchedPayload, meta?: DispatcherPayloadMeta): void;
     pipe(toDispatcher: Dispatcher): () => void;
 }
+export {};
 ```
 
 ----
 
-### `export declare class Dispatcher extends EventEmitter {`
+### `export declare class Dispatcher extends Events<DispatcherEvent> {`
 
 
 Dispatcher is the **central** event bus system.
@@ -31,8 +31,7 @@ Dispatcher is the **central** event bus system.
 - `onDispatch(function(payload){ });`
 - `dispatch(payload);`
 
-It is similar with EventEmitter of Node.js
-But, Dispatcher use `payload` object as arguments.
+Dispatcher pass `payload` object and `meta` object.
 
 ## Payload
 
@@ -54,6 +53,11 @@ Also, You can put any property to payload object.
 }
 ```
 
+## PayloadMeta
+
+`meta` object represent meta information for payload
+PayloadMeta is created automatically when that payload is dispatched.
+
 ### FAQ
 
 Q. Why Almin use `payload` object instead `emit(key, ...args)`?
@@ -68,13 +72,6 @@ So, Almin use `payload` object instead of it without casting.
 
 
 if `v` is instance of Dispatcher, return true
-
-----
-
-### `constructor();`
-
-
-constructor not have arguments.
 
 ----
 
@@ -100,7 +97,12 @@ Dispatch `payload` to subscribers.
 
 ----
 
-### `pipe(toDispatcher: Dispatcher): () => void;`
+### Interface 
+```typescript
+pipe(toDispatcher: Dispatcher): () => void;
+}
+export {
+```
 
 
 Delegate payload object to other dispatcher.
