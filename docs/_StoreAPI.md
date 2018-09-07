@@ -11,7 +11,6 @@ title: Store
 
 ```typescript
 export declare abstract class Store<State = any> extends Dispatcher implements StoreLike<State> {
-    static displayName?: string;
     static isStore(v: any): v is Store;
     state?: State;
     name: string;
@@ -21,7 +20,7 @@ export declare abstract class Store<State = any> extends Dispatcher implements S
     shouldStateUpdate(prevState: any | State, nextState: any | State): boolean;
     receivePayload?(payload: Payload): void;
     onDispatch(handler: (payload: Payload | AnyPayload, meta: DispatcherPayloadMeta) => void): () => void;
-    onChange(cb: (changingStores: Array<this>) => void): () => void;
+    onChange(handler: (changingStores: Array<Store<State>>) => void): () => void;
     emitChange(): void;
     release(): void;
 }
@@ -87,13 +86,6 @@ class YourStore extends Store {
    }
 }
 ```
-
-----
-
-### `static displayName?: string;`
-
-
-Set debuggable name if needed.
 
 ----
 
@@ -258,7 +250,7 @@ class MyUseCase extends UseCase{
 
 ----
 
-### `onChange(cb: (changingStores: Array<this>) => void): () => void;`
+### `onChange(handler: (changingStores: Array<Store<State>>) => void): () => void;`
 
 
 Subscribe change event of the store.
