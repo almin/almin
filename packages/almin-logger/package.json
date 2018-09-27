@@ -49,7 +49,7 @@
     "almin": "^0.18.1",
     "cross-env": "^5.1.4",
     "mocha": "^5.2.0",
-    "power-assert": "^1.5.0",
+    "power-assert": "^1.6.1",
     "rimraf": "^2.6.2",
     "simple-mock": "^0.8.0",
     "typescript": "~3.0.1",
