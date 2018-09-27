@@ -49,7 +49,7 @@
     "cross-env": "^5.1.4",
     "jsdom": "^11.9.0",
     "mocha": "^5.2.0",
-    "power-assert": "^1.5.0",
+    "power-assert": "^1.6.1",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
     "rimraf": "^2.6.2",
