@@ -147,11 +147,61 @@ BREAKING CHANGE: make `StoreGroup` as default store
 fix #42
 ```
 
-## How to release?
+## Release workflow
 
-Run following commands:
+**For maintainer**:  This document describe release flow for maintainer.
+
+1. Checkout release branch
 
 ```
-yarn test
-yarn run publish
+git checkout -b release-date
+git push origin HEAD -u
+```
+
+2. Bump version and tag
+
+Run one of following command.
+
+Recommend: `yarn run versionup`
+
+```shell
+# automatic versioning by commit message
+$ yarn run versionup
+# major update for all
+$ yarn run versionup:major
+# minor update for all
+$ yarn run versionup:minor
+# path update for all
+$ yarn run versionup:patch
+```
+
+3. Copy Changelog
+
+Copy CHANGELOG.md with the bump tags.
+
+You can copy CHANGELOG related with current release to your clipboard.
+
+```shell
+$ yarn run copy-changelog
+# copy to clipboard
+```
+
+4. Submit Pull Request
+
+Submit Pull Request and paste the CHANGELOG.
+
+**For maintainer**: Reviewers should review the CHANGELOG and approve it.
+
+
+5. Update Release Notes
+
+- Update GitHub Release
+- Write blog post if it is needed
+
+6. Publish to npm
+
+Finally, publish new version to npm by running next command:
+
+```
+$ yarn run release
 ```
