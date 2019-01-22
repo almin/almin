@@ -54,7 +54,8 @@ export class AlminReactContainer {
 
             render() {
                 // Workaround TS2.3.1: https://github.com/Microsoft/TypeScript/pull/13288
-                return <WrappedComponent {...this.state} {...this.props} />;
+                const C: any = WrappedComponent as any;
+                return <C {...this.state} {...this.props} />;
             }
         };
     }
