@@ -26,14 +26,16 @@ describe("UseCaseExecutor", function() {
                 useCase: new ThrowUseCase(),
                 parent: null
             });
-            return executor.executor(useCase => useCase.execute()).then(
-                () => {
-                    throw new Error("SHOULD NOT CALLED");
-                },
-                error => {
-                    assert(error instanceof Error, "should be caught error");
-                }
-            );
+            return executor
+                .executor(useCase => useCase.execute())
+                .then(
+                    () => {
+                        throw new Error("SHOULD NOT CALLED");
+                    },
+                    error => {
+                        assert(error instanceof Error, "should be caught error");
+                    }
+                );
         });
         it("should throw error when pass non-executor function and output console.error", () => {
             const executor = new UseCaseExecutorImpl({
@@ -61,14 +63,16 @@ describe("UseCaseExecutor", function() {
                 useCase: callableUseCase,
                 parent: null
             });
-            return executor.executor(useCase => useCase.execute()).then(
-                () => {
-                    assert(callableUseCase.isExecuted, "UseCase#execute should be called");
-                },
-                error => {
-                    throw new error();
-                }
-            );
+            return executor
+                .executor(useCase => useCase.execute())
+                .then(
+                    () => {
+                        assert(callableUseCase.isExecuted, "UseCase#execute should be called");
+                    },
+                    error => {
+                        throw new error();
+                    }
+                );
         });
         it("executor(useCase => {}) useCase is actual wrapper object", () => {
             const executor = new UseCaseExecutorImpl({

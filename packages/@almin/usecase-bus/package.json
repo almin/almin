@@ -43,15 +43,15 @@
   },
   "devDependencies": {
     "@types/mocha": "^5.2.1",
-    "@types/node": "^9.4.7",
+    "@types/node": "^10.12.18",
     "almin": "^0.18.1",
     "cross-env": "^5.1.4",
     "mocha": "^5.2.0",
-    "prettier": "^1.14.3",
-    "rimraf": "^2.6.2",
-    "ts-node": "^7.0.1",
-    "ts-node-test-register": "^4.0.0",
-    "typescript": "^3.0.1"
+    "prettier": "^1.16.1",
+    "rimraf": "^2.6.3",
+    "ts-node": "^8.0.1",
+    "ts-node-test-register": "^8.0.0",
+    "typescript": "^3.2.4"
   },
   "peerDependencies": {
     "almin": ">=0.16.0"

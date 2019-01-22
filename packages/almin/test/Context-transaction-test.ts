@@ -19,7 +19,7 @@ import { TransactionContext } from "../src/UnitOfWork/TransactionContext";
 /**
  * create a Store that can handle receivePayload
  */
-const createReceivePayloadStore = (receivePayloadHandler: ((payload: DispatchedPayload) => void)): Store => {
+const createReceivePayloadStore = (receivePayloadHandler: (payload: DispatchedPayload) => void): Store => {
     class MockStore extends Store {
         constructor() {
             super();
