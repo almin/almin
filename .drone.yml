@@ -8,5 +8,6 @@ steps:
 - name: deploy
   image: emirjrs/node:v1
   commands:
-  - npm install
-  - npm start
+  - pwd
+  - cd examples/todomvc & npm install
+  - cd examples/todomvc & npm start
