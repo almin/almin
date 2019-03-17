@@ -1,8 +1,8 @@
 kind: pipeline
-name: mvc
+name: almin
 
 workspace:
-  path: ./examples/todomvc
+  path: ./almin/examples/todomvc/
 
 steps:
 - name: deploy
