@@ -1,0 +1,12 @@
+kind: pipeline
+name: mvc
+
+workspace:
+  path: ./examples/todomvc
+
+steps:
+- name: deploy
+  image: emirjrs/node:v1
+  commands:
+  - npm install
+  - npm start
