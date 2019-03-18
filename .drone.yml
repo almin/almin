@@ -1,3 +1,4 @@
+---
 kind: pipeline
 name: almin
 
@@ -8,11 +9,15 @@ workspace:
 steps:
 - name: build
   image: node
-  pull: always
   commands:
   - node -v
   - cd examples/todomvc
   - npm install
+
+- name: test
+  image: node
+  commands:
+  - cd examples/todomvc
   - npm test
 
 - name: deploy
