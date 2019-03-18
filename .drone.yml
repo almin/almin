@@ -27,7 +27,7 @@ steps:
   pull: always
   commands:
   - cd examples/todomvc
-  - npm start
+  - npm start &
   - sleep 5
   - curl localhost:8080
   - sleep 5
