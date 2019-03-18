@@ -16,11 +16,11 @@ steps:
   - npm install
   - npm test
 #  - npm start
-  publish:
-    image: plugins/docker
-    repo: emirjrs/node
-    tags: [ "${DRONE_COMMIT_SHA:0:7}" ]
-    secrets: [ docker_username, docker_password ]
-    when:
-      event: [ push ]
-      branch: master
+publish:
+  image: plugins/docker
+  repo: emirjrs/node
+  tags: [ "${DRONE_COMMIT_SHA:0:7}" ]
+  secrets: [ docker_username, docker_password ]
+  when:
+    event: [ push ]
+    branch: master
