@@ -3,15 +3,15 @@ name: almin
 
 workspace:
   base: /app
-  path: almin/examples/todomvc/
+  path: src/almin
 
 steps:
 - name: deploy
   image: emirjrs/node:v1
   commands:
   - pwd
-  - ls -l
   - node -v
-  - npm install
-  - npm test
-  - npm start
+  - cd ./examples/todomevc/ && ls -l
+  - cd ./examples/todomevc/ && npm install
+  - cd ./examples/todomevc/ && npm test
+  - cd ./examples/todomevc/ && npm start
