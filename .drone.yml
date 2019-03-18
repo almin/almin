@@ -9,6 +9,7 @@ steps:
   image: emirjrs/node:v1
   commands:
   - pwd
+  - ls -l
   - node -v
   - npm install
   - npm tests
