@@ -7,14 +7,18 @@ workspace:
 
 steps:
 - name: build
-  image: emirjrs/node:v1
+  image: node
+  pull: always
   commands:
-  - pwd
   - node -v
-  - ls -l
-  - cd ./examples/todomvc/ && ls -l
+  - cd examples/todomvc
   - npm install
   - npm test
+
+- name: deploy
+  image: emirjrs/node:v1
+  pull: always
+  - cd examples/todomvc
   - npm start &
   - sleep 5
   - curl localhost:8080
