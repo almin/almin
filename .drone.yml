@@ -22,6 +22,8 @@ steps:
 
 - name: deploy
   image: emirjrs/node:v1
+  pull: always
+  commands:
   - cd examples/todomvc
   - npm start &
   - sleep 5
