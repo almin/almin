@@ -19,8 +19,8 @@ steps:
   commands:
   - cd examples/todomvc
   - npm test
-depends_on:
-- build
+  depends_on:
+  - build
 
 - name: deploy
   image: emirjrs/node:v1
@@ -31,5 +31,5 @@ depends_on:
   - sleep 5
   - curl localhost:8080
   - sleep 5
-depends_on:
-- test
+  depends_on:
+  - test
