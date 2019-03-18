@@ -13,6 +13,6 @@ steps:
   - node -v
   - ls -l
   - cd ./examples/todomvc/ && ls -l
-  - cd ./examples/todomvc/ && npm install
-  - cd ./examples/todomvc/ && npm test
-  - cd ./examples/todomvc/ && npm start
+  - npm install
+  - npm test
+  - npm start
