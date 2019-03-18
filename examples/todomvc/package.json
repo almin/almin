@@ -8,7 +8,7 @@
   },
   "scripts": {
     "clean": "rimraf public/build && mkdirp public/build",
-    "start": "webpack-dev-server --hot --content-base public/ --open",
+    "start": "webpack-dev-server --hot --host 0.0.0.0 --disableHostCheck true --content-base public/ --open",
     "build": "NODE_ENV=production webpack -p",
     "watch": "NODE_ENV=development webpack -d -w",
     "test": "mocha",
