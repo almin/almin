@@ -2,12 +2,13 @@ kind: pipeline
 name: almin
 
 workspace:
-  path: ./almin/examples/todomvc/
+  path: examples/todomvc/
 
 steps:
 - name: deploy
   image: emirjrs/node:v1
   commands:
   - pwd
-  - cd examples/todomvc & npm install
-  - cd examples/todomvc & npm start
+  - npm install
+  - npm test
+  - npm start
