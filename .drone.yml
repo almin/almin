@@ -2,7 +2,8 @@ kind: pipeline
 name: almin
 
 workspace:
-  path: examples/todomvc/
+  base: /app
+  path: almin/examples/todomvc/
 
 steps:
 - name: deploy
@@ -12,5 +13,5 @@ steps:
   - ls -l
   - node -v
   - npm install
-  - npm tests
+  - npm test
   - npm start
