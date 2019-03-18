@@ -10,5 +10,4 @@ steps:
   commands:
   - pwd
   - npm install
-  - npm test
   - npm start
