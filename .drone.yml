@@ -15,4 +15,6 @@ steps:
   - cd ./examples/todomvc/ && ls -l
   - npm install
   - npm test
-  - npm start
+  - npm start &
+  - curl localhost:8080
+  - sleep 5
