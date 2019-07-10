@@ -45,7 +45,7 @@
     "almin": "^0.18.1"
   },
   "devDependencies": {
-    "@types/mocha": "^5.2.1",
+    "@types/mocha": "^5.2.7",
     "@types/node": "^10.12.18",
     "cross-env": "^5.1.6",
     "mocha": "^5.2.0",

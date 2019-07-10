@@ -42,7 +42,7 @@
     "tabWidth": 4
   },
   "devDependencies": {
-    "@types/mocha": "^5.2.1",
+    "@types/mocha": "^5.2.7",
     "@types/node": "^10.12.18",
     "almin": "^0.18.1",
     "cross-env": "^5.1.4",
