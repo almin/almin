@@ -789,9 +789,10 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
-"@types/sinon@^4.3.1":
+"@types/sinon@^4.3.3":
   version "4.3.3"
   resolved "https://registry.yarnpkg.com/@types/sinon/-/sinon-4.3.3.tgz#97cbbfddc3282b5fd40c7abf80b99db426fd4237"
+  integrity sha512-Tt7w/ylBS/OEAlSCwzB0Db1KbxnkycP/1UkQpbvKFYoUuRn4uYsC3xh5TRPrOjTy0i8TIkSz1JdNL4GPVdf3KQ==
 
 "@webassemblyjs/ast@1.5.13":
   version "1.5.13"
