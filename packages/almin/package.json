@@ -68,7 +68,7 @@
     "rimraf": "^2.6.3",
     "sinon": "^4.5.0",
     "size-limit": "^0.17.1",
-    "source-map-support": "^0.5.10",
+    "source-map-support": "^0.5.12",
     "ts-node": "^8.0.1",
     "ts-node-test-register": "^8.0.0",
     "typescript": "~3.2.4",
