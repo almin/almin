@@ -25,7 +25,7 @@
     "lerna": "^3.10.6",
     "lint-staged": "^7.3.0",
     "prettier": "^1.16.1",
-    "textlint": "^11.2.1",
+    "textlint": "^11.2.6",
     "textlint-filter-rule-comments": "^1.2.2",
     "textlint-rule-alex": "^1.0.1",
     "textlint-rule-common-misspellings": "^1.0.1",
