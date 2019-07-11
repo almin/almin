@@ -2841,9 +2841,9 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
     hash-base "^3.0.0"
     inherits "^2.0.1"
 
-rm-local-modules@0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/rm-local-modules/-/rm-local-modules-0.0.1.tgz#209367a50d7a1648de5836d06da82de10a65694f"
+rm-local-modules@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/rm-local-modules/-/rm-local-modules-0.0.2.tgz#e45a4419276b7b05cf8717491f840dacc3902838"
   dependencies:
     cli-color "^1.1.0"
     minimist "^1.2.0"

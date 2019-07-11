@@ -24,7 +24,7 @@
     "cross-env": "^5.0.5",
     "lodash": "^4.17.4",
     "mocha": "^3.5.3",
-    "rm-local-modules": "0.0.1",
+    "rm-local-modules": "0.0.2",
     "testem": "^1.15.0",
     "webpack": "^2.2.1"
   },
