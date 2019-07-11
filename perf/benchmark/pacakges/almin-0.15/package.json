@@ -8,6 +8,6 @@
   "author": "azu",
   "license": "MIT",
   "dependencies": {
-    "almin": "^0.15.0"
+    "almin": "^0.15.3"
   }
 }
