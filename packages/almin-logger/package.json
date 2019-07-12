@@ -54,7 +54,7 @@
     "simple-mock": "^0.8.0",
     "typescript": "~3.2.4",
     "webpack": "^3.12.0",
-    "zuul": "^3.10.1"
+    "zuul": "^3.12.0"
   },
   "peerDependencies": {
     "almin": ">=0.15.0"

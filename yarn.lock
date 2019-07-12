@@ -12585,9 +12585,10 @@ zuul-localtunnel@1.1.0:
   dependencies:
     localtunnel "1.5.0"
 
-zuul@^3.10.1:
+zuul@^3.12.0:
   version "3.12.0"
   resolved "https://registry.yarnpkg.com/zuul/-/zuul-3.12.0.tgz#2ba48310588e173d74e61a9e51cf01e7cfe53e4d"
+  integrity sha512-ABOM+J+get8DsLXmFmCUjJOwxZILsedXZ0+bJnG9ajmDhVmtLqaUPJ9NEardYzSHxq6Vxi5qXf4mluA7PePq/A==
   dependencies:
     JSON2 "0.1.0"
     batch "0.5.0"
