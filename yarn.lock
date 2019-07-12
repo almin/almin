@@ -11364,13 +11364,14 @@ textlint-rule-no-dead-link@^4.4.2:
     minimatch "^3.0.4"
     textlint-rule-helper "^2.1.1"
 
-textlint-rule-prh@^5.0.1:
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/textlint-rule-prh/-/textlint-rule-prh-5.2.0.tgz#046453acf03b8e0e007f9c9ab9576ba56008ef99"
+textlint-rule-prh@^5.2.1:
+  version "5.2.1"
+  resolved "https://registry.yarnpkg.com/textlint-rule-prh/-/textlint-rule-prh-5.2.1.tgz#dcbb3ee674a9c63e7ba71f73b31d675571b874fc"
+  integrity sha512-RlVQRok7GnmuuCrNRSYbFqcpzJkH1g6OrVVrGE+S9drT1TzgsSSM8NkAQlP6kFnQ7fN4V7g4j6JBg0N3ArBpCg==
   dependencies:
     prh "^5.4.3"
-    textlint-rule-helper "^2.0.0"
-    untildify "^3.0.2"
+    textlint-rule-helper "^2.1.1"
+    untildify "^3.0.3"
 
 textlint@^11.2.6:
   version "11.2.6"
@@ -11915,9 +11916,10 @@ untildify@^2.1.0:
   dependencies:
     os-homedir "^1.0.0"
 
-untildify@^3.0.2:
+untildify@^3.0.3:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/untildify/-/untildify-3.0.3.tgz#1e7b42b140bcfd922b22e70ca1265bfe3634c7c9"
+  integrity sha512-iSk/J8efr8uPT/Z4eSUywnqyrQU7DSdMfdqK4iWEaUVVmcP5JcnpRqmVMwcwcnmI1ATFNgC5V90u09tBynNFKA==
 
 unzip-response@^2.0.1:
   version "2.0.1"
