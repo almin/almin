@@ -3226,7 +3226,7 @@ tar@^4:
     safe-buffer "^5.1.2"
     yallist "^3.0.2"
 
-testem@^1.15.0:
+testem@^1.18.5:
   version "1.18.5"
   resolved "https://registry.yarnpkg.com/testem/-/testem-1.18.5.tgz#912f3bfd4773519fa3cce0a8fd0e354763cbd545"
   dependencies:

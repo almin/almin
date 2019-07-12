@@ -25,7 +25,7 @@
     "lodash": "^4.17.14",
     "mocha": "^3.5.3",
     "rm-local-modules": "0.0.2",
-    "testem": "^1.15.0",
+    "testem": "^1.18.5",
     "webpack": "^2.2.1"
   },
   "scripts": {
