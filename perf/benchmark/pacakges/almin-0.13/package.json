@@ -9,6 +9,6 @@
   "author": "azu",
   "license": "MIT",
   "dependencies": {
-    "almin": "^0.13.11"
+    "almin": "^0.18.1"
   }
 }
