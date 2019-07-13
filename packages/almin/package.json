@@ -51,7 +51,7 @@
   },
   "dependencies": {
     "map-like": "^2.0.0",
-    "shallow-equal-object": "^1.0.1"
+    "shallow-equal-object": "^1.1.1"
   },
   "devDependencies": {
     "@types/mocha": "^5.2.7",

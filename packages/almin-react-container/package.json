@@ -35,7 +35,7 @@
     "watch": "tsc -p . --watch"
   },
   "dependencies": {
-    "shallow-equal-object": "^1.0.1"
+    "shallow-equal-object": "^1.1.1"
   },
   "devDependencies": {
     "@types/node": "^10.14.12",
