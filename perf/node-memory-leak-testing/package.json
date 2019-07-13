@@ -11,6 +11,6 @@
   "license": "MIT",
   "dependencies": {
     "almin": "^0.18.1",
-    "prettysize": "0.1.0"
+    "prettysize": "2.0.0"
   }
 }
