@@ -1879,7 +1879,7 @@ json-stable-stringify@^1.0.1:
   dependencies:
     jsonify "~0.0.0"
 
-json2csv@^3.7.3:
+json2csv@^3.11.5:
   version "3.11.5"
   resolved "https://registry.yarnpkg.com/json2csv/-/json2csv-3.11.5.tgz#088006c3b5c06425a48cb7326ca712a6f8661417"
   dependencies:

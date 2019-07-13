@@ -12,7 +12,7 @@
     "almin-0.13": "file:pacakges/almin-0.13",
     "almin-0.14": "file:pacakges/almin-0.14",
     "almin-0.15": "file:pacakges/almin-0.15",
-    "json2csv": "^3.7.3",
+    "json2csv": "^3.11.5",
     "lodash.range": "^3.2.0",
     "p-queue": "^1.0.0"
   },
