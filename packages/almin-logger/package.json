@@ -45,7 +45,7 @@
   "devDependencies": {
     "@almin/store-test-helper": "^1.1.3",
     "@types/mocha": "^5.2.7",
-    "@types/node": "^10.14.13",
+    "@types/node": "^10.14.14",
     "almin": "^0.18.1",
     "cross-env": "^5.1.4",
     "mocha": "^5.2.0",
