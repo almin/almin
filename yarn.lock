@@ -8095,7 +8095,7 @@ mem@^1.1.0:
   dependencies:
     mimic-fn "^1.0.0"
 
-mem@^4.0.0:
+mem@^4.0.0, mem@^4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/mem/-/mem-4.3.0.tgz#461af497bc4ae09608cdb2e60eefb69bff744178"
   integrity sha512-qX2bG48pTqYRVmDB37rn/6PT7LcR8T7oAX3bf99u1Tt1nzxYfxkgqDwUwolPlXweM0XzBOBFzSx4kfp7KP1s/w==
@@ -9146,6 +9146,13 @@ outpipe@^1.1.0:
   dependencies:
     shell-quote "^1.4.2"
 
+p-all@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/p-all/-/p-all-2.1.0.tgz#91419be56b7dee8fe4c5db875d55e0da084244a0"
+  integrity sha512-HbZxz5FONzz/z2gJfk6bFca0BCiSRF8jU3yCsWOen/vR6lZjfPOu/e7L3uFzTW1i0H8TlC3vqQstEJPQL4/uLA==
+  dependencies:
+    p-map "^2.0.0"
+
 p-defer@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/p-defer/-/p-defer-1.0.0.tgz#9f6eb182f6c9aa8cd743004a7d4f96b196b0fb0c"
@@ -9212,6 +9219,14 @@ p-map@^2.0.0, p-map@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/p-map/-/p-map-2.1.0.tgz#310928feef9c9ecc65b68b17693018a665cea175"
   integrity sha512-y3b8Kpd8OAN444hxfBbFfj1FY/RjtTd8tzYwhUqNYXx0fXx2iX4maP4Qr6qhIKbQXI02wTLAda4fYUbDagTUFw==
+
+p-memoize@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/p-memoize/-/p-memoize-3.1.0.tgz#ac7587983c9e530139f969ca7b41ef40e93659aa"
+  integrity sha512-e5tIvrsr7ydUUnxb534iQWtXxWgk/86IsH+H+nV4FHouIggBt4coXboKBt26o4lTu7JbEnGSeXdEsYR8BhAHFA==
+  dependencies:
+    mem "^4.3.0"
+    mimic-fn "^2.1.0"
 
 p-pipe@^1.2.0:
   version "1.2.0"
@@ -12226,15 +12241,17 @@ textlint-rule-helper@^2.0.0, textlint-rule-helper@^2.1.1:
     structured-source "^3.0.2"
     unist-util-visit "^1.1.0"
 
-textlint-rule-no-dead-link@^4.4.3:
-  version "4.4.3"
-  resolved "https://registry.yarnpkg.com/textlint-rule-no-dead-link/-/textlint-rule-no-dead-link-4.4.3.tgz#079e93169b1a48aeab3a581eda5c647a6b18e061"
-  integrity sha512-DfN2ELxCV3J0yD4/t4wRdj9gDZvivJAX45ajs9NEPcbG4w1Jop2V87FaPlW4qrpzK+Ds3p3RCsnpiRHY4X7mRA==
+textlint-rule-no-dead-link@^4.4.4:
+  version "4.4.4"
+  resolved "https://registry.yarnpkg.com/textlint-rule-no-dead-link/-/textlint-rule-no-dead-link-4.4.4.tgz#e1a677a8a0df8476dd6e30ab01b64bde58d5c290"
+  integrity sha512-eMIdKFMhkmQR7CJkjz04Pt5nxHketpdp9hr2+trxnQiPxXhv7NSnekEyE+8XjyIKqKlsSFYMKve5mvuSlodKow==
   dependencies:
     fs-extra "^8.0.1"
     get-url-origin "^1.0.1"
     minimatch "^3.0.4"
     node-fetch "^2.6.0"
+    p-all "^2.1.0"
+    p-memoize "^3.1.0"
     textlint-rule-helper "^2.1.1"
 
 textlint-rule-prh@^5.2.1:
