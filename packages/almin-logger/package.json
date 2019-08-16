@@ -50,7 +50,7 @@
     "cross-env": "^5.1.4",
     "mocha": "^5.2.0",
     "power-assert": "^1.6.1",
-    "rimraf": "^2.7.1",
+    "rimraf": "^3.0.0",
     "simple-mock": "^0.8.0",
     "typescript": "~3.2.4",
     "webpack": "^3.12.0",
