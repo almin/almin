@@ -26,7 +26,7 @@ export interface TodoAppProps {
 export type TodoAppState = typeof appStoreGroup.state;
 
 export class TodoApp extends React.Component<TodoAppProps, TodoAppState> {
-    releaseChange: () => void;
+    releaseChange = () => {};
 
     constructor(props: TodoAppProps) {
         super(props);

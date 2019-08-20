@@ -7,6 +7,7 @@ import * as TestUtils from "react-dom/test-utils";
 const createTestStore = <T extends {}>(initialState: T) => {
     class TestStore extends Store<T> {
         state: T;
+
         constructor() {
             super();
             this.state = initialState;
@@ -51,21 +52,21 @@ describe("almin-react-container", () => {
                 store: testStore
             });
             const Container = AlminReactContainer.create(Passthrough, context);
-            const tree = TestUtils.renderIntoDocument(<Container />) as React.Component;
+            const tree = TestUtils.renderIntoDocument<React.Component>(<Container />) as React.Component;
             const container = TestUtils.findRenderedComponentWithType(tree, Container);
             const stub = TestUtils.findRenderedComponentWithType(tree, Passthrough);
             // Initial state
             assert.strictEqual(updatedCount, 0);
-            assert.deepEqual(container.state, initialState);
-            assert.deepEqual(stub.props, initialState);
+            assert.deepStrictEqual(container.state, initialState);
+            assert.deepStrictEqual(stub.props, initialState);
             // Update state
             const newState = {
                 testKey: "new value"
             };
             testStore.updateState(newState);
             assert.strictEqual(updatedCount, 1);
-            assert.deepEqual(container.state, newState, "should update state");
-            assert.deepEqual(stub.props, newState, "should update props");
+            assert.deepStrictEqual(container.state, newState, "should update state");
+            assert.deepStrictEqual(stub.props, newState, "should update props");
         });
     });
     context("when update with same state", () => {
@@ -112,10 +113,12 @@ describe("almin-react-container", () => {
             // Store
             class MyState {
                 value: string;
+
                 constructor({ value }: { value: string }) {
                     this.value = value;
                 }
             }
+
             class MyStore extends Store<MyState> {
                 state: MyState;
 
@@ -138,11 +141,13 @@ describe("almin-react-container", () => {
             });
 
             type PassthroughProps = { custom: string } & typeof storeGroup.state;
+
             class Passthrough extends React.Component<PassthroughProps> {
                 render() {
                     return <div>{this.props.custom}</div>;
                 }
             }
+
             const Container = AlminReactContainer.create(Passthrough, context);
             const tree = TestUtils.renderIntoDocument(<Container custom={"value"} />);
             const stub = TestUtils.findRenderedComponentWithType(
