@@ -909,7 +909,7 @@
     "@sinonjs/commons" "^1"
     "@sinonjs/samsam" "^3.1.0"
 
-"@sinonjs/samsam@^3.1.0", "@sinonjs/samsam@^3.3.2":
+"@sinonjs/samsam@^3.1.0", "@sinonjs/samsam@^3.3.3":
   version "3.3.3"
   resolved "https://registry.yarnpkg.com/@sinonjs/samsam/-/samsam-3.3.3.tgz#46682efd9967b259b81136b9f120fd54585feb4a"
   integrity sha512-bKCMKZvWIjYD0BLGnNrxVuw4dkWCYsLqFOUWw8VgKF/+5Y+mE7LfHWPIYoDXowH+3a9LsWDMo0uAP8YDosPvHQ==
@@ -923,35 +923,35 @@
   resolved "https://registry.yarnpkg.com/@sinonjs/text-encoding/-/text-encoding-0.7.1.tgz#8da5c6530915653f3a1f38fd5f101d8c3f8079c5"
   integrity sha512-+iTbntw2IZPb/anVDbypzfQa+ay64MW0Zo8aJ8gZPWMMK6/OubMVb6lUPMagqjOPnmtauXnFCACVl3O7ogjeqQ==
 
-"@size-limit/file@2.1.1":
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/@size-limit/file/-/file-2.1.1.tgz#8fa8b1b204cd6e4c26599b4f27b1713323ff9c98"
-  integrity sha512-zp0lZhyy+AhQqZ3g/nLPqFPRFbc6En2iA/ApiohRG7qQOMBbZhiZXvZeGX5GWUCDUU0ekH1NXz/SxhU/Cq6K2g==
+"@size-limit/file@2.1.2":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@size-limit/file/-/file-2.1.2.tgz#cc7a10b6ad8822ae49f20898523a568b3e3b8dc0"
+  integrity sha512-Ms4Vp+A4CS2aElbRaj3SeHX10Q+7i1u535U5EYBT/1mj0hcPPS2MS9Shr2mKJAzUehEfT51yp1TMYuwDQmORqw==
   dependencies:
-    size-limit "2.1.1"
+    size-limit "2.1.2"
 
-"@size-limit/preset-small-lib@^2.1.1":
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/@size-limit/preset-small-lib/-/preset-small-lib-2.1.1.tgz#149c7d93eeeec006469654bee58a201a0a7ecb0a"
-  integrity sha512-cbMHq4lmCuSmkasAcT1mJNTtlBk10+6Z0jDlH+gMIXWviaJPmRqrtAOoSgJ7OfcHMJvmvehXTi7v6jZCH/M8DQ==
+"@size-limit/preset-small-lib@^2.1.2":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@size-limit/preset-small-lib/-/preset-small-lib-2.1.2.tgz#40dd1c8454e8b233a17a4bf9d9ba872fec8ef953"
+  integrity sha512-HYf+Gx46b1q/c4uJ0Aw3DghApdxiIrqbV/iy6D5U1RGUyp/4ApKSCzj9x29SJfFRcpYFC4HeDNK/quKWIMwwVQ==
   dependencies:
-    "@size-limit/file" "2.1.1"
-    "@size-limit/webpack" "2.1.1"
+    "@size-limit/file" "2.1.2"
+    "@size-limit/webpack" "2.1.2"
 
-"@size-limit/webpack@2.1.1":
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/@size-limit/webpack/-/webpack-2.1.1.tgz#a13bb4052130cc188524e0d2dd7d13a5ebfcad3f"
-  integrity sha512-A00NV9q4znon1rXEuqLQp4eBVpH+avjdzA5Hk34Z6ddOpDNXDai5eXTDecryapSCb/Q5rs/iKHwDxZiMgHH2DA==
+"@size-limit/webpack@2.1.2":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@size-limit/webpack/-/webpack-2.1.2.tgz#89561a91c1a4e07fb56d73c5306d656cf6cdbb35"
+  integrity sha512-EDrm2pcLH8JI81YCDfrujLT/goi/XgzKq7mteV9mswE2caLnh3Hsm2F2/BXX0eB7FXivOF2YDkhUbNItArU2Ww==
   dependencies:
     css-loader "^3.2.0"
     escape-string-regexp "^2.0.0"
     file-loader "^4.2.0"
-    nanoid "^2.0.3"
+    nanoid "^2.1.0"
     optimize-css-assets-webpack-plugin "^5.0.3"
     rimraf "^3.0.0"
-    size-limit "2.1.1"
+    size-limit "2.1.2"
     style-loader "^1.0.0"
-    webpack "^4.39.2"
+    webpack "^4.39.3"
     webpack-bundle-analyzer "^3.4.1"
 
 "@textlint/ast-node-types@^4.2.1", "@textlint/ast-node-types@^4.2.4":
@@ -3870,7 +3870,7 @@ create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.4:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-cross-env@^5.2.0:
+cross-env@^5.2.1:
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/cross-env/-/cross-env-5.2.1.tgz#b2c76c1ca7add66dc874d11798466094f551b34d"
   integrity sha512-1yHhtcfAd1r4nwQgknowuUNfIT9E8dOMMspC36g45dN+iD1blloi7xp8X/xAIDnjHWyt1uQ8PHk2fkNaym7soQ==
@@ -6340,10 +6340,10 @@ humanize-ms@^1.2.1:
   dependencies:
     ms "^2.0.0"
 
-husky@^3.0.4:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/husky/-/husky-3.0.4.tgz#10a48ac11ab50859b0939750fa0b4e07ad0bf669"
-  integrity sha512-7Rnt8aJfy+MlV28snmYK7O7vWwtOfeVxV6KhLpUFXlmx5ukQ1nQmNUB7QsAwSgdySB5X+bm7q7JIRgazqBUzKA==
+husky@^3.0.5:
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/husky/-/husky-3.0.5.tgz#d7db27c346645a8dc52df02aa534a377ad7925e0"
+  integrity sha512-cKd09Jy9cDyNIvAdN2QQAP/oA21sle4FWXjIMDttailpLAYZuBE7WaPmhrkj+afS8Sj9isghAtFvWSQ0JiwOHg==
   dependencies:
     chalk "^2.4.2"
     cosmiconfig "^5.2.1"
@@ -8390,7 +8390,7 @@ nan@^2.12.1:
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.14.0.tgz#7818f722027b2459a86f0295d434d1fc2336c52c"
   integrity sha512-INOFj37C7k3AfaNTtX8RhsTw7qRy7eLET14cROi9+5HAVbbHuIWUHEauBv5qT4Av2tWasiTY1Jw6puUNqRJXQg==
 
-nanoid@^2.0.3:
+nanoid@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-2.1.0.tgz#3de3dbd68cfb2f3bd52550e2bfd439cf75040eb2"
   integrity sha512-g5WwS+p6Cm+zQhO2YOpRbQThZVnNb7DDq74h8YDCLfAGynrEOrbx2E16dc8ciENiP1va5sqaAruqn2sN+xpkWg==
@@ -8461,7 +8461,7 @@ nice-try@^1.0.4:
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"
   integrity sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ==
 
-nise@^1.5.1:
+nise@^1.5.2:
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/nise/-/nise-1.5.2.tgz#b6d29af10e48b321b307e10e065199338eeb2652"
   integrity sha512-/6RhOUlicRCbE9s+94qCUsyE+pKlVJ5AhIv+jEE7ESKwnbXqulKZ1FYU+XAtHHWE9TinYvAxDUJAb912PwPoWA==
@@ -11182,23 +11182,23 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-sinon@^7.4.1:
-  version "7.4.1"
-  resolved "https://registry.yarnpkg.com/sinon/-/sinon-7.4.1.tgz#bcd0c63953893e87fa0cc502f52489c32a83d4d9"
-  integrity sha512-7s9buHGHN/jqoy/v4bJgmt0m1XEkCEd/tqdHXumpBp0JSujaT4Ng84JU5wDdK4E85ZMq78NuDe0I3NAqXY8TFg==
+sinon@^7.4.2:
+  version "7.4.2"
+  resolved "https://registry.yarnpkg.com/sinon/-/sinon-7.4.2.tgz#ecd54158fef2fcfbdb231a3fa55140e8cb02ad6c"
+  integrity sha512-pY5RY99DKelU3pjNxcWo6XqeB1S118GBcVIIdDi6V+h6hevn1izcg2xv1hTHW/sViRXU7sUOxt4wTUJ3gsW2CQ==
   dependencies:
     "@sinonjs/commons" "^1.4.0"
     "@sinonjs/formatio" "^3.2.1"
-    "@sinonjs/samsam" "^3.3.2"
+    "@sinonjs/samsam" "^3.3.3"
     diff "^3.5.0"
     lolex "^4.2.0"
-    nise "^1.5.1"
+    nise "^1.5.2"
     supports-color "^5.5.0"
 
-size-limit@2.1.1, size-limit@^2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/size-limit/-/size-limit-2.1.1.tgz#92ec1f22e709b74a488efb20ac649607e56d036a"
-  integrity sha512-OMODRoyU1ZeSAttafaOvVTnCG93z3pF6bw0ZIu8cxGEq8VZSnmhUC4/zgt/O9hUwDWEEE/INMR3ST5DYJlHvHA==
+size-limit@2.1.2, size-limit@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/size-limit/-/size-limit-2.1.2.tgz#b386999f3ffdc005ff5edba2e44abae50a14653f"
+  integrity sha512-a4IM8MpfcRhCVkEEVAPCryf6Xg9WtCb/oFSNbzE2aB6FxEfHG5eKiDXfDeti/wXAP2JHKp56pDfCr5MTQdtZoQ==
   dependencies:
     bytes "^3.1.0"
     chalk "^2.4.2"
@@ -13055,7 +13055,7 @@ webpack-sources@^1.1.0, webpack-sources@^1.4.0, webpack-sources@^1.4.1:
     source-list-map "^2.0.0"
     source-map "~0.6.1"
 
-webpack@^4.39.2, webpack@^4.39.3:
+webpack@^4.39.3:
   version "4.39.3"
   resolved "https://registry.yarnpkg.com/webpack/-/webpack-4.39.3.tgz#a02179d1032156b713b6ec2da7e0df9d037def50"
   integrity sha512-BXSI9M211JyCVc3JxHWDpze85CvjC842EvpRsVTc/d15YJGlox7GIDd38kJgWrb3ZluyvIjgenbLDMBQPDcxYQ==
