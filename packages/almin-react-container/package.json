@@ -50,8 +50,8 @@
     "jsdom": "^15.1.1",
     "mocha": "^6.2.0",
     "power-assert": "^1.6.1",
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0",
+    "react": "^16.10.1",
+    "react-dom": "^16.10.1",
     "rimraf": "^3.0.0",
     "ts-node": "^8.4.1",
     "typescript": "~3.5.3"
