@@ -48,7 +48,7 @@
     "@types/node": "^12.7.8",
     "almin": "^0.18.1",
     "cross-env": "^5.2.1",
-    "mocha": "^6.2.0",
+    "mocha": "^6.2.1",
     "power-assert": "^1.6.1",
     "rimraf": "^3.0.0",
     "simple-mock": "^0.8.0",
