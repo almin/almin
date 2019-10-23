@@ -17,8 +17,8 @@
     "almin": "^0.18.1",
     "almin-react-container": "file:../",
     "prop-types": "^15.7.2",
-    "react": "^16.10.2",
-    "react-dom": "^16.10.2"
+    "react": "^16.11.0",
+    "react-dom": "^16.11.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -32,7 +32,7 @@
     "npm-run-all": "^4.1.5",
     "rimraf": "^3.0.0",
     "webpack": "^2.7.0",
-    "webpack-dev-server": "^3.8.2"
+    "webpack-dev-server": "^3.9.0"
   },
   "scripts": {
     "test": "npm run build",

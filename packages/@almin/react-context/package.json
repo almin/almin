@@ -53,15 +53,15 @@
     "jsdom": "^15.2.0",
     "mocha": "^6.2.2",
     "raf": "^3.4.1",
-    "react": "^16.10.2",
-    "react-dom": "^16.10.2",
+    "react": "^16.11.0",
+    "react-dom": "^16.11.0",
     "rimraf": "^3.0.0",
     "ts-node": "^8.4.1",
     "ts-node-test-register": "^8.0.1",
     "typescript": "^3.2.4"
   },
   "peerDependencies": {
-    "react": ">=16.10.2"
+    "react": ">=16.11.0"
   },
   "publishConfig": {
     "access": "public"
