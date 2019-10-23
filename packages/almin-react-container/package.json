@@ -38,7 +38,7 @@
     "shallow-equal-object": "^1.1.1"
   },
   "devDependencies": {
-    "@types/node": "^12.11.1",
+    "@types/node": "^12.11.5",
     "@types/react": "16.9.9",
     "@types/react-dom": "16.9.2",
     "almin": "^0.18.1",
