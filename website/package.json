@@ -11,6 +11,6 @@
     "examples": "docusaurus-examples"
   },
   "devDependencies": {
-    "docusaurus": "^1.14.2"
+    "docusaurus": "^1.14.3"
   }
 }

@@ -2068,7 +2068,7 @@ dir-glob@2.0.0:
     arrify "^1.0.1"
     path-type "^3.0.0"
 
-docusaurus@^1.14.2:
+docusaurus@^1.14.3:
   version "1.14.3"
   resolved "https://registry.yarnpkg.com/docusaurus/-/docusaurus-1.14.3.tgz#640ffc37ae14fe58c175fd14e66c3a2dd36e19a3"
   integrity sha512-PoEB8uBLLVrWmv41Rvq9OqfOUUIk+tnscCNIuw/wI31tjALAfP3IfsliLc6ZBUvAtTF3S2Dk/quuzmdSCYgjaA==
