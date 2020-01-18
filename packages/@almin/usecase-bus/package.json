@@ -45,7 +45,7 @@
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.12.25",
     "almin": "^0.18.1",
-    "cross-env": "^5.2.1",
+    "cross-env": "^6.0.3",
     "mocha": "^6.2.2",
     "prettier": "^1.16.1",
     "rimraf": "^3.0.0",
