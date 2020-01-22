@@ -39,8 +39,8 @@
   },
   "devDependencies": {
     "@types/node": "^12.12.25",
-    "@types/react": "16.9.17",
-    "@types/react-dom": "16.9.4",
+    "@types/react": "16.9.18",
+    "@types/react-dom": "16.9.5",
     "almin": "^0.18.1",
     "babel-preset-env": "^1.7.0",
     "babel-preset-power-assert": "^1.0.0",
