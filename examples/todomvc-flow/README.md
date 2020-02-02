@@ -6,7 +6,7 @@ TodoMVC is popular example for MV* library.
 
 :memo: Please see tutorial documents!
 
-- https://almin.js.org/docs/tutorial/todomvc-flow/
+- https://almin.js.org/docs/en/tutorial-todo-app.html
 
 ## Installation
 
