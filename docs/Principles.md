@@ -19,10 +19,10 @@ For example, Flux's store is a "one" model, but it is also Write and Read model.
 
 ### In Flux
 
-[Flux architecture](https://facebook.github.io/flux/ "Flux") defines [Stores](https://facebook.github.io/flux/docs/in-depth-overview.html#stores "Stores") role.
+[Flux architecture](https://facebook.github.io/flux/ "Flux") defines [Stores](https://facebook.github.io/flux/docs/in-depth-overview/#stores "Stores") role.
 
 > Stores contain the application state and logic. 
-> -- [Stores](https://facebook.github.io/flux/docs/in-depth-overview.html#stores "Stores")
+> -- [Stores](https://facebook.github.io/flux/docs/in-depth-overview/#stores "Stores")
 
 It means that Store is a single model, but has two task - `state` and `logic`.
 
@@ -77,7 +77,7 @@ Quote from [Microsoft .NET - Architecting Applications for the Enterprise (2nd E
 **Related**:
 
 - [CQRS](https://martinfowler.com/bliki/CQRS.html "CQRS")
-- [CQRS Journey](https://msdn.microsoft.com/library/jj554200.aspx "CQRS Journey")
+- [CQRS Journey](https://docs.microsoft.com/en-us/previous-versions/msp-n-p/jj554200(v=pandp.10) "CQRS Journey")
 
 ## Unit of work
 

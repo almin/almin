@@ -6,7 +6,7 @@ Simple increment counter.
 
 :memo: Please see tutorial documents!
 
-- https://almin.js.org/docs/tutorial/counter/
+- https://almin.js.org/docs/en/tutorial-counter.html
 
 ## Installation
 
