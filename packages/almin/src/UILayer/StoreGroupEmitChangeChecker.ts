@@ -50,9 +50,7 @@ const warningIfStatePropertyIsModifiedDirectly = (store: Store, prevState: any, 
     const isStateReplacedButShouldNotUpdate = isStateReferenceReplaced && !isStateUpdated;
     if (isStateReplacedButShouldNotUpdate) {
         console.error(
-            `Warning(Store): ${
-                store.name
-            }#state property is replaced by different value directly, but this changes **does not** reflect to view.
+            `Warning(Store): ${store.name}#state property is replaced by different value directly, but this changes **does not** reflect to view.
 Because, ${store.name}#shouldStateUpdate(prevState, newState) has returned **false**.
 It means that you have replaced store's state by new state directly, but it is not correct way.
 

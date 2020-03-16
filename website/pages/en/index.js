@@ -49,16 +49,12 @@ class HomeSplash extends React.Component {
                                 <div className="promoRow">
                                     <div className="pluginRowBlock">
                                         <Button
-                                            href={`${siteConfig.baseUrl}docs/${
-                                                this.props.language
-                                            }/getting-started.html`}
+                                            href={`${siteConfig.baseUrl}docs/${this.props.language}/getting-started.html`}
                                         >
                                             Getting Started
                                         </Button>
                                         <Button
-                                            href={`${siteConfig.baseUrl}docs/${
-                                                this.props.language
-                                            }/example-projects.html`}
+                                            href={`${siteConfig.baseUrl}docs/${this.props.language}/example-projects.html`}
                                         >
                                             Take a tutorial
                                         </Button>
@@ -112,11 +108,7 @@ class Index extends React.Component {
                                     title: "Debuggable",
                                     image: `${siteConfig.baseUrl}img/icon/mbri-search.svg`,
                                     imageAlign: "top",
-                                    content: `[Logger](${siteConfig.baseUrl}docs/${
-                                        this.props.language
-                                    }/logging.html), [DevTools](https://github.com/almin/almin-devtools), [Performance monitoring](${
-                                        siteConfig.baseUrl
-                                    }docs/${this.props.language}/logging.html)`
+                                    content: `[Logger](${siteConfig.baseUrl}docs/${this.props.language}/logging.html), [DevTools](https://github.com/almin/almin-devtools), [Performance monitoring](${siteConfig.baseUrl}docs/${this.props.language}/logging.html)`
                                 },
                                 {
                                     title: "Layered Architecture",

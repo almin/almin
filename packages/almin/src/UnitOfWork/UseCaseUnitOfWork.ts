@@ -211,9 +211,7 @@ Disallow to do multiple exit in a transaction`);
     release() {
         if (!this.options.autoCommit && !this.doesReflectActionAtLeastOne) {
             if (process.env.NODE_ENV !== "production") {
-                console.error(`Warning(UnitOfWork): Transaction(${
-                    this.name
-                }) should be commit() or exit() at least one. 
+                console.error(`Warning(UnitOfWork): Transaction(${this.name}) should be commit() or exit() at least one. 
 If you not want to commit, Please call \`transactionContext.exit()\` at end of transaction.
 `);
             }

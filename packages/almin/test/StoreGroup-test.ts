@@ -126,11 +126,11 @@ describe("StoreGroup", function() {
                     isCalled = true;
                 });
                 // when
-                const useCase = new class NopeUseCase extends UseCase {
+                const useCase = new (class NopeUseCase extends UseCase {
                     execute() {
                         // not change any store
                     }
-                }();
+                })();
                 const context = new Context({
                     dispatcher: new Dispatcher(),
                     store: storeGroup
@@ -422,13 +422,13 @@ describe("StoreGroup", function() {
                     isCalled = true;
                 });
                 // when
-                const useCase = new class ThrowErrorUseCase extends UseCase {
+                const useCase = new (class ThrowErrorUseCase extends UseCase {
                     execute() {
                         store.updateState({ a: 1 });
                         // dispatch event
                         this.throwError(new Error("error message"));
                     }
-                }();
+                })();
                 const context = new Context({
                     dispatcher: new Dispatcher(),
                     store: storeGroup
