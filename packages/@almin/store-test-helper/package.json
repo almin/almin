@@ -46,9 +46,9 @@
   },
   "devDependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "^12.12.29",
+    "@types/node": "^12.12.32",
     "cross-env": "^5.2.1",
-    "mocha": "^6.2.2",
+    "mocha": "^6.2.3",
     "prettier": "^1.16.1",
     "rimraf": "^3.0.2",
     "ts-node": "^8.6.2",
