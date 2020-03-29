@@ -43,7 +43,7 @@
     "@types/react-dom": "16.9.5",
     "almin": "^0.18.1",
     "babel-preset-env": "^1.7.0",
-    "babel-preset-power-assert": "^1.0.0",
+    "babel-preset-power-assert": "^3.0.0",
     "babel-preset-react": "^6.24.1",
     "babel-register": "^6.26.0",
     "cross-env": "^5.2.1",
