@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "^12.12.34",
+    "@types/node": "^12.12.35",
     "almin": "^0.18.1",
     "cross-env": "^5.2.1",
     "mocha": "^6.2.3",
