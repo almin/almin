@@ -46,7 +46,7 @@
     "babel-preset-power-assert": "^1.0.0",
     "babel-preset-react": "^6.24.1",
     "babel-register": "^6.26.0",
-    "cross-env": "^5.2.1",
+    "cross-env": "^7.0.2",
     "jsdom": "^15.2.1",
     "mocha": "^6.2.3",
     "power-assert": "^1.6.1",
