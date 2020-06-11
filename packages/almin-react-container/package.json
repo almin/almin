@@ -48,7 +48,7 @@
     "babel-register": "^6.26.0",
     "cross-env": "^5.2.1",
     "jsdom": "^15.2.1",
-    "mocha": "^6.2.3",
+    "mocha": "^8.0.1",
     "power-assert": "^1.6.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
