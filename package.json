@@ -20,7 +20,7 @@
     "@alrra/travis-scripts": "^3.0.1",
     "@azu/docco": "^0.7.2",
     "eslint-config-prettier": "^2.10.0",
-    "eslint-plugin-prettier": "^2.7.0",
+    "eslint-plugin-prettier": "^3.1.4",
     "husky": "^3.1.0",
     "lerna": "^3.20.2",
     "lint-staged": "^10.1.6",
