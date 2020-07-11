@@ -89,6 +89,7 @@ crashlytics-build.properties
 /examples/**/lib/
 /packages/**/lib/
 /packages/**/yarn.lock
+/packages/**/module/
 /perf/**/output/
 # Build cache.
 .eslintcache
