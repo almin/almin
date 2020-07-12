@@ -57,8 +57,7 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,css}": [
-      "prettier --write",
-      "git add"
+      "prettier --write"
     ],
     "docs/*.md": [
       "textlint --cache -f pretty-error"
