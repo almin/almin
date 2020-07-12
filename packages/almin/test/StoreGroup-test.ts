@@ -1111,7 +1111,7 @@ Something wrong implementation of calling Store#emitChange at multiple`
     describe("#receivePayload", () => {
         it("UseCase dispatch payload -> Store should receive it", () => {
             class AState {
-                private count: number;
+                count: number;
 
                 constructor(count: number) {
                     this.count = count;
@@ -1169,14 +1169,14 @@ Something wrong implementation of calling Store#emitChange at multiple`
 
             const initialState = context.getState();
             assert.ok(initialState.a instanceof AState);
-            assert.deepEqual(initialState.a.count, 0);
+            assert.strictEqual(initialState.a.count, 0);
             return context
                 .useCase(new IncrementUseCase())
                 .execute()
                 .then(() => {
                     const state = context.getState();
                     assert.ok(state.a instanceof AState);
-                    assert.deepEqual(state.a.count, 1);
+                    assert.strictEqual(state.a.count, 1);
                 })
                 .then(() => {
                     return context.useCase(new DecrementUseCase()).execute();
@@ -1184,7 +1184,7 @@ Something wrong implementation of calling Store#emitChange at multiple`
                 .then(() => {
                     const state = context.getState();
                     assert.ok(state.a instanceof AState);
-                    assert.deepEqual(state.a.count, 0);
+                    assert.strictEqual(state.a.count, 0);
                 });
         });
     });
