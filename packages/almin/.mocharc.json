@@ -1,0 +1,8 @@
+{
+  "recursive": true,
+  "require": [
+    "env-development",
+    "ts-node-test-register"
+  ],
+  "timeout": "20000"
+}

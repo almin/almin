@@ -1,0 +1,6 @@
+{
+  "require": [
+    "test/setup.js",
+    "ts-node-test-register"
+  ]
+}
