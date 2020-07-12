@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.4](https://github.com/almin/almin/compare/almin-react-container@0.7.3...almin-react-container@0.7.4) (2020-07-12)
+
+
+### Bug Fixes
+
+* **deps:** update dependency almin to ^0.18.1 ([b488e76](https://github.com/almin/almin/commit/b488e76b1b6318e48d7b7b8dff0245dd0761b432))
+* **deps:** update dependency prop-types to ^15.7.2 ([a6d10cd](https://github.com/almin/almin/commit/a6d10cdee688f3bca72bb1b78d9a5ce4b80a53b7))
+* **deps:** update dependency shallow-equal-object to ^1.1.1 ([2734178](https://github.com/almin/almin/commit/2734178e7f53448903e1217d1655a441ec5bcd30))
+
+
+
+
+
 <a name="0.7.3"></a>
 ## [0.7.3](https://github.com/almin/almin/compare/almin-react-container@0.7.2...almin-react-container@0.7.3) (2018-08-30)
 
