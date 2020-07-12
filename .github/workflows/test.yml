@@ -1,0 +1,27 @@
+name: test
+on: [push, pull_request]
+env:
+  CI: true
+jobs:
+  test:
+    name: "Test on Node.js ${{ matrix.node-version }}"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [10, 12, 14]
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install
+        run: |
+            yarn install --frozen-lockfile
+            yarn run bootstrap
+            yarn run build
+      - name: Test
+        run: yarn run ci
+      - name: E2E Test
+        run: cd packages/almin && yarn run test:saucelabs
