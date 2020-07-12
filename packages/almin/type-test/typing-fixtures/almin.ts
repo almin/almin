@@ -173,13 +173,13 @@ class MyUseCase extends UseCase {
 
 context
     .useCase(new MyUseCase())
-    .executor(useCase => useCase.execute("value"))
+    .executor((useCase) => useCase.execute("value"))
     .then(() => {
         log("finish");
     });
 
 context
-    .transaction("my work", async transactionContext => {
+    .transaction("my work", async (transactionContext) => {
         await transactionContext.useCase(new MyUseCase()).execute("string");
         await transactionContext.useCase(new ParentUseCase()).execute("string");
         transactionContext.commit();

@@ -70,7 +70,7 @@ class TodoItem extends React.Component {
         );
     }
 
-    _onToggleComplete = event => {
+    _onToggleComplete = (event) => {
         AppLocator.context.useCase(ToggleTodoItemFactory.create()).execute(this.props.todo.id);
     };
 
@@ -84,7 +84,7 @@ class TodoItem extends React.Component {
      * in different ways.
      * @param  {string} title
      */
-    _onSave = title => {
+    _onSave = (title) => {
         AppLocator.context.useCase(UpdateTodoItemTitleFactory.create()).execute({
             id: this.props.todo.id,
             title

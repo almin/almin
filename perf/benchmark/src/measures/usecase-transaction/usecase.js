@@ -13,7 +13,7 @@ process.on("unhandledRejection", console.error);
 
 function runStore(almin, storeCount) {
     return new Promise((resolve, reject) => {
-        const stores = Array.from(new Array(storeCount), (_, i) => i).map(index => {
+        const stores = Array.from(new Array(storeCount), (_, i) => i).map((index) => {
             return almin.createStore(`Store${index}`);
         });
         const context = almin.createContext(stores);
@@ -50,7 +50,7 @@ const outputCSVPath = path.join(__dirname, "output", `usecase-${timeStamp}.csv`)
 const storeRanges = range(0, 350, 5);
 // count
 const resultsCurrent = [];
-storeRanges.forEach(count => {
+storeRanges.forEach((count) => {
     queue.add(() => {
         return runStore(alminCurrent, count).then(({ updateTime, updateCount }) => {
             resultsCurrent.push({

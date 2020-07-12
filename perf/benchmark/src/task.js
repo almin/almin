@@ -4,14 +4,14 @@
  * @param {AlminVersions} Almin
  * @param {function(error, data)} done
  */
-module.exports = function(Almin, done) {
+module.exports = function (Almin, done) {
     const { createContext, createStore, createUseCase } = Almin;
     let viewState = null;
-    const updateView = state => {
+    const updateView = (state) => {
         viewState = state;
     };
     // use-case
-    const stores = Array.from(new Array(50), (_, i) => i).map(index => {
+    const stores = Array.from(new Array(50), (_, i) => i).map((index) => {
         return createStore(`Store${index}`);
     });
     const context = createContext(stores);

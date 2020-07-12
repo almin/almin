@@ -13,8 +13,8 @@ describe("@almin/react-context", () => {
         it("should render with initialState props", () => {
             const context = new Context({
                 store: createStore({
-                    value: "store-initial"
-                })
+                    value: "store-initial",
+                }),
             });
             const { Consumer, Provider } = createReactContext(context);
 
@@ -23,7 +23,7 @@ describe("@almin/react-context", () => {
                     return (
                         <Provider initialState={{ value: "props-initial" }}>
                             <Consumer>
-                                {state => {
+                                {(state) => {
                                     return <p>{state.value}</p>;
                                 }}
                             </Consumer>
@@ -39,8 +39,8 @@ describe("@almin/react-context", () => {
         it("should render with initial getState() result", () => {
             const context = new Context({
                 store: createStore({
-                    value: "initial"
-                })
+                    value: "initial",
+                }),
             });
             const { Consumer, Provider } = createReactContext(context);
 
@@ -49,7 +49,7 @@ describe("@almin/react-context", () => {
                     return (
                         <Provider>
                             <Consumer>
-                                {state => {
+                                {(state) => {
                                     return <p>{state.value}</p>;
                                 }}
                             </Consumer>
@@ -64,10 +64,10 @@ describe("@almin/react-context", () => {
         });
         it("should re-render with updated state", () => {
             const testStore = createStore({
-                value: "initial"
+                value: "initial",
             });
             const context = new Context({
-                store: testStore
+                store: testStore,
             });
             const { Consumer, Provider } = createReactContext(context);
 
@@ -76,7 +76,7 @@ describe("@almin/react-context", () => {
                     return (
                         <Provider>
                             <Consumer>
-                                {state => {
+                                {(state) => {
                                     return <p>{state.value}</p>;
                                 }}
                             </Consumer>
@@ -91,7 +91,7 @@ describe("@almin/react-context", () => {
             }
             // update
             testStore.updateState({
-                value: "second"
+                value: "second",
             });
             const element = TestUtils.findRenderedDOMComponentWithTag(tree, "p");
             assert.strictEqual(element.textContent, "second");

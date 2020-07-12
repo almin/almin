@@ -29,9 +29,9 @@ export default class InitializeProductUseCase extends UseCase {
         // if server-side rendering mode, get data from inline dom data
         // if client-side rendering mode, get data from API access
         const promise = productsData ? Promise.resolve(productsData) : getAllProducts();
-        return promise.then(productCatalogData => {
+        return promise.then((productCatalogData) => {
             const products = ProductFactory.createProductsFromJSON(productCatalogData);
-            products.forEach(product => {
+            products.forEach((product) => {
                 this.productRepository.store(product);
             });
         });

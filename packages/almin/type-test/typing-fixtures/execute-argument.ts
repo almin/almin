@@ -66,6 +66,6 @@ context.useCase(new MyUseCaseOptional()).execute(1, 1);
 // typings:expect-error
 context.useCase(new MyUseCaseA()).execute("A", 1, 1);
 // typings:expect-error
-context.useCase(new MyUseCaseA()).executor(useCase => useCase.execute("A", 1, 1));
+context.useCase(new MyUseCaseA()).executor((useCase) => useCase.execute("A", 1, 1));
 // typings:expect-error
 context.useCase(new MyUseCaseDefault()).execute({ "incompatible type": 1 });

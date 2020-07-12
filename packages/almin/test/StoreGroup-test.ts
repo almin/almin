@@ -31,7 +31,7 @@ const createChangeStoreUseCase = (store: MockStore<any>) => {
 
     return new ChangeTheStoreUseCase();
 };
-describe("StoreGroup", function() {
+describe("StoreGroup", function () {
     describe("constructor(map)", () => {
         it("throw error when invalid arguments", () => {
             assert.throws(() => {
@@ -77,9 +77,9 @@ describe("StoreGroup", function() {
             });
         });
     });
-    describe("#emitChange", function() {
-        describe("when any store is not changed", function() {
-            it("should not call onChange", function() {
+    describe("#emitChange", function () {
+        describe("when any store is not changed", function () {
+            it("should not call onChange", function () {
                 const store = createStore({ name: "AStore" });
                 const storeGroup = new StoreGroup({
                     a: store
@@ -96,7 +96,7 @@ describe("StoreGroup", function() {
             });
         });
     });
-    describe("#onChange", function() {
+    describe("#onChange", function () {
         it("when actually store's state is changed", () => {
             it("call onChange handler", () => {
                 const store = createStore({
@@ -114,8 +114,8 @@ describe("StoreGroup", function() {
                 assert.ok(isCalled);
             });
         });
-        describe("when UseCase never change any store", function() {
-            it("should not be called", function() {
+        describe("when UseCase never change any store", function () {
+            it("should not be called", function () {
                 const store = createStore({ name: "AStore" });
                 const storeGroup = new StoreGroup({
                     a: store
@@ -152,7 +152,7 @@ describe("StoreGroup", function() {
                     BStore: storeB
                 });
                 let changedStores: Store[] = [];
-                storeGroup.onChange(changingStores => {
+                storeGroup.onChange((changingStores) => {
                     changedStores = changingStores;
                 });
 
@@ -181,8 +181,8 @@ describe("StoreGroup", function() {
             });
         });
         // sync
-        describe("when SyncUseCase change the store", function() {
-            it("should be called by sync", function() {
+        describe("when SyncUseCase change the store", function () {
+            it("should be called by sync", function () {
                 const store = createStore({ name: "AStore" });
                 const storeGroup = new StoreGroup({
                     AStore: store
@@ -204,8 +204,8 @@ describe("StoreGroup", function() {
             });
         });
         // async
-        describe("when ASyncUseCase change the store", function() {
-            it("should be called by async", function() {
+        describe("when ASyncUseCase change the store", function () {
+            it("should be called by async", function () {
                 const store = createStore({ name: "" });
                 const storeGroup = new StoreGroup({
                     AStore: store
@@ -232,8 +232,8 @@ describe("StoreGroup", function() {
                 return promise;
             });
         });
-        describe("when UseCase is nesting", function() {
-            it("should be called by all UseCases", function() {
+        describe("when UseCase is nesting", function () {
+            it("should be called by all UseCases", function () {
                 const aStore = createStore({ name: "AStore" });
                 const bStore = createStore({ name: "BStore" });
                 const storeGroup = new StoreGroup({ a: aStore, b: bStore });
@@ -268,8 +268,8 @@ describe("StoreGroup", function() {
                         assert.equal(onChangeCounter, 2);
                     });
             });
-            describe("when UseCase#dispatch is called", function() {
-                it("should not be called - no changing store", function() {
+            describe("when UseCase#dispatch is called", function () {
+                it("should not be called - no changing store", function () {
                     const store = createStore({ name: "AStore" });
                     const storeGroup = new StoreGroup({ a: store });
                     let isChanged = false;
@@ -285,7 +285,7 @@ describe("StoreGroup", function() {
                             this.dispatch({
                                 type: "DispatchAndFinishAsyncUseCase"
                             });
-                            return new Promise(resolve => {
+                            return new Promise((resolve) => {
                                 setTimeout(resolve, 100);
                             });
                         }
@@ -295,7 +295,7 @@ describe("StoreGroup", function() {
                         dispatcher: new Dispatcher(),
                         store: storeGroup
                     });
-                    context.events.onDispatch(payload => {
+                    context.events.onDispatch((payload) => {
                         dispatchedPayload = payload;
                     });
                     // when
@@ -308,7 +308,7 @@ describe("StoreGroup", function() {
                     });
                     return resultPromise;
                 });
-                it("should be called by sync", function() {
+                it("should be called by sync", function () {
                     const store = createStore({ name: "AStore" });
                     const storeGroup = new StoreGroup({ a: store });
                     let isCalled = false;
@@ -325,7 +325,7 @@ describe("StoreGroup", function() {
                             this.dispatch({
                                 type: "DispatchAndFinishAsyncUseCase"
                             });
-                            return new Promise(resolve => {
+                            return new Promise((resolve) => {
                                 setTimeout(resolve, 100);
                             });
                         }
@@ -342,7 +342,7 @@ describe("StoreGroup", function() {
                     assert.ok(isCalled);
                     return resultPromise;
                 });
-                it("should be called each dispatch", function() {
+                it("should be called each dispatch", function () {
                     const store = createStore({ name: "AStore" });
                     const storeGroup = new StoreGroup({ a: store });
                     let calledCount = 0;
@@ -381,8 +381,8 @@ describe("StoreGroup", function() {
                 });
             });
         });
-        describe("when UseCase throwing Error", function() {
-            it("should be called", function() {
+        describe("when UseCase throwing Error", function () {
+            it("should be called", function () {
                 const aStore = createStore({ name: "AStore" });
                 const storeGroup = new StoreGroup({ a: aStore });
                 let onChangeCounter = 0;
@@ -412,8 +412,8 @@ describe("StoreGroup", function() {
                     });
             });
         });
-        describe("when UseCase call `throwError()", function() {
-            it("should be called", function() {
+        describe("when UseCase call `throwError()", function () {
+            it("should be called", function () {
                 const store = createStore({ name: "AStore" });
                 const storeGroup = new StoreGroup({ a: store });
                 let isCalled = false;
@@ -441,8 +441,8 @@ describe("StoreGroup", function() {
                     });
             });
         });
-        describe("WhiteBox testing", function() {
-            it("should thin out change events at once", function() {
+        describe("WhiteBox testing", function () {
+            it("should thin out change events at once", function () {
                 const aStore = createStore({ name: "AStore" });
                 const bStore = createStore({ name: "BStore" });
                 const storeGroup = new StoreGroup({ a: aStore, b: bStore });
@@ -463,7 +463,7 @@ describe("StoreGroup", function() {
                 });
                 // then - called change handler a one-time
                 let calledCount = 0;
-                storeGroup.onChange(changedStores => {
+                storeGroup.onChange((changedStores) => {
                     calledCount++;
                     assert.equal(changedStores.length, 2);
                 });
@@ -478,7 +478,7 @@ describe("StoreGroup", function() {
                     });
             });
             describe("when the UseCase don't return a promise", () => {
-                it("StoreGroup#emitChange is called just one time", function() {
+                it("StoreGroup#emitChange is called just one time", function () {
                     const aStore = createStore({ name: "AStore" });
                     const storeGroup = new StoreGroup({ a: aStore });
 
@@ -509,7 +509,7 @@ describe("StoreGroup", function() {
                 });
             });
         });
-        describe("Sync Change and Async Change in Edge case", function() {
+        describe("Sync Change and Async Change in Edge case", function () {
             /*
             This useCase should update twice
                 execute(){
@@ -521,7 +521,7 @@ describe("StoreGroup", function() {
                 }
 
              */
-            it("should pass twice update scenario", function() {
+            it("should pass twice update scenario", function () {
                 const store = createStore({ name: "AStore" });
                 const storeGroup = new StoreGroup({ a: store });
                 const asyncUseCase = createAsyncChangeStoreUseCase(store);
@@ -553,8 +553,8 @@ describe("StoreGroup", function() {
                     });
             });
         });
-        describe("onChange calling flow example", function() {
-            it("should call onChange in order", function() {
+        describe("onChange calling flow example", function () {
+            it("should call onChange in order", function () {
                 const aStore = createStore({ name: "AStore" });
                 const bStore = createStore({ name: "BStore" });
                 const cStore = createStore({ name: "CStore" });
@@ -579,7 +579,7 @@ describe("StoreGroup", function() {
 
                 class ChildAUseCase extends UseCase {
                     execute() {
-                        return new Promise(resolve => {
+                        return new Promise((resolve) => {
                             aStore.updateState({ a: 1 });
                             resolve();
                         });
@@ -588,7 +588,7 @@ describe("StoreGroup", function() {
 
                 class ChildBUseCase extends UseCase {
                     execute() {
-                        return new Promise(resolve => {
+                        return new Promise((resolve) => {
                             bStore.updateState({ b: 1 });
                             resolve();
                         });
@@ -602,7 +602,7 @@ describe("StoreGroup", function() {
                 });
                 // then - called change handler a one-time
                 let actualChangedStores: Store[] = [];
-                storeGroup.onChange(changedStores => {
+                storeGroup.onChange((changedStores) => {
                     actualChangedStores = actualChangedStores.concat(changedStores);
                 });
                 // when
@@ -615,8 +615,8 @@ describe("StoreGroup", function() {
                     });
             });
         });
-        describe("When StoreGroup calling Store#receivePayload", function() {
-            it("should call count is necessary and sufficient for performance", function() {
+        describe("When StoreGroup calling Store#receivePayload", function () {
+            it("should call count is necessary and sufficient for performance", function () {
                 class AStore extends Store<any> {
                     public receivedPayloadList: any[];
 
@@ -697,12 +697,12 @@ describe("StoreGroup", function() {
                     });
             });
         });
-        describe("when Store#emitChange before receivePayload", function() {
-            it("arguments includes the store", function() {
+        describe("when Store#emitChange before receivePayload", function () {
+            it("arguments includes the store", function () {
                 const aStore = createStore({ name: "AStore" });
                 const storeGroup = new StoreGroup({ a: aStore });
                 let actualStores: Store[] = [];
-                storeGroup.onChange(stores => {
+                storeGroup.onChange((stores) => {
                     actualStores = actualStores.concat(stores);
                 });
                 // when
@@ -727,8 +727,8 @@ describe("StoreGroup", function() {
                     });
             });
         });
-        describe("when Store is changed in receivePayload", function() {
-            it("arguments includes the store", function() {
+        describe("when Store is changed in receivePayload", function () {
+            it("arguments includes the store", function () {
                 class AStore extends Store {
                     constructor() {
                         super();
@@ -750,7 +750,7 @@ describe("StoreGroup", function() {
                 const aStore = new AStore();
                 const storeGroup = new StoreGroup({ a: aStore });
                 let actualStores: Store[] = [];
-                storeGroup.onChange(stores => {
+                storeGroup.onChange((stores) => {
                     actualStores = actualStores.concat(stores);
                 });
                 // when
@@ -775,8 +775,8 @@ describe("StoreGroup", function() {
             });
         });
     });
-    describe("#getState", function() {
-        it("should return a single state object", function() {
+    describe("#getState", function () {
+        it("should return a single state object", function () {
             class AStore extends Store {
                 getState() {
                     return "a value";
@@ -800,8 +800,8 @@ describe("StoreGroup", function() {
                 b: "b value"
             });
         });
-        describe("when getState() return State object", function() {
-            it("should return a single state has {<key>: state} of return Store#getState", function() {
+        describe("when getState() return State object", function () {
+            it("should return a single state has {<key>: state} of return Store#getState", function () {
                 class AState {}
 
                 class AStore extends Store {
@@ -839,7 +839,7 @@ describe("StoreGroup", function() {
         afterEach(() => {
             consoleErrorStub.restore();
         });
-        it("should check that a Store returned state immutability", function() {
+        it("should check that a Store returned state immutability", function () {
             const store = createStore({ name: "AStore" });
 
             class EmitStoreUseCase extends UseCase {
@@ -863,7 +863,7 @@ describe("StoreGroup", function() {
                 });
         });
         // See https://github.com/almin/almin/pull/205
-        it("State changing: A -> B -> A by Store#emitChange should not warn", function() {
+        it("State changing: A -> B -> A by Store#emitChange should not warn", function () {
             const state = { value: "init" };
 
             class MyStore extends Store {
@@ -921,7 +921,7 @@ Something wrong implementation of calling Store#emitChange at multiple`
                     );
                 });
         });
-        it("should check that a Store's state is changed but shouldStateUpdate return false", function() {
+        it("should check that a Store's state is changed but shouldStateUpdate return false", function () {
             class AStore extends Store {
                 constructor() {
                     super();
@@ -960,7 +960,7 @@ Something wrong implementation of calling Store#emitChange at multiple`
                 });
         });
         describe("when strict mode", () => {
-            it("should not show warning if update store inside of receivePayload", function() {
+            it("should not show warning if update store inside of receivePayload", function () {
                 class AStore extends Store {
                     constructor() {
                         super();
@@ -1007,7 +1007,7 @@ Something wrong implementation of calling Store#emitChange at multiple`
                         assert.strictEqual(consoleErrorStub.callCount, 0);
                     });
             });
-            it("should show warning if update store outside of receivePayload", function() {
+            it("should show warning if update store outside of receivePayload", function () {
                 class AStore extends Store {
                     constructor() {
                         super();
@@ -1049,7 +1049,7 @@ Something wrong implementation of calling Store#emitChange at multiple`
             });
         });
         describe("Not support warning case", () => {
-            it("directly modified and emitChange is mixed, we can't show warning", function() {
+            it("directly modified and emitChange is mixed, we can't show warning", function () {
                 class AStore extends Store {
                     constructor() {
                         super();
@@ -1093,8 +1093,8 @@ Something wrong implementation of calling Store#emitChange at multiple`
             });
         });
     });
-    describe("#release", function() {
-        it("release onChange handler", function() {
+    describe("#release", function () {
+        it("release onChange handler", function () {
             const aStore = createStore({ name: "AStore" });
             const bStore = createStore({ name: "BStore" });
             const storeGroup = new StoreGroup({ a: aStore, b: bStore });

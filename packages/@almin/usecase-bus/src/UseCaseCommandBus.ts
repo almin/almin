@@ -49,7 +49,7 @@ export class UseCaseBinder<Command, P extends Factory<UseCase, any>> {
             context: this.context,
             CommandConstructors: [...this.CommandConstructors, CommandConstructor],
             useCaseFactories: [...this.useCaseFactories, () => useCase],
-            duplicateChecker: this.duplicateChecker
+            duplicateChecker: this.duplicateChecker,
         });
     }
 
@@ -74,7 +74,7 @@ export class UseCaseBinder<Command, P extends Factory<UseCase, any>> {
             context: this.context,
             CommandConstructors: [...this.CommandConstructors, CommandConstructor],
             useCaseFactories: [...this.useCaseFactories, useCaseFactory],
-            duplicateChecker: this.duplicateChecker
+            duplicateChecker: this.duplicateChecker,
         });
     }
 
@@ -112,7 +112,7 @@ container.send(CommandA);
             throw new Error(`UseCase is not found for the command: ${command}`);
         }
         const useCase = useCaseFactory(command);
-        return this.context.useCase(useCase).executor(useCase => useCase.execute(command));
+        return this.context.useCase(useCase).executor((useCase) => useCase.execute(command));
     }
 
     private releaseBinding() {
@@ -146,7 +146,7 @@ export class UseCaseCommandBus {
             context,
             duplicateChecker,
             CommandConstructors: [],
-            useCaseFactories: []
+            useCaseFactories: [],
         });
     }
 }

@@ -6,7 +6,7 @@ describe("@almin/store-test-helper", () => {
     describe("createStore", () => {
         it("create(name, state)", () => {
             const initialState = {
-                value: "value"
+                value: "value",
             };
             const store = createStore("TestStore", initialState);
             assert.ok(store instanceof Store);
@@ -15,7 +15,7 @@ describe("@almin/store-test-helper", () => {
         });
         it("create(state)", () => {
             const initialState = {
-                value: "value"
+                value: "value",
             };
             const store = createStore(initialState);
             assert.ok(store instanceof Store);

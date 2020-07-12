@@ -31,7 +31,7 @@ class Header extends React.Component {
      * in different ways.
      * @param {string} text
      */
-    _onSave = text => {
+    _onSave = (text) => {
         if (text.trim()) {
             AppLocator.context.useCase(AddTodoItemFactory.create()).execute(text);
         }

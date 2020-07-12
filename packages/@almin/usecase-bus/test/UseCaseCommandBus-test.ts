@@ -6,7 +6,7 @@ import * as assert from "assert";
 describe("UseCaseBus", () => {
     it("should send command to bound useCase", async () => {
         const context = new Context({
-            store: new NopeStore()
+            store: new NopeStore(),
         });
 
         class TestCommand {
@@ -28,7 +28,7 @@ describe("UseCaseBus", () => {
     });
     it("should bind multiple command and useCase", async () => {
         const context = new Context({
-            store: new NopeStore()
+            store: new NopeStore(),
         });
 
         class TestCommandA {
@@ -67,7 +67,7 @@ describe("UseCaseBus", () => {
     });
     it("UseCase instance should be called multiple", async () => {
         const context = new Context({
-            store: new NopeStore()
+            store: new NopeStore(),
         });
 
         class TestCommand {
@@ -93,7 +93,7 @@ describe("UseCaseBus", () => {
 
     it("UseCaseFactory receive command which is sent", async () => {
         const context = new Context({
-            store: new NopeStore()
+            store: new NopeStore(),
         });
 
         class TestCommand {
@@ -124,7 +124,7 @@ describe("UseCaseBus", () => {
 
     it("can bind and bindFactory both", async () => {
         const context = new Context({
-            store: new NopeStore()
+            store: new NopeStore(),
         });
 
         class CommandA {
@@ -168,7 +168,7 @@ describe("UseCaseBus", () => {
     context("Limitation case", () => {
         it("could not use old binding instance", () => {
             const context = new Context({
-                store: new NopeStore()
+                store: new NopeStore(),
             });
 
             class TestCommandA {
@@ -194,7 +194,7 @@ describe("UseCaseBus", () => {
         });
         it("could not bind with same Command", () => {
             const context = new Context({
-                store: new NopeStore()
+                store: new NopeStore(),
             });
 
             class TestCommand {
@@ -217,7 +217,7 @@ describe("UseCaseBus", () => {
         });
         it("could not bind with same UseCaseFactory", () => {
             const context = new Context({
-                store: new NopeStore()
+                store: new NopeStore(),
             });
 
             class TestCommandA {

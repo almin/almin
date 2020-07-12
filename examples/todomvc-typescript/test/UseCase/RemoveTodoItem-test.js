@@ -6,8 +6,8 @@ import TodoItem from "../../lib/domain/TodoList/TodoItem";
 import TodoList from "../../lib/domain/TodoList/TodoList";
 import { TodoListRepository } from "../../lib/infra/TodoListRepository";
 import { RemoveTodoItemUseCase } from "../../lib/usecase/RemoveTodoItem";
-describe("RemoveTodoItemUseCase", function() {
-    it("should add TodoItem with title", function(done) {
+describe("RemoveTodoItemUseCase", function () {
+    it("should add TodoItem with title", function (done) {
         const mockTodoList = new TodoList();
         const todoItem = new TodoItem({ title: "before" });
         mockTodoList.addItem(todoItem);

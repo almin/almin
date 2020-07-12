@@ -8,7 +8,7 @@ export default class ConsoleMock {
     static create() {
         var consoleMock = {};
         var prop, method;
-        var spy = simpleSpy.spy(function() {});
+        var spy = simpleSpy.spy(function () {});
         var properties = ["memory"];
         var methods = (
             "assert,clear,count,debug,dir,dirxml,error,exception,group," +

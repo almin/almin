@@ -8,16 +8,16 @@ import TodoStore from "../../lib/store/TodoStore/TodoStore";
 import TodoState, { FilterTypes } from "../../lib/store/TodoStore/TodoState";
 import { FilterTodoListUseCase } from "../../lib/usecase/FilterTodoList";
 import { TodoListRepository } from "../../lib/infra/TodoListRepository";
-describe("TodoStore", function() {
-    it("should return TodoState instance", function() {
+describe("TodoStore", function () {
+    it("should return TodoState instance", function () {
         const todoListRepository = new TodoListRepository();
         const store = new TodoStore({ todoListRepository });
         // then
         const todoState = store.getState();
         assert(todoState instanceof TodoState);
     });
-    context("when TodoList has todo", function() {
-        it("should return todoState that has todo item also", function() {
+    context("when TodoList has todo", function () {
+        it("should return todoState that has todo item also", function () {
             const todoList = new TodoList();
             const todoItem = new TodoItem({ title: "Read It Later" });
             todoList.addItem(todoItem);
@@ -32,8 +32,8 @@ describe("TodoStore", function() {
             assert.equal(actualTodoItem.title, "Read It Later");
         });
     });
-    context("when dispatch events", function() {
-        it("should update State", function() {
+    context("when dispatch events", function () {
+        it("should update State", function () {
             const todoList = new TodoList();
             const todoListRepository = new TodoListRepository();
             todoListRepository.save(todoList);

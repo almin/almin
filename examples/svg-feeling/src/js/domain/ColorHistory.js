@@ -21,7 +21,7 @@ export default class ColorHistory {
      * @returns {boolean}
      */
     isAlreadyUsedColor(color) {
-        return this._history.some(historyColor => {
+        return this._history.some((historyColor) => {
             return historyColor.isEqualColor(color);
         });
     }

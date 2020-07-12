@@ -8,7 +8,7 @@ export default class ProductFactory {
      * @returns {Product[]}
      */
     static createProductsFromJSON(productJSON) {
-        return productJSON.map(productData => {
+        return productJSON.map((productData) => {
             return new Product(productData);
         });
     }

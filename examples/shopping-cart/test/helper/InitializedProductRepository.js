@@ -9,10 +9,10 @@ export default class InitializedProductRepository {
      */
     static create() {
         const productRepository = new ProductRepository();
-        const products = productCatalogData.map(productData => {
+        const products = productCatalogData.map((productData) => {
             return new Product(productData);
         });
-        products.forEach(product => {
+        products.forEach((product) => {
             productRepository.store(product);
         });
         return {

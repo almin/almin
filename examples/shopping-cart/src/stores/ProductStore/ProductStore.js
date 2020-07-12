@@ -13,7 +13,7 @@ export default class ProductStore extends Store {
 
     receivePayload(payload) {
         const products = this.productRepository.findAll();
-        const productItems = products.map(product => {
+        const productItems = products.map((product) => {
             return product.toProductItem();
         });
         const newState = new ProductState(productItems);

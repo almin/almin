@@ -14,9 +14,9 @@ import {
 import { InitializedPayload } from "../src/payload/InitializedPayload";
 import { UseCaseFunction } from "../src/FunctionalUseCaseContext";
 
-describe("UseCaseUnitOfWork", function() {
+describe("UseCaseUnitOfWork", function () {
     describe("Integration with Store#onDispatch", () => {
-        it("should not dispatch unnecessary payload to each store", function() {
+        it("should not dispatch unnecessary payload to each store", function () {
             class TestStore extends Store<{ receive: any[]; onDispatchedPayload: DispatchedPayload[] }> {
                 state: { receive: any[]; onDispatchedPayload: DispatchedPayload[] };
 
@@ -26,7 +26,7 @@ describe("UseCaseUnitOfWork", function() {
                         receive: [],
                         onDispatchedPayload: []
                     };
-                    this.onDispatch(payload => {
+                    this.onDispatch((payload) => {
                         this.state.onDispatchedPayload = this.state.onDispatchedPayload.concat(payload);
                     });
                 }
@@ -85,7 +85,7 @@ describe("UseCaseUnitOfWork", function() {
                     });
                 });
         });
-        it("should dispatch payload to each store", function() {
+        it("should dispatch payload to each store", function () {
             class TestStore extends Store {
                 constructor() {
                     super();
@@ -93,7 +93,7 @@ describe("UseCaseUnitOfWork", function() {
                         receive: [],
                         direct: []
                     };
-                    this.onDispatch(payload => {
+                    this.onDispatch((payload) => {
                         this.state.direct = this.state.direct.concat(payload);
                     });
                 }

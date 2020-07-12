@@ -24,7 +24,7 @@ describe("UseCaseContext", () => {
                 dispatcher,
                 store: createStore({ name: "test" })
             });
-            context.events.onDispatch(payload => {
+            context.events.onDispatch((payload) => {
                 dispatched.push(payload);
             });
             return context

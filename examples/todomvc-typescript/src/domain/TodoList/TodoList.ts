@@ -16,13 +16,13 @@ export default class TodoList {
     }
 
     hasItem(id: string) {
-        return this._items.some(item => {
+        return this._items.some((item) => {
             return item.id === id;
         });
     }
 
     getItem(id: string): TodoItem | undefined {
-        const items = this._items.filter(item => {
+        const items = this._items.filter((item) => {
             return item.id === id;
         });
         if (items.length > 0) {
@@ -64,7 +64,7 @@ export default class TodoList {
      * toggle status of all items
      */
     toggleCompleteAll() {
-        this.getAllTodoItems().forEach(item => {
+        this.getAllTodoItems().forEach((item) => {
             return this.toggleComplete(item.id);
         });
     }
@@ -104,8 +104,8 @@ export default class TodoList {
      */
     removeAllCompletedItems() {
         this.getAllTodoItems()
-            .filter(item => item.completed)
-            .forEach(item => {
+            .filter((item) => item.completed)
+            .forEach((item) => {
                 return this.removeItem(item.id);
             });
     }

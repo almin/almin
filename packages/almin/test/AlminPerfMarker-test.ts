@@ -46,7 +46,7 @@ describe("AlminPerfMarker", () => {
         const markedEvents: string[] = [];
         const debugTool = AlminInstruments.debugTool as AlminPerfMarker;
         if (debugTool) {
-            debugTool.addEventListener(event => {
+            debugTool.addEventListener((event) => {
                 markedEvents.push(event.type);
             });
         }
@@ -59,7 +59,7 @@ describe("AlminPerfMarker", () => {
 
         const transactionName = "My Transaction";
         return context
-            .transaction(transactionName, transactionContext => {
+            .transaction(transactionName, (transactionContext) => {
                 return transactionContext
                     .useCase(new ChangeAUseCase())
                     .execute()

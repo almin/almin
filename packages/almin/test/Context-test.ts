@@ -41,7 +41,7 @@ class ThrowUseCase extends UseCase {
     }
 }
 
-describe("Context", function() {
+describe("Context", function () {
     context("Deprecated API", () => {
         let consoleErrorStub: SinonStub;
         beforeEach(() => {
@@ -50,7 +50,7 @@ describe("Context", function() {
         afterEach(() => {
             consoleErrorStub.restore();
         });
-        it("should be deprecated warn", function() {
+        it("should be deprecated warn", function () {
             const aStore = createStore({ name: "test" });
             const storeGroup = new StoreGroup({ a: aStore });
             const dispatcher = new Dispatcher();
@@ -63,8 +63,8 @@ describe("Context", function() {
             assert.strictEqual(consoleErrorStub.callCount, 1, "should be deprecated");
         });
     });
-    describe("UseCase can dispatch in Context", function() {
-        it("should dispatch Store", function() {
+    describe("UseCase can dispatch in Context", function () {
+        it("should dispatch Store", function () {
             const dispatcher = new Dispatcher();
             const DISPATCHED_EVENT = {
                 type: "update",
@@ -115,8 +115,8 @@ describe("Context", function() {
                 });
         });
     });
-    describe("#getStates", function() {
-        it("should get a single state from State", function() {
+    describe("#getStates", function () {
+        it("should get a single state from State", function () {
             const dispatcher = new Dispatcher();
             const expectedMergedObject = {
                 "1": 1
@@ -130,8 +130,8 @@ describe("Context", function() {
             assert.deepEqual(states, expectedMergedObject);
         });
     });
-    describe("#onChange", function() {
-        it("should called when change some State", function(done) {
+    describe("#onChange", function () {
+        it("should called when change some State", function (done) {
             const dispatcher = new Dispatcher();
             const aStore = createStore({ name: "AStore" });
             const storeGroup = new StoreGroup({
@@ -141,14 +141,14 @@ describe("Context", function() {
                 dispatcher,
                 store: storeGroup
             });
-            appContext.onChange(stores => {
+            appContext.onChange((stores) => {
                 assert.equal(stores.length, 1);
                 assert.equal(stores[0], aStore);
                 done();
             });
             aStore.updateState({ a: 1 });
         });
-        it("should thin change events are happened at same time", function(done) {
+        it("should thin change events are happened at same time", function (done) {
             const dispatcher = new Dispatcher();
             const aStore = createStore({ name: "AStore" });
             const bStore = createStore({ name: "BStore" });
@@ -160,7 +160,7 @@ describe("Context", function() {
                 dispatcher,
                 store: storeGroup
             });
-            appContext.onChange(stores => {
+            appContext.onChange((stores) => {
                 assert.equal(stores.length, 2);
                 done();
             });
@@ -171,7 +171,7 @@ describe("Context", function() {
         });
     });
     describe("#onWillNotExecuteEachUseCase", () => {
-        it("should be called when UseCase#shouldExecute() return false", done => {
+        it("should be called when UseCase#shouldExecute() return false", (done) => {
             const dispatcher = new Dispatcher();
             const appContext = new Context({
                 dispatcher,
@@ -191,8 +191,8 @@ describe("Context", function() {
             appContext.useCase(notExecuteUseCase).execute();
         });
     });
-    describe("#onWillExecuteEachUseCase", function() {
-        it("should not called onWillNotExecuteEachUseCase", function() {
+    describe("#onWillExecuteEachUseCase", function () {
+        it("should not called onWillNotExecuteEachUseCase", function () {
             const dispatcher = new Dispatcher();
             const appContext = new Context({
                 dispatcher,
@@ -212,7 +212,7 @@ describe("Context", function() {
                     assert.ok(!isOnWillNotExecuteEachUseCaseCalled, "onWillNotExecuteEachUseCase should not called");
                 });
         });
-        it("should called before UseCase will execute", function(done) {
+        it("should called before UseCase will execute", function (done) {
             const dispatcher = new Dispatcher();
             const appContext = new Context({
                 dispatcher,
@@ -230,7 +230,7 @@ describe("Context", function() {
             // when
             appContext.useCase(testUseCase).execute();
         });
-        it("payload.args is the same with context.execute arguments", function(done) {
+        it("payload.args is the same with context.execute arguments", function (done) {
             const dispatcher = new Dispatcher();
             const appContext = new Context({
                 dispatcher,
@@ -254,8 +254,8 @@ describe("Context", function() {
             return appContext.useCase(oneArgumentUseCase).execute(expectedArguments);
         });
     });
-    describe("#onDispatch", function() {
-        it("should called the other of built-in event", function() {
+    describe("#onDispatch", function () {
+        it("should called the other of built-in event", function () {
             const dispatcher = new Dispatcher();
             const appContext = new Context({
                 dispatcher,
@@ -310,14 +310,14 @@ describe("Context", function() {
                 .useCase(eventUseCase)
                 .execute()
                 .then(() => {
-                    Object.keys(isCalled).forEach(key => {
+                    Object.keys(isCalled).forEach((key) => {
                         assert.ok(isCalled[key] === true, `${key} should be called`);
                     });
                 });
         });
     });
-    describe("#onDidExecuteEachUseCase", function() {
-        it("should called after UseCase did execute", function(done) {
+    describe("#onDidExecuteEachUseCase", function () {
+        it("should called after UseCase did execute", function (done) {
             const dispatcher = new Dispatcher();
             const appContext = new Context({
                 dispatcher,
@@ -333,8 +333,8 @@ describe("Context", function() {
             appContext.useCase(testUseCase).execute();
         });
     });
-    describe("#onCompleteEachUseCase", function() {
-        it("always should be called by async", function() {
+    describe("#onCompleteEachUseCase", function () {
+        it("always should be called by async", function () {
             const dispatcher = new Dispatcher();
             const appContext = new Context({
                 dispatcher,
@@ -355,8 +355,8 @@ describe("Context", function() {
             });
         });
     });
-    describe("#onErrorDispatch", function() {
-        it("should called after UseCase did execute", function(done) {
+    describe("#onErrorDispatch", function () {
+        it("should called after UseCase did execute", function (done) {
             const dispatcher = new Dispatcher();
             const appContext = new Context({
                 dispatcher,
@@ -375,8 +375,8 @@ describe("Context", function() {
             appContext.useCase(throwUseCase).execute();
         });
     });
-    describe("#useCase", function() {
-        it("should return UseCaseExecutor", function() {
+    describe("#useCase", function () {
+        it("should return UseCaseExecutor", function () {
             const dispatcher = new Dispatcher();
             const appContext = new Context({
                 dispatcher,
@@ -387,9 +387,9 @@ describe("Context", function() {
             useCaseExecutor.execute();
         });
     });
-    describe("#execute", function() {
-        describe("when pass UseCase constructor", function() {
-            it("should throw AssertionError", function() {
+    describe("#execute", function () {
+        describe("when pass UseCase constructor", function () {
+            it("should throw AssertionError", function () {
                 const dispatcher = new Dispatcher();
                 const appContext = new Context({
                     dispatcher,
@@ -450,7 +450,7 @@ describe("Context", function() {
             context.release();
             // then - does not call any handler
             return context
-                .transaction("transaction name", transactionContext => {
+                .transaction("transaction name", (transactionContext) => {
                     return transactionContext
                         .useCase(new DispatchUseCase())
                         .execute({
@@ -469,7 +469,7 @@ describe("Context", function() {
                 });
         });
     });
-    it("should execute functional UseCase", function() {
+    it("should execute functional UseCase", function () {
         const dispatcher = new Dispatcher();
         const appContext = new Context({
             dispatcher,
@@ -480,7 +480,7 @@ describe("Context", function() {
             callStack.push(payload);
         });
         const useCase: UseCaseFunction = ({ dispatcher }) => {
-            return value => {
+            return (value) => {
                 dispatcher.dispatch({
                     type: "Example",
                     value
@@ -499,7 +499,7 @@ describe("Context", function() {
                 ]);
             });
     });
-    it("should execute functional UseCase and lifecycle hook is called ", function() {
+    it("should execute functional UseCase and lifecycle hook is called ", function () {
         const dispatcher = new Dispatcher();
         const appContext = new Context({
             dispatcher,
@@ -519,7 +519,7 @@ describe("Context", function() {
             callStack.push(payload);
         });
         const useCase: UseCaseFunction = ({ dispatcher }) => {
-            return value => {
+            return (value) => {
                 dispatcher.dispatch({
                     type: "Example",
                     value

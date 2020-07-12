@@ -4,7 +4,7 @@ require("babel-polyfill");
 const assert = require("assert");
 const bench = require("../src/index");
 const AlminVersions = require("../versions.js").AlminVersions;
-describe("benchmark", function() {
+describe("benchmark", function () {
     const orginalEnv = process.env.NODE_ENV;
     beforeEach(() => {
         process.env.NODE_ENV = "production";
@@ -13,9 +13,9 @@ describe("benchmark", function() {
         process.env.NODE_ENV = orginalEnv;
     });
 
-    it("Current version should be fastest", function(done) {
+    it("Current version should be fastest", function (done) {
         this.timeout(50 * 1000);
-        bench(AlminVersions, benchmark => {
+        bench(AlminVersions, (benchmark) => {
             const fastest = benchmark.filter("fastest").map("name");
             console.log(benchmark.join("\n"));
             if (Array.isArray(fastest)) {

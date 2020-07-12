@@ -7,9 +7,9 @@ import Customer from "../src/domain/Customer/Customer";
 import Cart from "../src/domain/Cart/Cart";
 // repository
 import { CartRepository } from "../src/infra/CartRepository";
-describe("AddItemToCartUseCase", function() {
-    context("when the customer has not cart", function() {
-        it("should throw error", function(done) {
+describe("AddItemToCartUseCase", function () {
+    context("when the customer has not cart", function () {
+        it("should throw error", function (done) {
             // Given
             const { productRepository, products } = InitializedProductRepository.create();
             const customer = new Customer({ name: "Mint" });
@@ -21,7 +21,7 @@ describe("AddItemToCartUseCase", function() {
                 productRepository
             });
             const itemID = products[0].id;
-            useCase.onError(error => {
+            useCase.onError((error) => {
                 assert(error instanceof Error);
                 done();
             });
@@ -29,8 +29,8 @@ describe("AddItemToCartUseCase", function() {
             useCase.execute(itemID);
         });
     });
-    context("when the customer has a cart", function() {
-        it("should decrement item from Product", function(done) {
+    context("when the customer has a cart", function () {
+        it("should decrement item from Product", function (done) {
             // Given
             const { productRepository, products } = InitializedProductRepository.create();
             const customer = new Customer({ name: "Mint" });
@@ -45,14 +45,14 @@ describe("AddItemToCartUseCase", function() {
             });
             const itemID = products[0].id;
             const inventoryCount = products[0].inventory;
-            productRepository.onChange(product => {
+            productRepository.onChange((product) => {
                 assert.equal(product.inventory, inventoryCount - 1);
                 done();
             });
             // When
             useCase.execute(itemID);
         });
-        it("should add item to the cart of user", function(done) {
+        it("should add item to the cart of user", function (done) {
             // Given
             const { productRepository, products } = InitializedProductRepository.create();
             const customer = new Customer({ name: "Mint" });
@@ -66,7 +66,7 @@ describe("AddItemToCartUseCase", function() {
                 productRepository
             });
             const itemID = products[0].id;
-            cartRepository.onChange(cart => {
+            cartRepository.onChange((cart) => {
                 const productItems = cart.getAllProductItems();
                 assert.equal(productItems.length, 1);
                 const [item] = productItems;

@@ -31,7 +31,7 @@ export default class CartState {
 
     get itemsByProduct() {
         const itemMap = {};
-        this.productItems.forEach(product => {
+        this.productItems.forEach((product) => {
             if (itemMap[product.id] === undefined) {
                 itemMap[product.id] = {
                     id: product.id,

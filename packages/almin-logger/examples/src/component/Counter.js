@@ -41,13 +41,13 @@ export default class CounterComponent extends React.Component {
             context.useCase(new ThrowErrorUseCase()).execute();
         };
         const transaction = () => {
-            context.transaction("+1 -1 +1 +1 = +2", transactionContext => {
+            context.transaction("+1 -1 +1 +1 = +2", (transactionContext) => {
                 return (
                     Promise.resolve()
                         .then(() => transactionContext.useCase(new IncrementalCounterUseCase()).execute())
                         .then(() => transactionContext.useCase(new DecrementalCounterUseCase()).execute())
                         // add 500ms delay
-                        .then(() => new Promise(resolve => setTimeout(resolve, 500)))
+                        .then(() => new Promise((resolve) => setTimeout(resolve, 500)))
                         .then(() => transactionContext.useCase(new IncrementalCounterUseCase()).execute())
                         .then(() => transactionContext.useCase(new IncrementalCounterUseCase()).execute())
                         .then(() => {

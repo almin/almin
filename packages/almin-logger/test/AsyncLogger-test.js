@@ -22,7 +22,7 @@ import NoDispatchUseCase from "./usecase/NoDispatchUseCase";
 import { NotExecuteUseCase } from "./usecase/NotExecuteUseCase";
 import WrapUseCase from "./usecase/WrapUseCase";
 
-describe("AsyncLogger", function() {
+describe("AsyncLogger", function () {
     it("can start and stop", () => {
         const consoleMock = ConsoleMock.create();
         const logger = new AsyncLogger({
@@ -34,7 +34,7 @@ describe("AsyncLogger", function() {
             dispatcher: new Dispatcher()
         });
         const results = [];
-        logger.on(AlminLogger.Events.output, function(logGroup) {
+        logger.on(AlminLogger.Events.output, function (logGroup) {
             results.push(logGroup);
         });
         return context
@@ -93,7 +93,7 @@ describe("AsyncLogger", function() {
             });
             logger.startLogging(context);
             const results = [];
-            logger.on(AlminLogger.Events.output, function(logGroup) {
+            logger.on(AlminLogger.Events.output, function (logGroup) {
                 results.push(logGroup);
             });
 
@@ -131,7 +131,7 @@ describe("AsyncLogger", function() {
         });
         logger.startLogging(context);
         const results = [];
-        logger.on(AlminLogger.Events.output, function(logGroup) {
+        logger.on(AlminLogger.Events.output, function (logGroup) {
             results.push(logGroup);
         });
         const dispatchedPayload = {
@@ -157,7 +157,7 @@ describe("AsyncLogger", function() {
                 return context
                     .useCase(useCase)
                     .execute()
-                    .catch(error => {
+                    .catch((error) => {
                         assert(results.length === 1);
                         const logGroup = results.shift();
                         assert(logGroup.title === "ErrorUseCase");
@@ -186,11 +186,11 @@ describe("AsyncLogger", function() {
             logger.startLogging(context);
 
             const results = [];
-            logger.on(AlminLogger.Events.output, function(logGroup) {
+            logger.on(AlminLogger.Events.output, function (logGroup) {
                 results.push(logGroup);
             });
             return context
-                .transaction("transaction", transactionContext => {
+                .transaction("transaction", (transactionContext) => {
                     return transactionContext
                         .useCase(new NoDispatchUseCase())
                         .execute()
@@ -225,11 +225,11 @@ describe("AsyncLogger", function() {
             });
             logger.startLogging(context);
             const results = [];
-            logger.on(AlminLogger.Events.output, function(logGroup) {
+            logger.on(AlminLogger.Events.output, function (logGroup) {
                 results.push(logGroup);
             });
             const getTransaction = () => {
-                return context.transaction("transaction", transactionContext => {
+                return context.transaction("transaction", (transactionContext) => {
                     return transactionContext
                         .useCase(new NoDispatchUseCase())
                         .execute()
@@ -258,7 +258,7 @@ describe("AsyncLogger", function() {
             logger.startLogging(context);
 
             const results = [];
-            logger.on(AlminLogger.Events.output, function(logGroup) {
+            logger.on(AlminLogger.Events.output, function (logGroup) {
                 results.push(logGroup);
             });
             const useCase = new ParentUseCase();
@@ -287,7 +287,7 @@ describe("AsyncLogger", function() {
         });
     });
 
-    it("should log willNotExecute event", function() {
+    it("should log willNotExecute event", function () {
         const consoleMock = ConsoleMock.create();
         const logger = new AsyncLogger({
             console: consoleMock
@@ -305,7 +305,7 @@ describe("AsyncLogger", function() {
         assert(!consoleMock.log.called);
         // Then
         let actualLogGroup = null;
-        logger.on(AlminLogger.Events.output, function(logGroup) {
+        logger.on(AlminLogger.Events.output, function (logGroup) {
             actualLogGroup = logGroup;
         });
         // When
@@ -315,13 +315,13 @@ describe("AsyncLogger", function() {
             .then(() => {
                 assert(consoleMock.groupCollapsed.called);
                 const expectOutput = `NotExecuteUseCase`;
-                const isContain = consoleMock.log.calls.some(call => {
+                const isContain = consoleMock.log.calls.some((call) => {
                     return call.arg && call.arg.indexOf(expectOutput) !== -1;
                 });
                 assert.ok(isContain, `${expectOutput} is not found.`);
             });
     });
-    it("should log dispatch event", function() {
+    it("should log dispatch event", function () {
         const consoleMock = ConsoleMock.create();
         const logger = new AsyncLogger({
             console: consoleMock
@@ -339,7 +339,7 @@ describe("AsyncLogger", function() {
         assert(!consoleMock.log.called);
         // Then
         let actualLogGroup = null;
-        logger.on(AlminLogger.Events.output, function(logGroup) {
+        logger.on(AlminLogger.Events.output, function (logGroup) {
             actualLogGroup = logGroup;
         });
         // When
@@ -351,13 +351,13 @@ describe("AsyncLogger", function() {
             .then(() => {
                 assert(consoleMock.groupCollapsed.called);
                 const expectOutput = `dispatch:example`;
-                const isContain = consoleMock.log.calls.some(call => {
+                const isContain = consoleMock.log.calls.some((call) => {
                     return call.arg && call.arg.indexOf(expectOutput) !== -1;
                 });
                 assert(isContain, `${expectOutput} is not found.`);
             });
     });
-    it("should output as async", function(done) {
+    it("should output as async", function (done) {
         const consoleMock = ConsoleMock.create();
         const logger = new AsyncLogger({
             console: consoleMock
@@ -374,7 +374,7 @@ describe("AsyncLogger", function() {
         assert(!consoleMock.groupCollapsed.called);
         assert(!consoleMock.log.called);
         // Then
-        logger.on(AlminLogger.Events.output, function() {
+        logger.on(AlminLogger.Events.output, function () {
             assert(consoleMock.groupCollapsed.called);
             assert(consoleMock.log.called);
             done();
@@ -382,7 +382,7 @@ describe("AsyncLogger", function() {
         // When
         context.useCase(useCase).execute();
     });
-    it("should log dispatch event with Symbol type", function(done) {
+    it("should log dispatch event with Symbol type", function (done) {
         if (typeof Symbol === "undefined") {
             // pass
             return;
@@ -403,10 +403,10 @@ describe("AsyncLogger", function() {
         assert(!consoleMock.groupCollapsed.called);
         assert(!consoleMock.log.called);
         // Then
-        logger.on(AlminLogger.Events.output, function() {
+        logger.on(AlminLogger.Events.output, function () {
             assert(consoleMock.groupCollapsed.called);
             const expectOutput = `dispatch:`;
-            const isContain = consoleMock.log.calls.some(call => {
+            const isContain = consoleMock.log.calls.some((call) => {
                 return call.arg && call.arg.indexOf(expectOutput) !== -1;
             });
             assert(isContain, `${expectOutput} is not found.`);

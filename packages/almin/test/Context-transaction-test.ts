@@ -53,7 +53,7 @@ describe("Context#transaction", () => {
             const getTransactionId = (): Promise<string> => {
                 let id: string | null = null;
                 return context
-                    .transaction("transaction", transactionContext => {
+                    .transaction("transaction", (transactionContext) => {
                         id = transactionContext.id;
                         transactionContext.exit();
                         return Promise.resolve();
@@ -79,7 +79,7 @@ describe("Context#transaction", () => {
         afterEach(() => {
             consoleErrorStub!.restore();
         });
-        it("should be warned when no-commit and no-exit in a transaction", function() {
+        it("should be warned when no-commit and no-exit in a transaction", function () {
             const aStore = createStore({ name: "test" });
             const storeGroup = new StoreGroup({ a: aStore });
             const dispatcher = new Dispatcher();
@@ -92,7 +92,7 @@ describe("Context#transaction", () => {
             });
             // 1st transaction
             return context
-                .transaction("transaction", _transactionContext => {
+                .transaction("transaction", (_transactionContext) => {
                     return Promise.resolve();
                 })
                 .then(() => {
@@ -101,7 +101,7 @@ describe("Context#transaction", () => {
         });
     });
     context("Error Pattern", () => {
-        it("should throw error when return non-promise value in the transaction", function() {
+        it("should throw error when return non-promise value in the transaction", function () {
             const aStore = createStore({ name: "test" });
             const storeGroup = new StoreGroup({ a: aStore });
             const context = new Context({
@@ -125,7 +125,7 @@ describe("Context#transaction", () => {
                     }
                 );
         });
-        it("have unique id for in transactions", function() {
+        it("have unique id for in transactions", function () {
             const aStore = createStore({ name: "test" });
             const storeGroup = new StoreGroup({ a: aStore });
             const context = new Context({
@@ -135,13 +135,13 @@ describe("Context#transaction", () => {
                     strict: true
                 }
             });
-            return context.transaction("transaction name", transactionContext => {
+            return context.transaction("transaction name", (transactionContext) => {
                 assert.strictEqual(typeof transactionContext.id, "string");
                 transactionContext.exit();
                 return Promise.resolve();
             });
         });
-        it("should throw error when do multiple exit in a transaction", function() {
+        it("should throw error when do multiple exit in a transaction", function () {
             const aStore = createStore({ name: "test" });
             const storeGroup = new StoreGroup({ a: aStore });
             const context = new Context({
@@ -152,7 +152,7 @@ describe("Context#transaction", () => {
                 }
             });
             return context
-                .transaction("transaction name", transactionContext => {
+                .transaction("transaction name", (transactionContext) => {
                     transactionContext.exit();
                     transactionContext.exit();
                     return Promise.resolve();
@@ -167,7 +167,7 @@ describe("Context#transaction", () => {
                     }
                 );
         });
-        it("should throw error when do multiple commit in a transaction", function() {
+        it("should throw error when do multiple commit in a transaction", function () {
             const aStore = createStore({ name: "test" });
             const storeGroup = new StoreGroup({ a: aStore });
             const context = new Context({
@@ -178,7 +178,7 @@ describe("Context#transaction", () => {
                 }
             });
             return context
-                .transaction("transaction name", transactionContext => {
+                .transaction("transaction name", (transactionContext) => {
                     transactionContext.commit();
                     transactionContext.commit();
                     return Promise.resolve();
@@ -229,24 +229,24 @@ describe("Context#transaction", () => {
             // then - called change handler a one-time
             let onChangeCount = 0;
             let changedStores: StoreLike[] = [];
-            context.onChange(stores => {
+            context.onChange((stores) => {
                 onChangeCount++;
                 changedStores = changedStores.concat(stores);
             });
 
             const runUseCase = (context: Context<any>) => {
-                return context.useCase(new ChangeByUseCase()).executor(useCase => useCase.execute("useCase"));
+                return context.useCase(new ChangeByUseCase()).executor((useCase) => useCase.execute("useCase"));
             };
             const runTransaction = (transactionContext: TransactionContext) => {
                 return transactionContext
                     .useCase(new ChangeByTransactionUseCase())
-                    .executor(useCase => useCase.execute("transaction"));
+                    .executor((useCase) => useCase.execute("transaction"));
             };
             // when
             // `transaction` should not lock store-group
             // different unit of work can affect the singleton store-group
             return context
-                .transaction("transaction name", transactionContext => {
+                .transaction("transaction name", (transactionContext) => {
                     // `context`
                     return runUseCase(context)
                         .then(() => {
@@ -270,7 +270,7 @@ describe("Context#transaction", () => {
                 });
         });
     });
-    it("should collect up StoreGroup commit", function() {
+    it("should collect up StoreGroup commit", function () {
         class AStore extends Store {
             constructor() {
                 super();
@@ -310,13 +310,13 @@ describe("Context#transaction", () => {
         // then - called change handler a one-time
         let onChangeCount = 0;
         let changedStores: StoreLike[] = [];
-        context.onChange(stores => {
+        context.onChange((stores) => {
             onChangeCount++;
             changedStores = changedStores.concat(stores);
         });
         // when
         return context
-            .transaction("transaction name", transactionContext => {
+            .transaction("transaction name", (transactionContext) => {
                 return transactionContext
                     .useCase(new ChangeAUseCase())
                     .execute(1)
@@ -336,7 +336,7 @@ describe("Context#transaction", () => {
                 });
             });
     });
-    it("should collect up StoreGroup commit", function() {
+    it("should collect up StoreGroup commit", function () {
         const { MockStore: AStore, MockUseCase: AUseCase } = createUpdatableStoreWithUseCase("A");
         const { MockStore: BStore, MockUseCase: BUseCase } = createUpdatableStoreWithUseCase("B");
         const { MockStore: CStore, MockUseCase: CUseCase } = createUpdatableStoreWithUseCase("C");
@@ -373,13 +373,13 @@ describe("Context#transaction", () => {
         // then - called change handler a one-time
         let onChangeCount = 0;
         let changedStores: StoreLike[] = [];
-        context.onChange(stores => {
+        context.onChange((stores) => {
             onChangeCount++;
             changedStores = changedStores.concat(stores);
         });
         // when
         return context
-            .transaction("transaction name", transactionContext => {
+            .transaction("transaction name", (transactionContext) => {
                 return transactionContext
                     .useCase(new ChangeAUseCase())
                     .execute()
@@ -404,9 +404,9 @@ describe("Context#transaction", () => {
                 });
             });
     });
-    it("commit and each store#receivePayload is called", function() {
+    it("commit and each store#receivePayload is called", function () {
         const receivedPayloadList: DispatchedPayload[] = [];
-        const aStore = createReceivePayloadStore(payload => {
+        const aStore = createReceivePayloadStore((payload) => {
             receivedPayloadList.push(payload);
         });
         const storeGroup = new StoreGroup({ a: aStore });
@@ -420,7 +420,7 @@ describe("Context#transaction", () => {
         // reset initialized
         receivedPayloadList.length = 0;
         return context
-            .transaction("transaction name", transactionContext => {
+            .transaction("transaction name", (transactionContext) => {
                 assert.strictEqual(receivedPayloadList.length, 0, "no commitment");
                 // Sync && No Dispatch UseCase call receivedPayloadList at once
                 return transactionContext
@@ -433,7 +433,7 @@ describe("Context#transaction", () => {
                     });
             })
             .then(() => {
-                return context.transaction("nest transaction", transactionContext => {
+                return context.transaction("nest transaction", (transactionContext) => {
                     // AsyncUseCase call receivedPayloadList twice
                     return transactionContext
                         .useCase(new AsyncUseCase())
@@ -450,7 +450,7 @@ describe("Context#transaction", () => {
                 });
             });
     });
-    it("can receive begin/end payload of transaction via Context", function() {
+    it("can receive begin/end payload of transaction via Context", function () {
         const aStore = createStore({ name: "test" });
         const storeGroup = new StoreGroup({ a: aStore });
         const dispatcher = new Dispatcher();
@@ -483,7 +483,7 @@ describe("Context#transaction", () => {
         });
         // 1st transaction
         return context
-            .transaction("1st transaction", transactionContext => {
+            .transaction("1st transaction", (transactionContext) => {
                 return transactionContext
                     .useCase(new SyncNoDispatchUseCase())
                     .execute()
@@ -505,7 +505,7 @@ describe("Context#transaction", () => {
                 const [endPayload] = endTransaction;
                 assert.strictEqual(endPayload.name, "1st transaction");
                 // 2nd transaction
-                return context.transaction("2nd transaction", transactionContext => {
+                return context.transaction("2nd transaction", (transactionContext) => {
                     return transactionContext
                         .useCase(new SyncNoDispatchUseCase())
                         .execute()
@@ -529,7 +529,7 @@ describe("Context#transaction", () => {
             });
     });
 
-    it("should meta.transaction is current transaction", function() {
+    it("should meta.transaction is current transaction", function () {
         const { MockStore: AStore, MockUseCase: AUseCase } = createUpdatableStoreWithUseCase("A");
         const aStore = new AStore();
         const storeGroup = new StoreGroup({ a: aStore });
@@ -557,7 +557,7 @@ describe("Context#transaction", () => {
             assert.strictEqual(meta.transaction.name, transactionName);
         });
         // 1st transaction
-        return context.transaction(transactionName, transactionContext => {
+        return context.transaction(transactionName, (transactionContext) => {
             return transactionContext
                 .useCase(new SyncNoDispatchUseCase())
                 .execute()
@@ -577,7 +577,7 @@ describe("Context#transaction", () => {
     it(
         "commit and each Store#onDispatch is not called," +
             "because, Store#onDispatch receive only dispatched the Payload by UseCase#dispatch.",
-        function() {
+        function () {
             const receivedCommitments: Commitment[] = [];
             const aStore = createStore({ name: "test" });
             aStore.onDispatch((payload, meta) => {
@@ -598,7 +598,7 @@ describe("Context#transaction", () => {
             // reset initialized
             receivedCommitments.length = 0;
             return context
-                .transaction("transaction 1", transactionContext => {
+                .transaction("transaction 1", (transactionContext) => {
                     assert.strictEqual(receivedCommitments.length, 0, "no commitment");
                     return transactionContext
                         .useCase(new SyncNoDispatchUseCase())
@@ -610,7 +610,7 @@ describe("Context#transaction", () => {
                         });
                 })
                 .then(() => {
-                    return context.transaction("transaction 2", transactionContext => {
+                    return context.transaction("transaction 2", (transactionContext) => {
                         return transactionContext
                             .useCase(new SyncNoDispatchUseCase())
                             .execute()

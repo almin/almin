@@ -33,7 +33,7 @@ if (process.env.NODE_ENV !== "production") {
 AppLocator.context = appContext;
 // Initialize application domain
 (async function bootApp() {
-    await appContext.transaction("bootstrap", async transactionContext => {
+    await appContext.transaction("bootstrap", async (transactionContext) => {
         // reset repository and observe changes
         await transactionContext.useCase(InitializeRepositoryUseCase.create()).execute();
         // Create anonymous customer data

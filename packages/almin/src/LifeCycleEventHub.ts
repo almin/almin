@@ -214,7 +214,7 @@ export class LifeCycleEventHub {
      * Release all events handler.
      */
     release() {
-        this.releaseHandlers.forEach(releaseHandler => releaseHandler());
+        this.releaseHandlers.forEach((releaseHandler) => releaseHandler());
         this.releaseHandlers.length = 0;
     }
 }

@@ -28,12 +28,12 @@ const loadInitialState = () => {
     return Promise.resolve(require("./api/products.json"));
 };
 // catch memory leak event
-process.on("uncaughtException", error => {
+process.on("uncaughtException", (error) => {
     console.error(error);
 });
 // /server is server-side rendering
 app.get("/server", (req, res) => {
-    loadInitialState().then(async products => {
+    loadInitialState().then(async (products) => {
         // instances
         const dispatcher = new Dispatcher();
         // context connect dispatch with stores
@@ -61,6 +61,6 @@ app.get("/server", (req, res) => {
 
 const port = process.env.PORT || 3000;
 // start server
-app.listen(port, function() {
+app.listen(port, function () {
     console.log(`listening on port http://localhost:${port}/server`);
 });

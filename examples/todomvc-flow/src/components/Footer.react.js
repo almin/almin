@@ -50,8 +50,8 @@ class Footer extends React.Component {
             );
         }
 
-        const filterByType = type => {
-            return event => {
+        const filterByType = (type) => {
+            return (event) => {
                 event.preventDefault();
                 AppLocator.context.useCase(FilterTodoListFactory.create()).execute(type);
             };
