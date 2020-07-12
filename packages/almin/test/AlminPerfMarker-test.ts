@@ -10,6 +10,7 @@ describe("AlminPerfMarker", () => {
         const marker = new AlminPerfMarker();
         assert.ok(marker.isProfiling === false);
         marker.beginProfile();
+        // @ts-ignore
         assert.ok(marker.isProfiling === true);
         marker.endProfile();
         assert.ok(marker.isProfiling === false);
