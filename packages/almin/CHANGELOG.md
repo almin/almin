@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.19.0](https://github.com/almin/almin/compare/almin@0.18.1...almin@0.19.0) (2020-07-12)
+
+
+### Bug Fixes
+
+* **almin:** drop flow type support ([#427](https://github.com/almin/almin/issues/427)) ([9714b9a](https://github.com/almin/almin/commit/9714b9a65e56bf94c63d1770389ba403f160df73))
+* **deps:** update dependency shallow-equal-object to ^1.1.1 ([2734178](https://github.com/almin/almin/commit/2734178e7f53448903e1217d1655a441ec5bcd30))
+
+
+### Features
+
+* **almin:** support module field ([#422](https://github.com/almin/almin/issues/422)) ([70ffbb4](https://github.com/almin/almin/commit/70ffbb468f2dfe6d3eb04930867a74e4c56e9431)), closes [#354](https://github.com/almin/almin/issues/354)
+
+
+### BREAKING CHANGES
+
+* **almin:** Drop flow type support
+
+* chore(examples): remove flow example
+
+* chore(almin): remove unused command
+
+
+
+
+
 <a name="0.18.1"></a>
 ## [0.18.1](https://github.com/almin/almin/compare/almin@0.18.0...almin@0.18.1) (2018-08-30)
 

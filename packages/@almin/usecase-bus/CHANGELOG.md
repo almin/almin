@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.3](https://github.com/almin/almin/compare/@almin/usecase-bus@1.2.2...@almin/usecase-bus@1.2.3) (2020-07-12)
+
+**Note:** Version bump only for package @almin/usecase-bus
+
+
+
+
+
 <a name="1.2.2"></a>
 ## [1.2.2](https://github.com/almin/almin/compare/@almin/usecase-bus@1.2.1...@almin/usecase-bus@1.2.2) (2018-08-30)
 
