@@ -5,9 +5,9 @@ import { IncrementalCounterUseCase } from "../src/usecase/IncrementalCounterUseC
 import { CounterStore } from "../src/store/CounterStore";
 import { Dispatcher, Context, StoreGroup } from "almin";
 
-describe("CounterStore", function() {
-    context("when IncrementalCounterUseCase is executed", function() {
-        it("should new state was count up", function() {
+describe("CounterStore", function () {
+    context("when IncrementalCounterUseCase is executed", function () {
+        it("should new state was count up", function () {
             const useCase = new IncrementalCounterUseCase();
             const store = new CounterStore();
             const context = new Context({

@@ -1,4 +1,0 @@
---recursive
---require env-development
---require ts-node-test-register
---timeout 20000

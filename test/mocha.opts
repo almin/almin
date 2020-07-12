@@ -1,3 +1,0 @@
---recursive
---require env-development
---require babel-register

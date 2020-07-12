@@ -18,10 +18,10 @@ export class PrintLogger {
      * @param {LogGroup} logGroup
      */
     printLogGroup(logGroup: LogGroup) {
-        const childrenLogGroup = logGroup.children.filter(logItem => logItem instanceof LogGroup) as LogGroup[];
+        const childrenLogGroup = logGroup.children.filter((logItem) => logItem instanceof LogGroup) as LogGroup[];
         const includesUseCaseName = childrenLogGroup
-            .filter(logGroup => logGroup !== undefined)
-            .map(logGroup => logGroup.useCaseName)
+            .filter((logGroup) => logGroup !== undefined)
+            .map((logGroup) => logGroup.useCaseName)
             .join(", ");
         const groupTitleSuffix = childrenLogGroup.length > 0 ? `(includes "${includesUseCaseName}")` : "";
         /**
@@ -42,7 +42,7 @@ export class PrintLogger {
         const groupMark = getGroupMark(logGroup);
         const groupTitle = `${groupMark} ${logGroup.title}${groupTitleSuffix}`;
         this.logger.groupCollapsed(groupTitle);
-        logGroup.children.forEach(logItem => {
+        logGroup.children.forEach((logItem) => {
             if (logItem instanceof LogGroup) {
                 this.printLogGroup(logItem);
             } else {
@@ -107,7 +107,7 @@ export class PrintLogger {
      * @private
      */
     _includeErrorChunk(logGroup: LogGroup): boolean {
-        return logGroup.children.some(chunk => {
+        return logGroup.children.some((chunk) => {
             if (chunk instanceof LogGroup) {
                 return this._includeErrorChunk(chunk);
             } else {
@@ -125,7 +125,7 @@ export class PrintLogger {
         if (!Array.isArray(logs)) {
             return logs instanceof Error;
         }
-        return logs.some(log => {
+        return logs.some((log) => {
             return log instanceof Error;
         });
     }

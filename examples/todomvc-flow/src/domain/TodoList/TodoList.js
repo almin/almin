@@ -29,7 +29,7 @@ export default class TodoList {
      * @returns {boolean}
      */
     hasItem(id: string): boolean {
-        return this._items.some(item => {
+        return this._items.some((item) => {
             return item.id === id;
         });
     }
@@ -40,7 +40,7 @@ export default class TodoList {
      */
     getItem(id: string): ?TodoItem {
         assert(id, "need id");
-        const items = this._items.filter(item => {
+        const items = this._items.filter((item) => {
             return item.id === id;
         });
         if (items.length > 0) {
@@ -77,7 +77,7 @@ export default class TodoList {
      * toggle status of all items
      */
     toggleCompleteAll() {
-        this.getAllTodoItems().forEach(item => {
+        this.getAllTodoItems().forEach((item) => {
             return this.toggleComplete(item.id);
         });
     }
@@ -115,8 +115,8 @@ export default class TodoList {
      */
     removeAllCompletedItems() {
         this.getAllTodoItems()
-            .filter(item => item.completed)
-            .forEach(item => {
+            .filter((item) => item.completed)
+            .forEach((item) => {
                 return this.removeItem(item.id);
             });
     }

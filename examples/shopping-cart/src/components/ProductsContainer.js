@@ -18,7 +18,7 @@ class ProductItemContainer extends React.Component {
 class ProductsListContainer extends React.Component {
     render() {
         const products = this.props.products;
-        const nodes = products.map(product => {
+        const nodes = products.map((product) => {
             return <ProductItemContainer key={product.id} product={product} />;
         });
 

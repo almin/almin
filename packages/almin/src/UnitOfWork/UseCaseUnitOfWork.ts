@@ -217,7 +217,7 @@ If you not want to commit, Please call \`transactionContext.exit()\` at end of t
             }
             this.exit();
         }
-        this.unsubscribeMap.keys().forEach(useCaseExecutor => {
+        this.unsubscribeMap.keys().forEach((useCaseExecutor) => {
             this.close(useCaseExecutor);
         });
         this.unitOfWork.release();

@@ -258,7 +258,7 @@ export default class AsyncLogger extends EventEmitter {
             const storeName = store.name ? store.name : "no-name";
             // one, or more stores
             const useCases = this.useCaseLogGroupMap.keys();
-            const workingUseCaseNames = useCases.map(useCase => {
+            const workingUseCaseNames = useCases.map((useCase) => {
                 return useCase.name;
             });
             const existWorkingUseCase = workingUseCaseNames.length !== 0;
@@ -417,7 +417,7 @@ export default class AsyncLogger extends EventEmitter {
      */
     addLog(log: any) {
         const useCases = this.useCaseLogGroupMap.keys();
-        useCases.forEach(useCase => {
+        useCases.forEach((useCase) => {
             const logGroup = this.useCaseLogGroupMap.get(useCase);
             if (!logGroup) {
                 return;
@@ -445,7 +445,7 @@ export default class AsyncLogger extends EventEmitter {
      */
     release() {
         this.flushBuffer();
-        this._releaseHandlers.forEach(releaseHandler => releaseHandler());
+        this._releaseHandlers.forEach((releaseHandler) => releaseHandler());
         this._releaseHandlers.length = 0;
     }
 }

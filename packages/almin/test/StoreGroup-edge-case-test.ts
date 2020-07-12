@@ -6,7 +6,7 @@ import { createUpdatableStoreWithUseCase } from "./helper/create-update-store-us
 import { AsyncUseCase } from "./use-case/AsyncUseCase";
 import { SyncNoDispatchUseCase } from "./use-case/SyncNoDispatchUseCase";
 
-describe("StoreGroup edge case", function() {
+describe("StoreGroup edge case", function () {
     describe("when {A,B}Store#emitChange on UseCase is completed", () => {
         it("should Context#onChange is called at once", () => {
             const { MockStore: AStore, requestUpdateState: changeAState } = createUpdatableStoreWithUseCase("A");

@@ -24,12 +24,12 @@ export default class InitializeRepositoryUseCase extends UseCase {
 
     execute() {
         // clear each repository
-        this.repositories.forEach(repository => {
+        this.repositories.forEach((repository) => {
             repository.clear();
         });
         // observe changes
-        this.repositories.forEach(repository => {
-            cartRepository.onChange(domain => {
+        this.repositories.forEach((repository) => {
+            cartRepository.onChange((domain) => {
                 addToAlminLogger([`💾 Repository:${repository.constructor.name}`, domain]);
             });
         });

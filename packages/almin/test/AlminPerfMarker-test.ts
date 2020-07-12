@@ -10,6 +10,7 @@ describe("AlminPerfMarker", () => {
         const marker = new AlminPerfMarker();
         assert.ok(marker.isProfiling === false);
         marker.beginProfile();
+        // @ts-ignore
         assert.ok(marker.isProfiling === true);
         marker.endProfile();
         assert.ok(marker.isProfiling === false);
@@ -46,7 +47,7 @@ describe("AlminPerfMarker", () => {
         const markedEvents: string[] = [];
         const debugTool = AlminInstruments.debugTool as AlminPerfMarker;
         if (debugTool) {
-            debugTool.addEventListener(event => {
+            debugTool.addEventListener((event) => {
                 markedEvents.push(event.type);
             });
         }
@@ -59,7 +60,7 @@ describe("AlminPerfMarker", () => {
 
         const transactionName = "My Transaction";
         return context
-            .transaction(transactionName, transactionContext => {
+            .transaction(transactionName, (transactionContext) => {
                 return transactionContext
                     .useCase(new ChangeAUseCase())
                     .execute()

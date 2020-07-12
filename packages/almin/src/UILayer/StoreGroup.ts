@@ -209,7 +209,7 @@ export class StoreGroup<T> extends Dispatcher implements StoreGroupLike {
         // Dispatch -> pipe -> Store#emitChange() if it is needed
         //          -> this.onDispatch -> If anyone store is changed, this.emitChange()
         // each pipe to dispatching
-        this.stores.forEach(store => {
+        this.stores.forEach((store) => {
             // observe Store
             const unRegisterHandler = this._registerStore(store);
             this._releaseHandlers.push(unRegisterHandler);
@@ -474,7 +474,7 @@ But, ${store.name}#getState() was called.`
      * StoreGroup#onChange workflow: https://code2flow.com/mHFviS
      */
     onChange(handler: (stores: Array<Store<T>>, details?: StoreGroupReasonForChange) => void): () => void {
-        const releaseHandler = this.storeGroupChangeEvent.addEventListener(event =>
+        const releaseHandler = this.storeGroupChangeEvent.addEventListener((event) =>
             handler(event.stores, event.details)
         );
         this._releaseHandlers.push(releaseHandler);
@@ -486,7 +486,7 @@ But, ${store.name}#getState() was called.`
      * You can call this when no more call event handler
      */
     release(): void {
-        this._releaseHandlers.forEach(releaseHandler => releaseHandler());
+        this._releaseHandlers.forEach((releaseHandler) => releaseHandler());
         this._releaseHandlers.length = 0;
         this._pruneChangingStateOfStores();
     }

@@ -98,6 +98,6 @@ export class Footer extends React.Component<FooterProps, {}> {
      * Event handler to delete all completed TODOs
      */
     _onClearCompletedClick = () => {
-        AppLocator.context.useCase(RemoveTodoItemFactory.create()).executor(useCase => useCase.execute());
+        AppLocator.context.useCase(RemoveTodoItemFactory.create()).executor((useCase) => useCase.execute());
     };
 }

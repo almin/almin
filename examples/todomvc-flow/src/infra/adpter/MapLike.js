@@ -10,7 +10,7 @@ export default class MapLike<K, V> {
 
     constructor(entries: Array<[K, V]> = []) {
         this._store = Object.create(null);
-        entries.forEach(entry => {
+        entries.forEach((entry) => {
             assert(Array.isArray(entry), "new MapLike([ [key, value] ])");
             this.set(entry[0], entry[1]);
         });
@@ -40,7 +40,7 @@ export default class MapLike<K, V> {
         const keys = this.keys();
         const store = this._store;
         const results = [];
-        keys.forEach(key => {
+        keys.forEach((key) => {
             results.push(store[key]);
         });
         return results;

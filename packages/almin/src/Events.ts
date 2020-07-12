@@ -40,11 +40,11 @@ export class Events<T> {
 
     emit(payload: T): void {
         /** Update any general listeners */
-        this.listeners.forEach(listener => listener(payload));
+        this.listeners.forEach((listener) => listener(payload));
 
         /** Clear the `once` queue */
         if (this.listenersOnce.length > 0) {
-            this.listenersOnce.forEach(listener => listener(payload));
+            this.listenersOnce.forEach((listener) => listener(payload));
             this.listenersOnce = [];
         }
     }

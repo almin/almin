@@ -19,8 +19,8 @@ describe("@almin/react-context", () => {
                     // createTestStore is a test helper that create Store instance of Almin
                     a: createStore({ value: "a" }),
                     b: createStore({ value: "b" }),
-                    c: createStore({ value: "c" })
-                })
+                    c: createStore({ value: "c" }),
+                }),
             });
             // Create React Context that wrap Almin Context
             const { Consumer, Provider } = createReactContext(context);
@@ -33,7 +33,7 @@ describe("@almin/react-context", () => {
                         <Provider>
                             {/* Consumer children props is called when Almin's context is changed */}
                             <Consumer>
-                                {state => {
+                                {(state) => {
                                     return (
                                         <ul>
                                             <li>{state.a.value}</li>;<li>{state.b.value}</li>;<li>{state.c.value}</li>;

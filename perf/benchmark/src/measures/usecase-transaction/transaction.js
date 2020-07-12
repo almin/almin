@@ -13,7 +13,7 @@ process.on("unhandledRejection", console.error);
 
 function runStore(almin, storeCount) {
     return new Promise((resolve, reject) => {
-        const stores = Array.from(new Array(storeCount), (_, i) => i).map(index => {
+        const stores = Array.from(new Array(storeCount), (_, i) => i).map((index) => {
             return almin.createStore(`Store${index}`);
         });
         const context = almin.createContext(stores);
@@ -28,7 +28,7 @@ function runStore(almin, storeCount) {
         // execute usecase
         const useCase = almin.createUseCase();
         context
-            .transaction("transaction", transactionContext => {
+            .transaction("transaction", (transactionContext) => {
                 return transactionContext
                     .useCase(useCase)
                     .execute(1)
@@ -56,7 +56,7 @@ const outputCSVPath = path.join(__dirname, "output", `transaction-${timeStamp}.c
 const storeRanges = range(0, 350, 5);
 // count
 const resultsCurrent = [];
-storeRanges.forEach(count => {
+storeRanges.forEach((count) => {
     queue.add(() => {
         return runStore(alminCurrent, count).then(({ updateTime, updateCount }) => {
             resultsCurrent.push({

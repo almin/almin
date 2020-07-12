@@ -16,14 +16,14 @@ if (typeof window == "object") {
  * @param {Object} AlminVeesions
  * @param {function(benchmark: Object}} done
  */
-module.exports = function(AlminVersions, done) {
+module.exports = function (AlminVersions, done) {
     const suite = new Suite();
     // randomize for equality
-    _.shuffle(Object.keys(AlminVersions)).forEach(version => {
+    _.shuffle(Object.keys(AlminVersions)).forEach((version) => {
         suite.add(
             version,
-            function(deferred) {
-                task(AlminVersions[version], error => {
+            function (deferred) {
+                task(AlminVersions[version], (error) => {
                     if (error) {
                         deferred.resolve(error);
                     } else {
@@ -35,7 +35,7 @@ module.exports = function(AlminVersions, done) {
         );
     });
     suite
-        .on("complete", function() {
+        .on("complete", function () {
             done(this);
         })
         .run({ async: true });

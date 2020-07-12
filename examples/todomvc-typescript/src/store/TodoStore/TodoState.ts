@@ -25,7 +25,7 @@ export default class TodoState {
      * @returns {boolean}
      */
     get areAllComplete() {
-        return this.items.every(item => {
+        return this.items.every((item) => {
             return item.completed;
         });
     }
@@ -35,7 +35,7 @@ export default class TodoState {
      * @returns {Array.<TodoItem>}
      */
     get displayItems() {
-        return this.items.filter(item => {
+        return this.items.filter((item) => {
             switch (this.filterType) {
                 case FilterTypes.ACTIVE_TODOS:
                     return !item.completed;

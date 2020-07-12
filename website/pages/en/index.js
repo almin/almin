@@ -73,10 +73,10 @@ class Index extends React.Component {
     render() {
         const language = this.props.language || "en";
         const showcase = siteConfig.users
-            .filter(user => {
+            .filter((user) => {
                 return user.pinned;
             })
-            .map(user => {
+            .map((user) => {
                 return (
                     <a key={user.infoLink} href={user.infoLink}>
                         <img src={user.image} title={user.caption} />

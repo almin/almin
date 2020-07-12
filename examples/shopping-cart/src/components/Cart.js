@@ -30,7 +30,7 @@ class Cart extends React.Component {
         const nodes = !hasProducts ? (
             <div>Please add some products to cart.</div>
         ) : (
-            products.map(function(p) {
+            products.map(function (p) {
                 return (
                     <ProductHeader key={p.id}>
                         {p.title} - &euro;{p.price} x {p.quantity}

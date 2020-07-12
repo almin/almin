@@ -167,7 +167,7 @@ export class Context<T> {
             stores: Array<StoreLike<any>>,
             details?: StoreGroupReasonForChange
         ) => {
-            stores.forEach(store => {
+            stores.forEach((store) => {
                 const payload = new StoreChangedPayload(store);
                 // Should not included in StoreChanged Event
                 // inherit some context from the reason of change details
@@ -474,7 +474,7 @@ context.transaction("transaction", transactionContext => {
             () => {
                 unitOfWork.release();
             },
-            error => {
+            (error) => {
                 unitOfWork.release();
                 return Promise.reject(error);
             }

@@ -7,7 +7,7 @@ import { SinonStub } from "sinon";
 
 const sinon = require("sinon");
 
-describe("FunctionalUseCase", function() {
+describe("FunctionalUseCase", function () {
     let consoleErrorStub: SinonStub;
     beforeEach(() => {
         consoleErrorStub = sinon.stub(console, "error");

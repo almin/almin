@@ -158,7 +158,7 @@ export abstract class UseCase extends Dispatcher implements UseCaseLike {
      * `errorHandler` is called with error when error is thrown.
      */
     onError(errorHandler: (error: Error) => void): (this: Dispatcher) => void {
-        return this.onDispatch(payload => {
+        return this.onDispatch((payload) => {
             if (isErrorPayload(payload)) {
                 errorHandler(payload.error);
             }
@@ -185,6 +185,6 @@ export abstract class UseCase extends Dispatcher implements UseCaseLike {
 }
 
 // Implement assertion
-UseCase.prototype.execute = function(this: UseCase) {
+UseCase.prototype.execute = function (this: UseCase) {
     throw new TypeError(`${this.name} should be implemented UseCase#execute(): any`);
 };

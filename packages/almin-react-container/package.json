@@ -38,23 +38,23 @@
     "shallow-equal-object": "^1.1.1"
   },
   "devDependencies": {
-    "@types/node": "^12.12.36",
-    "@types/react": "16.9.34",
-    "@types/react-dom": "16.9.6",
+    "@types/node": "^14.0.22",
+    "@types/react": "16.9.43",
+    "@types/react-dom": "16.9.8",
     "almin": "^0.18.1",
     "babel-preset-env": "^1.7.0",
     "babel-preset-power-assert": "^1.0.0",
     "babel-preset-react": "^6.24.1",
     "babel-register": "^6.26.0",
-    "cross-env": "^5.2.1",
+    "cross-env": "^7.0.2",
     "jsdom": "^15.2.1",
-    "mocha": "^6.2.3",
+    "mocha": "^8.0.1",
     "power-assert": "^1.6.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "rimraf": "^3.0.2",
-    "ts-node": "^8.9.0",
-    "typescript": "~3.5.3"
+    "ts-node": "^8.10.2",
+    "typescript": "~3.9.6"
   },
   "peerDependencies": {
     "almin": ">=0.15.0",

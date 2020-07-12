@@ -10,7 +10,7 @@ export default class MousePositionContainer extends React.Component {
     }
 
     componentDidMount() {
-        const onMouseMoveHandler = event => {
+        const onMouseMoveHandler = (event) => {
             const x = event.clientX;
             const y = event.clientY;
             const width = window.innerWidth || body.clientWidth;

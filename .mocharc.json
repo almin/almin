@@ -1,0 +1,7 @@
+{
+  "recursive": true,
+  "require": [
+    "env-development",
+    "babel-register"
+  ]
+}

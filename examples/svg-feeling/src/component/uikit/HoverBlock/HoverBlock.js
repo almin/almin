@@ -11,13 +11,13 @@ export default class HoverBlock extends React.Component {
     }
 
     render() {
-        const mouseEnter = event => {
+        const mouseEnter = (event) => {
             if (!this.state.hover && typeof this.props.onMouseEnter === "function") {
                 this.props.onMouseEnter(event);
             }
             this.setState({ hover: true });
         };
-        const mouseLeave = event => {
+        const mouseLeave = (event) => {
             if (this.state.hover && typeof this.props.onMouseLeave === "function") {
                 this.props.onMouseLeave(event);
             }

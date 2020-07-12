@@ -59,7 +59,7 @@ export function createReactContext<T>(
             }
             return (
                 <StateContext.Consumer>
-                    {value => {
+                    {(value) => {
                         return this.props.children(value);
                     }}
                 </StateContext.Consumer>
@@ -69,6 +69,6 @@ export function createReactContext<T>(
 
     return {
         Provider,
-        Consumer
+        Consumer,
     };
 }

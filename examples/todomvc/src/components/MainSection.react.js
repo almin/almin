@@ -31,7 +31,7 @@ class MainSection extends React.Component {
         }
 
         const allTodos = this.props.allTodos;
-        const todos = allTodos.map(todo => {
+        const todos = allTodos.map((todo) => {
             return <TodoItem key={todo.id} todo={todo} />;
         });
         return (

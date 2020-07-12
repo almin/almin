@@ -66,7 +66,7 @@ class TodoTextInput extends React.Component {
     /**
      * @param  {object} event
      */
-    _onKeyDown = event => {
+    _onKeyDown = (event) => {
         if (event.keyCode === ENTER_KEY_CODE) {
             this._save();
         }

@@ -8,9 +8,9 @@ import Cart from "../src/domain/Cart/Cart";
 import Product from "../src/domain/Product/Product";
 // repository
 import { CartRepository } from "../src/infra/CartRepository";
-describe("CheckoutCartUseCase", function() {
-    context("when the cart contain items", function() {
-        it("should flush item in the cart", function(done) {
+describe("CheckoutCartUseCase", function () {
+    context("when the cart contain items", function () {
+        it("should flush item in the cart", function (done) {
             // Given
             const { products } = InitializedProductRepository.create();
             const [product] = products;
@@ -26,7 +26,7 @@ describe("CheckoutCartUseCase", function() {
                 customer,
                 cartRepository
             });
-            cartRepository.onChange(cart => {
+            cartRepository.onChange((cart) => {
                 assert.equal(cart.getAllProductItems().length, 0);
                 done();
             });

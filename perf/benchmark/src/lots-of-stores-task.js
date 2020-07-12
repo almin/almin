@@ -5,7 +5,7 @@
  */
 const { createContext, createStore, createUseCase } = require("../almin-current");
 const numberOfStore = 500;
-const stores = Array.from(new Array(numberOfStore), (_, i) => i).map(index => {
+const stores = Array.from(new Array(numberOfStore), (_, i) => i).map((index) => {
     return createStore(`Store${index}`);
 });
 /**

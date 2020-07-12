@@ -11,7 +11,7 @@ import { createStore } from "./helper/create-new-store";
 const assert = require("assert");
 const sinon = require("sinon");
 
-describe("UseCase", function() {
+describe("UseCase", function () {
     describe("id", () => {
         it("should have unique id in instance", () => {
             class ExampleUseCase extends UseCase {
@@ -48,8 +48,8 @@ describe("UseCase", function() {
             });
         });
     });
-    describe("#throwError", function() {
-        it("should dispatch thought onDispatch event", function(done) {
+    describe("#throwError", function () {
+        it("should dispatch thought onDispatch event", function (done) {
             class TestUseCase extends UseCase {
                 execute() {
                     this.throwError(new Error("error"));
@@ -58,7 +58,7 @@ describe("UseCase", function() {
 
             const testUseCase = new TestUseCase();
             // then
-            testUseCase.onDispatch(payload => {
+            testUseCase.onDispatch((payload) => {
                 assert.ok(payload instanceof ErrorPayload, "should be instance of ErrorPayload");
                 if (payload instanceof ErrorPayload) {
                     assert(payload.error instanceof Error);
@@ -70,8 +70,8 @@ describe("UseCase", function() {
         });
     });
     // scenario
-    describe("when execute B UseCase in A UseCase", function() {
-        it("should execute A:will -> B:will -> B:did -> A:did", function() {
+    describe("when execute B UseCase in A UseCase", function () {
+        it("should execute A:will -> B:will -> B:did -> A:did", function () {
             class BUseCase extends UseCase {
                 execute() {
                     return "b";
@@ -103,7 +103,7 @@ describe("UseCase", function() {
                 store: createStore({ name: "test" })
             });
             // then
-            aUseCase.onDispatch(payload => {
+            aUseCase.onDispatch((payload) => {
                 const type = payload.type;
                 const expectedType = expectedCallStackOfAUseCase.shift();
                 assert.equal(type, expectedType);
@@ -122,7 +122,7 @@ describe("UseCase", function() {
                     assert.deepEqual(callStack, expectedCallStack);
                 });
         });
-        it("UseCase should have `context` that is Context instance", function() {
+        it("UseCase should have `context` that is Context instance", function () {
             class TestUseCase extends UseCase {
                 execute() {
                     // then
@@ -141,8 +141,8 @@ describe("UseCase", function() {
             context.useCase(useCase).execute();
         });
     });
-    describe("when not implemented execute()", function() {
-        it("should assert error on constructor", function() {
+    describe("when not implemented execute()", function () {
+        it("should assert error on constructor", function () {
             // @ts-ignore
             class WrongImplementUseCase extends UseCase {}
 
@@ -155,7 +155,7 @@ describe("UseCase", function() {
             }
         });
     });
-    describe("UseCase is nesting", function() {
+    describe("UseCase is nesting", function () {
         /*
             P: Parent UseCase
             C: Child UseCase
@@ -166,7 +166,7 @@ describe("UseCase", function() {
                  C----------
 
          */
-        describe("when child did completed before parent is completed", function() {
+        describe("when child did completed before parent is completed", function () {
             const childPayload = {
                 type: "ChildUseCase"
             };
@@ -183,14 +183,14 @@ describe("UseCase", function() {
                 }
             }
 
-            it("should delegate dispatch to parent -> dispatcher", function() {
+            it("should delegate dispatch to parent -> dispatcher", function () {
                 const dispatcher = new Dispatcher();
                 const context = new Context({
                     dispatcher,
                     store: createStore({ name: "test" })
                 });
                 const dispatchedPayloads: DispatchedPayload[] = [];
-                dispatcher.onDispatch(payload => {
+                dispatcher.onDispatch((payload) => {
                     dispatchedPayloads.push(payload);
                 });
                 return context
@@ -214,7 +214,7 @@ describe("UseCase", function() {
                               C call dispatch()
 
          */
-        describe("when child is completed after parent did completed", function() {
+        describe("when child is completed after parent did completed", function () {
             let consoleErrorStub: SinonStub;
             beforeEach(() => {
                 consoleErrorStub = sinon.stub(console, "error");
@@ -222,7 +222,7 @@ describe("UseCase", function() {
             afterEach(() => {
                 consoleErrorStub.restore();
             });
-            it("should not delegate dispatch to parent -> dispatcher and show warning", function(done) {
+            it("should not delegate dispatch to parent -> dispatcher and show warning", function (done) {
                 const childPayload = {
                     type: "ChildUseCase"
                 };
@@ -261,7 +261,7 @@ describe("UseCase", function() {
                     dispatcher,
                     store: createStore({ name: "test" })
                 });
-                dispatcher.onDispatch(payload => {
+                dispatcher.onDispatch((payload) => {
                     dispatchedPayloads.push(payload);
                 });
                 context.useCase(new ParentUseCase()).execute();

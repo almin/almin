@@ -64,7 +64,7 @@ export class UnitOfWork extends Events<UnitOfWorkEvent> {
         if (this.isDisposed) {
             throw new Error("already closed this transaction");
         }
-        this.commitments.forEach(commitment => {
+        this.commitments.forEach((commitment) => {
             this.committable.commit(commitment);
         });
         this.prune();

@@ -104,7 +104,7 @@ export class Dispatcher extends Events<DispatcherEvent> {
      * ```
      */
     onDispatch(handler: (payload: DispatchedPayload, meta: DispatcherPayloadMeta) => void): () => void {
-        return this.addEventListener(event => handler(event.payload, event.meta));
+        return this.addEventListener((event) => handler(event.payload, event.meta));
     }
 
     /**

@@ -30,7 +30,7 @@ export class MainSection extends React.Component<MainSectionProps, {}> {
         }
 
         const allTodos = this.props.allTodos;
-        const todos = allTodos.map(todo => {
+        const todos = allTodos.map((todo) => {
             return <TodoItemComponent key={todo.id} todo={todo} />;
         });
         return (

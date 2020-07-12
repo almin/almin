@@ -7,7 +7,7 @@ import { Store } from "../src/Store";
 import { UseCase } from "../src/UseCase";
 import { createStore } from "./helper/create-new-store";
 
-describe("Store", function() {
+describe("Store", function () {
     describe("#name", () => {
         describe("when define displayName", () => {
             it("#name is same with displayName", () => {
@@ -90,15 +90,15 @@ describe("Store", function() {
             });
         });
     });
-    describe("#onDispatch", function() {
-        it("should called when dispatched", function(done) {
+    describe("#onDispatch", function () {
+        it("should called when dispatched", function (done) {
             const store = createStore({ name: "test" });
             const expectedPayload = {
                 type: "test",
                 value: "value"
             };
             // then
-            store.onDispatch(payload => {
+            store.onDispatch((payload) => {
                 assert.deepEqual(payload, expectedPayload);
                 done();
             });
@@ -143,8 +143,8 @@ describe("Store", function() {
             assert(store.shouldStateUpdate({ a: 1 }, { a: 1 }));
         });
     });
-    describe("#onChange", function() {
-        it("should called when changed", function(done) {
+    describe("#onChange", function () {
+        it("should called when changed", function (done) {
             const store = createStore({ name: "test" });
             let isCalled = false;
             // then
@@ -158,7 +158,7 @@ describe("Store", function() {
         });
         // Related https://github.com/almin/almin/issues/190
         describe("when call Store#setState out of UseCase", () => {
-            it("should be called Store#onChange", done => {
+            it("should be called Store#onChange", (done) => {
                 type State = number;
 
                 class AStore extends Store<State> {
@@ -188,9 +188,9 @@ describe("Store", function() {
             });
         });
     });
-    describe("#onDispatch", function() {
-        describe("when useCaseName is minified", function() {
-            it("can receive error from UseCase", function(done) {
+    describe("#onDispatch", function () {
+        describe("when useCaseName is minified", function () {
+            it("can receive error from UseCase", function (done) {
                 const store = createStore({ name: "test" });
 
                 class TestUseCase extends UseCase {
@@ -217,7 +217,7 @@ describe("Store", function() {
                 testUseCase.execute();
             });
         });
-        it("should receive error from UseCase", function(done) {
+        it("should receive error from UseCase", function (done) {
             const store = createStore({ name: "test" });
 
             class TestUseCase extends UseCase {

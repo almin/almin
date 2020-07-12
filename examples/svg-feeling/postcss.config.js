@@ -1,5 +1,5 @@
 const browserList = "> 5%";
-module.exports = ctx => {
+module.exports = (ctx) => {
     return {
         plugins: {
             "postcss-easy-import": {},

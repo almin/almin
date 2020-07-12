@@ -5,8 +5,8 @@ import MemoryDB from "../../src/infra/adpter/MemoryDB";
 import TodoList from "../../src/domain/TodoList/TodoList";
 import { TodoListRepository } from "../../src/infra/TodoListRepository";
 import { AddTodoItemUseCase } from "../../src/usecase/AddTodoItem";
-describe("AddTodoItem", function() {
-    it("should add TodoItem with title", function() {
+describe("AddTodoItem", function () {
+    it("should add TodoItem with title", function () {
         const mockTodoList = new TodoList();
         // prepare
         const todoListRepository = new TodoListRepository(new MemoryDB());

@@ -30,7 +30,7 @@ describe("LifeCycleEventHub", () => {
 
         return context
             .useCase(new ExampleUseCase())
-            .executor(useCase => useCase.execute())
+            .executor((useCase) => useCase.execute())
             .then(() => {
                 assert.equal(dispatchedLogs.length, 1, "should be dispatched at once");
             });
