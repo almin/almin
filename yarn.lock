@@ -15,7 +15,7 @@
     commander ">=2.9.0"
     fs-extra ">=0.30.0"
     highlight.js ">=9.4.0"
-    marked GerHobbelt/marked#master
+    marked "github:gerhobbelt/marked#master"
     underscore ">= 1.8.3"
 
 "@azu/format-text@^1.0.1":
@@ -8333,10 +8333,10 @@ markdown-escapes@^1.0.0:
   resolved "https://registry.yarnpkg.com/markdown-escapes/-/markdown-escapes-1.0.4.tgz#c95415ef451499d7602b91095f3c8e8975f78535"
   integrity sha512-8z4efJYk43E0upd0NbVXwgSTQs6cT3T06etieCMEg7dRbzCbxUCK/GHlX8mhHRDcp+OLlHkPKsvqQTCvsRl2cg==
 
-marked@GerHobbelt/marked#master:
+"marked@github:gerhobbelt/marked#master":
   version "0.3.6-2"
   uid "15e137e836033daf7b697ac987b50f27f61b3ada"
-  resolved "https://codeload.github.com/GerHobbelt/marked/tar.gz/15e137e836033daf7b697ac987b50f27f61b3ada"
+  resolved "https://codeload.github.com/gerhobbelt/marked/tar.gz/15e137e836033daf7b697ac987b50f27f61b3ada"
 
 math-random@^1.0.1:
   version "1.0.4"
