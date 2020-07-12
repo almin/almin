@@ -32,7 +32,6 @@
   "scripts": {
     "build": "npm-run-all -s build:src build:lib",
     "build:lib": "npm-run-all -p build:lib:*",
-    "build:lib:cp_type_def": "cpx type-definitions/**/*.js.flow lib/src/ --preserve",
     "build:src": "tsc --project . && tsc --project ./tsconfig.module.json",
     "build:test": "tsc --project test/",
     "ci": "npm test && npm run size",
