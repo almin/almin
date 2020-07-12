@@ -30,8 +30,7 @@
     "url": "git+https://github.com/almin/almin.git"
   },
   "scripts": {
-    "build": "npm-run-all -s build:src build:lib",
-    "build:lib": "npm-run-all -p build:lib:*",
+    "build": "npm-run-all -s build:src",
     "build:src": "tsc --project . && tsc --project ./tsconfig.module.json",
     "build:test": "tsc --project test/",
     "ci": "npm test && npm run size",
