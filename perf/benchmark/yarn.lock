@@ -57,25 +57,25 @@ align-text@^0.1.1, align-text@^0.1.3:
 "almin-0.13@file:pacakges/almin-0.13":
   version "1.0.0"
   dependencies:
-    almin "^0.18.1"
+    almin "^0.19.0"
 
 "almin-0.14@file:pacakges/almin-0.14":
   version "1.0.0"
   dependencies:
-    almin "^0.18.1"
+    almin "^0.19.0"
 
 "almin-0.15@file:pacakges/almin-0.15":
   version "1.0.0"
   dependencies:
-    almin "^0.18.1"
+    almin "^0.19.0"
 
-almin@^0.18.1:
-  version "0.18.1"
-  resolved "https://registry.yarnpkg.com/almin/-/almin-0.18.1.tgz#fa5df7a11b6c04e5fead36fd42d8884c724af6f7"
-  integrity sha512-W/fsBpew0Vf/2lWsqflyNLZvEb8+z8JzrNUKcjGVUm7wRVLhOWwMxiYmqGQ7Pbj+nckpI3P9abdAfq1sr9sD6g==
+almin@^0.19.0:
+  version "0.19.0"
+  resolved "https://registry.yarnpkg.com/almin/-/almin-0.19.0.tgz#f5de37b44069f314a6cf19e865d0f6e6ac46c306"
+  integrity sha512-DMYy3GyoXRw4AhAgtDSkLCSz0lWvbO8DTZJS5jNudCLwcag6LsmlOX9g+eO3weZosZQqtKvHn7BH3//VRxT3iw==
   dependencies:
     map-like "^2.0.0"
-    shallow-equal-object "^1.0.1"
+    shallow-equal-object "^1.1.1"
 
 ansi-regex@^2.0.0, ansi-regex@^2.1.1:
   version "2.1.1"
@@ -3444,7 +3444,7 @@ sha.js@^2.4.0, sha.js@^2.4.8:
     inherits "^2.0.1"
     safe-buffer "^5.0.1"
 
-shallow-equal-object@^1.0.1:
+shallow-equal-object@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/shallow-equal-object/-/shallow-equal-object-1.1.1.tgz#0c016b8cc16dc59ab76739b6eeaa9c99d68beef7"
   integrity sha512-9DDzYRlzCwF2CemeF0aOFk5T5KMrjG7HldcW7utwYhA/limuGHn3No8KhpDE8BrO7GLaSRJumNKReipZBybd7A==
