@@ -25,7 +25,7 @@
     invariant "^2.2.4"
     semver "^5.5.0"
 
-"@babel/core@^7.7.4":
+"@babel/core@^7.9.0":
   version "7.11.0"
   resolved "https://registry.yarnpkg.com/@babel/core/-/core-7.11.0.tgz#73b9c33f1658506887f767c26dae07798b30df76"
   integrity sha512-mkLq8nwaXmDtFmRkQ8ED/eA2CnVw4zr7dCztKalZXBvdK5EeNUAesrrwUqjQEzFgomJssayzB0aqlOsP1vGLqg==
@@ -296,7 +296,7 @@
     "@babel/helper-remap-async-to-generator" "^7.10.4"
     "@babel/plugin-syntax-async-generators" "^7.8.0"
 
-"@babel/plugin-proposal-class-properties@^7.10.4", "@babel/plugin-proposal-class-properties@^7.7.4":
+"@babel/plugin-proposal-class-properties@^7.10.4", "@babel/plugin-proposal-class-properties@^7.8.3":
   version "7.10.4"
   resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-class-properties/-/plugin-proposal-class-properties-7.10.4.tgz#a33bf632da390a59c7a8c570045d1115cd778807"
   integrity sha512-vhwkEROxzcHGNu2mzUC0OFFNXdZ4M23ib8aRRcJSsW8BZK9pQMD7QB7csl97NBbgGZO7ZyHUyKDnxzOaP4IrCg==
@@ -352,7 +352,7 @@
     "@babel/helper-plugin-utils" "^7.10.4"
     "@babel/plugin-syntax-numeric-separator" "^7.10.4"
 
-"@babel/plugin-proposal-object-rest-spread@^7.11.0", "@babel/plugin-proposal-object-rest-spread@^7.7.4":
+"@babel/plugin-proposal-object-rest-spread@^7.11.0", "@babel/plugin-proposal-object-rest-spread@^7.9.0":
   version "7.11.0"
   resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-object-rest-spread/-/plugin-proposal-object-rest-spread-7.11.0.tgz#bd81f95a1f746760ea43b6c2d3d62b11790ad0af"
   integrity sha512-wzch41N4yztwoRw0ak+37wxwJM2oiIiy6huGCoqkvSTA9acYWcPfn9Y4aJqmFFJ70KTJUu29f3DQ43uJ9HXzEA==
@@ -786,7 +786,7 @@
     "@babel/helper-create-regexp-features-plugin" "^7.10.4"
     "@babel/helper-plugin-utils" "^7.10.4"
 
-"@babel/polyfill@^7.7.0":
+"@babel/polyfill@^7.8.7":
   version "7.10.4"
   resolved "https://registry.yarnpkg.com/@babel/polyfill/-/polyfill-7.10.4.tgz#915e5bfe61490ac0199008e35ca9d7d151a8e45a"
   integrity sha512-8BYcnVqQ5kMD2HXoHInBH7H1b/uP3KdnwCYXOqFnXqguOyuu443WXusbIUbWEfY3Z0Txk0M1uG/8YuAMhNl6zg==
@@ -794,7 +794,7 @@
     core-js "^2.6.5"
     regenerator-runtime "^0.13.4"
 
-"@babel/preset-env@^7.7.4":
+"@babel/preset-env@^7.9.0":
   version "7.11.0"
   resolved "https://registry.yarnpkg.com/@babel/preset-env/-/preset-env-7.11.0.tgz#860ee38f2ce17ad60480c2021ba9689393efb796"
   integrity sha512-2u1/k7rG/gTh02dylX2kL3S0IJNF+J6bfDSp4DI2Ma8QN6Y9x9pmAax59fsCk6QUQG0yqH47yJWA+u1I1LccAg==
@@ -879,7 +879,7 @@
     "@babel/types" "^7.4.4"
     esutils "^2.0.2"
 
-"@babel/preset-react@^7.7.4":
+"@babel/preset-react@^7.9.4":
   version "7.10.4"
   resolved "https://registry.yarnpkg.com/@babel/preset-react/-/preset-react-7.10.4.tgz#92e8a66d816f9911d11d4cc935be67adfc82dbcf"
   integrity sha512-BrHp4TgOIy4M19JAfO1LhycVXOPWdDbTRep7eVyatf174Hff+6Uk53sDyajqZPu8W1qXRBiYOfIamek6jA7YVw==
@@ -892,7 +892,7 @@
     "@babel/plugin-transform-react-jsx-source" "^7.10.4"
     "@babel/plugin-transform-react-pure-annotations" "^7.10.4"
 
-"@babel/register@^7.7.4":
+"@babel/register@^7.9.0":
   version "7.10.5"
   resolved "https://registry.yarnpkg.com/@babel/register/-/register-7.10.5.tgz#354f3574895f1307f79efe37a51525e52fd38d89"
   integrity sha512-eYHdLv43nyvmPn9bfNfrcC4+iYNwdQ8Pxk1MFJuU/U5LpSYl/PH4dFMazCYZDFVi8ueG3shvO+AQfLrxpYulQw==
@@ -919,7 +919,7 @@
     "@babel/parser" "^7.10.4"
     "@babel/types" "^7.10.4"
 
-"@babel/traverse@^7.10.4", "@babel/traverse@^7.11.0", "@babel/traverse@^7.7.4":
+"@babel/traverse@^7.10.4", "@babel/traverse@^7.11.0", "@babel/traverse@^7.9.0":
   version "7.11.0"
   resolved "https://registry.yarnpkg.com/@babel/traverse/-/traverse-7.11.0.tgz#9b996ce1b98f53f7c3e4175115605d56ed07dd24"
   integrity sha512-ZB2V+LskoWKNpMq6E5UUCrjtDUh5IOTAyIl0dTjIEoXum/iKWkoIEKIRDnUucO6f+2FzNkE0oD4RLKoPIufDtg==
@@ -934,7 +934,7 @@
     globals "^11.1.0"
     lodash "^4.17.19"
 
-"@babel/types@^7.10.4", "@babel/types@^7.10.5", "@babel/types@^7.11.0", "@babel/types@^7.4.4", "@babel/types@^7.7.4":
+"@babel/types@^7.10.4", "@babel/types@^7.10.5", "@babel/types@^7.11.0", "@babel/types@^7.4.4", "@babel/types@^7.9.0":
   version "7.11.0"
   resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.11.0.tgz#2ae6bf1ba9ae8c3c43824e5861269871b206e90d"
   integrity sha512-O53yME4ZZI0jO1EVGtF1ePGl0LHirG4P1ibcD80XyzZcKhcMFeCXmh4Xb1ifGBIV233Qg12x4rBfQgA+tmOukA==
@@ -1190,7 +1190,7 @@ autolinker@~0.28.0:
   dependencies:
     gulp-header "^1.7.1"
 
-autoprefixer@^9.7.2:
+autoprefixer@^9.7.5:
   version "9.8.6"
   resolved "https://registry.yarnpkg.com/autoprefixer/-/autoprefixer-9.8.6.tgz#3b73594ca1bf9266320c5acf1588d74dea74210f"
   integrity sha512-XrvP4VVHdRBCdX1S3WXVD8+RyG9qeb1D5Sn1DeLiG2xfSpzellk5k54xbUERJ3M5DggQxes39UGOTP8CFrEGbg==
@@ -2230,21 +2230,21 @@ dir-glob@2.0.0:
     arrify "^1.0.1"
     path-type "^3.0.0"
 
-docusaurus@^1.14.4:
-  version "1.14.4"
-  resolved "https://registry.yarnpkg.com/docusaurus/-/docusaurus-1.14.4.tgz#1ef3ebe8c2aaaf1dec6c2e0e177e83be78aeaca3"
-  integrity sha512-KALmrlZBc0E+AB0ITR4POGKv8WcrcSSxvmgq7nC3TdpS+S2hrlXN/2tV3tVOZ8q8m+zhcMs7l9mAIhGFQyQwIw==
+docusaurus@^1.14.5:
+  version "1.14.5"
+  resolved "https://registry.yarnpkg.com/docusaurus/-/docusaurus-1.14.5.tgz#70f78627e7d58763c754de1339bceae8896ef9eb"
+  integrity sha512-VEOet+AcpTID4Co9goiBgAuubSaH+13GNHq6PilKaUAuFHHfEmyLkvQKJFMg4J9xTC83bmFiUkl708ycjr0p9w==
   dependencies:
-    "@babel/core" "^7.7.4"
-    "@babel/plugin-proposal-class-properties" "^7.7.4"
-    "@babel/plugin-proposal-object-rest-spread" "^7.7.4"
-    "@babel/polyfill" "^7.7.0"
-    "@babel/preset-env" "^7.7.4"
-    "@babel/preset-react" "^7.7.4"
-    "@babel/register" "^7.7.4"
-    "@babel/traverse" "^7.7.4"
-    "@babel/types" "^7.7.4"
-    autoprefixer "^9.7.2"
+    "@babel/core" "^7.9.0"
+    "@babel/plugin-proposal-class-properties" "^7.8.3"
+    "@babel/plugin-proposal-object-rest-spread" "^7.9.0"
+    "@babel/polyfill" "^7.8.7"
+    "@babel/preset-env" "^7.9.0"
+    "@babel/preset-react" "^7.9.4"
+    "@babel/register" "^7.9.0"
+    "@babel/traverse" "^7.9.0"
+    "@babel/types" "^7.9.0"
+    autoprefixer "^9.7.5"
     babylon "^6.18.0"
     chalk "^3.0.0"
     classnames "^2.2.6"
@@ -2275,7 +2275,7 @@ docusaurus@^1.14.4:
     react-dom "^16.8.4"
     remarkable "^2.0.0"
     request "^2.88.0"
-    shelljs "^0.8.3"
+    shelljs "^0.8.4"
     sitemap "^3.2.2"
     tcp-port-used "^1.0.1"
     tiny-lr "^1.1.1"
@@ -5792,7 +5792,7 @@ shell-quote@1.7.2:
   resolved "https://registry.yarnpkg.com/shell-quote/-/shell-quote-1.7.2.tgz#67a7d02c76c9da24f99d20808fcaded0e0e04be2"
   integrity sha512-mRz/m/JVscCrkMyPqHc/bczi3OQHkLTqXHEFu0zDhK/qfv3UcOA4SVmRCLmos4bhjr9ekVQubj/R7waKapmiQg==
 
-shelljs@^0.8.3:
+shelljs@^0.8.4:
   version "0.8.4"
   resolved "https://registry.yarnpkg.com/shelljs/-/shelljs-0.8.4.tgz#de7684feeb767f8716b326078a8a00875890e3c2"
   integrity sha512-7gk3UZ9kOfPLIAbslLzyWeGiEqx9e3rxwZM0KE6EL8GlGwjym9Mrlx5/p33bWTu9YG6vcS4MBxYZDHYr5lr8BQ==
