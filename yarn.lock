@@ -10845,7 +10845,7 @@ read-pkg@^3.0.0:
     normalize-package-data "^2.3.2"
     path-type "^3.0.0"
 
-read-pkg@^5.1.1, read-pkg@^5.2.0:
+read-pkg@^5.2.0:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/read-pkg/-/read-pkg-5.2.0.tgz#7bf295438ca5a33e56cd30e053b34ee7250c93cc"
   integrity sha512-Ug69mNOpfvKDAc2Q8DRpMjjzdtrnv9HcSMX+4VsZxD1aZ6ZzrIE7rlzXBtWTyhULSMKg076AW6WR5iZpD0JiOg==
@@ -12988,12 +12988,12 @@ tryer@^1.0.1:
   resolved "https://registry.yarnpkg.com/tryer/-/tryer-1.0.1.tgz#f2c85406800b9b0f74c9f7465b81eaad241252f8"
   integrity sha512-c3zayb8/kWWpycWYg87P71E1S1ZL6b6IJxfb5fvsUgsf0S2MVGaDhDXXjDMpdCpfWXqptc+4mXwmiy1ypXqRAA==
 
-ts-node-test-register@^8.0.1:
-  version "8.0.1"
-  resolved "https://registry.yarnpkg.com/ts-node-test-register/-/ts-node-test-register-8.0.1.tgz#457c5284c2632d8e04f82378db4cb54cd6fd7901"
-  integrity sha512-5QPI7WRfm7zVnMnq7PCNO4KINYefcipesYGvr01PoYXM1/AWfcVQbMrCXbwDXKjSL8jm8UZpFiVR9neGeiM+uA==
+ts-node-test-register@^9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/ts-node-test-register/-/ts-node-test-register-9.0.0.tgz#11800cc4d3ec6732a063d7db191957cf8a0ac84e"
+  integrity sha512-VKHg3/J11/fbdUFh9BsOgpEnifx5GqJcHLmrnKON18sUQl03Btzs52sWzCOY/k5LKQCeYkRJABVQ+lP53Iktag==
   dependencies:
-    read-pkg "^5.1.1"
+    read-pkg "^5.2.0"
 
 ts-node@^8.10.2:
   version "8.10.2"
