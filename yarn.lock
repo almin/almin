@@ -6593,9 +6593,9 @@ highlight.js@7.5.0:
   integrity sha1-AFJZXu8VhF2ELgKgMxOvrcPr1sw=
 
 highlight.js@>=9.4.0:
-  version "10.3.0"
-  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-10.3.0.tgz#126609b0074c7c532c141b0283f62cbe1a20de8a"
-  integrity sha512-KCk70Hi534i6vF5vBJt08B3vJEw7BdArWHLfKKf9Dh2bYiJambzMRHmlCUMyvRWKbZMbLqt8iAnF8IwciybcwA==
+  version "10.3.1"
+  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-10.3.1.tgz#3ca6bf007377faae347e8135ff25900aac734b9a"
+  integrity sha512-jeW8rdPdhshYKObedYg5XGbpVgb1/DT4AHvDFXhkU7UnGSIjy9kkJ7zHG7qplhFHMitTSzh5/iClKQk3Kb2RFQ==
 
 hmac-drbg@^1.0.0:
   version "1.0.1"
