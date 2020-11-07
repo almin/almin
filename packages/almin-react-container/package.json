@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "@types/node": "^14.14.6",
-    "@types/react": "16.9.55",
+    "@types/react": "16.9.56",
     "@types/react-dom": "16.9.9",
     "almin": "^0.19.0",
     "babel-preset-env": "^1.7.0",
