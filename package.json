@@ -14,7 +14,7 @@
   "license": "MIT",
   "resolutions": {
     "@types/react": "16.9.56",
-    "@types/react-dom": "16.9.9"
+    "@types/react-dom": "16.9.10"
   },
   "devDependencies": {
     "@alrra/travis-scripts": "^3.0.1",
