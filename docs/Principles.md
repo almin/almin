@@ -27,7 +27,7 @@ For example, Flux's store is a "one" model, but it is also Write and Read model.
 It means that Store is a single model, but has two task - `state` and `logic`.
 
 - On Application Layer: Store has application state
-- On Domain Layer: Store has bossiness logic
+- On Domain Layer: Store has business logic
 
 ![Flux Layering](/docs/assets/flux-layer.png)
 
