@@ -51,7 +51,7 @@ Store has only `state` role and Almin moves `logic` to domain model.
 Additionally, Almin introduces domain model for `logic` role.
 
 - On Application Layer: Store has application state
-- On Domain Layer: Domain model has bossiness logic
+- On Domain Layer: Domain model has business logic
 
 ![Almin Layering](/docs/assets/almin-layer.png)
 
