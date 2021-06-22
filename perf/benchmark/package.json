@@ -22,7 +22,7 @@
     "babel-preset-es2015": "^6.24.1",
     "benchmark": "^2.1.4",
     "cross-env": "^5.2.1",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "mocha": "^3.5.3",
     "rm-local-modules": "0.0.2",
     "testem": "^2.17.0",
